@@ -18,7 +18,6 @@ export default async function PrivatePage() {
     <div>
       <p>Hello {data.user.email}</p>
       <button onClick={logout}>Logout</button>
-      <p>{JSON.stringify(user)}</p>
       <p>Subscription {user.data.subscription_pack}</p>
     </div>
   )

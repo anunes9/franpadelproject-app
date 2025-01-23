@@ -22,22 +22,22 @@ export default async function LoginPage() {
         />
 
         <form className="max-w-sm">
-          <label htmlFor="email">Email:</label>
           <input
             id="email"
             name="email"
             type="email"
             required
             className="border-2 py-2 px-3 rounded-md mb-4 w-full"
+            placeholder="Email"
           />
 
-          <label htmlFor="password">Password:</label>
           <input
             id="password"
             name="password"
             type="password"
             required
             className="border-2 py-2 px-3 rounded-md w-full"
+            placeholder="Password"
           />
 
           <button
