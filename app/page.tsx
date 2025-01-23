@@ -1,6 +1,16 @@
-import Image from "next/image";
+import { createClient } from "@/utils/supabase/server"
+import Image from "next/image"
+import { redirect } from "next/navigation"
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    console.log(error)
+    redirect("/login")
+  }
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -97,5 +107,5 @@ export default function Home() {
         </a>
       </footer>
     </div>
-  );
+  )
 }
