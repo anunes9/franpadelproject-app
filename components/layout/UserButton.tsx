@@ -2,7 +2,7 @@ import { IconUserCircle } from "@tabler/icons-react"
 import Link from "next/link"
 import Image from "next/image"
 
-export const UserButton = async ({
+export const UserButton = ({
   user,
 }: {
   user: { name: string; avatar_url: string }
@@ -36,6 +36,36 @@ export const UserButton = async ({
           Definições
         </span>
       </span>
+    </div>
+  </Link>
+)
+
+export const UserCircle = ({
+  user,
+}: {
+  user: { name: string; avatar_url: string }
+}) => (
+  <Link className="flex items-center gap-2 justify-self-end" href="/profile">
+    <div>
+      <h2 className="text-sm">{user.name}</h2>
+    </div>
+
+    <div className="rounded-lg bg-gray-200 stroke-gray-500 w-6 h-6 flex justify-center items-center">
+      {user.avatar_url ? (
+        <Image
+          src={user.avatar_url}
+          alt="avatar"
+          className="!relative w-6 h-6 rounded-sm object-cover"
+          fill
+        />
+      ) : (
+        <IconUserCircle
+          width={28}
+          height={28}
+          stroke={1.2}
+          className="stroke-gray-600"
+        />
+      )}
     </div>
   </Link>
 )

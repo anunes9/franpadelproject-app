@@ -14,12 +14,11 @@ export const Item = ({
   icon: ReactNode
 }) => {
   const pathname = usePathname()
-  console.log(pathname)
 
   return (
     <Link
       href={href}
-      className={`flex items-center p-2 space-x-3 rounded-md hover:bg-btn-background-hover text-sm text-gray-800 ${
+      className={`flex items-center justify-center lg:justify-start p-2 space-x-3 rounded-md hover:bg-btn-background-hover text-sm text-gray-800 ${
         pathname === href ? "bg-btn-background" : ""
       }`}
     >
