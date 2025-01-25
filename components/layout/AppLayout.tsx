@@ -6,7 +6,7 @@ import { UserButton } from "@/components/layout/UserButton"
 import { createClient } from "@/utils/supabase/server"
 import {
   IconCalendarStats,
-  IconFiles,
+  IconCertificate,
   IconLogin,
   IconShield,
   IconShieldFilled,
@@ -72,9 +72,9 @@ export default async function AppLayout({
               />
 
               <Item
-                title="Certification"
-                href="/certification"
-                icon={<IconFiles width={24} height={24} stroke={1.5} />}
+                title="Certificações"
+                href="/certifications"
+                icon={<IconCertificate width={24} height={24} stroke={1.5} />}
               />
 
               {user.data ? (

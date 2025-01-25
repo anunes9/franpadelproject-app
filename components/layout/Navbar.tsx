@@ -5,7 +5,7 @@ import { LogoutButton } from "@/components/layout/LogoutButton"
 import { UserCircle } from "@/components/layout/UserButton"
 import {
   IconCalendarStats,
-  IconFiles,
+  IconCertificate,
   IconLogin,
   IconMenu,
   IconShield,
@@ -76,9 +76,9 @@ export const Navbar = ({
         />
 
         <Item
-          title="Certification"
-          href="/certification"
-          icon={<IconFiles width={24} height={24} stroke={1.5} />}
+          title="Certificações"
+          href="/certifications"
+          icon={<IconCertificate width={24} height={24} stroke={1.5} />}
         />
 
         {user ? (

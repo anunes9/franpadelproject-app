@@ -16,8 +16,8 @@ export default async function Home() {
         <div className="aspect-[9/16] bg-gray-200 rounded-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            autoPlay={false}
-            loop={false}
+            autoPlay
+            loop
             muted
             playsInline
             src="https://videos.ctfassets.net/rqt5vjnpqy42/3ef26Zy6GLC2xqMRKg65N6/ceaff5f51de07147756fdee533f8dfdb/FranPadelProject_teaser.mov"
