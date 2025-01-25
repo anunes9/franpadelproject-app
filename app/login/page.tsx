@@ -12,7 +12,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="animate-in pt-24 px-4 max-w-md m-auto">
+    <div className="animate-in py-24 px-4 max-w-md m-auto">
       <Image
         priority
         alt="fran-methodology"

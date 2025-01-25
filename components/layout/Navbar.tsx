@@ -8,6 +8,9 @@ import {
   IconFiles,
   IconLogin,
   IconMenu,
+  IconShield,
+  IconShieldFilled,
+  IconShieldHalfFilled,
 } from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -43,12 +46,33 @@ export const Navbar = ({
       <div
         className={`${
           open ? "flex" : "hidden"
-        } border-b border-b-foreground/10 flex-col gap-2 p-2`}
+        } border-b border-b-foreground/10 border-r border-r-foreground/10 flex-col gap-2 p-2 w-1/2`}
       >
         <Item
           title="The Academy"
           href="/the-academy"
           icon={<IconCalendarStats width={24} height={24} stroke={1.5} />}
+        />
+
+        <Item
+          title="Beginner"
+          href="/the-academy/beginner"
+          icon={<IconShield width={24} height={24} stroke={1.5} />}
+          subItem
+        />
+
+        <Item
+          title="Intermediate"
+          href="/the-academy/intermediate"
+          icon={<IconShieldHalfFilled width={24} height={24} stroke={1.5} />}
+          subItem
+        />
+
+        <Item
+          title="Advanced"
+          href="/the-academy/advanced"
+          icon={<IconShieldFilled width={24} height={24} stroke={1.5} />}
+          subItem
         />
 
         <Item

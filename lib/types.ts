@@ -20,3 +20,11 @@ export interface MesoProps {
     }[]
   }
 }
+
+export interface AcademyProps {
+  slug: string
+  title: string
+  level: number
+  description: { json: Document }
+  hero: { url: string }
+}

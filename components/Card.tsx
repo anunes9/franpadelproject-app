@@ -19,7 +19,10 @@ export const Card = ({
   description?: string
   descriptionJSON?: Document
 }) => (
-  <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-[0_2px_10px] shadow-gray-900/10">
+  <Link
+    className="rounded-lg bg-white p-6 shadow hover:shadow-2xl hover:scale-105 transition-all duration-300"
+    href={href}
+  >
     <div>
       <div className="flex gap-2">
         {icon}
@@ -33,11 +36,8 @@ export const Card = ({
       {description && <p className="text-sm text-gray-500">{description}</p>}
     </div>
 
-    <Link
-      href={href}
-      className="flex items-center gap-2 w-fit mt-6 p-2 space-x-3 rounded-md bg-btn-background hover:bg-btn-background-hover text-sm text-gray-800"
-    >
+    <div className="flex items-center gap-2 w-fit mt-6 p-2 space-x-3 rounded-md bg-btn-background hover:bg-btn-background-hover text-sm text-gray-800">
       Saber mais <IconPlus height={16} width={16} stroke={2} />
-    </Link>
-  </div>
+    </div>
+  </Link>
 )

@@ -49,7 +49,7 @@ const Tabs = ({
   tab: number
   tabs: string[]
 }) => (
-  <div className="my-8 flex gap-4 p-2 rounded-lg shadow-md bg-projectGray">
+  <div className="mb-8 flex gap-4 p-2 rounded-lg shadow-md bg-projectGray">
     {tabs.map((t, i) => (
       <button
         key={t}

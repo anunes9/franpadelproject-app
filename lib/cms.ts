@@ -1,4 +1,4 @@
-import { MesoProps } from "@/lib/types"
+import { AcademyProps, MesoProps } from "@/lib/types"
 
 export async function fetchGraphQL(query: string): Promise<any> {
   return fetch(
@@ -15,17 +15,64 @@ export async function fetchGraphQL(query: string): Promise<any> {
   ).then((response) => response.json())
 }
 
-export async function getMesos(): Promise<{ items: MesoProps[] }> {
+export async function getAllCourses(): Promise<{ items: AcademyProps[] }> {
+  const response = await fetchGraphQL(
+    `query {
+        academyCollection(where: { slug_exists: true }, order: level_ASC) {
+          items {
+            slug
+            title
+            level
+            description {
+              json
+            }
+            hero {
+              url
+            }
+          }
+        }
+      }`
+  )
+
+  return {
+    items: response.data?.academyCollection?.items,
+  }
+}
+
+export async function getAllMesos(): Promise<{ items: MesoProps[] }> {
   const response = await fetchGraphQL(
     `query {
         mesoCollection(where: { slug_exists: true }, order: title_ASC) {
           items {
             slug
-              title
-              concept
-              description {
-                json
-              }
+            title
+            concept
+            description {
+              json
+            }
+          }
+        }
+      }`
+  )
+
+  return {
+    items: response.data?.mesoCollection?.items,
+  }
+}
+
+export async function getMesosForLevel(
+  level: string
+): Promise<{ items: MesoProps[] }> {
+  const response = await fetchGraphQL(
+    `query {
+        mesoCollection(where: { level: "${level}" }, order: title_ASC) {
+          items {
+            slug
+            title
+            concept
+            description {
+              json
+            }
           }
         }
       }`

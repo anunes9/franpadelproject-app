@@ -4,7 +4,14 @@ import { LogoutButton } from "@/components/layout/LogoutButton"
 import { Navbar } from "@/components/layout/Navbar"
 import { UserButton } from "@/components/layout/UserButton"
 import { createClient } from "@/utils/supabase/server"
-import { IconCalendarStats, IconFiles, IconLogin } from "@tabler/icons-react"
+import {
+  IconCalendarStats,
+  IconFiles,
+  IconLogin,
+  IconShield,
+  IconShieldFilled,
+  IconShieldHalfFilled,
+} from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -39,6 +46,29 @@ export default async function AppLayout({
                 title="The Academy"
                 href="/the-academy"
                 icon={<IconCalendarStats width={24} height={24} stroke={1.5} />}
+              />
+
+              <Item
+                title="Beginner"
+                href="/the-academy/beginner"
+                icon={<IconShield width={24} height={24} stroke={1.5} />}
+                subItem
+              />
+
+              <Item
+                title="Intermediate"
+                href="/the-academy/intermediate"
+                icon={
+                  <IconShieldHalfFilled width={24} height={24} stroke={1.5} />
+                }
+                subItem
+              />
+
+              <Item
+                title="Advanced"
+                href="/the-academy/advanced"
+                icon={<IconShieldFilled width={24} height={24} stroke={1.5} />}
+                subItem
               />
 
               <Item
