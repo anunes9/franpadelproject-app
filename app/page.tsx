@@ -1,16 +1,8 @@
 import { Card } from "@/components/Card"
-// import { createClient } from "@/utils/supabase/server"
 import { IconBook2, IconCertificate } from "@tabler/icons-react"
 import Image from "next/image"
 
 export default async function Home() {
-  // const supabase = await createClient()
-
-  // const { data, error } = await supabase.auth.getUser()
-  // if (error || !data?.user) {
-  //   redirect("/login")
-  // }
-
   return (
     <div>
       <div className="grid gap-12 md:grid-cols-2 items-center mb-12">

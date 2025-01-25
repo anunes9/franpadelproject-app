@@ -10,6 +10,7 @@ import {
   IconMenu,
 } from "@tabler/icons-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useState } from "react"
 
 export const Navbar = ({
@@ -26,13 +27,15 @@ export const Navbar = ({
           <IconMenu width={24} height={24} stroke={1.5} />
         </button>
 
-        <Image
-          src="/fran-logo.svg"
-          alt="Fran Logo"
-          width={120}
-          height={48}
-          className="mx-auto"
-        />
+        <Link href="/">
+          <Image
+            src="/fran-logo.svg"
+            alt="Fran Logo"
+            width={120}
+            height={48}
+            className="mx-auto"
+          />
+        </Link>
 
         {user && <UserCircle user={user} />}
       </div>

@@ -6,6 +6,7 @@ import { UserButton } from "@/components/layout/UserButton"
 import { createClient } from "@/utils/supabase/server"
 import { IconCalendarStats, IconFiles, IconLogin } from "@tabler/icons-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export default async function AppLayout({
   children,
@@ -23,12 +24,14 @@ export default async function AppLayout({
         <div className="border-r border-r-foreground/10">
           <nav className="hidden lg:block h-[90vh]">
             <div className="py-4 flex items-center justify-center border-b border-b-foreground/10">
-              <Image
-                src="/fran-logo.svg"
-                alt="Fran Logo"
-                width={120}
-                height={48}
-              />
+              <Link href="/">
+                <Image
+                  src="/fran-logo.svg"
+                  alt="Fran Logo"
+                  width={120}
+                  height={48}
+                />
+              </Link>
             </div>
 
             <div className="flex flex-col gap-2 px-2 py-8">
