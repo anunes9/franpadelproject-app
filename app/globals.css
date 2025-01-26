@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  table {
+    @apply border border-gray-100 my-8;
+  }
+
+  tbody {
+    @apply bg-white;
+  }
+
+  th {
+    @apply p-2 border-b border-gray-100 bg-gray-50 font-bold;
+  }
+
+  td {
+    @apply p-2 border-b border-r border-gray-100 bg-white text-center;
+  }
+}
+
 :root {
   --background: 200 20% 98%;  /* #f9fafb */
   --btn-background: 200 10% 91%;  /* #e6e9ea */

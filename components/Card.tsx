@@ -23,12 +23,12 @@ export const Card = ({
     className="rounded-lg bg-white p-6 shadow hover:shadow-2xl hover:scale-105 transition-all duration-300"
     href={href}
   >
-    <div>
-      <div className="flex gap-2">
+    <div className="flex xl:flex-col gap-8">
+      <div className="flex items-center gap-2">
         {icon}
-        <h2 className="font-bold text-gray-900">{title}</h2>
+        <h2 className="w-max font-bold text-gray-900">{title}</h2>
       </div>
-      <h2 className="text-lg font-bold mt-2 text-gray-900">{concept}</h2>
+      <h2 className="text-lg font-bold xl:ml-8 text-gray-900">{concept}</h2>
     </div>
 
     <div className="mt-6">

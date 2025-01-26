@@ -16,18 +16,13 @@ export default async function Page({
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect("/login")
-  }
+  if (error || !data?.user) redirect("/login")
 
   const canAccess = await userCanAccessMeso(slug)
-  if (canAccess) return <Blocked />
+  if (!canAccess) return <Blocked />
 
   const { item } = await getMeso(slug)
-
-  if (!item) {
-    redirect("/the-academy")
-  }
+  if (!item) redirect("/the-academy")
 
   return (
     <>
@@ -40,9 +35,11 @@ export default async function Page({
         <h1 className="text-4xl font-bold">{item.concept}</h1>
       </div>
 
-      <span className="block text-gray-500 text-justify lg:max-w-[80%] mb-6">
-        {documentToReactComponents(item.description.json)}
-      </span>
+      {item.description && (
+        <span className="block text-gray-500 text-justify lg:max-w-[80%] mb-6">
+          {documentToReactComponents(item.description?.json)}
+        </span>
+      )}
 
       <TheAcademySlugComponent meso={item} />
     </>

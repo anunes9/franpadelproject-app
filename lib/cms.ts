@@ -94,15 +94,18 @@ export async function getMeso(slug: string): Promise<{ item: MesoProps }> {
             description {
               json
             }
-            detailsCollection {
-              items {
-                title
-                content {
-                  json
-                }
-              }
+            content {
+              json
             }
             exercisesCollection {
+              items {
+                url
+                title
+                width
+                height
+              }
+            }
+            videosCollection {
               items {
                 url
                 title

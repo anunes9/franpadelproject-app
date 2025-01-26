@@ -15,7 +15,9 @@ export default async function Page() {
       </span>
 
       <div className="grid md:grid-cols-2 items-start gap-8 pt-6">
-        <span>A planear certificações...</span>
+        <p className="text-xl font-medium text-gray-600 mb-6">
+          A planear certificações...
+        </p>
       </div>
     </>
   )

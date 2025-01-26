@@ -48,7 +48,7 @@ export const userCanAccessLevel = async (level: number) => {
   if (user.data.subscription_pack === "Advanced") return true
 
   // Intermediate users can access Beginner 1-8 and 9-15
-  if (user.data.subscription_pack === "Intermediate") return level === 2
+  if (user.data.subscription_pack === "Intermediate") return level <= 2
 
   // Beginner users can access Beginner 1-8 mesos
   if (user.data.subscription_pack === "Beginner") return level === 1

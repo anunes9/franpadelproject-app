@@ -1,17 +1,21 @@
 import { Document } from "@contentful/rich-text-types"
 
 export interface MesoProps {
-  description: { json: Document }
   slug: string
   title: string
   concept: string
-  detailsCollection: {
+  description: { json: Document }
+  content: { json: Document }
+  level: string
+  exercisesCollection: {
     items: {
+      url: string
       title: string
-      content: { json: Document }
+      width: number
+      height: number
     }[]
   }
-  exercisesCollection: {
+  videosCollection: {
     items: {
       url: string
       title: string
