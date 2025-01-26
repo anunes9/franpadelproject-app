@@ -5,6 +5,7 @@ import { IconBook2 } from "@tabler/icons-react"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { TheAcademySlugComponent } from "@/components/the-academy/SlugComponent"
 import { userCanAccessMeso } from "@/lib/permissions"
+import { Blocked } from "@/components/Blocked"
 
 export default async function Page({
   params,
@@ -20,17 +21,7 @@ export default async function Page({
   }
 
   const canAccess = await userCanAccessMeso(slug)
-  if (canAccess) {
-    return (
-      <div className="bg-red-500 p-4 rounded-lg text-white">
-        <h2 className="text-2xl font-bold mb-2">Acesso bloqueado</h2>
-        <p>
-          Não tem acesso a este conteúdo. Entre em contato com FranPadelProject
-          para obter mais informações.
-        </p>
-      </div>
-    )
-  }
+  if (canAccess) return <Blocked />
 
   const { item } = await getMeso(slug)
 

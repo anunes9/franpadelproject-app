@@ -36,3 +36,22 @@ export const userCanAccessMeso = async (meso: string) => {
 
   return false
 }
+
+export const userCanAccessLevel = async (level: number) => {
+  const supabase = await createClient()
+  const user = await supabase.from("users_app").select().single()
+
+  // User is not active
+  if (!user.data.active) return false
+
+  // Advances users can access all mesos
+  if (user.data.subscription_pack === "Advanced") return true
+
+  // Intermediate users can access Beginner 1-8 and 9-15
+  if (user.data.subscription_pack === "Intermediate") return level === 2
+
+  // Beginner users can access Beginner 1-8 mesos
+  if (user.data.subscription_pack === "Beginner") return level === 1
+
+  return false
+}
