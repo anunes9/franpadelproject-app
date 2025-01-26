@@ -32,3 +32,13 @@ export interface AcademyProps {
   description: { json: Document }
   hero: { url: string }
 }
+
+export interface UserProps {
+  email: string
+  name: string
+  avatar_url: string
+  club_name: string
+  club_banner_url: string
+  active: boolean
+  subscription_pack: string
+}
