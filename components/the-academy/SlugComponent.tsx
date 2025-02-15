@@ -7,17 +7,15 @@ import { MesoProps } from "@/lib/types"
 import { useState } from "react"
 import Image from "next/image"
 
+const TABS = ["Conceitos Teóricos", "Exercícios", "Correções Técnicas"]
+
 export const TheAcademySlugComponent = ({ meso }: { meso: MesoProps }) => {
   const [tab, setTab] = useState(0)
   const { content, exercisesCollection, videosCollection } = meso
 
   return (
     <>
-      <Tabs
-        tabs={["Conceitos Teóricos", "Exercícios", "Casos de Estudo"]}
-        onChange={setTab}
-        tab={tab}
-      />
+      <Tabs tabs={TABS} onChange={setTab} tab={tab} />
 
       <div className="md:px-4 lg:px-8">
         {tab === 0 && (
