@@ -14,9 +14,8 @@ export const LevelComponent = ({
     <>
       <div className="flex items-center gap-2 mb-6">
         <IconCalendarStats width={32} height={32} stroke={1.5} />
-        <h1 className="text-4xl font-bold underline">{`The Academy / ${
-          currentCourse!.title
-        }`}</h1>
+        <h1 className="text-4xl font-bold underline">{`The Academy / ${currentCourse!.title
+          }`}</h1>
       </div>
 
       {currentCourse && (
@@ -29,7 +28,7 @@ export const LevelComponent = ({
         />
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 items-start gap-8 pt-6">
+      <div className="grid grid-cols-1 items-start gap-8 pt-6">
         {items.map((meso) => (
           <Card
             key={meso.slug}

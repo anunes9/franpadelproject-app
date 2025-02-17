@@ -25,6 +25,21 @@ export interface MesoProps {
   }
 }
 
+export interface QuestionProps {
+  number: string
+  question: string
+  answers: string[]
+  percentage?: number
+  passed: boolean
+}
+
+export interface CertificationProps {
+  id: string
+  answers: Record<string, string>
+  percentage?: number
+  passed: boolean
+}
+
 export interface AcademyProps {
   slug: string
   title: string

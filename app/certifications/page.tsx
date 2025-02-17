@@ -1,4 +1,14 @@
+import { CourseCard } from "@/components/CourseCard"
 import { IconCertificate } from "@tabler/icons-react"
+
+const BEGINNER = {
+  slug: 'beginner',
+  title: 'Beginner',
+  level: 1,
+  hero: {
+    url: 'https://images.ctfassets.net/rqt5vjnpqy42/4YNCPWg8W8sMCeArZTzteM/a6fb70d48bb223d56a85545cbf731eaa/methodology-white.png'
+  }
+}
 
 export default async function Page() {
   return (
@@ -15,9 +25,11 @@ export default async function Page() {
       </span>
 
       <div className="grid md:grid-cols-2 items-start gap-8 pt-6">
-        <p className="text-xl font-medium text-gray-600 mb-6">
-          A planear certificações...
-        </p>
+        <CourseCard
+          title={BEGINNER.title}
+          href={`/certifications/${BEGINNER.slug}`}
+          image={BEGINNER.hero.url}
+        />
       </div>
     </>
   )

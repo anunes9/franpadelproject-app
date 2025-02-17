@@ -1,6 +1,6 @@
-import { AcademyProps, MesoProps } from "@/lib/types"
+import { AcademyProps, MesoProps, QuestionProps } from "@/lib/types"
 
-export async function fetchGraphQL(query: string): Promise<any> {
+export async function fetchGraphQL(query: string, tags: string[]): Promise<any> {
   return fetch(
     `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
     {
@@ -10,7 +10,7 @@ export async function fetchGraphQL(query: string): Promise<any> {
         Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
       },
       body: JSON.stringify({ query }),
-      next: { tags: ["destination"] },
+      next: { tags },
     }
   ).then((response) => response.json())
 }
@@ -31,7 +31,8 @@ export async function getAllCourses(): Promise<{ items: AcademyProps[] }> {
             }
           }
         }
-      }`
+      }`,
+    ['courses']
   )
 
   return {
@@ -52,7 +53,8 @@ export async function getAllMesos(): Promise<{ items: MesoProps[] }> {
             }
           }
         }
-      }`
+      }`,
+    ['mesos']
   )
 
   return {
@@ -75,7 +77,8 @@ export async function getMesosForLevel(
             }
           }
         }
-      }`
+      }`,
+    ['mesos']
   )
 
   return {
@@ -115,10 +118,30 @@ export async function getMeso(slug: string): Promise<{ item: MesoProps }> {
             }
           }
         }
-      }`
+      }`,
+    ['mesos']
   )
 
   return {
     item: response.data?.mesoCollection?.items[0],
+  }
+}
+
+export async function getQuestions(): Promise<{ items: QuestionProps[] }> {
+  const response = await fetchGraphQL(
+    `query {
+        questionCollection(order: number_ASC) {
+          items {
+            number
+            question
+            answers
+          }
+        }
+      }`,
+    ['questions']
+  )
+
+  return {
+    items: response.data?.questionCollection?.items,
   }
 }

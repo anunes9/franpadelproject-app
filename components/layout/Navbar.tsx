@@ -46,7 +46,7 @@ export const Navbar = ({
       <div
         className={`${
           open ? "flex" : "hidden"
-        } border-b border-b-foreground/10 border-r border-r-foreground/10 flex-col gap-2 p-2 w-1/2`}
+        } border-b border-b-foreground/10 flex-col gap-2 p-2`}
       >
         <Item
           title="The Academy"
