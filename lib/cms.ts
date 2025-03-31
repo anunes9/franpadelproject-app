@@ -1,6 +1,9 @@
 import { AcademyProps, MesoProps, QuestionProps } from "@/lib/types"
 
-export async function fetchGraphQL(query: string, tags: string[]): Promise<any> {
+export async function fetchGraphQL(
+  query: string,
+  tags: string[]
+): Promise<any> {
   return fetch(
     `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
     {
@@ -32,7 +35,7 @@ export async function getAllCourses(): Promise<{ items: AcademyProps[] }> {
           }
         }
       }`,
-    ['courses']
+    ["courses"]
   )
 
   return {
@@ -48,13 +51,14 @@ export async function getAllMesos(): Promise<{ items: MesoProps[] }> {
             slug
             title
             concept
+            level
             description {
               json
             }
           }
         }
       }`,
-    ['mesos']
+    ["mesos"]
   )
 
   return {
@@ -78,7 +82,7 @@ export async function getMesosForLevel(
           }
         }
       }`,
-    ['mesos']
+    ["mesos"]
   )
 
   return {
@@ -119,7 +123,7 @@ export async function getMeso(slug: string): Promise<{ item: MesoProps }> {
           }
         }
       }`,
-    ['mesos']
+    ["mesos"]
   )
 
   return {
@@ -138,7 +142,7 @@ export async function getQuestions(): Promise<{ items: QuestionProps[] }> {
           }
         }
       }`,
-    ['questions']
+    ["questions"]
   )
 
   return {
