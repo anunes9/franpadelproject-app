@@ -1,12 +1,14 @@
-import { IconLogout } from "@tabler/icons-react"
-import { logout } from "@/utils/supabase/actions"
+'use client'
+
+import { IconLogout } from '@tabler/icons-react'
+import { logout } from '@/app/auth/actions'
 
 export const LogoutButton = () => (
   <button
-    className="flex items-center p-2 space-x-3 rounded-md hover:bg-btn-background-hover text-sm text-gray-800 w-full"
     onClick={logout}
+    className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
   >
-    <IconLogout width={24} height={24} />
-    <span>Sair</span>
+    <IconLogout width={16} height={16} />
+    <span>Logout</span>
   </button>
 )

@@ -1,22 +1,22 @@
-import { createClient } from "@/utils/supabase/server"
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 
 export const userCanAccessMeso = async (meso: string) => {
-  const supabase = await createClient()
+  const supabase = await createSupabaseServerClient()
   // Check User session
   // const { data, error } = await supabase.auth.getUser()
   // if (error || !data?.user) return false
 
-  const user = await supabase.from("users_app").select().single()
+  const user = await supabase.from('users_app').select().single()
 
   // User is not active
   if (!user.data.active) return false
 
   // Advances users can access all mesos
-  if (user.data.subscription_pack === "Advanced") return true
+  if (user.data.subscription_pack === 'Advanced') return true
 
   // Intermediate users can access Beginner 1-8 and 9-15
-  if (user.data.subscription_pack === "Intermediate") {
-    const splitArray = meso.split("mesociclo-")
+  if (user.data.subscription_pack === 'Intermediate') {
+    const splitArray = meso.split('mesociclo-')
     if (splitArray.length === 2) {
       const id = parseInt(splitArray[1])
       return id <= 15
@@ -25,8 +25,8 @@ export const userCanAccessMeso = async (meso: string) => {
   }
 
   // Beginner users can access Beginner 1-8 mesos
-  if (user.data.subscription_pack === "Beginner") {
-    const splitArray = meso.split("mesociclo-")
+  if (user.data.subscription_pack === 'Beginner') {
+    const splitArray = meso.split('mesociclo-')
     if (splitArray.length === 2) {
       const id = parseInt(splitArray[1])
       return id <= 8
@@ -38,20 +38,20 @@ export const userCanAccessMeso = async (meso: string) => {
 }
 
 export const userCanAccessLevel = async (level: number) => {
-  const supabase = await createClient()
-  const user = await supabase.from("users_app").select().single()
+  const supabase = await createSupabaseServerClient()
+  const user = await supabase.from('users_app').select().single()
 
   // User is not active
   if (!user.data.active) return false
 
   // Advances users can access all mesos
-  if (user.data.subscription_pack === "Advanced") return true
+  if (user.data.subscription_pack === 'Advanced') return true
 
   // Intermediate users can access Beginner 1-8 and 9-15
-  if (user.data.subscription_pack === "Intermediate") return level <= 2
+  if (user.data.subscription_pack === 'Intermediate') return level <= 2
 
   // Beginner users can access Beginner 1-8 mesos
-  if (user.data.subscription_pack === "Beginner") return level === 1
+  if (user.data.subscription_pack === 'Beginner') return level === 1
 
   return false
 }

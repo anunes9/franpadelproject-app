@@ -1,28 +1,24 @@
-import { redirect } from "next/navigation"
-import { createClient } from "@/utils/supabase/server"
-import { getMeso } from "@/lib/cms"
-import { IconBook2 } from "@tabler/icons-react"
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
-import { TheAcademySlugComponent } from "@/components/the-academy/SlugComponent"
-import { userCanAccessMeso } from "@/lib/permissions"
-import { Blocked } from "@/components/Blocked"
+import { redirect } from 'next/navigation'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
+import { getMeso } from '@/lib/cms'
+import { IconBook2 } from '@tabler/icons-react'
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
+import { TheAcademySlugComponent } from '@/components/the-academy/SlugComponent'
+import { userCanAccessMeso } from '@/lib/permissions'
+import { Blocked } from '@/components/Blocked'
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = await createSupabaseServerClient()
 
   const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) redirect("/login")
+  if (error || !data?.user) redirect('/login')
 
   const canAccess = await userCanAccessMeso(slug)
   if (!canAccess) return <Blocked />
 
   const { item } = await getMeso(slug)
-  if (!item) redirect("/the-academy")
+  if (!item) redirect('/the-academy')
 
   return (
     <>

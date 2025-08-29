@@ -1,16 +1,16 @@
-import { getAllCourses, getMesosForLevel } from "@/lib/cms"
-import { createClient } from "@/utils/supabase/server"
-import { redirect } from "next/navigation"
-import { userCanAccessLevel } from "@/lib/permissions"
-import { Blocked } from "@/components/Blocked"
-import { LevelComponent } from "@/components/the-academy/LevelComponent"
+import { getAllCourses, getMesosForLevel } from '@/lib/cms'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import { userCanAccessLevel } from '@/lib/permissions'
+import { Blocked } from '@/components/Blocked'
+import { LevelComponent } from '@/components/the-academy/LevelComponent'
 
 const level = 1
 
 export default async function Page() {
-  const supabase = await createClient()
+  const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) redirect("/login")
+  if (error || !data?.user) redirect('/login')
 
   const canAccess = await userCanAccessLevel(level)
   if (!canAccess) return <Blocked />

@@ -1,5 +1,5 @@
-import { CertificationProps } from "@/lib/types"
-import { createClient } from "@/utils/supabase/server"
+import { CertificationProps } from '@/lib/types'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 
 export const createCertification = async ({
   formData,
@@ -10,14 +10,14 @@ export const createCertification = async ({
   userId: string
   prevCertification: CertificationProps | null
 }) => {
-  const supabase = await createClient()
+  const supabase = await createSupabaseServerClient()
 
   // update
   if (prevCertification) {
     const { data, error } = await supabase
-      .from("certifications_app")
+      .from('certifications_app')
       .update([{ answers: formData }])
-      .eq("id", prevCertification.id)
+      .eq('id', prevCertification.id)
       .select()
 
     console.log(data, error)
@@ -25,7 +25,7 @@ export const createCertification = async ({
     return { data, error }
   } else {
     const { data, error } = await supabase
-      .from("certifications_app")
+      .from('certifications_app')
       .insert([{ user_id: userId, answers: formData, level: 1 }])
       .select()
 
@@ -33,19 +33,9 @@ export const createCertification = async ({
   }
 }
 
-export const getCertification = async ({
-  level,
-  userId,
-}: {
-  level: number
-  userId: string
-}) => {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from("certifications_app")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("level", level)
+export const getCertification = async ({ level, userId }: { level: number; userId: string }) => {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase.from('certifications_app').select('*').eq('user_id', userId).eq('level', level)
 
   let certification = null
   if (data && data.length > 0) {

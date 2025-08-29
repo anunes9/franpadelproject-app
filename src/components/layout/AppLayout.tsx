@@ -1,9 +1,9 @@
-import { Footer } from "@/components/layout/Footer"
-import { Item } from "@/components/layout/Item"
-import { LogoutButton } from "@/components/layout/LogoutButton"
-import { Navbar } from "@/components/layout/Navbar"
-import { UserButton } from "@/components/layout/UserButton"
-import { createClient } from "@/utils/supabase/server"
+import { Footer } from '@/components/layout/Footer'
+import { Item } from '@/components/layout/Item'
+import { LogoutButton } from '@/components/layout/LogoutButton'
+import { Navbar } from '@/components/layout/Navbar'
+import { UserButton } from '@/components/layout/UserButton'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 import {
   IconCalendarStats,
   IconCertificate,
@@ -11,17 +11,17 @@ import {
   IconShield,
   IconShieldFilled,
   IconShieldHalfFilled,
-} from "@tabler/icons-react"
-import Image from "next/image"
-import Link from "next/link"
+} from '@tabler/icons-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const supabase = await createClient()
-  const user = await supabase.from("users_app").select().single()
+  const supabase = await createSupabaseServerClient()
+  const user = await supabase.from('users_app').select().single()
 
   return (
     <>
@@ -32,12 +32,7 @@ export default async function AppLayout({
           <nav className="hidden lg:block h-[90vh]">
             <div className="py-4 flex items-center justify-center border-b border-b-foreground/10">
               <Link href="/">
-                <Image
-                  src="/fran-logo.svg"
-                  alt="Fran Logo"
-                  width={120}
-                  height={48}
-                />
+                <Image src="/fran-logo.svg" alt="Fran Logo" width={120} height={48} />
               </Link>
             </div>
 
@@ -58,9 +53,7 @@ export default async function AppLayout({
               <Item
                 title="Intermediate"
                 href="/the-academy/intermediate"
-                icon={
-                  <IconShieldHalfFilled width={24} height={24} stroke={1.5} />
-                }
+                icon={<IconShieldHalfFilled width={24} height={24} stroke={1.5} />}
                 subItem
               />
 
@@ -80,11 +73,7 @@ export default async function AppLayout({
               {user.data ? (
                 <LogoutButton />
               ) : (
-                <Item
-                  title="Entrar"
-                  href="/login"
-                  icon={<IconLogin width={24} height={24} stroke={1.5} />}
-                />
+                <Item title="Entrar" href="/login" icon={<IconLogin width={24} height={24} stroke={1.5} />} />
               )}
             </div>
 
