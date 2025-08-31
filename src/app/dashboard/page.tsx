@@ -1,9 +1,33 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { BookOpen, Dumbbell, Award, User, LogOut } from "lucide-react"
-import Link from "next/link"
+'use client'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { BookOpen, Dumbbell, Award, User, LogOut } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function DashboardPage() {
+  const router = useRouter()
+  const { signOut } = useAuth()
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await signOut()
+
+      if (error) {
+        console.error('Logout error:', error)
+        return
+      }
+
+      // Redirect to home page after successful logout
+      router.push('/')
+      router.refresh()
+    } catch (err) {
+      console.error('Logout error:', err)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -25,12 +49,10 @@ export default function DashboardPage() {
                   Profile
                 </Link>
               </Button>
-              <Link href="/">
-                <Button variant="ghost" size="sm">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </Button>
-              </Link>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
             </div>
           </div>
         </div>
@@ -70,7 +92,7 @@ export default function DashboardPage() {
                   <span className="text-sm font-medium text-primary">30% Complete</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-2 mb-4">
-                  <div className="bg-primary h-2 rounded-full" style={{ width: "30%" }}></div>
+                  <div className="bg-primary h-2 rounded-full" style={{ width: '30%' }}></div>
                 </div>
                 <Button className="w-full">Continue Course</Button>
               </CardContent>
