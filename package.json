@@ -6,7 +6,17 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "get-meso": "tsx scripts/get-meso-entries.ts",
+    "get-meso:export": "tsx scripts/get-meso-entries.ts --export",
+    "get-beginner-meso": "tsx scripts/get-beginner-meso-entries.ts",
+    "get-entries": "tsx scripts/get-contentful-entries.ts",
+    "list-content-types": "tsx scripts/get-contentful-entries.ts --list-types",
+    "create-modules": "tsx scripts/create-modules-content.ts",
+    "create-modules:dry-run": "tsx scripts/create-modules-content.ts --dry-run",
+    "test-contentful": "tsx scripts/test-contentful-connection.ts",
+    "debug-tokens": "tsx scripts/debug-tokens.ts",
+    "test-token": "tsx scripts/test-token-directly.ts"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.0.1",
@@ -21,6 +31,7 @@
     "@tabler/icons-react": "^3.34.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "contentful-management": "^11.54.4",
     "lucide-react": "^0.542.0",
     "next": "^15.5.2",
     "react": "^19.0.0",
@@ -34,10 +45,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "^15.5.2",
     "postcss": "^8",
     "tailwindcss": "^4.1.12",
+    "tsx": "^4.20.5",
     "tw-animate-css": "^1.3.7",
     "typescript": "^5"
   }
