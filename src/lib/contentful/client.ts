@@ -7,8 +7,14 @@ let contentfulManagement: any = null
 // Initialize the client (call this after environment variables are loaded)
 export const initializeContentfulClient = () => {
   validateContentfulConfig()
+  const config = getContentfulConfig()
+
+  if (!config.managementToken) {
+    throw new Error('CONTENTFUL_MANAGEMENT_TOKEN is required')
+  }
+
   contentfulManagement = createClient({
-    accessToken: getContentfulConfig().managementToken,
+    accessToken: config.managementToken,
   })
   return contentfulManagement
 }
