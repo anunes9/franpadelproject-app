@@ -1,163 +1,239 @@
-# Contentful Management API Integration
+# Contentful Integration
 
-This folder contains utilities for managing content on Contentful using the contentful-management.js library.
+This directory contains the Contentful integration for the Fran Padel Project app. We use both the **Management API** (for content creation/updates) and **Delivery API** (for reading published content) to provide a complete content management solution.
 
-## Setup
+## 🏗️ Architecture
 
-1. Install the required dependency:
+### Management API (`contentful-management`)
+
+- **Purpose**: Create, update, and manage content
+- **Use cases**: Admin tools, content seeding, bulk operations
+- **Files**: `client.ts`, `entries.ts`, `assets.ts`, `content-types.ts`
+
+### Delivery API (`contentful`)
+
+- **Purpose**: Read published content efficiently
+- **Use cases**: App content display, user-facing features
+- **Files**: `delivery-client.ts`, `modules-delivery.ts`
+
+## 📋 Environment Variables
+
+Add these to your `.env.local` file:
 
 ```bash
-npm install contentful-management
+# Required for both APIs
+CONTENTFUL_SPACE_ID=your_space_id_here
+
+# Required for Management API (content creation/updates)
+CONTENTFUL_MANAGEMENT_TOKEN=your_management_token_here
+
+# Required for Delivery API (content reading)
+CONTENTFUL_DELIVERY_TOKEN=your_delivery_token_here
+
+# Optional: Environment (defaults to 'master')
+CONTENTFUL_ENVIRONMENT_ID=master
 ```
 
-2. Set up environment variables in your `.env.local` file:
+## 🚀 Quick Start
 
-```env
-CONTENTFUL_SPACE_ID=your_space_id
-CONTENTFUL_MANAGEMENT_TOKEN=your_management_token
+### 1. Install Dependencies
+
+```bash
+npm install contentful contentful-management
 ```
 
-## Files Structure
+### 2. Set Up Environment Variables
 
-- `client.ts` - Contentful management client configuration
-- `entries.ts` - Functions for managing content entries
-- `assets.ts` - Functions for managing assets (images, files)
-- `content-types.ts` - Functions for managing content types
-- `types.ts` - TypeScript type definitions
-- `examples.ts` - Example usage patterns
-- `index.ts` - Main export file
+Get your tokens from the Contentful web app:
 
-## Usage
+- **Space ID**: Found in Settings → General settings
+- **Management Token**: Found in Settings → API keys → Content management tokens
+- **Delivery Token**: Found in Settings → API keys → Content delivery tokens
 
-### Basic Setup
+### 3. Test the Integration
+
+```bash
+# Test Management API
+npm run test-contentful
+
+# Test Delivery API
+npm run test-delivery
+```
+
+## 📚 Usage Examples
+
+### Reading Content (Delivery API)
 
 ```typescript
-import { createEntry, getEntry, updateEntry, deleteEntry } from '@/lib/contentful'
+import { getBeginnerModules, getModuleByExternalId } from '@/lib/contentful/modules-delivery'
+
+// Get all beginner modules
+const modules = await getBeginnerModules()
+
+// Get a specific module
+const module = await getModuleByExternalId('module-1')
 ```
 
-### Creating Content Types
+### Creating Content (Management API)
 
 ```typescript
-import { createContentType } from '@/lib/contentful'
+import { createEntry } from '@/lib/contentful/entries'
 
-const blogPostFields = [
-  {
-    id: 'title',
-    name: 'Title',
-    type: 'Text',
-    required: true,
-    localized: true,
-  },
-  {
-    id: 'content',
-    name: 'Content',
-    type: 'RichText',
-    required: true,
-    localized: true,
-  },
-]
-
-await createContentType('blogPost', 'Blog Post', 'A blog post', blogPostFields)
+// Create a new module
+const newModule = await createEntry('modules', {
+  title: { 'en-US': 'Introduction to Padel' },
+  description: { 'en-US': 'Learn the basics of padel' },
+  level: { 'en-US': 'Beginner' },
+  externalId: { 'en-US': '1' },
+  duration: { 'en-US': '30' },
+  topics: { 'en-US': ['Basics', 'Rules', 'Equipment'] },
+})
 ```
 
-### Creating Entries
+## 🔧 Available Functions
+
+### Delivery API Functions
+
+#### `modules-delivery.ts`
+
+- `getBeginnerModules()` - Get all beginner-level modules
+- `getModuleByExternalId(externalId)` - Get a specific module by external ID
+- `getAllModules()` - Get all modules sorted by level
+- `getModulesByLevel(level)` - Get modules by specific level
+
+#### `delivery-client.ts`
+
+- `getEntries(query)` - Get entries with optional query parameters
+- `getEntry(entryId)` - Get a single entry by ID
+- `getAssets(query)` - Get assets with optional query parameters
+- `getAsset(assetId)` - Get a single asset by ID
+- `sync(options)` - Sync content for incremental updates
+
+### Management API Functions
+
+#### `entries.ts`
+
+- `createEntry(contentTypeId, fields)` - Create a new entry
+- `getEntry(entryId)` - Get an entry by ID
+- `updateEntry(entryId, fields)` - Update an entry
+- `deleteEntry(entryId)` - Delete an entry
+- `getEntriesByType(contentTypeId)` - Get all entries of a type
+
+#### `assets.ts`
+
+- `createAsset(fields)` - Create a new asset
+- `getAsset(assetId)` - Get an asset by ID
+- `updateAsset(assetId, fields)` - Update an asset
+- `deleteAsset(assetId)` - Delete an asset
+- `getAllAssets()` - Get all assets
+
+## 📖 Content Types
+
+### Module Content Type
+
+The app expects a content type called `modules` with these fields:
 
 ```typescript
-import { createEntry } from '@/lib/contentful'
-
-const entryFields = {
-  title: {
-    'en-US': 'My Blog Post',
-  },
-  content: {
-    'en-US': {
-      nodeType: 'document',
-      data: {},
-      content: [
-        {
-          nodeType: 'paragraph',
-          data: {},
-          content: [
-            {
-              nodeType: 'text',
-              value: 'This is my blog post content.',
-              marks: [],
-              data: {},
-            },
-          ],
-        },
-      ],
-    },
-  },
+interface Module {
+  id: string
+  externalId: string
+  title: string
+  description: string
+  duration: string
+  level: string
+  topics: string[]
+  content?: any
+  createdAt: string
+  updatedAt: string
+  publishedAt?: string
+  isPublished: boolean
 }
-
-const entry = await createEntry('blogPost', entryFields)
 ```
 
-### Managing Assets
+## 🔍 Query Examples
+
+### Delivery API Queries
 
 ```typescript
-import { createAsset } from '@/lib/contentful'
+// Get all published modules
+const allModules = await getEntries({
+  content_type: 'modules',
+  include: 2,
+})
 
-// Upload an image
-const asset = await createAsset(
-  imageBuffer, // Buffer or file path
-  'my-image.jpg',
-  'image/jpeg'
-)
+// Get beginner modules only
+const beginnerModules = await getEntries({
+  content_type: 'modules',
+  'fields.level': 'Beginner',
+  include: 2,
+})
+
+// Get a specific module by external ID
+const module = await getEntries({
+  content_type: 'modules',
+  'fields.externalId': '1',
+  limit: 1,
+})
 ```
 
-### Getting Entries
+## 🛠️ Scripts
 
-```typescript
-import { getEntry, getEntriesByType } from '@/lib/contentful'
+### Available NPM Scripts
 
-// Get a specific entry
-const entry = await getEntry('entry-id')
+```bash
+# Test connections
+npm run test-contentful    # Test Management API
+npm run test-delivery      # Test Delivery API
 
-// Get all entries of a content type
-const blogPosts = await getEntriesByType('blogPost')
+# Content management
+npm run get-meso           # Get module entries
+npm run get-beginner-meso  # Get beginner modules
+npm run create-modules     # Create sample modules
+npm run list-content-types # List available content types
 ```
 
-### Updating Entries
+## 🔒 Security Notes
 
-```typescript
-import { updateEntry } from '@/lib/contentful'
+- **Management Token**: Keep this secure - it has full access to create/update content
+- **Delivery Token**: This is safe to use in client-side code - it only reads published content
+- **Environment Variables**: Never commit tokens to version control
+- **Rate Limiting**: Be mindful of API rate limits, especially with the Management API
 
-const updatedFields = {
-  title: {
-    'en-US': 'Updated Title',
-  },
-}
+## 🐛 Troubleshooting
 
-await updateEntry('entry-id', updatedFields)
+### Common Issues
+
+1. **"CONTENTFUL_DELIVERY_TOKEN is required"**
+
+   - Make sure you've set the delivery token in your environment variables
+   - Verify the token has the correct permissions
+
+2. **"No modules found"**
+
+   - Check that your content type is named `modules`
+   - Ensure entries are published
+   - Verify the content type has the expected fields
+
+3. **"Unable to resolve module 'http'"**
+   - This is a Node.js vs browser environment issue
+   - The library automatically handles this, but you can force browser version:
+   ```typescript
+   const { createClient } = require('contentful/dist/contentful.browser.min.js')
+   ```
+
+### Debug Commands
+
+```bash
+# Debug environment variables
+npm run debug-tokens
+
+# Test token directly
+npm run test-token
 ```
 
-### Deleting Entries
+## 📚 Additional Resources
 
-```typescript
-import { deleteEntry } from '@/lib/contentful'
-
-await deleteEntry('entry-id')
-```
-
-## Environment Variables
-
-Make sure to set these environment variables:
-
-- `CONTENTFUL_SPACE_ID`: Your Contentful space ID
-- `CONTENTFUL_MANAGEMENT_TOKEN`: Your Contentful Management API token
-
-## Important Notes
-
-1. **Management Token**: The management token has full access to your Contentful space. Keep it secure and never expose it in client-side code.
-
-2. **Publishing**: All create and update operations automatically publish the content. If you need draft versions, modify the functions accordingly.
-
-3. **Error Handling**: Add proper error handling in your application code when using these functions.
-
-4. **Rate Limits**: Be aware of Contentful's API rate limits when making multiple requests.
-
-## Examples
-
-See `examples.ts` for complete examples of creating content types, entries, and managing content for a padel course application.
+- [Contentful JavaScript SDK Documentation](https://github.com/contentful/contentful.js)
+- [Contentful Management API Documentation](https://github.com/contentful/contentful-management.js)
+- [Contentful REST API Reference](https://www.contentful.com/developers/docs/references/content-delivery-api/)
+- [Contentful Query Parameters](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters)

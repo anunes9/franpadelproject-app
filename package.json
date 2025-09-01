@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "NODE_OPTIONS='--no-deprecation' next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -15,6 +15,7 @@
     "create-modules": "tsx scripts/create-modules-content.ts",
     "create-modules:dry-run": "tsx scripts/create-modules-content.ts --dry-run",
     "test-contentful": "tsx scripts/test-contentful-connection.ts",
+    "test-delivery": "tsx scripts/test-delivery-api.ts",
     "debug-tokens": "tsx scripts/debug-tokens.ts",
     "test-token": "tsx scripts/test-token-directly.ts"
   },
@@ -31,6 +32,7 @@
     "@tabler/icons-react": "^3.34.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "contentful": "^11.7.15",
     "contentful-management": "^11.54.4",
     "lucide-react": "^0.542.0",
     "next": "^15.5.2",

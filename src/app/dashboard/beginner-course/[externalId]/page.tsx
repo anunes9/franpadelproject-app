@@ -4,16 +4,16 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Play, Clock, BookOpen, Award } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getModuleByExternalId } from '@/lib/contentful/modules'
+import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 
 interface ModulePageProps {
-  params: {
+  params: Promise<{
     externalId: string
-  }
+  }>
 }
 
 export default async function ModulePage({ params }: ModulePageProps) {
-  const { externalId } = params
+  const { externalId } = await params
 
   // Fetch module data from Contentful
   const module = await getModuleByExternalId(externalId)

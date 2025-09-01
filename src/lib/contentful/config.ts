@@ -11,7 +11,7 @@ export const getContentfulConfig = (environmentId?: string) => ({
   spaceId: process.env.CONTENTFUL_SPACE_ID,
   managementToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN,
   deliveryToken: process.env.CONTENTFUL_DELIVERY_TOKEN,
-  environmentId: environmentId || process.env.CONTENTFUL_ENVIRONMENT_ID || 'master',
+  environment: environmentId || process.env.CONTENTFUL_ENVIRONMENT_ID || 'master',
 })
 
 // Validate required environment variables
@@ -24,5 +24,18 @@ export const validateContentfulConfig = () => {
 
   if (!config.managementToken) {
     throw new Error('CONTENTFUL_MANAGEMENT_TOKEN environment variable is required')
+  }
+}
+
+// Validate delivery API configuration
+export const validateDeliveryConfig = () => {
+  const config = getContentfulConfig()
+
+  if (!config.spaceId) {
+    throw new Error('CONTENTFUL_SPACE_ID environment variable is required')
+  }
+
+  if (!config.deliveryToken) {
+    throw new Error('CONTENTFUL_DELIVERY_TOKEN environment variable is required')
   }
 }

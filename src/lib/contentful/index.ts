@@ -5,6 +5,11 @@ export * from './assets'
 export * from './content-types'
 export * from './config'
 
+// Export delivery API functions
+export * from './delivery-client'
+export * from './modules-delivery'
+export * from './rich-text-renderer'
+
 // Re-export commonly used functions for convenience
 export { createEntry, getEntry, updateEntry, deleteEntry, getEntriesByType } from './entries'
 
