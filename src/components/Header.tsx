@@ -5,10 +5,11 @@ import { User, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
+import Image from 'next/image'
 
 export default function Header() {
   const router = useRouter()
-  const { signOut } = useAuth()
+  const { user, signOut } = useAuth()
 
   const handleLogout = async () => {
     try {
@@ -32,17 +33,23 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
-            <Link href="/dashboard" className="text-2xl font-bold text-foreground hover:text-primary transition-colors">
-              Padel Academy
+            <Link
+              href="/dashboard"
+              className="text-2xl font-bold text-foreground hover:text-primary transition-colors"
+              prefetch={false}
+            >
+              <Image src="/fran-methodology-logo.png" alt="Fran Methodology" width={160} height={160} />
             </Link>
           </div>
+
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard/profile">
+              <Link href="/dashboard/profile" prefetch={false}>
                 <User className="h-4 w-4 mr-2" />
-                Profile
+                {user ? user.email : 'Profile'}
               </Link>
             </Button>
+
             <Button variant="ghost" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Logout
