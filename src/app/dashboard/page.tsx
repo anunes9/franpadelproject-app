@@ -18,7 +18,7 @@ export default function DashboardPage() {
       {/* Dashboard Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Beginner Course Card */}
-        <Link href="/dashboard/beginner-course">
+        <Link href="/dashboard/beginner">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
             <CardHeader>
               <div className="flex items-center space-x-3">
