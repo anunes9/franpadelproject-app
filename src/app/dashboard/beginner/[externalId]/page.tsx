@@ -7,6 +7,11 @@ import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
+import dynamic from 'next/dynamic.js'
+
+const PDFViewer = dynamic(() => import('@/components/PDFViewer'), {
+  ssr: false,
+})
 
 interface ModulePageProps {
   params: Promise<{
@@ -75,7 +80,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
           {module.content ? (
             <MarkdownRenderer content={module.content} className="px-4" />
           ) : (
-            <p className="text-muted-foreground leading-relaxed">Em Desenvolvimento</p>
+            <p className="text-muted-foreground leading-relaxed">Em desenvolvimento</p>
           )}
         </Field>
 
@@ -104,6 +109,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
                 {document.fields.file.fileName}
               </Button>
             ))}
+
+            <PDFViewer url={module.documents?.[0].fields.file.url ?? ''} />
           </div>
         </Field>
 

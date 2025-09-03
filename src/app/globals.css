@@ -289,3 +289,8 @@
 .prose td {
   @apply p-2 border-b border-r border-border bg-background text-center text-muted-foreground;
 }
+
+/* PDF Viewer Modal Styles */
+.react-pdf__Page__canvas {
+  @apply !w-full mb-4 !h-auto;
+}
