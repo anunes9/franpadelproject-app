@@ -4,9 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-project-blue: #122c49;
-  --color-project-green: #6bb8a4;
-  --color-project-gray: #f4f4f4;
+  --color-p-blue: #122c49;
+  --color-p-green: #6bb8a4;
+  --color-p-green-light: #e6f2ef;
+  --color-p-gray: #f4f4f4;
 
   --color-green-50: #f3faf7;
   --color-green-100: #d7f0e8;

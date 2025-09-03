@@ -14,6 +14,8 @@
     "list-content-types": "tsx scripts/get-contentful-entries.ts --list-types",
     "create-modules": "tsx scripts/create-modules-content.ts",
     "create-modules:dry-run": "tsx scripts/create-modules-content.ts --dry-run",
+    "update-module-content": "tsx scripts/update-module-content.ts",
+    "update-module-content:dry-run": "tsx scripts/update-module-content.ts --dry-run",
     "test-contentful": "tsx scripts/test-contentful-connection.ts",
     "test-delivery": "tsx scripts/test-delivery-api.ts",
     "debug-tokens": "tsx scripts/debug-tokens.ts",

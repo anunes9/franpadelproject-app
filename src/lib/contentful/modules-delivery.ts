@@ -9,7 +9,17 @@ export interface Module {
   duration: string
   level: string
   topics: string[]
-  content?: any
+  content?: string // Markdown
+  documents?: {
+    fields: {
+      file: {
+        url: string
+        details: { size: number }
+        fileName: string
+        contentType: string
+      }
+    }
+  }[]
   createdAt: string
   updatedAt: string
   publishedAt?: string
@@ -32,6 +42,7 @@ export async function getBeginnerModules(): Promise<Module[]> {
       'fields.level': 'Beginner',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
+      locale: 'pt',
     })
 
     if (entries.items.length === 0) {
@@ -102,6 +113,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       'fields.externalId': externalId,
       include: 2, // Include 2 levels of linked entries
       limit: 1,
+      locale: 'pt',
     })
 
     if (entries.items.length === 0) {
@@ -117,6 +129,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const duration = fields.duration || 'Unknown'
     const topics = fields.topics || []
     const content = fields.content || null
+    const documents = fields.documents || []
 
     const module: Module = {
       id: entry.sys.id,
@@ -127,6 +140,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       level,
       topics: Array.isArray(topics) ? topics : [],
       content,
+      documents,
       createdAt: entry.sys.createdAt,
       updatedAt: entry.sys.updatedAt,
       publishedAt: entry.sys.publishedAt,
@@ -156,6 +170,7 @@ export async function getAllModules(): Promise<Module[]> {
       content_type: 'modules',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
+      locale: 'pt',
     })
 
     if (entries.items.length === 0) {
@@ -235,6 +250,7 @@ export async function getModulesByLevel(level: string): Promise<Module[]> {
       'fields.level': level,
       include: 2, // Include 2 levels of linked entries
       limit: 100,
+      locale: 'pt',
     })
 
     if (entries.items.length === 0) {

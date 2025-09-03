@@ -90,7 +90,61 @@ npm run create-modules
 npm run create-modules --env=staging
 ```
 
-### 4. Generic Content Entry Fetcher
+### 4. Update Module Content
+
+Updates the "content" field on existing "Module" content type entries in Contentful, ensuring they have the proper bilingual structure with Portuguese and English content.
+
+```bash
+# Preview what would be updated (dry run)
+npm run update-module-content:dry-run
+
+# Update module content in Contentful
+npm run update-module-content
+
+# Force update all entries (even if they appear to be up-to-date)
+npm run update-module-content --force
+
+# Update in a specific environment
+npm run update-module-content --env=staging
+```
+
+This script will:
+
+- Read the updated `docs/beginner.json` file with bilingual content
+- Fetch all existing "Module" entries from Contentful
+- Match entries by `externalId` field
+- Update the `content` field to ensure proper bilingual object format:
+  - `content.pt`: Portuguese content
+  - `content.en-US`: English content
+- Automatically publish updated entries
+- Skip entries that already have the new structure (unless `--force` is used)
+
+#### Options
+
+- `--dry-run`: Preview what would be updated without actually updating entries
+- `--force`: Force update all entries even if they appear to be up-to-date
+- `--env=<environment>`: Specify environment (default: master)
+
+#### Examples
+
+```bash
+# Preview what will be updated
+npm run update-module-content:dry-run
+
+# Update all module content
+npm run update-module-content
+
+# Force update all entries
+npm run update-module-content --force
+
+# Update in staging environment
+npm run update-module-content --env=staging
+
+# Combine options
+npm run update-module-content --force --env=staging
+```
+
+### 5. Generic Content Entry Fetcher
 
 A flexible script to fetch entries of any content type.
 

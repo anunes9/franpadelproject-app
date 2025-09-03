@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Play, BookOpen, Award } from 'lucide-react'
+import { Play, BookOpen, Award, FileTextIcon } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
+import { Field } from '@/components/Field'
 
 interface ModulePageProps {
   params: Promise<{
@@ -63,43 +63,16 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
       <PageHeader
         title={`${module.title} - ${module.description}`}
-        badgeText={module.level}
+        level={module.level}
         duration={module.duration}
+        topics={module.topics}
       />
 
-      {/* Main Content */}
       <div className="space-y-6">
-        {/* Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BookOpen className="h-5 w-5" />
-              <span>Module Overview</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              {module.content?.overview ||
-                'This module will help you master the fundamentals of padel. Follow along with the video lessons and practice the exercises to improve your skills.'}
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Topics Covered */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Topics Covered</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {module.topics.map((topic, index) => (
-                <Badge key={index} variant="outline">
-                  {topic}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Module Content */}
+        <Field title="Module Content" icon={<BookOpen className="h-5 w-5" />}>
+          <p className="text-muted-foreground leading-relaxed">{module.content}</p>
+        </Field>
 
         {/* Video Section */}
         <Card>
@@ -118,61 +91,45 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </Card>
 
         {/* Resources */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Additional Resources</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Button variant="outline" className="w-full justify-start">
-                <BookOpen className="h-4 w-4 mr-2" />
-                Download PDF
+        <Field title="Additional Resources" icon={<BookOpen className="h-5 w-5" />}>
+          <div className="flex flex-wrap gap-2">
+            {module.documents?.map((document, index) => (
+              <Button variant="outline" className="w-full justify-start" key={index}>
+                <FileTextIcon className="h-4 w-4 mr-2" />
+                {document.fields.file.fileName}
               </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Play className="h-4 w-4 mr-2" />
-                Practice Exercises
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        </Field>
 
         {/* Quiz Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Award className="h-5 w-5" />
-              <span>Knowledge Check</span>
-            </CardTitle>
-            <CardDescription>Test your understanding with these questions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {quizQuestions.map((question, index) => (
-                <div key={question.id} className="p-4 border border-border rounded-lg">
-                  <h4 className="font-medium mb-3">
-                    {index + 1}. {question.question}
-                  </h4>
-                  <div className="space-y-2">
-                    {question.options.map((option, optionIndex) => (
-                      <label key={optionIndex} className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name={`question-${question.id}`}
-                          value={optionIndex}
-                          className="text-primary"
-                        />
-                        <span className="text-sm">{option}</span>
-                      </label>
-                    ))}
-                  </div>
+        <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
+          <div className="space-y-4">
+            {quizQuestions.map((question, index) => (
+              <div key={question.id} className="p-4 border border-border rounded-lg">
+                <h4 className="font-medium mb-3">
+                  {index + 1}. {question.question}
+                </h4>
+                <div className="space-y-2">
+                  {question.options.map((option, optionIndex) => (
+                    <label key={optionIndex} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`question-${question.id}`}
+                        value={optionIndex}
+                        className="text-primary"
+                      />
+                      <span className="text-sm">{option}</span>
+                    </label>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="mt-6">
-              <Button className="w-full">Submit Quiz</Button>
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6">
+            <Button className="w-full">Submit Quiz</Button>
+          </div>
+        </Field>
       </div>
     </>
   )
