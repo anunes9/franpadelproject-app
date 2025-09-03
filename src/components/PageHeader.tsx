@@ -15,6 +15,7 @@ interface PageHeaderProps {
   topics?: string[]
   backLink?: string
   backLinkText?: string
+  sticky?: boolean
 }
 
 export default function PageHeader({
@@ -30,9 +31,14 @@ export default function PageHeader({
   topics,
   backLink,
   backLinkText = 'Back to Dashboard',
+  sticky = false,
 }: PageHeaderProps) {
   return (
-    <div className="sticky top-16 z-40 bg-p-green-light border-b border-border -mx-8 p-8 mb-12 backdrop-blur-sm bg-opacity-95">
+    <div
+      className={`${
+        sticky ? 'sticky top-16 z-40 backdrop-blur-sm bg-opacity-95' : ''
+      } bg-p-green-light border-b border-border -mx-8 p-8 mb-12 `}
+    >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           {backLink && (

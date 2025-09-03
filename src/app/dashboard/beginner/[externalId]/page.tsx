@@ -6,6 +6,7 @@ import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
+import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 
 interface ModulePageProps {
   params: Promise<{
@@ -71,7 +72,11 @@ export default async function ModulePage({ params }: ModulePageProps) {
       <div className="space-y-6">
         {/* Module Content */}
         <Field title="Module Content" icon={<BookOpen className="h-5 w-5" />}>
-          <p className="text-muted-foreground leading-relaxed">{module.content}</p>
+          {module.content ? (
+            <MarkdownRenderer content={module.content} className="px-4" />
+          ) : (
+            <p className="text-muted-foreground leading-relaxed">Em Desenvolvimento</p>
+          )}
         </Field>
 
         {/* Video Section */}
@@ -103,7 +108,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </Field>
 
         {/* Quiz Section */}
-        <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
+        {/* <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
           <div className="space-y-4">
             {quizQuestions.map((question, index) => (
               <div key={question.id} className="p-4 border border-border rounded-lg">
@@ -129,7 +134,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
           <div className="mt-6">
             <Button className="w-full">Submit Quiz</Button>
           </div>
-        </Field>
+        </Field> */}
       </div>
     </>
   )
