@@ -1,0 +1,95 @@
+{
+  "name": "Exercises",
+  "description": "Definição dos exercícios",
+  "displayField": "title",
+  "fields": [
+    {
+      "id": "title",
+      "name": "Title",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "externalId",
+      "name": "ExternalId",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "description",
+      "name": "Description",
+      "type": "Text",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "media",
+      "name": "Media",
+      "type": "Link",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "linkType": "Asset"
+    }
+  ],
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "rqt5vjnpqy42"
+      }
+    },
+    "id": "exercises",
+    "type": "ContentType",
+    "createdAt": "2025-09-01T01:10:02.538Z",
+    "updatedAt": "2025-09-03T23:22:03.986Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 3,
+    "publishedAt": "2025-09-03T23:22:03.986Z",
+    "firstPublishedAt": "2025-09-01T01:10:02.910Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "publishedCounter": 2,
+    "version": 4,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "urn": "crn:contentful:::content:spaces/rqt5vjnpqy42/environments/master/content_types/exercises"
+  }
+}

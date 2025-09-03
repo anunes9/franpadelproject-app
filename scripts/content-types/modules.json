@@ -1,0 +1,172 @@
+{
+  "name": "Modules",
+  "description": "Definição dos mesociclos",
+  "displayField": "title",
+  "fields": [
+    {
+      "id": "title",
+      "name": "Title",
+      "type": "Symbol",
+      "localized": true,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "externalId",
+      "name": "External Id",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "description",
+      "name": "Description",
+      "type": "Text",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "topics",
+      "name": "Topics",
+      "type": "Array",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Symbol",
+        "validations": []
+      }
+    },
+    {
+      "id": "duration",
+      "name": "Duration",
+      "type": "Symbol",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "level",
+      "name": "Level",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "in": [
+            "Beginner",
+            "Intermediate",
+            "Advanced"
+          ]
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "content",
+      "name": "Content",
+      "type": "Text",
+      "localized": true,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "documents",
+      "name": "Documents",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [],
+        "linkType": "Asset"
+      }
+    },
+    {
+      "id": "exercises",
+      "name": "Exercises",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [
+          {
+            "linkContentType": [
+              "exercises"
+            ]
+          }
+        ],
+        "linkType": "Entry"
+      }
+    }
+  ],
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "rqt5vjnpqy42"
+      }
+    },
+    "id": "modules",
+    "type": "ContentType",
+    "createdAt": "2025-08-31T23:11:05.103Z",
+    "updatedAt": "2025-09-03T23:23:08.105Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 9,
+    "publishedAt": "2025-09-03T23:23:08.105Z",
+    "firstPublishedAt": "2025-08-31T23:11:05.513Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "publishedCounter": 5,
+    "version": 10,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "urn": "crn:contentful:::content:spaces/rqt5vjnpqy42/environments/master/content_types/modules"
+  }
+}

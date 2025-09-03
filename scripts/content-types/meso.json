@@ -1,0 +1,242 @@
+{
+  "name": "Meso",
+  "description": "",
+  "displayField": "title",
+  "fields": [
+    {
+      "id": "title",
+      "name": "Title",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "slug",
+      "name": "Slug",
+      "type": "Symbol",
+      "localized": false,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "concept",
+      "name": "Concept",
+      "type": "Symbol",
+      "localized": true,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "description",
+      "name": "Description",
+      "type": "RichText",
+      "localized": true,
+      "required": false,
+      "validations": [
+        {
+          "enabledMarks": [
+            "bold",
+            "italic",
+            "underline",
+            "code",
+            "superscript",
+            "subscript",
+            "strikethrough"
+          ],
+          "message": "Only bold, italic, underline, code, superscript, subscript, and strikethrough marks are allowed"
+        },
+        {
+          "enabledNodeTypes": [
+            "heading-1",
+            "heading-2",
+            "heading-3",
+            "heading-4",
+            "heading-5",
+            "heading-6",
+            "ordered-list",
+            "unordered-list",
+            "hr",
+            "blockquote",
+            "embedded-entry-block",
+            "embedded-asset-block",
+            "table",
+            "asset-hyperlink",
+            "embedded-entry-inline",
+            "entry-hyperlink",
+            "hyperlink"
+          ],
+          "message": "Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, ordered list, unordered list, horizontal rule, quote, block entry, asset, table, link to asset, inline entry, link to entry, and link to Url nodes are allowed"
+        },
+        {
+          "nodes": {}
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "content",
+      "name": "Content",
+      "type": "RichText",
+      "localized": true,
+      "required": true,
+      "validations": [
+        {
+          "enabledMarks": [
+            "bold",
+            "italic",
+            "underline"
+          ],
+          "message": "Only bold, italic, and underline marks are allowed"
+        },
+        {
+          "enabledNodeTypes": [
+            "heading-1",
+            "heading-2",
+            "heading-3",
+            "ordered-list",
+            "embedded-asset-block",
+            "embedded-entry-inline",
+            "unordered-list",
+            "asset-hyperlink",
+            "hyperlink",
+            "entry-hyperlink",
+            "embedded-entry-block",
+            "table",
+            "hr"
+          ],
+          "message": "Only heading 1, heading 2, heading 3, ordered list, asset, inline entry, unordered list, link to asset, link to Url, link to entry, block entry, table, and horizontal rule nodes are allowed"
+        },
+        {
+          "nodes": {}
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "duration",
+      "name": "Duration",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "in": [
+            "2 - 4 semanas"
+          ]
+        }
+      ],
+      "defaultValue": {
+        "en-US": "2 - 4 semanas"
+      },
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "level",
+      "name": "Level",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "in": [
+            "Beginner",
+            "Intermediate",
+            "Advanced"
+          ]
+        }
+      ],
+      "defaultValue": {
+        "en-US": "Beginner"
+      },
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "exercises",
+      "name": "Exercises",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [],
+        "linkType": "Asset"
+      }
+    },
+    {
+      "id": "videos",
+      "name": "Videos",
+      "type": "Array",
+      "localized": false,
+      "required": false,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Link",
+        "validations": [],
+        "linkType": "Asset"
+      }
+    }
+  ],
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "rqt5vjnpqy42"
+      }
+    },
+    "id": "meso",
+    "type": "ContentType",
+    "createdAt": "2025-01-19T21:39:21.848Z",
+    "updatedAt": "2025-02-02T22:02:05.525Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 33,
+    "publishedAt": "2025-02-02T22:02:05.525Z",
+    "firstPublishedAt": "2025-01-19T21:39:22.167Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "publishedCounter": 17,
+    "version": 34,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "urn": "crn:contentful:::content:spaces/rqt5vjnpqy42/environments/master/content_types/meso"
+  }
+}
