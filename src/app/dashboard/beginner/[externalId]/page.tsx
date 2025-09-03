@@ -1,17 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Play, BookOpen, Award, FileTextIcon } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
-import dynamic from 'next/dynamic.js'
-
-const PDFViewer = dynamic(() => import('@/components/PDFViewer'), {
-  ssr: false,
-})
+import AdditionalResources from '@/components/AdditionalResources'
 
 interface ModulePageProps {
   params: Promise<{
@@ -29,7 +23,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     notFound()
   }
 
-  // Mock quiz questions for now - this could also come from Contentful
+  // TODO: Mock quiz questions for now - this could also come from Contentful
   const quizQuestions = [
     {
       id: 1,
@@ -84,35 +78,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
           )}
         </Field>
 
-        {/* Video Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Video Lesson</CardTitle>
-            <CardDescription>Watch the instructional video for this module</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <Play className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground">Video content will be displayed here</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Additional Resources */}
+        <AdditionalResources documents={module.documents} />
 
-        {/* Resources */}
-        <Field title="Additional Resources" icon={<BookOpen className="h-5 w-5" />}>
-          <div className="flex flex-wrap gap-2">
-            {module.documents?.map((document, index) => (
-              <Button variant="outline" className="w-full justify-start" key={index}>
-                <FileTextIcon className="h-4 w-4 mr-2" />
-                {document.fields.file.fileName}
-              </Button>
-            ))}
-
-            <PDFViewer url={module.documents?.[0].fields.file.url ?? ''} />
-          </div>
-        </Field>
+        <div className="h-8" />
 
         {/* Quiz Section */}
         {/* <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
