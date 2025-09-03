@@ -40,7 +40,7 @@ export default async function BeginnerCoursePage() {
       <div>
         {modules.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-muted-foreground mb-4">No beginner modules found in Contentful</div>
+            <div className="text-muted-foreground mb-4">No modules found</div>
             <Button variant="outline" asChild>
               <Link href="/dashboard" prefetch={false}>
                 Back to Dashboard
@@ -51,86 +51,83 @@ export default async function BeginnerCoursePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {modules.map((module, index) => {
               const status = getModuleStatus(index)
+              const link = status === 'locked' ? '#' : `/dashboard/beginner/${module.externalId}`
               return (
-                <Card
-                  key={module.id}
-                  className={`hover:shadow-lg transition-all duration-200 ${
-                    status === 'locked' ? 'opacity-60' : 'cursor-pointer hover:scale-105'
-                  }`}
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div
-                          className={`p-2 rounded-lg ${
-                            status === 'completed'
-                              ? 'bg-green-100 text-green-600'
-                              : status === 'in-progress'
-                              ? 'bg-primary/10 text-primary'
-                              : 'bg-muted text-muted-foreground'
-                          }`}
+                <Link href={link} prefetch={false} key={module.id}>
+                  <Card
+                    className={`hover:shadow-lg transition-all duration-200 ${
+                      status === 'locked' ? 'opacity-60' : 'cursor-pointer hover:scale-105'
+                    }`}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`p-2 rounded-lg ${
+                              status === 'completed'
+                                ? 'bg-green-100 text-green-600'
+                                : status === 'in-progress'
+                                ? 'bg-primary/10 text-primary'
+                                : 'bg-muted text-muted-foreground'
+                            }`}
+                          >
+                            {status === 'completed' ? (
+                              <CheckCircle className="h-5 w-5" />
+                            ) : status === 'in-progress' ? (
+                              <Play className="h-5 w-5" />
+                            ) : (
+                              <Lock className="h-5 w-5" />
+                            )}
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg">{module.description}</CardTitle>
+                            <CardDescription className="text-sm">{module.title}</CardDescription>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={
+                            status === 'completed' ? 'default' : status === 'in-progress' ? 'secondary' : 'outline'
+                          }
                         >
-                          {status === 'completed' ? (
-                            <CheckCircle className="h-5 w-5" />
-                          ) : status === 'in-progress' ? (
-                            <Play className="h-5 w-5" />
-                          ) : (
-                            <Lock className="h-5 w-5" />
-                          )}
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg">{module.description}</CardTitle>
-                          <CardDescription className="text-sm">{module.title}</CardDescription>
+                          {status === 'completed' ? 'Complete' : status === 'in-progress' ? 'In Progress' : 'Locked'}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {/* <p className="text-muted-foreground mb-4">{module.description}</p> */}
+
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">{module.duration}</span>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-foreground mb-2">Topics covered:</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {module.topics.map((topic, topicIndex) => (
+                            <Badge key={topicIndex} variant="outline" className="text-xs">
+                              {topic}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
-                      <Badge
-                        variant={
-                          status === 'completed' ? 'default' : status === 'in-progress' ? 'secondary' : 'outline'
-                        }
+
+                      <Button
+                        className="w-full mt-8"
+                        disabled={status === 'locked'}
+                        variant={status === 'completed' ? 'outline' : 'default'}
                       >
-                        {status === 'completed' ? 'Complete' : status === 'in-progress' ? 'In Progress' : 'Locked'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {/* <p className="text-muted-foreground mb-4">{module.description}</p> */}
-
-                    <div className="flex items-center space-x-2 mb-4">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">{module.duration}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-foreground mb-2">Topics covered:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {module.topics.map((topic, topicIndex) => (
-                          <Badge key={topicIndex} variant="outline" className="text-xs">
-                            {topic}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Button
-                      className="w-full"
-                      disabled={status === 'locked'}
-                      variant={status === 'completed' ? 'outline' : 'default'}
-                      asChild={status !== 'locked'}
-                    >
-                      {status !== 'locked' ? (
-                        <Link href={`/dashboard/beginner/${module.externalId}`} prefetch={false}>
-                          {status === 'completed'
-                            ? 'Review Module'
-                            : status === 'in-progress'
-                            ? 'Continue Module'
-                            : 'Start Module'}
-                        </Link>
-                      ) : (
-                        'Locked'
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
+                        {status === 'locked'
+                          ? 'Locked'
+                          : status === 'completed'
+                          ? 'Review Module'
+                          : status === 'in-progress'
+                          ? 'Continue Module'
+                          : 'Start Module'}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Link>
               )
             })}
           </div>
