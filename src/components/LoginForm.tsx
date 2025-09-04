@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import { IconBrandGoogleFilled } from '@tabler/icons-react'
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -128,7 +127,7 @@ export function LoginForm() {
           </Button>
         </form>
 
-        <div className="relative flex justify-center text-xs uppercase border-t border-border">
+        {/* <div className="relative flex justify-center text-xs uppercase border-t border-border">
           <span className="px-2 text-muted-foreground mt-[-8px] bg-white">Or continue with</span>
         </div>
 
@@ -141,13 +140,13 @@ export function LoginForm() {
             <IconBrandGoogleFilled className="mr-2 h-4 w-4" />
             Google
           </Button>
-        </div>
+        </div> */}
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            {"Don't have an account? "}
+            {'Não tens uma conta? '}
             <a href="#" className="text-accent hover:text-accent/80 font-medium transition-colors">
-              Sign up here
+              Regista-te aqui
             </a>
           </p>
         </div>

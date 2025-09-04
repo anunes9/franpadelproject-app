@@ -3,9 +3,14 @@
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/client'
+import { dbUtils } from '../../database/utils'
+import { Database } from '../../database/types/database.types'
+
+type UserProfile = Database['public']['Tables']['users']['Row']
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -16,6 +21,20 @@ export function useAuth() {
         data: { session },
       } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
+
+      // Fetch user profile if user is authenticated
+      if (session?.user?.id) {
+        try {
+          const profile = await dbUtils.getCurrentUserProfile(session.user.id)
+          setUserProfile(profile)
+        } catch (error) {
+          console.error('Error fetching user profile:', error)
+          setUserProfile(null)
+        }
+      } else {
+        setUserProfile(null)
+      }
+
       setLoading(false)
     }
 
@@ -26,6 +45,20 @@ export function useAuth() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
+
+      // Fetch user profile if user is authenticated
+      if (session?.user?.id) {
+        try {
+          const profile = await dbUtils.getCurrentUserProfile(session.user.id)
+          setUserProfile(profile)
+        } catch (error) {
+          console.error('Error fetching user profile:', error)
+          setUserProfile(null)
+        }
+      } else {
+        setUserProfile(null)
+      }
+
       setLoading(false)
     })
 
@@ -65,6 +98,7 @@ export function useAuth() {
 
   return {
     user,
+    userProfile,
     loading,
     signIn,
     signUp,
