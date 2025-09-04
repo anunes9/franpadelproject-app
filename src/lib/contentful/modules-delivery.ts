@@ -1,5 +1,6 @@
 import { getEntries, initializeContentfulDeliveryClient } from './delivery-client'
 import { validateDeliveryConfig } from './config'
+import { FILE_TYPES } from '@/lib/utils'
 
 export interface Exercise {
   id: string
@@ -22,6 +23,16 @@ export interface Module {
   level: string
   topics: string[]
   content?: string // Markdown
+  presentation?: {
+    fields: {
+      file: {
+        url: string
+        details: { size: number }
+        fileName: string
+        contentType: typeof FILE_TYPES.PDF
+      }
+    }
+  }
   documents?: {
     fields: {
       file: {
@@ -76,6 +87,7 @@ export async function getBeginnerModules(): Promise<Module[]> {
         const duration = fields.duration || 'Unknown'
         const topics = fields.topics || []
         const content = fields.content || null
+        const presentation = fields.presentation || null
 
         return {
           id: entry.sys.id,
@@ -86,6 +98,7 @@ export async function getBeginnerModules(): Promise<Module[]> {
           level,
           topics: Array.isArray(topics) ? topics : [],
           content,
+          presentation,
           createdAt: entry.sys.createdAt,
           updatedAt: entry.sys.updatedAt,
           publishedAt: entry.sys.publishedAt,
@@ -142,6 +155,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const duration = fields.duration || 'Unknown'
     const topics = fields.topics || []
     const content = fields.content || null
+    const presentation = fields.presentation || null
     const documents = fields.documents || []
     const exercises = fields.exercises || []
 
@@ -175,6 +189,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       level,
       topics: Array.isArray(topics) ? topics : [],
       content,
+      presentation,
       documents,
       exercises: processedExercises,
       createdAt: entry.sys.createdAt,
@@ -227,6 +242,7 @@ export async function getAllModules(): Promise<Module[]> {
         const duration = fields.duration || 'Unknown'
         const topics = fields.topics || []
         const content = fields.content || null
+        const presentation = fields.presentation || null
 
         return {
           id: entry.sys.id,
@@ -237,6 +253,7 @@ export async function getAllModules(): Promise<Module[]> {
           level,
           topics: Array.isArray(topics) ? topics : [],
           content,
+          presentation,
           createdAt: entry.sys.createdAt,
           updatedAt: entry.sys.updatedAt,
           publishedAt: entry.sys.publishedAt,
@@ -307,6 +324,7 @@ export async function getModulesByLevel(level: string): Promise<Module[]> {
         const duration = fields.duration || 'Unknown'
         const topics = fields.topics || []
         const content = fields.content || null
+        const presentation = fields.presentation || null
 
         return {
           id: entry.sys.id,
@@ -317,6 +335,7 @@ export async function getModulesByLevel(level: string): Promise<Module[]> {
           level,
           topics: Array.isArray(topics) ? topics : [],
           content,
+          presentation,
           createdAt: entry.sys.createdAt,
           updatedAt: entry.sys.updatedAt,
           publishedAt: entry.sys.publishedAt,

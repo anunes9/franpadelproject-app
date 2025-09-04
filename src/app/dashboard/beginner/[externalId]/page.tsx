@@ -1,12 +1,13 @@
-import { BookOpen } from 'lucide-react'
+import { FileText } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
-import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import AdditionalResources from '@/components/AdditionalResources'
 import Exercises from '@/components/Exercises'
+import PDFViewer from '@/components/PDFViewer'
+import { Button } from '@/components/ui/button'
 
 interface ModulePageProps {
   params: Promise<{
@@ -20,9 +21,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
   // Fetch module data from Contentful
   const module = await getModuleByExternalId(externalId)
 
-  if (!module) {
-    notFound()
-  }
+  if (!module) notFound()
 
   // TODO: Mock quiz questions for now - this could also come from Contentful
   const quizQuestions = [
@@ -70,20 +69,24 @@ export default async function ModulePage({ params }: ModulePageProps) {
       />
 
       <div className="space-y-6">
-        {/* Module Content */}
-        <Field title="Conteúdo Teórico" icon={<BookOpen className="h-5 w-5" />}>
-          {module.content ? (
-            <MarkdownRenderer content={module.content} className="px-4" />
-          ) : (
-            <p className="text-muted-foreground leading-relaxed">Em desenvolvimento</p>
-          )}
-        </Field>
+        {/* Presentation */}
+        {module.presentation && (
+          <Field title="Apresentação" icon={<FileText className="h-5 w-5" />}>
+            <div className="px-4">
+              <PDFViewer url={module.presentation.fields.file.url} />
+            </div>
+          </Field>
+        )}
 
         {/* Additional Resources */}
         <AdditionalResources documents={module.documents} />
 
         {/* Exercises */}
         <Exercises exercises={module.exercises} />
+
+        <Button className="w-full mt-8" disabled variant="default">
+          Concluir Mesociclo
+        </Button>
 
         <div className="h-8" />
 

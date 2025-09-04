@@ -24,7 +24,7 @@ export default async function ExercisesPage() {
     media: exercise.media,
   }))
 
-  const categories = ['Todos', 'Técnico', 'Tático']
+  const categories = ['Todos', 'Técnico', 'Táctico']
 
   const completedExercises = exercises.filter((ex) => ex.completed).length
   const totalExercises = exercises.length
@@ -36,7 +36,7 @@ export default async function ExercisesPage() {
 
       <PageHeader
         title="Biblioteca de Exercícios"
-        description="Coleção abrangente de exercícios técnicos e de táticos"
+        description="Coleção abrangente de exercícios técnicos e de tácticos"
         badgeText={`${totalExercises} Exercícios`}
         progressPercentage={progressPercentage}
         completedCount={completedExercises}

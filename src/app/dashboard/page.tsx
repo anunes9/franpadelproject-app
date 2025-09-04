@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { BookOpen, Dumbbell, Award } from 'lucide-react'
 import Link from 'next/link'
+import { StatsRow } from '@/components/Stats'
 
 export default function DashboardPage() {
   return (
@@ -24,23 +25,27 @@ export default function DashboardPage() {
                   <BookOpen className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl">Metodologia - Iniciante</CardTitle>
+                  <CardTitle className="text-xl">Metodologia - Iniciado</CardTitle>
                   <CardDescription>Aprende os fundamentos do padel</CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col justify-between h-full">
               <p className="text-muted-foreground mb-4">
-                Complete 8 mesociclos abrangentes que cobrem todas as técnicas e táticas fundamentais do padel.
+                Completa 8 mesociclos abrangentes que cobrem todas as técnicas e táticas fundamentais do padel.
               </p>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-muted-foreground">Progresso: 3/10 mesociclos</span>
-                <span className="text-sm font-medium text-primary">30% Completo</span>
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-muted-foreground">Progresso: 0/10 mesociclos</span>
+                  <span className="text-sm font-medium text-primary">0% Completo</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-2 mb-4">
+                  <div className="bg-primary h-2 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+
+                <Button className="w-full">Continuar Metodologia</Button>
               </div>
-              <div className="w-full bg-muted rounded-full h-2 mb-4">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '30%' }}></div>
-              </div>
-              <Button className="w-full">Continuar Metodologia</Button>
             </CardContent>
           </Card>
         </Link>
@@ -59,7 +64,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col justify-between h-full">
               <p className="text-muted-foreground mb-4">
                 Acede a uma biblioteca abrangente de exercícios e dinâmicas de padel.
               </p>
@@ -69,11 +74,11 @@ export default function DashboardPage() {
               </div>
               <div className="grid grid-cols-2 gap-2 mb-4">
                 <div className="text-center p-2 bg-muted rounded">
-                  <div className="text-lg font-semibold text-foreground">12</div>
+                  <div className="text-lg font-semibold text-foreground">0</div>
                   <div className="text-xs text-muted-foreground">Completos</div>
                 </div>
                 <div className="text-center p-2 bg-muted rounded">
-                  <div className="text-lg font-semibold text-foreground">33</div>
+                  <div className="text-lg font-semibold text-foreground">64</div>
                   <div className="text-xs text-muted-foreground">Restantes</div>
                 </div>
               </div>
@@ -98,21 +103,22 @@ export default function DashboardPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col justify-between h-full">
               <p className="text-muted-foreground mb-4">
                 Completa avaliações e ganha certificações oficiais da academia de padel.
               </p>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-muted-foreground">Requisitos</span>
-                <span className="text-sm font-medium text-yellow-600">2/3 Completos</span>
+                <span className="text-sm font-medium text-yellow-600">0/3 Completos</span>
               </div>
               <div className="space-y-2 mb-4">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-muted-foreground">Completa curso iniciante</span>
+                  {/* <div className="w-2 h-2 bg-green-500 rounded-full"></div> */}
+                  <div className="w-2 h-2 bg-muted rounded-full"></div>
+                  <span className="text-sm text-muted-foreground">Completa curso Iniciado</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-muted rounded-full"></div>
                   <span className="text-sm text-muted-foreground">Passa avaliação prática</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -129,24 +135,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-primary mb-1">3</div>
-          <div className="text-sm text-muted-foreground">Módulos Completos</div>
-        </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-accent mb-1">12</div>
-          <div className="text-sm text-muted-foreground">Exercícios Feitos</div>
-        </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-yellow-600 mb-1">24</div>
-          <div className="text-sm text-muted-foreground">Horas Praticadas</div>
-        </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-green-600 mb-1">85%</div>
-          <div className="text-sm text-muted-foreground">Progresso Geral</div>
-        </div>
-      </div>
+      <StatsRow />
     </>
   )
 }

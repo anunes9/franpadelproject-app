@@ -16,6 +16,7 @@ interface PageHeaderProps {
   backLink?: string
   backLinkText?: string
   sticky?: boolean
+  color?: 'primary' | 'secondary'
 }
 
 export default function PageHeader({
@@ -32,12 +33,18 @@ export default function PageHeader({
   backLink,
   backLinkText = 'Back to Dashboard',
   sticky = false,
+  color = 'primary',
 }: PageHeaderProps) {
+  const colorClass = {
+    primary: 'bg-p-green-light',
+    secondary: 'bg-yellow-500/10',
+  }
+
   return (
     <div
-      className={`${
-        sticky ? 'sticky top-16 z-40 backdrop-blur-sm bg-opacity-95' : ''
-      } bg-p-green-light border-b border-border -mx-8 p-8 mb-12 `}
+      className={`${sticky ? 'sticky top-16 z-40 backdrop-blur-sm bg-opacity-95' : ''} ${
+        colorClass[color]
+      } border-b border-border -mx-8 p-8 mb-12 `}
     >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
@@ -81,7 +88,7 @@ export default function PageHeader({
           </div>
         </div>
 
-        {(progressPercentage > 0 || (completedCount !== undefined && totalCount !== undefined)) && (
+        {(progressPercentage >= 0 || (completedCount !== undefined && totalCount !== undefined)) && (
           <div className="mt-6 md:mt-0">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary mb-1">{Math.round(progressPercentage)}%</div>

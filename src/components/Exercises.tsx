@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Dumbbell, X, ImageIcon } from 'lucide-react'
 import { Field } from '@/components/Field'
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface Exercise {
   id: string
@@ -32,14 +31,12 @@ export default function Exercises({ exercises }: ExercisesProps) {
     }
   }
 
-  const closeImageModal = () => {
-    setSelectedExercise(null)
-  }
+  const closeImageModal = () => setSelectedExercise(null)
 
   return (
     <Field title="Exercícios" icon={<Dumbbell className="h-5 w-5" />}>
       {exercises && exercises.length > 0 ? (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {exercises.map((exercise) => (
             <Card key={exercise.id} className="w-full">
               <CardHeader>
