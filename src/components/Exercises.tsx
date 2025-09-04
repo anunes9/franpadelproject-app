@@ -82,7 +82,7 @@ export default function Exercises({ exercises }: ExercisesProps) {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-white">{selectedExercise.title}</h3>
               <Button variant="outline" onClick={closeImageModal} className="text-black border-white hover:bg-white/20">
-                <X className="h-4 w-4" /> Close
+                <X className="h-4 w-4" /> Fechar
               </Button>
             </div>
             <div className="bg-white rounded-lg overflow-hidden">

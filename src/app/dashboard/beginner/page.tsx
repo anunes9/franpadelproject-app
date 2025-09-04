@@ -28,7 +28,7 @@ export default async function BeginnerCoursePage() {
 
       <PageHeader
         title="Metodologia - Iniciante"
-        description={`Aprenda os fundamentos do padel com nosso curso iniciante em ${totalModules} Mesociclos`}
+        description={`Aprende os fundamentos do padel com nosso curso iniciante em ${totalModules} Mesociclos`}
         badgeText={`${totalModules} Mesociclos`}
         progressPercentage={progressPercentage}
         completedCount={completedModules}
