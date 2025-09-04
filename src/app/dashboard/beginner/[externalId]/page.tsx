@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import AdditionalResources from '@/components/AdditionalResources'
+import Exercises from '@/components/Exercises'
 
 interface ModulePageProps {
   params: Promise<{
@@ -59,7 +60,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
   return (
     <>
-      <BackNavigation href="/dashboard/beginner" text="Back to Course" />
+      <BackNavigation href="/dashboard/beginner" text="Voltar ao Curso" />
 
       <PageHeader
         title={`${module.title} - ${module.description}`}
@@ -70,7 +71,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
       <div className="space-y-6">
         {/* Module Content */}
-        <Field title="Module Content" icon={<BookOpen className="h-5 w-5" />}>
+        <Field title="Conteúdo Teórico" icon={<BookOpen className="h-5 w-5" />}>
           {module.content ? (
             <MarkdownRenderer content={module.content} className="px-4" />
           ) : (
@@ -80,6 +81,9 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
         {/* Additional Resources */}
         <AdditionalResources documents={module.documents} />
+
+        {/* Exercises */}
+        <Exercises exercises={module.exercises} />
 
         <div className="h-8" />
 

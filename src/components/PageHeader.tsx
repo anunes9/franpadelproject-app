@@ -55,7 +55,7 @@ export default function PageHeader({
           <h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
           {description && <p className="text-muted-foreground text-lg">{description}</p>}
 
-          <div className="flex items-center space-x-4 pt-4">
+          <div className="flex flex-wrap gap-4 items-center pt-4">
             {badgeText && <Badge variant="default">{badgeText}</Badge>}
 
             {level && (

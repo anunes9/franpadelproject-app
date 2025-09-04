@@ -54,7 +54,7 @@ export default function AdditionalResources({ documents }: AdditionalResourcesPr
   }
 
   return (
-    <Field title="Additional Resources" icon={<NotebookTextIcon className="h-5 w-5" />}>
+    <Field title="Documentos e Correções Técnicas" icon={<NotebookTextIcon className="h-5 w-5" />}>
       <div className="flex flex-wrap gap-2">
         {documents?.map((document, index) => {
           const fileType = detectFileType(document.fields.file.url, document.fields.file.fileName)

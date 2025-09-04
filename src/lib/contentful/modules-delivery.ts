@@ -1,6 +1,18 @@
 import { getEntries, initializeContentfulDeliveryClient } from './delivery-client'
 import { validateDeliveryConfig } from './config'
 
+export interface Exercise {
+  id: string
+  externalId: string
+  title: string
+  description?: string
+  media?: {
+    url: string
+    fileName: string
+    contentType: string
+  }
+}
+
 export interface Module {
   id: string
   externalId: string
@@ -20,6 +32,7 @@ export interface Module {
       }
     }
   }[]
+  exercises?: Exercise[]
   createdAt: string
   updatedAt: string
   publishedAt?: string
@@ -113,7 +126,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       'fields.externalId': externalId,
       include: 2, // Include 2 levels of linked entries
       limit: 1,
-      locale: 'en-US',
+      locale: 'pt',
     })
 
     if (entries.items.length === 0) {
@@ -130,6 +143,28 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const topics = fields.topics || []
     const content = fields.content || null
     const documents = fields.documents || []
+    const exercises = fields.exercises || []
+
+    // Process exercises if they exist
+    let processedExercises: Exercise[] = []
+    if (Array.isArray(exercises) && exercises.length > 0) {
+      processedExercises = exercises.map((exercise: any) => {
+        const exerciseFields = exercise.fields
+        return {
+          id: exercise.sys.id,
+          externalId: exerciseFields.externalId || exercise.sys.id,
+          title: exerciseFields.title || 'Untitled Exercise',
+          description: exerciseFields.description || undefined,
+          media: exerciseFields.media
+            ? {
+                url: exerciseFields.media.fields.file.url,
+                fileName: exerciseFields.media.fields.file.fileName,
+                contentType: exerciseFields.media.fields.file.contentType,
+              }
+            : undefined,
+        }
+      })
+    }
 
     const module: Module = {
       id: entry.sys.id,
@@ -141,6 +176,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       topics: Array.isArray(topics) ? topics : [],
       content,
       documents,
+      exercises: processedExercises,
       createdAt: entry.sys.createdAt,
       updatedAt: entry.sys.updatedAt,
       publishedAt: entry.sys.publishedAt,
