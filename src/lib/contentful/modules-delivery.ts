@@ -113,7 +113,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       'fields.externalId': externalId,
       include: 2, // Include 2 levels of linked entries
       limit: 1,
-      locale: 'pt',
+      locale: 'en-US',
     })
 
     if (entries.items.length === 0) {
