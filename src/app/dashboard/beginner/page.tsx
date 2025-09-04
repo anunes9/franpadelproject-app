@@ -24,28 +24,23 @@ export default async function BeginnerCoursePage() {
 
   return (
     <>
-      <BackNavigation />
+      <BackNavigation text="Voltar ao Dashboard" />
 
       <PageHeader
-        title="Methodology - Beginner"
-        description={`Master the fundamentals of padel with our comprehensive ${totalModules}-module course`}
-        badgeText={`${totalModules} Modules`}
+        title="Metodologia - Iniciante"
+        description={`Aprenda os fundamentos do padel com nosso curso iniciante em ${totalModules} Mesociclos`}
+        badgeText={`${totalModules} Mesociclos`}
         progressPercentage={progressPercentage}
         completedCount={completedModules}
         totalCount={totalModules}
-        progressLabel={`${completedModules}/${totalModules} Modules`}
+        progressLabel={`${completedModules}/${totalModules} Mesociclos`}
       />
 
       {/* Modules Grid */}
       <div>
         {modules.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-muted-foreground mb-4">No modules found</div>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard" prefetch={false}>
-                Back to Dashboard
-              </Link>
-            </Button>
+            <span className="text-muted-foreground mb-4">Nenhum módulo encontrado</span>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -79,11 +74,13 @@ export default async function BeginnerCoursePage() {
                               <Lock className="h-5 w-5" />
                             )}
                           </div>
+
                           <div>
                             <CardTitle className="text-lg">{module.description}</CardTitle>
                             <CardDescription className="text-sm">{module.title}</CardDescription>
                           </div>
                         </div>
+
                         <Badge
                           variant={
                             status === 'completed' ? 'default' : status === 'in-progress' ? 'secondary' : 'outline'
@@ -102,7 +99,7 @@ export default async function BeginnerCoursePage() {
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-medium text-foreground mb-2">Topics covered:</h4>
+                        <h4 className="text-sm font-medium text-foreground mb-2">Tópicos</h4>
                         <div className="flex flex-wrap gap-1">
                           {module.topics.map((topic, topicIndex) => (
                             <Badge key={topicIndex} variant="outline" className="text-xs">
@@ -118,12 +115,12 @@ export default async function BeginnerCoursePage() {
                         variant={status === 'completed' ? 'outline' : 'default'}
                       >
                         {status === 'locked'
-                          ? 'Locked'
+                          ? 'Bloqueado'
                           : status === 'completed'
-                          ? 'Review Module'
+                          ? 'Rever Mesociclo'
                           : status === 'in-progress'
-                          ? 'Continue Module'
-                          : 'Start Module'}
+                          ? 'Continuar Mesociclo'
+                          : 'Iniciar Mesociclo'}
                       </Button>
                     </CardContent>
                   </Card>
