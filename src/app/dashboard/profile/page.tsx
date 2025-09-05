@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { User, Trophy, Target, Clock, Save, Camera } from 'lucide-react'
+import { User, Trophy, Target, Clock, Save } from 'lucide-react'
 import BackNavigation from '@/components/BackNavigation'
 import { StatsRow } from '@/components/Stats'
 import { useAuth } from '@/hooks/useAuth'
+import Image from 'next/image'
 
 const recentActivity = [] as any[]
 // const recentActivity = [
@@ -52,12 +53,13 @@ export default function ProfilePage() {
         <div className="flex justify-center">
           <div className="flex items-center space-x-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center">
-                <User className="h-12 w-12 text-primary" />
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                {userProfile?.avatar_url ? (
+                  <Image src={userProfile.avatar_url} alt="User Avatar" width={64} height={64} />
+                ) : (
+                  <User className="h-12 w-12 text-primary" />
+                )}
               </div>
-              <Button size="sm" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0">
-                <Camera className="h-4 w-4" />
-              </Button>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -106,10 +108,6 @@ export default function ProfilePage() {
                 <Input disabled id="email" type="email" defaultValue={userProfile?.email || user?.email || ''} />
               </div>
               <div>
-                <Label htmlFor="avatarUrl">Avatar</Label>
-                <Input id="avatarUrl" defaultValue={userProfile?.avatar_url || ''} />
-              </div>
-              <div>
                 <Label htmlFor="createdAt">Membro Desde</Label>
                 <Input
                   id="createdAt"
@@ -132,7 +130,7 @@ export default function ProfilePage() {
                 <Target className="h-5 w-5" />
                 <span>Avaliação de Habilidades</span>
               </CardTitle>
-              <CardDescription>Os teus níveis de habilidade em diferentes áreas</CardDescription>
+              <CardDescription>EM ATUALIZAÇÃO - Os teus níveis de habilidade em diferentes áreas</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

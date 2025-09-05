@@ -9,7 +9,7 @@ import Image from 'next/image'
 
 export default function Header() {
   const router = useRouter()
-  const { user, signOut } = useAuth()
+  const { user, userProfile, signOut } = useAuth()
 
   const handleLogout = async () => {
     try {
@@ -44,13 +44,17 @@ export default function Header() {
 
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard/profile" prefetch={false}>
-                <User className="h-4 w-4 mr-2" />
-                {user ? user.email : 'Profile'}
+              <Link href="/dashboard/profile" prefetch={false} className="flex items-center space-x-2">
+                {userProfile?.avatar_url ? (
+                  <Image src={userProfile.avatar_url} alt="User Avatar" width={28} height={28} />
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
+                <span>{userProfile?.full_name || user?.email || 'Profile'}</span>
               </Link>
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="cursor-pointer">
               <LogOut className="h-4 w-4 mr-2" />
               Logout
             </Button>
