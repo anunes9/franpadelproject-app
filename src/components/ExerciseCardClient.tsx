@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Play, Clock, X, Target, Zap, Users } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface ExerciseCardProps {
   exercise: {
@@ -141,7 +142,7 @@ export default function ExerciseCardClient({ exercise }: ExerciseCardProps) {
               </Button>
             </div>
             <div className="flex justify-center">
-              <img
+              <Image
                 src={exercise.media.url}
                 alt={exercise.media.fileName || exercise.title}
                 className="max-w-full max-h-[70vh] object-contain"

@@ -180,7 +180,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       })
     }
 
-    const module: Module = {
+    const course: Module = {
       id: entry.sys.id,
       externalId,
       title,
@@ -198,8 +198,8 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       isPublished: !!entry.sys.publishedAt,
     }
 
-    console.log(`✅ Found module: ${module.title}`)
-    return module
+    console.log(`✅ Found module: ${course.title}`)
+    return course
   } catch (error) {
     console.error('❌ Error fetching module by externalId:', error)
     return null

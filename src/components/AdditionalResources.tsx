@@ -6,6 +6,7 @@ import { Field } from '@/components/Field'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { detectFileType, FILE_TYPES } from '@/lib/utils'
+import Image from 'next/image'
 
 const PDFViewer = dynamic(() => import('@/components/PDFViewer'), {
   ssr: false,
@@ -109,7 +110,7 @@ export default function AdditionalResources({ documents }: AdditionalResourcesPr
                       </Button>
                     </div>
                     <div className="flex justify-center">
-                      <img
+                      <Image
                         src={selectedResource.fields.file.url}
                         alt={selectedResource.fields.file.fileName}
                         className="max-w-full h-auto rounded-lg shadow-lg"

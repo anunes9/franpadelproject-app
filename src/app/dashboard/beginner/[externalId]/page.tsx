@@ -19,9 +19,9 @@ export default async function ModulePage({ params }: ModulePageProps) {
   const { externalId } = await params
 
   // Fetch module data from Contentful
-  const module = await getModuleByExternalId(externalId)
+  const course = await getModuleByExternalId(externalId)
 
-  if (!module) notFound()
+  if (!course) notFound()
 
   // TODO: Mock quiz questions for now - this could also come from Contentful
   const quizQuestions = [
@@ -62,27 +62,27 @@ export default async function ModulePage({ params }: ModulePageProps) {
       <BackNavigation href="/dashboard/beginner" text="Voltar ao Curso" />
 
       <PageHeader
-        title={`${module.title} - ${module.description}`}
-        level={module.level}
-        duration={module.duration}
-        topics={module.topics}
+        title={`${course.title} - ${course.description}`}
+        level={course.level}
+        duration={course.duration}
+        topics={course.topics}
       />
 
       <div className="space-y-6">
         {/* Presentation */}
-        {module.presentation && (
+        {course.presentation && (
           <Field title="Apresentação" icon={<FileText className="h-5 w-5" />}>
             <div className="px-4">
-              <PDFViewer url={module.presentation.fields.file.url} />
+              <PDFViewer url={course.presentation.fields.file.url} />
             </div>
           </Field>
         )}
 
         {/* Additional Resources */}
-        <AdditionalResources documents={module.documents} />
+        <AdditionalResources documents={course.documents} />
 
         {/* Exercises */}
-        <Exercises exercises={module.exercises} />
+        <Exercises exercises={course.exercises} />
 
         <Button className="w-full mt-8" disabled variant="default">
           Concluir Mesociclo

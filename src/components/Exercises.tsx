@@ -5,6 +5,7 @@ import { Dumbbell, X, ImageIcon } from 'lucide-react'
 import { Field } from '@/components/Field'
 import { useState } from 'react'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 
 interface Exercise {
   id: string
@@ -83,7 +84,7 @@ export default function Exercises({ exercises }: ExercisesProps) {
               </Button>
             </div>
             <div className="bg-white rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={selectedExercise.media.url}
                 alt={selectedExercise.title}
                 className="w-full h-auto max-h-[80vh] object-contain"

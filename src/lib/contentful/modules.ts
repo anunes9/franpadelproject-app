@@ -1,5 +1,6 @@
-import { getEntriesByType, initializeContentfulClient } from './index'
+import { initializeContentfulClient } from './client'
 import { validateContentfulConfig } from './config'
+import { getEntriesByType } from './entries'
 import { ContentfulEntry } from './types'
 
 export interface Module {
@@ -124,7 +125,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const topics = fields.topics?.['en-US'] || fields.topics?.['es-ES'] || []
     const content = fields.content?.['en-US'] || fields.content?.['es-ES'] || null
 
-    const module: Module = {
+    const course: Module = {
       id: moduleEntry.sys.id,
       externalId,
       title,
@@ -139,8 +140,8 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       isPublished: !!moduleEntry.sys.publishedAt,
     }
 
-    console.log(`✅ Found module: ${module.title}`)
-    return module
+    console.log(`✅ Found module: ${course.title}`)
+    return course
   } catch (error) {
     console.error('❌ Error fetching module by externalId:', error)
     return null
