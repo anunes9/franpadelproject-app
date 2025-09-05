@@ -6,8 +6,8 @@ import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import AdditionalResources from '@/components/AdditionalResources'
 import Exercises from '@/components/Exercises'
-import PDFViewer from '@/components/PDFViewer'
 import { Button } from '@/components/ui/button'
+import PDFViewerWrapper from '@/components/PDFViewerWrapper'
 
 interface ModulePageProps {
   params: Promise<{
@@ -73,7 +73,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         {course.presentation && (
           <Field title="Apresentação" icon={<FileText className="h-5 w-5" />}>
             <div className="px-4">
-              <PDFViewer url={course.presentation.fields.file.url} />
+              <PDFViewerWrapper url={course.presentation.fields.file.url} />
             </div>
           </Field>
         )}

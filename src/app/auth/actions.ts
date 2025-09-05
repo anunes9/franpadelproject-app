@@ -23,6 +23,13 @@ export async function login(formData: FormData) {
 
 export async function logout() {
   const supabase = await createSupabaseServerClient()
-  await supabase.auth.signOut()
+
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.error('Logout error:', error)
+    redirect('/error')
+  }
+
   redirect('/')
 }
