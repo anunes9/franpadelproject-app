@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/client'
-import { dbUtils } from '../../database/utils'
-import { Database } from '../../database/types/database.types'
+import { dbUtils } from '@/lib/database/utils'
+import { Database } from '@/lib/database/types'
 
 type UserProfile = Database['public']['Tables']['users']['Row']
 
