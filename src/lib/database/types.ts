@@ -15,6 +15,8 @@ export interface Database {
           full_name: string | null
           role: UserRole
           avatar_url: string | null
+          club_name: string | null
+          club_avatar_url: string | null
           created_at: string
           updated_at: string
         }
@@ -24,6 +26,8 @@ export interface Database {
           full_name?: string | null
           role?: UserRole
           avatar_url?: string | null
+          club_name?: string | null
+          club_avatar_url?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -33,6 +37,8 @@ export interface Database {
           full_name?: string | null
           role?: UserRole
           avatar_url?: string | null
+          club_name?: string | null
+          club_avatar_url?: string | null
           created_at?: string
           updated_at?: string
         }

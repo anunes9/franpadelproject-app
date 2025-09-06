@@ -1,18 +1,14 @@
-'use client'
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Dumbbell, Award } from 'lucide-react'
 import Link from 'next/link'
 import { StatsRow } from '@/components/Stats'
+import { DashboardHeader } from '@/components/DashboardHeader'
 
 export default function DashboardPage() {
   return (
     <>
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Bem-vindo ao seu Dashboard</h2>
-        <p className="text-muted-foreground text-lg">Continua a tua jornada no padel com nosso programa de treino</p>
-      </div>
+      <DashboardHeader />
 
       {/* Dashboard Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -108,6 +108,17 @@ export default function ProfilePage() {
                 <Input disabled id="email" type="email" defaultValue={userProfile?.email || user?.email || ''} />
               </div>
               <div>
+                <Label htmlFor="clubName">Clube</Label>
+                <Input disabled id="clubName" type="text" defaultValue={userProfile?.club_name || ''} />
+                <Image
+                  src={userProfile?.club_avatar_url || ''}
+                  alt="Clube"
+                  width={720}
+                  height={720}
+                  className="w-full"
+                />
+              </div>
+              <div>
                 <Label htmlFor="createdAt">Membro Desde</Label>
                 <Input
                   id="createdAt"

@@ -16,7 +16,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="text-sm text-muted-foreground">© 2025 All rights reserved</div>
+          <div className="text-sm text-muted-foreground">{new Date().getFullYear()} © All rights reserved</div>
         </div>
       </div>
     </footer>
