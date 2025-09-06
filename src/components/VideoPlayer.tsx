@@ -16,7 +16,7 @@ export default function VideoPlayer({ url, title, onClose }: VideoPlayerProps) {
   const [isMuted, setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [showControls, setShowControls] = useState(true)
+  // const [showControls, setShowControls] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
@@ -87,11 +87,11 @@ export default function VideoPlayer({ url, title, onClose }: VideoPlayerProps) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  const handleMouseMove = () => {
-    setShowControls(true)
-    const timeout = setTimeout(() => setShowControls(false), 3000)
-    return () => clearTimeout(timeout)
-  }
+  // const handleMouseMove = () => {
+  //   setShowControls(true)
+  //   const timeout = setTimeout(() => setShowControls(false), 3000)
+  //   return () => clearTimeout(timeout)
+  // }
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -104,12 +104,13 @@ export default function VideoPlayer({ url, title, onClose }: VideoPlayerProps) {
 
       <div
         className="relative bg-black rounded-lg overflow-hidden"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setShowControls(false)}
+        // onMouseMove={handleMouseMove}
+        // onMouseLeave={() => setShowControls(false)}
+        onClick={togglePlay}
       >
         <video
           ref={videoRef}
-          className="w-full h-auto"
+          className="w-full h-auto aspect-auto max-h-[80vh]"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
@@ -121,54 +122,52 @@ export default function VideoPlayer({ url, title, onClose }: VideoPlayerProps) {
         </video>
 
         {/* Video Controls Overlay */}
-        {showControls && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-            {/* Progress Bar */}
-            <div className="mb-3">
-              <input
-                type="range"
-                min="0"
-                max={duration || 0}
-                value={currentTime}
-                onChange={handleSeek}
-                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #10b981 0%, #10b981 ${
-                    (currentTime / (duration || 1)) * 100
-                  }%, #6b7280 ${(currentTime / (duration || 1)) * 100}%, #6b7280 100%)`,
-                }}
-              />
-            </div>
-
-            {/* Control Buttons */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={togglePlay} className="text-white hover:bg-white/20">
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
-
-                <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                </Button>
-
-                <Button variant="ghost" size="sm" onClick={restart} className="text-white hover:bg-white/20">
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-
-                <span className="text-white text-sm ml-2">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </span>
-              </div>
-
-              <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
-                <Maximize2 className="h-4 w-4" />
-              </Button>
-            </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+          {/* Progress Bar */}
+          <div className="mb-3">
+            <input
+              type="range"
+              min="0"
+              max={duration || 0}
+              value={currentTime}
+              onChange={handleSeek}
+              className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+              style={{
+                background: `linear-gradient(to right, #10b981 0%, #10b981 ${
+                  (currentTime / (duration || 1)) * 100
+                }%, #6b7280 ${(currentTime / (duration || 1)) * 100}%, #6b7280 100%)`,
+              }}
+            />
           </div>
-        )}
+
+          {/* Control Buttons */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={togglePlay} className="text-white hover:bg-white/20">
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+
+              <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
+                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
+
+              <Button variant="ghost" size="sm" onClick={restart} className="text-white hover:bg-white/20">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+
+              <span className="text-white text-sm ml-2">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+            </div>
+
+            <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
+              <Maximize2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
         {/* Play Button Overlay when paused */}
-        {!isPlaying && !showControls && (
+        {!isPlaying && (
           <div className="absolute inset-0 flex items-center justify-center">
             <Button
               variant="ghost"

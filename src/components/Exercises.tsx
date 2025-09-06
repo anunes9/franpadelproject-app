@@ -5,7 +5,7 @@ import { Dumbbell, X, ImageIcon } from 'lucide-react'
 import { Field } from '@/components/Field'
 import { useState } from 'react'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import Image from 'next/image'
+import ExerciseModal from './ExerciseModal'
 
 interface Exercise {
   id: string
@@ -27,7 +27,7 @@ export default function Exercises({ exercises }: ExercisesProps) {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
 
   const handleExerciseClick = (exercise: Exercise) => {
-    if (exercise.media) {
+    if (exercise.media?.url) {
       setSelectedExercise(exercise)
     }
   }
@@ -39,7 +39,11 @@ export default function Exercises({ exercises }: ExercisesProps) {
       {exercises && exercises.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {exercises.map((exercise) => (
-            <Card key={exercise.id} className="w-full">
+            <Card
+              key={exercise.id}
+              className="w-full cursor-pointer hover:shadow-lg transition-all duration-200"
+              onClick={() => handleExerciseClick(exercise)}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -54,7 +58,7 @@ export default function Exercises({ exercises }: ExercisesProps) {
                           variant="outline"
                           size="sm"
                           onClick={() => handleExerciseClick(exercise)}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 cursor-pointer"
                         >
                           <ImageIcon className="h-4 w-4" />
                           View Image
@@ -75,23 +79,7 @@ export default function Exercises({ exercises }: ExercisesProps) {
 
       {/* Image Modal - only shown when an exercise with media is selected */}
       {selectedExercise && selectedExercise.media && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="relative max-w-4xl max-h-full">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-white">{selectedExercise.title}</h3>
-              <Button variant="outline" onClick={closeImageModal} className="text-black border-white hover:bg-white/20">
-                <X className="h-4 w-4" /> Fechar
-              </Button>
-            </div>
-            <div className="bg-white rounded-lg overflow-hidden">
-              <Image
-                src={selectedExercise.media.url}
-                alt={selectedExercise.title}
-                className="w-full h-auto max-h-[80vh] object-contain"
-              />
-            </div>
-          </div>
-        </div>
+        <ExerciseModal exercise={selectedExercise} closeModal={closeImageModal} />
       )}
     </Field>
   )

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Play, Clock, X, Target, Zap, Users } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import ExerciseModal from './ExerciseModal'
 
 interface ExerciseCardProps {
   exercise: {
@@ -132,28 +132,7 @@ export default function ExerciseCardClient({ exercise }: ExerciseCardProps) {
       </Card>
 
       {/* Modal for displaying media */}
-      {isModalOpen && exercise.media?.url && (
-        <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-4 max-w-4xl max-h-[90vh] overflow-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">{exercise.title}</h3>
-              <Button variant="outline" size="sm" onClick={closeModal} className="cursor-pointer">
-                <X className="h-4 w-4" /> Fechar
-              </Button>
-            </div>
-            <div className="flex justify-center">
-              <Image
-                src={exercise.media.url}
-                alt={exercise.media.fileName || exercise.title}
-                className="max-w-full max-h-[70vh] object-contain"
-              />
-            </div>
-            {exercise.media.fileName && (
-              <p className="text-sm text-muted-foreground mt-2 text-center">{exercise.media.fileName}</p>
-            )}
-          </div>
-        </div>
-      )}
+      {isModalOpen && exercise.media?.url && <ExerciseModal exercise={exercise} closeModal={closeModal} />}
     </>
   )
 }

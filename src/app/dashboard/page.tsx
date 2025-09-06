@@ -44,7 +44,7 @@ export default function DashboardPage() {
                   <div className="bg-primary h-2 rounded-full" style={{ width: '0%' }}></div>
                 </div>
 
-                <Button className="w-full">Continuar Metodologia</Button>
+                <Button className="w-full cursor-pointer">Continuar Metodologia</Button>
               </div>
             </CardContent>
           </Card>
@@ -82,7 +82,7 @@ export default function DashboardPage() {
                   <div className="text-xs text-muted-foreground">Restantes</div>
                 </div>
               </div>
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
                 Visualizar Exercícios
               </Button>
             </CardContent>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
                   <span className="text-sm text-muted-foreground">Completa exame final</span>
                 </div>
               </div>
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
                 Visualizar Progresso
               </Button>
             </CardContent>
