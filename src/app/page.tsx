@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/LoginForm'
+import { OTPSignInForm } from '@/components/OTPSignInForm'
 import Image from 'next/image'
 
 export default function LoginPage() {
@@ -27,7 +27,7 @@ export default function LoginPage() {
             className="mx-auto mb-8"
           />
 
-          <LoginForm />
+          <OTPSignInForm />
         </div>
       </div>
     </div>

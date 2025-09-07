@@ -21,10 +21,6 @@ export default function VerifyPage() {
         const refreshToken = searchParams.get('refresh_token')
         const type = searchParams.get('type')
 
-        console.log('accessToken', accessToken)
-
-        debugger
-
         if (accessToken && type === 'recovery') {
           // This is a password reset flow, redirect directly to reset password
           setStatus('success')

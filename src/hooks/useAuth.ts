@@ -103,6 +103,26 @@ export function useAuth() {
     return { error }
   }
 
+  const signInWithOTP = async (email: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        shouldCreateUser: false,
+      },
+    })
+    return { error }
+  }
+
+  const verifyOTP = async (email: string, token: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'email',
+    })
+    return { error }
+  }
+
   return {
     user,
     userProfile,
@@ -112,6 +132,8 @@ export function useAuth() {
     signOut,
     resetPassword,
     updatePassword,
+    signInWithOTP,
+    verifyOTP,
     isAuthenticated: !!user,
   }
 }
