@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
+import Link from 'next/link'
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -106,9 +107,13 @@ export function LoginForm() {
                 Remember me
               </Label>
             </div>
-            <a href="#" className="text-sm text-accent hover:text-accent/80 transition-colors">
+            <Link
+              href="/auth/forgot-password"
+              className="text-sm text-accent hover:text-accent/80 transition-colors"
+              prefetch={false}
+            >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           <Button

@@ -19,7 +19,9 @@
     "test-contentful": "tsx scripts/test-contentful-connection.ts",
     "test-delivery": "tsx scripts/test-delivery-api.ts",
     "debug-tokens": "tsx scripts/debug-tokens.ts",
-    "test-token": "tsx scripts/test-token-directly.ts"
+    "test-token": "tsx scripts/test-token-directly.ts",
+    "test:invitation": "tsx scripts/test-invitation-flow.ts",
+    "debug:invitation": "tsx scripts/debug-invitation-flow.ts"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.0.1",
