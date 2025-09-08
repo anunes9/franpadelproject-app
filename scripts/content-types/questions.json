@@ -1,0 +1,111 @@
+{
+  "name": "Questions",
+  "description": "Modelo para Perguntas e Respostas",
+  "displayField": "question",
+  "fields": [
+    {
+      "id": "question",
+      "name": "Question",
+      "type": "Symbol",
+      "localized": true,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "answers",
+      "name": "Answers",
+      "type": "Array",
+      "localized": true,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false,
+      "items": {
+        "type": "Symbol",
+        "validations": []
+      }
+    },
+    {
+      "id": "correctOption",
+      "name": "Correct Option",
+      "type": "Symbol",
+      "localized": true,
+      "required": true,
+      "validations": [],
+      "disabled": false,
+      "omitted": false
+    },
+    {
+      "id": "module",
+      "name": "Module",
+      "type": "Symbol",
+      "localized": false,
+      "required": false,
+      "validations": [
+        {
+          "in": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "disabled": false,
+      "omitted": false
+    }
+  ],
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "rqt5vjnpqy42"
+      }
+    },
+    "id": "questions",
+    "type": "ContentType",
+    "createdAt": "2025-09-07T23:34:30.415Z",
+    "updatedAt": "2025-09-07T23:53:35.769Z",
+    "environment": {
+      "sys": {
+        "id": "master",
+        "type": "Link",
+        "linkType": "Environment"
+      }
+    },
+    "publishedVersion": 3,
+    "publishedAt": "2025-09-07T23:53:35.769Z",
+    "firstPublishedAt": "2025-09-07T23:34:30.755Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "publishedCounter": 2,
+    "version": 4,
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "2BDjzXxDRXyiFXjZgYGgNp"
+      }
+    },
+    "urn": "crn:contentful:::content:spaces/rqt5vjnpqy42/environments/master/content_types/questions"
+  }
+}

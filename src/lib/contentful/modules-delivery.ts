@@ -2,6 +2,14 @@ import { getEntries, initializeContentfulDeliveryClient } from './delivery-clien
 import { validateDeliveryConfig } from './config'
 import { FILE_TYPES } from '@/lib/utils'
 
+export interface Question {
+  id: string
+  externalId: string
+  question: string
+  answers: string[]
+  correctOption: string
+}
+
 export interface Exercise {
   id: string
   externalId: string
@@ -44,6 +52,7 @@ export interface Module {
     }
   }[]
   exercises?: Exercise[]
+  questions?: Question[]
   createdAt: string
   updatedAt: string
   publishedAt?: string
@@ -158,6 +167,9 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const presentation = fields.presentation || null
     const documents = fields.documents || []
     const exercises = fields.exercises || []
+    const questions = fields.questions || []
+
+    console.log('questions', questions)
 
     // Process exercises if they exist
     let processedExercises: Exercise[] = []
@@ -180,6 +192,15 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       })
     }
 
+    const processedQuestions: Question[] = questions.map((question: any) => {
+      return {
+        id: question.sys.id,
+        question: question.fields.question,
+        answers: question.fields.answers,
+        correctOption: question.fields.correctOption,
+      }
+    })
+
     const course: Module = {
       id: entry.sys.id,
       externalId,
@@ -192,6 +213,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       presentation,
       documents,
       exercises: processedExercises,
+      questions: processedQuestions,
       createdAt: entry.sys.createdAt,
       updatedAt: entry.sys.updatedAt,
       publishedAt: entry.sys.publishedAt,

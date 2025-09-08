@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 
 import { loadEnvFile } from './env-loader'
-import { createEntry, initializeContentfulClient } from '../src/lib/contentful'
+import { createEntry } from '../src/lib/contentful/entries'
+import { initializeContentfulClient } from '../src/lib/contentful/client'
 import { validateContentfulConfig } from '../src/lib/contentful/config'
 import { readFileSync } from 'fs'
 import { join } from 'path'

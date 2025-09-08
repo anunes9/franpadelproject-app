@@ -1,0 +1,456 @@
+{
+  "questions": [
+    {
+      "question": {
+        "en-US": "The mindset of a first service consists of:",
+        "pt": "A mentalidade de um 1º Serviço consiste em:"
+      },
+      "answers": {
+        "en-US": [
+          "Defining the point",
+          "Building the point",
+          "Pressuring the return",
+          "All of the above"
+        ],
+        "pt": [
+          "Definir o ponto",
+          "Construir o ponto",
+          "Pressionar a resposta",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Pressuring the return",
+        "pt": "Pressionar a resposta"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The main effects on the first service are:",
+        "pt": "Os efeitos primordiais no 1º serviço são:"
+      },
+      "answers": {
+        "en-US": [
+          "Flat and Topspin",
+          "Slice and Backspin",
+          "Slice and Topspin",
+          "Slice and Flat"
+        ],
+        "pt": [
+          "Plano e Top-Spin",
+          "Slice e Backspin",
+          "Slice e Top-Spin",
+          "Slice e Plano"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Slice and Flat",
+        "pt": "Slice e Plano"
+      }
+    },
+    {
+      "question": {
+        "en-US": "How many services are there in padel?",
+        "pt": "Quantos serviços existem no padel?"
+      },
+      "answers": {
+        "en-US": [
+          "1",
+          "2",
+          "3",
+          "None of the above"
+        ],
+        "pt": [
+          "1",
+          "2",
+          "3",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "2",
+        "pt": "2"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In the first service, the role of the non-dominant hand prior to execution is to:",
+        "pt": "Num primeiro serviço, a colocação da mão não-dominante prévia à execução tem como função:"
+      },
+      "answers": {
+        "en-US": [
+          "Set up and adjust body positioning",
+          "Indicate the point of impact",
+          "Providing balance and dynamics in the biomechanics of the movement",
+          "All of the above"
+        ],
+        "pt": [
+          "Enquadrar e ajustar o perfil corporal",
+          "Marcar o ponto de impacto",
+          "Conferir equilíbrio e dinâmica na biomecânica do movimento",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "All of the above",
+        "pt": "Todas as respostas anteriores"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In both the first and second services, the manual throwing can be:",
+        "pt": "Num primeiro e segundo serviço, os lançamentos podem ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Static",
+          "Dynamic",
+          "Unstable",
+          "Answers a) and b) are correct"
+        ],
+        "pt": [
+          "Estáticos",
+          "Dinâmicos",
+          "Instáveis",
+          "Resposta a) e b) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Answers a) and b) are correct",
+        "pt": "Resposta a) e b) estão corretas"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The first and second services are biomechanical movement patterns, that are:",
+        "pt": "O primeiro e segundo serviço são movimentos biomecânicos de padrão:"
+      },
+      "answers": {
+        "en-US": [
+          "Linear",
+          "Downward",
+          "Upward",
+          "All of the above"
+        ],
+        "pt": [
+          "Retilíneo",
+          "Descendente",
+          "Ascendente",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Downward",
+        "pt": "Descendente"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The potential for growth in a service has a significant correlation between:",
+        "pt": "O potencial de crescimento de um serviço apresenta uma correlação significativa entre:"
+      },
+      "answers": {
+        "en-US": [
+          "Elbow height relative to the shoulder",
+          "The speed of the hand through the ball",
+          "Body projection towards the ball",
+          "None of the above"
+        ],
+        "pt": [
+          "A altura do cotovelo ao ombro",
+          "A velocidade de passagem da mão e a bola",
+          "A projeção do corpo e a bola",
+          "Nenhuma das anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Elbow height relative to the shoulder",
+        "pt": "A altura do cotovelo ao ombro"
+      }
+    },
+    {
+      "question": {
+        "en-US": "Anatomically, the waist is located between:",
+        "pt": "A nível anatómico, a cintura fica localizada entre:"
+      },
+      "answers": {
+        "en-US": [
+          "The lower part of the ribs and the belly button",
+          "The lower part of the ribs and the highest point of the hip",
+          "At the belly button",
+          "Answers b) and c)"
+        ],
+        "pt": [
+          "Parte inferior das costelas e o umbigo",
+          "Parte inferior das costelas e o ponto mais alto do quadril",
+          "No umbigo",
+          "Resposta b) e c)"
+        ]
+      },
+      "correctOption": {
+        "en-US": "The lower part of the ribs and the highest point of the hip",
+        "pt": "Parte inferior das costelas e o ponto mais alto do quadril"
+      }
+    },
+    {
+      "question": {
+        "en-US": "According to FIP regulations, a padel player can serve:",
+        "pt": "O regulamento da FIP refere que o jogador de padel pode servir:"
+      },
+      "answers": {
+        "en-US": [
+          "Above waist height",
+          "Below waist height",
+          "At waist level",
+          "Answers b) and c) are correct"
+        ],
+        "pt": [
+          "Acima da altura da cintura",
+          "Abaixo da altura da cintura",
+          "Ao nível da cintura",
+          "Respostas b) e c) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Answers b) and c) are correct",
+        "pt": "Respostas b) e c) estão corretas"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The mindset of a second service consists of:",
+        "pt": "A mentalidade de um segundo serviço consiste em:"
+      },
+      "answers": {
+        "en-US": [
+          "Pressuring",
+          "Defining",
+          "Winning",
+          "Constructing"
+        ],
+        "pt": [
+          "Pressionar",
+          "Definir",
+          "Ganhar",
+          "Construir"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Constructing",
+        "pt": "Construir"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The primary effect of a second service is:",
+        "pt": "Qual o efeito primordial de um segundo serviço:"
+      },
+      "answers": {
+        "en-US": [
+          "Topspin",
+          "Slice",
+          "Flat",
+          "Answers a) and b) are correct"
+        ],
+        "pt": [
+          "Top-Spin",
+          "Slice",
+          "Plano",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Flat",
+        "pt": "Plano"
+      }
+    },
+    {
+      "question": {
+        "en-US": "After executing a service, the body should be projected:",
+        "pt": "Após a execução de um serviço, o corpo deve ser projetado:"
+      },
+      "answers": {
+        "en-US": [
+          "Towards the intended direction of the service",
+          "Forward, as quickly as possible",
+          "In the opposite direction of the intended service",
+          "All of the above"
+        ],
+        "pt": [
+          "No sentido da direção pretendida pelo jogador que serve",
+          "O mais rápido possível para a frente",
+          "Na direção contrária à pretendida pelo jogador que serve",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Towards the intended direction of the service",
+        "pt": "No sentido da direção pretendida pelo jogador que serve"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In padel, the service can:",
+        "pt": "O serviço no padel pode:"
+      },
+      "answers": {
+        "en-US": [
+          "Be executed from both the dominant and non-dominant side",
+          "Always be cross-court",
+          "Be executed above waist height",
+          "Answers a) and b) are correct"
+        ],
+        "pt": [
+          "Ser realizado no lado dominante e não-dominante",
+          "É sempre cruzado",
+          "Ser realizado acima da altura da cintura",
+          "As respostas a) e b) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Answers a) and b) are correct",
+        "pt": "As respostas a) e b) estão corretas"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In returning a first service, the responder's mindset should be to:",
+        "pt": "Na resposta a um primeiro serviço, o \"mindset\" de quem responde passa por:"
+      },
+      "answers": {
+        "en-US": [
+          "Return with the highest possible quality in order to receive an easier second ball, that allows maintaining control of the ball from the defensive zone",
+          "Attempt to win the point",
+          "Direct the ball to areas of the court that reduce margin of error",
+          "Answers a) and c) are correct"
+        ],
+        "pt": [
+          "Responder com a melhor qualidade possível de forma a receber uma segunda bola mais confortável, que permita manter o controlo da bola na zona defensiva",
+          "Procurar ganhar o ponto",
+          "Direcionar para zonas do campo que diminuam a margem de erro",
+          "Respostas a) e c) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Answers a) and c) are correct",
+        "pt": "Respostas a) e c) estão corretas"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The combination of rain and humidity influences the return of the service by:",
+        "pt": "A chuva, combinada com a humidade, condiciona a resposta ao serviço por:"
+      },
+      "answers": {
+        "en-US": [
+          "Reducing the bounce height of the ball on the court",
+          "Altering the bounce of the ball off the glass",
+          "Making the ball heavier",
+          "All of the above"
+        ],
+        "pt": [
+          "Diminuir a altura do ressalto da bola no chão",
+          "Alterar o ressalto da bola nos vidros",
+          "Tornar a bola mais pesada",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "All of the above",
+        "pt": "Todas as respostas anteriores"
+      }
+    },
+    {
+      "question": {
+        "en-US": "The server may raise the body in order to lift the waist, thereby maximizing the use of their morphology. This statement is:",
+        "pt": "Quem executa o serviço pode elevar o corpo de modo a elevar a cintura e, desta forma, rentabilizar a sua morfologia corporal ao máximo. Esta afirmação é:"
+      },
+      "answers": {
+        "en-US": [
+          "True",
+          "False"
+        ],
+        "pt": [
+          "Verdadeira",
+          "Falsa"
+        ]
+      },
+      "correctOption": {
+        "en-US": "True",
+        "pt": "Verdadeira"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In returning a second service, the responder's mindset should be:",
+        "pt": "Na resposta ao segundo serviço, o jogador que responde deve apresentar uma mentalidade:"
+      },
+      "answers": {
+        "en-US": [
+          "Constructive",
+          "Pressuring",
+          "Defining",
+          "None of the above"
+        ],
+        "pt": [
+          "De construção",
+          "De pressão",
+          "De definição",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Pressuring",
+        "pt": "De pressão"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In an ideal scenario, after executing the first service, the player should seek to receive the next ball in the offensive zone with:",
+        "pt": "Num cenário ideal, na primeira ação após a execução do primeiro serviço, o jogador deve procurar receber a bola na zona ofensiva, com:"
+      },
+      "answers": {
+        "en-US": [
+          "Neutral polarity in order to keep pressing",
+          "Negative polarity in order to defend the position",
+          "Positive polarity in order to keep pressing",
+          "Neutral polarity in order to defend the position"
+        ],
+        "pt": [
+          "Polaridade neutra para continuar a pressionar",
+          "Polaridade negativa para defender a posição",
+          "Polaridade positiva para continuar a pressionar",
+          "Polaridade neutra para defender a posição"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Positive polarity in order to keep pressing",
+        "pt": "Polaridade positiva para continuar a pressionar"
+      }
+    },
+    {
+      "question": {
+        "en-US": "In an ideal scenario, after executing the second service, the player should seek to receive the next ball in the offensive zone with:",
+        "pt": "Num cenário ideal, a primeira ação após a execução do segundo serviço, o jogador deve procurar receber a bola na zona ofensiva, com:"
+      },
+      "answers": {
+        "en-US": [
+          "Neutral polarity in order to keep pressing",
+          "Negative polarity in order to defend the position",
+          "Neutral polarity in order to defend the position",
+          "Answers b) and c) are correct"
+        ],
+        "pt": [
+          "Polaridade neutra para continuar a pressionar",
+          "Polaridade negativa para defender a posição",
+          "Polaridade neutra para defender a posição",
+          "As respostas b) e c) estão corretas"
+        ]
+      },
+      "correctOption": {
+        "en-US": "Answers b) and c) are correct",
+        "pt": "As respostas b) e c) estão corretas"
+      }
+    }
+  ]
+}
