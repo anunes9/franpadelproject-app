@@ -203,3 +203,50 @@ export async function getBestQuizAttempt(moduleExternalId: string) {
 
   return attempt || null
 }
+
+/**
+ * Get the latest quiz attempt responses for a module (for pre-populating form)
+ */
+export async function getLatestQuizAttemptResponses(moduleExternalId: string) {
+  const supabase = await createSupabaseServerClient()
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
+  if (userError || !user) {
+    throw new Error('User not authenticated')
+  }
+
+  const { data: attempt, error } = await supabase
+    .from('quiz_attempts')
+    .select('responses, attempt_number, score_percentage')
+    .eq('user_id', user.id)
+    .eq('module_external_id', moduleExternalId)
+    .order('attempt_number', { ascending: false })
+    .limit(1)
+    .single()
+
+  if (error && error.code !== 'PGRST116') {
+    // PGRST116 = no rows returned
+    throw new Error(`Failed to fetch latest quiz attempt: ${error.message}`)
+  }
+
+  if (!attempt) {
+    return null
+  }
+
+  // Convert the stored responses back to the format expected by the form
+  const responses: Record<string, number> = {}
+  const storedResponses = attempt.responses as Record<string, QuizResponse>
+
+  Object.entries(storedResponses).forEach(([questionId, response]) => {
+    responses[questionId] = response.selectedIndex
+  })
+
+  return {
+    responses,
+    attemptNumber: attempt.attempt_number,
+    scorePercentage: attempt.score_percentage,
+  }
+}

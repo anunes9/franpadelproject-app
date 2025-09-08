@@ -18,7 +18,6 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    console.log(error)
     redirect('/error')
   }
 
@@ -63,13 +62,9 @@ export async function updateUser(name: string) {
   const supabase = await createSupabaseServerClient()
   const session = await supabase.auth.getUser()
 
-  console.log('here', name)
-  console.log('here', session)
-
   const { error } = await supabase.from('users_app').update({ name }).eq('id', session.data.user?.id).select()
 
   if (error) {
-    console.log('error', error)
     return false
   } else return true
 }

@@ -13,8 +13,6 @@ export const initializeContentfulDeliveryClient = () => {
     throw new Error('CONTENTFUL_DELIVERY_TOKEN is required')
   }
 
-  console.log('config', config)
-
   contentfulDelivery = createClient({
     space: config.spaceId!,
     accessToken: config.deliveryToken,

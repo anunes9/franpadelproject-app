@@ -169,8 +169,6 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const exercises = fields.exercises || []
     const questions = fields.questions || []
 
-    console.log('questions', questions)
-
     // Process exercises if they exist
     let processedExercises: Exercise[] = []
     if (Array.isArray(exercises) && exercises.length > 0) {

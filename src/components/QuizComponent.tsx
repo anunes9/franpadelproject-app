@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, XCircle, Clock } from 'lucide-react'
 import { submitQuiz } from '@/app/dashboard/beginner/actions'
-import { getUserQuizAttempts, getUserModuleProgress } from '@/lib/database/quiz-utils'
+import { getUserQuizAttempts, getUserModuleProgress, getLatestQuizAttemptResponses } from '@/lib/database/quiz-utils'
 
 interface Question {
   id: string
@@ -32,6 +32,7 @@ interface QuizState {
   } | null
   previousAttempts: any[]
   moduleProgress: any
+  loadedFromPreviousAttempt: boolean
 }
 
 export default function QuizComponent({ questions, moduleExternalId }: QuizComponentProps) {
@@ -42,6 +43,7 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
     result: null,
     previousAttempts: [],
     moduleProgress: null,
+    loadedFromPreviousAttempt: false,
   })
 
   const [startTime, setStartTime] = useState<number | null>(null)
@@ -54,15 +56,19 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
 
   const loadQuizData = async () => {
     try {
-      const [attempts, progress] = await Promise.all([
+      const [attempts, progress, latestResponses] = await Promise.all([
         getUserQuizAttempts(moduleExternalId),
         getUserModuleProgress(moduleExternalId),
+        getLatestQuizAttemptResponses(moduleExternalId),
       ])
 
       setQuizState((prev) => ({
         ...prev,
         previousAttempts: attempts,
         moduleProgress: progress,
+        // Pre-populate responses if available and quiz hasn't been submitted yet
+        responses: prev.submitted ? prev.responses : latestResponses?.responses || {},
+        loadedFromPreviousAttempt: !prev.submitted && !!latestResponses?.responses,
       }))
     } catch (error) {
       console.error('Falha ao carregar os dados do quiz:', error)
@@ -144,6 +150,7 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
       result: null,
       previousAttempts: quizState.previousAttempts,
       moduleProgress: quizState.moduleProgress,
+      loadedFromPreviousAttempt: false,
     })
     setStartTime(Date.now())
   }
@@ -219,6 +226,16 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
   // Show quiz form
   return (
     <div className="space-y-4">
+      {/* Show indicator if responses were loaded from previous attempt */}
+      {quizState.loadedFromPreviousAttempt && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800">
+            <strong>Respostas carregadas:</strong> As tuas respostas da tentativa anterior foram carregadas. Podes
+            modificá-las ou submeter como estão.
+          </p>
+        </div>
+      )}
+
       {questions.map((question, index) => (
         <div key={question.id} className="p-4 border border-border rounded-lg">
           <h4 className="font-medium mb-3">
