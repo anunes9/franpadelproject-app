@@ -4,6 +4,7 @@
 export type UserRole = 'admin' | 'sales' | 'client'
 export type ProductType = 'course' | 'clinic' | 'formation'
 export type PaymentStatus = 'pending' | 'paid' | 'cancelled'
+export type ModuleStatus = 'not_started' | 'in_progress' | 'completed'
 
 export interface Database {
   public: {
@@ -183,6 +184,91 @@ export interface Database {
           updated_at?: string
         }
       }
+      quiz_attempts: {
+        Row: {
+          id: string
+          user_id: string
+          module_external_id: string
+          attempt_number: number
+          responses: any // JSONB
+          total_questions: number
+          correct_answers: number
+          score_percentage: number
+          time_spent_seconds: number | null
+          completed_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          module_external_id: string
+          attempt_number?: number
+          responses: any // JSONB
+          total_questions: number
+          correct_answers?: number
+          score_percentage?: number
+          time_spent_seconds?: number | null
+          completed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          module_external_id?: string
+          attempt_number?: number
+          responses?: any // JSONB
+          total_questions?: number
+          correct_answers?: number
+          score_percentage?: number
+          time_spent_seconds?: number | null
+          completed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      module_progress: {
+        Row: {
+          id: string
+          user_id: string
+          module_external_id: string
+          status: ModuleStatus
+          best_score: number | null
+          total_attempts: number
+          first_attempt_at: string | null
+          last_attempt_at: string | null
+          completed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          module_external_id: string
+          status?: ModuleStatus
+          best_score?: number | null
+          total_attempts?: number
+          first_attempt_at?: string | null
+          last_attempt_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          module_external_id?: string
+          status?: ModuleStatus
+          best_score?: number | null
+          total_attempts?: number
+          first_attempt_at?: string | null
+          last_attempt_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -194,6 +280,7 @@ export interface Database {
       user_role: UserRole
       product_type: ProductType
       payment_status: PaymentStatus
+      module_status: ModuleStatus
     }
   }
 }

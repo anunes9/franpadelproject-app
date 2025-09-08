@@ -88,7 +88,7 @@ export default function PageHeader({
           </div>
         </div>
 
-        {(progressPercentage >= 0 || (completedCount !== undefined && totalCount !== undefined)) && (
+        {progressPercentage >= 0 && completedCount !== undefined && totalCount !== undefined && (
           <div className="mt-6 md:mt-0">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary mb-1">{Math.round(progressPercentage)}%</div>

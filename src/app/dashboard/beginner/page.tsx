@@ -4,17 +4,35 @@ import { Badge } from '@/components/ui/badge'
 import { Play, CheckCircle, Lock, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { getBeginnerModules } from '@/lib/contentful/modules-delivery'
+import { getAllUserModuleProgress } from '@/lib/database/quiz-utils'
 import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 
 export default async function BeginnerCoursePage() {
   const modules = await getBeginnerModules()
 
-  const getModuleStatus = (index: number) => {
-    return ''
-    // if (index === 0) return 'completed'
-    // if (index === 1) return 'in-progress'
-    // return 'locked'
+  // Get user's progress for all modules
+  let userProgress: any[] = []
+  try {
+    userProgress = await getAllUserModuleProgress()
+  } catch (error) {
+    console.error('Failed to load user progress:', error)
+  }
+
+  const getModuleStatus = (moduleExternalId: string, index: number) => {
+    const progress = userProgress.find((p) => p.module_external_id === moduleExternalId)
+
+    if (progress?.status === 'completed') return 'completed'
+    if (progress?.status === 'in_progress') return 'in-progress'
+
+    // Check if previous module is completed to unlock next one
+    if (index > 0) {
+      const previousModule = modules[index - 1]
+      const previousProgress = userProgress.find((p) => p.module_external_id === previousModule.externalId)
+      if (previousProgress?.status !== 'completed') return 'locked'
+    }
+
+    return 'not_started'
   }
 
   const getStatusText = (status: string) => {
@@ -22,7 +40,7 @@ export default async function BeginnerCoursePage() {
       case 'completed':
         return 'Completo'
       case 'in-progress':
-        return 'Em progresso'
+        return 'Continuar'
       case 'locked':
         return 'Bloqueado'
       default:
@@ -43,7 +61,9 @@ export default async function BeginnerCoursePage() {
     }
   }
 
-  const completedModules = modules.filter((_, index) => getModuleStatus(index) === 'completed').length
+  const completedModules = modules.filter(
+    (module, index) => getModuleStatus(module.externalId, index) === 'completed'
+  ).length
   const totalModules = modules.length
   const progressPercentage = totalModules > 0 ? (completedModules / totalModules) * 100 : 0
 
@@ -70,9 +90,10 @@ export default async function BeginnerCoursePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {modules.map((module, index) => {
-              const status = getModuleStatus(index)
+              const status = getModuleStatus(module.externalId, index)
               const statusText = getStatusText(status)
               const link = status === 'locked' ? '#' : `/dashboard/beginner/${module.externalId}`
+              const progress = userProgress.find((p) => p.module_external_id === module.externalId)
               return (
                 <Link href={link} prefetch={false} key={module.id}>
                   <Card
@@ -100,37 +121,59 @@ export default async function BeginnerCoursePage() {
                             <CardDescription className="text-sm">{module.title}</CardDescription>
                           </div>
                         </div>
-
-                        {/* <Badge
-                          variant={
-                            status === 'completed' ? 'default' : status === 'in-progress' ? 'secondary' : 'outline'
-                          }
-                        >
-                          {statusText}
-                        </Badge> */}
                       </div>
                     </CardHeader>
-                    <CardContent className="flex flex-col justify-between h-full">
-                      <div>
-                        <div className="flex items-center space-x-2 mb-4">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">{module.duration}</span>
-                        </div>
+                    <CardContent className="flex flex-col justify-between gap-4 h-full">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">{module.duration}</span>
+                      </div>
 
-                        <div>
-                          <h4 className="text-sm font-medium text-foreground mb-2">Tópicos</h4>
-                          <div className="flex flex-wrap gap-1">
-                            {module.topics.map((topic, topicIndex) => (
-                              <Badge key={topicIndex} variant="outline" className="text-xs">
-                                {topic}
-                              </Badge>
-                            ))}
-                          </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-foreground mb-2">Tópicos</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {module.topics.map((topic, topicIndex) => (
+                            <Badge key={topicIndex} variant="outline" className="text-xs">
+                              {topic}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
 
+                      {/* Progress indicator */}
+                      {progress && (
+                        <div>
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground mb-2">Quiz</h4>
+
+                            <div className="flex items-center space-x-2 mb-2">
+                              <div className="w-full bg-muted rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full bg-primary`}
+                                  style={{ width: `${progress.best_score.toFixed(1)}%` }}
+                                />
+                              </div>
+
+                              <span className="text-sm text-muted-foreground">
+                                {progress.best_score ? `${progress.best_score.toFixed(1)}%` : 'N/A'}
+                              </span>
+                            </div>
+
+                            <div className="flex justify-between items-center text-xs text-muted-foreground">
+                              <span>
+                                {progress.total_attempts} tentativa{progress.total_attempts !== 1 ? 's' : ''}
+                              </span>
+
+                              {progress.completed_at && (
+                                <span>Completo em {new Date(progress.completed_at).toLocaleDateString('pt-PT')}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <Button
-                        className="w-full mt-8"
+                        className="w-full mt-4"
                         disabled={status === 'locked'}
                         variant={status === 'completed' ? 'outline' : 'default'}
                       >
@@ -143,36 +186,6 @@ export default async function BeginnerCoursePage() {
             })}
           </div>
         )}
-
-        {/* Course Stats */}
-        {/* <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="text-center p-6 bg-card rounded-lg border border-border">
-            <div className="text-2xl font-bold text-green-600 mb-1">{completedModules}</div>
-            <div className="text-sm text-muted-foreground">Completed Modules</div>
-          </div>
-          <div className="text-center p-6 bg-card rounded-lg border border-border">
-            <div className="text-2xl font-bold text-primary mb-1">
-              {modules.filter((_, index) => getModuleStatus(index) === 'in-progress').length}
-            </div>
-            <div className="text-sm text-muted-foreground">In Progress</div>
-          </div>
-          <div className="text-center p-6 bg-card rounded-lg border border-border">
-            <div className="text-2xl font-bold text-muted-foreground mb-1">
-              {modules.filter((_, index) => getModuleStatus(index) === 'locked').length}
-            </div>
-            <div className="text-sm text-muted-foreground">Remaining</div>
-          </div>
-          <div className="text-center p-6 bg-card rounded-lg border border-border">
-            <div className="text-2xl font-bold text-accent mb-1">
-              {modules.reduce((total, module) => {
-                const duration = parseInt(module.duration) || 0
-                return total + duration
-              }, 0)}
-              min
-            </div>
-            <div className="text-sm text-muted-foreground">Total Duration</div>
-          </div>
-        </div> */}
       </div>
     </>
   )

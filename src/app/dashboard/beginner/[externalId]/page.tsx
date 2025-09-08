@@ -6,7 +6,7 @@ import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import AdditionalResources from '@/components/AdditionalResources'
 import Exercises from '@/components/Exercises'
-import { Button } from '@/components/ui/button'
+import QuizComponent from '@/components/QuizComponent'
 import PDFViewerWrapper from '@/components/PDFViewerWrapper'
 
 interface ModulePageProps {
@@ -51,33 +51,11 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <Exercises exercises={course.exercises} />
 
         {/* Quiz Section */}
-        <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
-          <div className="space-y-4">
-            {course.questions?.map((question, index) => (
-              <div key={question.id} className="p-4 border border-border rounded-lg">
-                <h4 className="font-medium mb-3">
-                  {index + 1}. {question.question}
-                </h4>
-                <div className="space-y-2">
-                  {question.answers.map((option, optionIndex) => (
-                    <label key={optionIndex} className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name={`question-${question.id}`}
-                        value={optionIndex}
-                        className="text-primary"
-                      />
-                      <span className="text-sm">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6">
-            <Button className="w-full">Submeter Respostas</Button>
-          </div>
-        </Field>
+        {course.questions && course.questions.length > 0 && (
+          <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
+            <QuizComponent questions={course.questions} moduleExternalId={externalId} />
+          </Field>
+        )}
       </div>
     </>
   )
