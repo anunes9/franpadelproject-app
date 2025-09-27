@@ -1,7 +1,7 @@
-import { OTPSignInForm } from '@/components/OTPSignInForm'
+import { LoginPage } from '@/components/LoginPage'
 import Image from 'next/image'
 
-export default function LoginPage() {
+export default function HomePage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Video Background */}
@@ -27,7 +27,7 @@ export default function LoginPage() {
             className="mx-auto mb-8"
           />
 
-          <OTPSignInForm />
+          <LoginPage />
         </div>
       </div>
     </div>
