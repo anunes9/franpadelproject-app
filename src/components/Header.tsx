@@ -1,14 +1,15 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, BookOpen, Dumbbell, Award, Calendar } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Image from 'next/image'
 
 export default function Header() {
   const router = useRouter()
+  const pathname = usePathname()
   const { user, userProfile, signOut } = useAuth()
 
   const handleLogout = async () => {
@@ -28,6 +29,14 @@ export default function Header() {
     }
   }
 
+  const navigationItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: BookOpen },
+    { href: '/dashboard/beginner', label: 'Metodologia', icon: BookOpen },
+    { href: '/dashboard/exercises', label: 'Exercícios', icon: Dumbbell },
+    { href: '/dashboard/training-planner', label: 'Planeador', icon: Calendar },
+    { href: '/dashboard/certification', label: 'Certificação', icon: Award },
+  ]
+
   return (
     <header className="border-b border-border bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,6 +50,27 @@ export default function Header() {
               <Image src="/fran-methodology-logo.png" alt="Fran Methodology" width={160} height={160} />
             </Link>
           </div>
+
+          {/* Navigation Menu */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navigationItems.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+              return (
+                <Button
+                  key={item.href}
+                  variant={isActive ? 'default' : 'ghost'}
+                  size="sm"
+                  asChild
+                  className={isActive ? 'bg-primary text-primary-foreground' : ''}
+                >
+                  <Link href={item.href} prefetch={false} className="flex items-center space-x-2">
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                </Button>
+              )
+            })}
+          </nav>
 
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" asChild>
