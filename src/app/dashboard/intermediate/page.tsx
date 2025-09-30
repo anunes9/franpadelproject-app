@@ -19,8 +19,6 @@ export default async function IntermediateCoursePage() {
 
   return (
     <>
-      <BackNavigation text="Voltar ao Dashboard" />
-
       {/* Course Header */}
       <CourseHeader modules={modules} level="Intermediate" />
 

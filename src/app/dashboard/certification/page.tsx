@@ -111,8 +111,6 @@ export default function CertificationPage() {
 
   return (
     <>
-      <BackNavigation href="/dashboard" text="Voltar ao Curso" />
-
       <PageHeader
         color="secondary"
         title="Centro de Certificação"

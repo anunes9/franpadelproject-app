@@ -5,7 +5,6 @@ import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Clock, BookOpen, Target } from 'lucide-react'
-import BackNavigation from '@/components/BackNavigation'
 
 interface ModulePageProps {
   params: {
@@ -25,9 +24,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
       <DashboardHeader />
 
       <div className="max-w-4xl mx-auto">
-        {/* Back Navigation */}
-        <BackNavigation href="/dashboard/intermediate" />
-
         {/* Module Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
@@ -125,7 +121,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
             </CardHeader>
             <CardContent>
               <div className="prose prose-lg max-w-none">
-                <MarkdownRenderer content={module.presentation} />
+                <MarkdownRenderer content={module?.presentation?.fields?.file?.url} />
               </div>
             </CardContent>
           </Card>

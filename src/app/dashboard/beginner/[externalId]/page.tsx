@@ -25,8 +25,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
   return (
     <>
-      <BackNavigation href="/dashboard/beginner" text="Voltar ao Curso" />
-
       <PageHeader
         title={`${course.title} - ${course.description}`}
         level={course.level}

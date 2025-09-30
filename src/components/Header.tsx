@@ -30,8 +30,8 @@ export default function Header() {
   }
 
   const navigationItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: BookOpen },
-    { href: '/dashboard/beginner', label: 'Metodologia', icon: BookOpen },
+    { href: '/dashboard/beginner', label: 'Iniciado', icon: BookOpen },
+    { href: '/dashboard/intermediate', label: 'Intermédio', icon: BookOpen },
     { href: '/dashboard/exercises', label: 'Exercícios', icon: Dumbbell },
     { href: '/dashboard/certification', label: 'Certificação', icon: Award },
   ]
@@ -51,7 +51,7 @@ export default function Header() {
           </div>
 
           {/* Navigation Menu */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1">
             {navigationItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
               return (

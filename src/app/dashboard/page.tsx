@@ -11,7 +11,7 @@ export default function DashboardPage() {
       <DashboardHeader />
 
       {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Beginner Course Card */}
         <Link href="/dashboard/beginner">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
@@ -40,7 +40,7 @@ export default function DashboardPage() {
                   <div className="bg-primary h-2 rounded-full" style={{ width: '0%' }}></div>
                 </div>
 
-                <Button className="w-full cursor-pointer">Continuar Metodologia</Button>
+                <Button className="w-full cursor-pointer">Ver mais</Button>
               </div>
             </CardContent>
           </Card>
@@ -74,9 +74,7 @@ export default function DashboardPage() {
                   <div className="bg-orange-500 h-2 rounded-full" style={{ width: '0%' }}></div>
                 </div>
 
-                <Button className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white">
-                  Iniciar Metodologia Intermédia
-                </Button>
+                <Button className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white">Ver mais</Button>
               </div>
             </CardContent>
           </Card>

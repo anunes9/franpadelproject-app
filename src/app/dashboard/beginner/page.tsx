@@ -39,8 +39,6 @@ export default async function BeginnerCoursePage() {
 
   return (
     <>
-      <BackNavigation text="Voltar ao Dashboard" />
-
       <CourseHeader modules={modules} level="Beginner" />
 
       {/* Modules Grid */}

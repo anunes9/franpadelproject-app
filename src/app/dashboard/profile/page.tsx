@@ -35,7 +35,6 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <>
-        <BackNavigation text="Voltar ao Dashboard" />
         <div className="flex items-center justify-center py-8">
           <div className="text-muted-foreground">Loading profile...</div>
         </div>
@@ -45,9 +44,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      {/* Back Navigation */}
-      <BackNavigation text="Voltar ao Dashboard" />
-
       {/* Profile Header */}
       <div className="bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border -mx-8 px-8 py-8 mb-8">
         <div className="flex justify-center">

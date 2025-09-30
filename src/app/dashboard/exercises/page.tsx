@@ -32,8 +32,6 @@ export default async function ExercisesPage() {
 
   return (
     <>
-      <BackNavigation text="Voltar ao Dashboard" />
-
       <PageHeader
         title="Biblioteca de Exercícios"
         description="Coleção abrangente de exercícios técnicos e de tácticos"
