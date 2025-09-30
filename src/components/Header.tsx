@@ -33,7 +33,6 @@ export default function Header() {
     { href: '/dashboard', label: 'Dashboard', icon: BookOpen },
     { href: '/dashboard/beginner', label: 'Metodologia', icon: BookOpen },
     { href: '/dashboard/exercises', label: 'Exercícios', icon: Dumbbell },
-    { href: '/dashboard/training-planner', label: 'Planeador', icon: Calendar },
     { href: '/dashboard/certification', label: 'Certificação', icon: Award },
   ]
 

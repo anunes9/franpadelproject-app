@@ -132,6 +132,79 @@ export async function getBeginnerModules(): Promise<Module[]> {
   }
 }
 
+export async function getIntermediateModules(): Promise<Module[]> {
+  try {
+    // Initialize Contentful delivery client
+    initializeContentfulDeliveryClient()
+
+    // Validate configuration
+    validateDeliveryConfig()
+
+    console.log('🔍 Fetching intermediate modules from Contentful Delivery API...')
+
+    // Get all published entries with content type "modules" and level = "Intermediate"
+    const entries = await getEntries({
+      content_type: 'modules',
+      'fields.level': 'Intermediate',
+      include: 2, // Include 2 levels of linked entries
+      limit: 100,
+      locale: 'pt',
+    })
+
+    if (entries.items.length === 0) {
+      console.log('❌ No intermediate modules found in Contentful')
+      return []
+    }
+
+    console.log('🔍 Entries:', entries.items.length)
+
+    // Process entries
+    const modules: Module[] = entries.items
+      .map((entry: any) => {
+        const fields = entry.fields
+        const title = fields.title || 'No title'
+        const description = fields.description || 'No description'
+        const level = fields.level || 'No level'
+        const externalId = fields.externalId || entry.sys.id
+        const duration = fields.duration || 'Unknown'
+        const topics = fields.topics || []
+        const content = fields.content || null
+        const presentation = fields.presentation || null
+
+        return {
+          id: entry.sys.id,
+          externalId,
+          title,
+          description,
+          duration,
+          level,
+          topics: Array.isArray(topics) ? topics : [],
+          content,
+          presentation,
+          createdAt: entry.sys.createdAt,
+          updatedAt: entry.sys.updatedAt,
+          publishedAt: entry.sys.publishedAt,
+          isPublished: !!entry.sys.publishedAt,
+        }
+      })
+      .sort((a: Module, b: Module) => {
+        // Sort by externalId if it's numeric, otherwise by title
+        const aId = parseInt(a.externalId) || 0
+        const bId = parseInt(b.externalId) || 0
+        if (aId && bId) {
+          return aId - bId
+        }
+        return a.title.localeCompare(b.title)
+      })
+
+    console.log(`✅ Found ${modules.length} intermediate modules`)
+    return modules
+  } catch (error) {
+    console.error('❌ Error fetching intermediate modules:', error)
+    return []
+  }
+}
+
 export async function getModuleByExternalId(externalId: string): Promise<Module | null> {
   try {
     // Initialize Contentful delivery client

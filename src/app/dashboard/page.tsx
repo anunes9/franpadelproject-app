@@ -11,7 +11,7 @@ export default function DashboardPage() {
       <DashboardHeader />
 
       {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Beginner Course Card */}
         <Link href="/dashboard/beginner">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
@@ -41,6 +41,42 @@ export default function DashboardPage() {
                 </div>
 
                 <Button className="w-full cursor-pointer">Continuar Metodologia</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Intermediate Course Card */}
+        <Link href="/dashboard/intermediate">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
+            <CardHeader>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-orange-500/10 rounded-lg group-hover:bg-orange-500/20 transition-colors">
+                  <BookOpen className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">Metodologia - Intermédio</CardTitle>
+                  <CardDescription>Desenvolve técnicas avançadas</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-between h-full">
+              <p className="text-muted-foreground mb-4">
+                Avança para o próximo nível com mesociclos que focam em transições progressivas e técnicas avançadas.
+              </p>
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-muted-foreground">Progresso: 0/1 mesociclos</span>
+                  <span className="text-sm font-medium text-orange-600">0% Completo</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-2 mb-4">
+                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+
+                <Button className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white">
+                  Iniciar Metodologia Intermédia
+                </Button>
               </div>
             </CardContent>
           </Card>
