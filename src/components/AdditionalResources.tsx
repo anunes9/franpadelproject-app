@@ -54,6 +54,8 @@ export default function AdditionalResources({ documents }: AdditionalResourcesPr
     setSelectedResource(null)
   }
 
+  if (!documents?.length) return null
+
   return (
     <Field title="Documentos e Correções Técnicas" icon={<NotebookTextIcon className="h-5 w-5" />}>
       <div className="flex flex-wrap gap-2">

@@ -1,153 +1,67 @@
+import { Award, FileText } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
-import { DashboardHeader } from '@/components/DashboardHeader'
+import PageHeader from '@/components/PageHeader'
+import { Field } from '@/components/Field'
+import AdditionalResources from '@/components/AdditionalResources'
+import Exercises from '@/components/Exercises'
+import QuizComponent from '@/components/QuizComponent'
+import PDFViewerWrapper from '@/components/PDFViewerWrapper'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Clock, BookOpen, Target } from 'lucide-react'
 
 interface ModulePageProps {
-  params: {
+  params: Promise<{
     externalId: string
-  }
+  }>
 }
 
 export default async function ModulePage({ params }: ModulePageProps) {
-  const module = await getModuleByExternalId(params.externalId)
+  const { externalId } = await params
 
-  if (!module) {
-    notFound()
-  }
+  // Fetch module data from Contentful
+  const course = await getModuleByExternalId(externalId)
+
+  if (!course) notFound()
 
   return (
     <>
-      <DashboardHeader />
+      <PageHeader
+        title={`${course.title} - ${course.description}`}
+        level={course.level}
+        duration={course.duration}
+        topics={course.topics}
+      />
 
-      <div className="max-w-4xl mx-auto">
-        {/* Module Header */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-3 bg-orange-500/10 rounded-lg">
-              <BookOpen className="h-8 w-8 text-orange-600" />
+      <div className="space-y-6">
+        {/* Presentation */}
+        {course.presentation && (
+          <Field title="Apresentação" icon={<FileText className="h-5 w-5" />}>
+            <div className="px-4">
+              <PDFViewerWrapper url={course.presentation.fields.file.url} />
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{module.title}</h1>
-              <p className="text-muted-foreground text-lg">{module.description}</p>
-            </div>
-          </div>
-
-          {/* Module Info */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-orange-600" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Duração</p>
-                    <p className="font-semibold">{module.duration}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Target className="h-5 w-5 text-orange-600" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Nível</p>
-                    <p className="font-semibold">{module.level}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="h-5 w-5 text-orange-600" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Tópicos</p>
-                    <p className="font-semibold">{module.topics?.length || 0} tópicos</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Topics */}
-          {module.topics && module.topics.length > 0 && (
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg">Tópicos Abordados</CardTitle>
-                <CardDescription>
-                  Os principais conceitos e técnicas que serão desenvolvidos neste mesociclo
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {module.topics.map((topic, index) => (
-                    <Badge key={index} variant="secondary" className="text-sm">
-                      {topic}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* Module Content */}
-        {module.content && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Conteúdo do Mesociclo</CardTitle>
-              <CardDescription>Desenvolve as técnicas e conceitos fundamentais deste nível</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="prose prose-lg max-w-none">
-                <MarkdownRenderer content={module.content} />
-              </div>
-            </CardContent>
-          </Card>
+          </Field>
         )}
 
-        {/* Presentation Content */}
-        {module.presentation && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="text-xl">Apresentação</CardTitle>
-              <CardDescription>Material de apoio e apresentações do mesociclo</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="prose prose-lg max-w-none">
-                <MarkdownRenderer content={module?.presentation?.fields?.file?.url} />
-              </div>
-            </CardContent>
-          </Card>
+        {course.technicalContent && (
+          <Field title="Conteúdo Teórico" icon={<FileText className="h-5 w-5" />}>
+            <div className="px-4">
+              <MarkdownRenderer content={course.technicalContent} />
+            </div>
+          </Field>
         )}
 
-        {/* Module Metadata */}
-        <div className="mt-8 p-4 bg-muted/50 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
-            <div>
-              <p>
-                <strong>ID do Módulo:</strong> {module.externalId}
-              </p>
-              <p>
-                <strong>Criado em:</strong> {new Date(module.createdAt).toLocaleDateString('pt-PT')}
-              </p>
-            </div>
-            <div>
-              <p>
-                <strong>Última atualização:</strong> {new Date(module.updatedAt).toLocaleDateString('pt-PT')}
-              </p>
-              <p>
-                <strong>Status:</strong> {module.isPublished ? 'Publicado' : 'Rascunho'}
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Additional Resources */}
+        <AdditionalResources documents={course.documents} />
+
+        {/* Exercises */}
+        <Exercises exercises={course.exercises} />
+
+        {/* Quiz Section */}
+        {course.questions && course.questions.length > 0 && (
+          <Field title="Knowledge Check" icon={<Award className="h-5 w-5" />}>
+            <QuizComponent questions={course.questions} moduleExternalId={externalId} />
+          </Field>
+        )}
       </div>
     </>
   )

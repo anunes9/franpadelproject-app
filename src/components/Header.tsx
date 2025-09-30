@@ -79,7 +79,7 @@ export default function Header() {
                 ) : (
                   <User className="h-4 w-4" />
                 )}
-                <span>{userProfile?.full_name || user?.email || 'Profile'}</span>
+                <span>{userProfile?.full_name || user?.email || 'Perfil'}</span>
               </Link>
             </Button>
 

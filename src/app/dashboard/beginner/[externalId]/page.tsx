@@ -1,7 +1,6 @@
 import { Award, FileText } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
-import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { Field } from '@/components/Field'
 import AdditionalResources from '@/components/AdditionalResources'

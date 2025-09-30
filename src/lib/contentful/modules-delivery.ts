@@ -31,6 +31,7 @@ export interface Module {
   level: string
   topics: string[]
   content?: string // Markdown
+  technicalContent?: string // Markdown
   presentation?: {
     fields: {
       file: {
@@ -237,6 +238,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
     const duration = fields.duration || 'Unknown'
     const topics = fields.topics || []
     const content = fields.content || null
+    const technicalContent = fields.technicalContent || null
     const presentation = fields.presentation || null
     const documents = fields.documents || []
     const exercises = fields.exercises || []
@@ -281,6 +283,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       level,
       topics: Array.isArray(topics) ? topics : [],
       content,
+      technicalContent,
       presentation,
       documents,
       exercises: processedExercises,
