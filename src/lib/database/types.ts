@@ -4,6 +4,7 @@
 export type UserRole = 'admin' | 'sales' | 'client'
 export type ProductType = 'course' | 'clinic' | 'formation'
 export type PaymentStatus = 'pending' | 'paid' | 'cancelled'
+export type WeeklyPlanItemType = 'module' | 'exercise'
 
 export interface Database {
   public: {
@@ -213,7 +214,8 @@ export interface Database {
         Row: {
           id: string
           weekly_plan_id: string
-          module_external_id: string
+          item_external_id: string
+          item_type: WeeklyPlanItemType
           day_of_week: number
           order_index: number
           notes: string | null
@@ -223,7 +225,8 @@ export interface Database {
         Insert: {
           id?: string
           weekly_plan_id: string
-          module_external_id: string
+          item_external_id: string
+          item_type: WeeklyPlanItemType
           day_of_week: number
           order_index?: number
           notes?: string | null
@@ -233,7 +236,8 @@ export interface Database {
         Update: {
           id?: string
           weekly_plan_id?: string
-          module_external_id?: string
+          item_external_id?: string
+          item_type?: WeeklyPlanItemType
           day_of_week?: number
           order_index?: number
           notes?: string | null
@@ -252,6 +256,7 @@ export interface Database {
       user_role: UserRole
       product_type: ProductType
       payment_status: PaymentStatus
+      weekly_plan_item_type: WeeklyPlanItemType
     }
   }
 }

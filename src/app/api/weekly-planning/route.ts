@@ -20,11 +20,16 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { year, week, moduleExternalId, dayOfWeek, orderIndex, notes } = body
+    const { year, week, itemExternalId, itemType, dayOfWeek, orderIndex, notes } = body
 
     // Validate required fields
-    if (!year || !week || !moduleExternalId || !dayOfWeek) {
+    if (!year || !week || !itemExternalId || !itemType || !dayOfWeek) {
       return NextResponse.json({ error: 'Campos obrigatórios em falta' }, { status: 400 })
+    }
+
+    // Validate item type
+    if (itemType !== 'module' && itemType !== 'exercise') {
+      return NextResponse.json({ error: 'Tipo de item inválido' }, { status: 400 })
     }
 
     // Validate field types and ranges
@@ -90,12 +95,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Insert the module
-    const { data: newModule, error: insertError } = await supabase
+    // Insert the item
+    const { data: newItem, error: insertError } = await supabase
       .from('weekly_plan_modules')
       .insert({
         weekly_plan_id: weeklyPlanId,
-        module_external_id: moduleExternalId,
+        item_external_id: itemExternalId,
+        item_type: itemType,
         day_of_week: dayOfWeek,
         order_index: finalOrderIndex,
         notes: notes || null,
@@ -103,12 +109,12 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (insertError || !newModule) {
-      console.error('Error inserting module:', insertError)
-      return NextResponse.json({ error: 'Erro ao adicionar módulo' }, { status: 500 })
+    if (insertError || !newItem) {
+      console.error('Error inserting item:', insertError)
+      return NextResponse.json({ error: 'Erro ao adicionar item' }, { status: 500 })
     }
 
-    return NextResponse.json(newModule, { status: 201 })
+    return NextResponse.json(newItem, { status: 201 })
   } catch (error) {
     console.error('Error in POST /api/weekly-planning:', error)
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })

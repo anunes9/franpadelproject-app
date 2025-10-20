@@ -4,9 +4,10 @@ import { useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DayCard } from './day-card'
 import { WeekNavigator } from './week-navigator'
-import { ModuleSelector } from './module-selector'
-import { WeeklyPlanData, addModuleToDay, removeModuleFromDay } from '@/app/dashboard/weekly-planning/actions'
+import { ItemSelector } from './item-selector'
+import { WeeklyPlanData, addItemToDay, removeItemFromDay } from '@/app/dashboard/weekly-planning/actions'
 import { Module } from '@/lib/contentful/modules-delivery'
+import { Exercise } from '@/lib/contentful/exercises-delivery'
 import {
   getDayName,
   getDateForDay,
@@ -21,6 +22,7 @@ interface WeeklyPlanningCalendarProps {
   initialWeek: number
   weeklyPlanData: WeeklyPlanData
   availableModules: Module[]
+  availableExercises: Exercise[]
 }
 
 export function WeeklyPlanningCalendar({
@@ -28,27 +30,29 @@ export function WeeklyPlanningCalendar({
   initialWeek,
   weeklyPlanData,
   availableModules,
+  availableExercises,
 }: WeeklyPlanningCalendarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
-  const [isModuleSelectorOpen, setIsModuleSelectorOpen] = useState(false)
+  const [isItemSelectorOpen, setIsItemSelectorOpen] = useState(false)
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
 
   const year = initialYear
   const week = initialWeek
 
-  // Group modules by day
-  const modulesByDay: Record<number, typeof weeklyPlanData.modules> = {}
-  for (let i = 1; i <= 7; i++) {
-    modulesByDay[i] = weeklyPlanData.modules.filter((m) => m.day_of_week === i)
+  // Group items by day (only weekdays: Monday-Friday)
+  const itemsByDay: Record<number, typeof weeklyPlanData.items> = {}
+  for (let i = 1; i <= 5; i++) {
+    itemsByDay[i] = weeklyPlanData.items.filter((m) => m.day_of_week === i)
   }
 
-  // Get current date for highlighting today
+  // Get current date for highlighting today (only for weekdays)
   const currentWeek = getCurrentWeek()
   const isCurrentWeek = currentWeek.year === year && currentWeek.week === week
-  const today = isCurrentWeek ? new Date().getDay() || 7 : null
+  const currentDay = new Date().getDay() || 7
+  const today = isCurrentWeek && currentDay <= 5 ? currentDay : null
 
   const handlePreviousWeek = () => {
     const prev = getPreviousWeek(year, week)
@@ -69,33 +73,33 @@ export function WeeklyPlanningCalendar({
     router.push(`/dashboard/weekly-planning?year=${newYear}&week=${newWeek}`)
   }
 
-  const handleAddModule = (dayOfWeek: number) => {
+  const handleAddItem = (dayOfWeek: number) => {
     setSelectedDay(dayOfWeek)
-    setIsModuleSelectorOpen(true)
+    setIsItemSelectorOpen(true)
   }
 
-  const handleSelectModule = async (moduleExternalId: string) => {
+  const handleSelectItem = async (itemExternalId: string, itemType: 'module' | 'exercise') => {
     if (selectedDay === null) return
 
     startTransition(async () => {
-      const result = await addModuleToDay(year, week, moduleExternalId, selectedDay)
+      const result = await addItemToDay(year, week, itemExternalId, itemType, selectedDay)
 
       if (result.success) {
         router.refresh()
       } else {
-        alert(result.error || 'Erro ao adicionar módulo')
+        alert(result.error || 'Erro ao adicionar item')
       }
     })
   }
 
-  const handleRemoveModule = async (moduleId: string) => {
+  const handleRemoveItem = async (itemId: string) => {
     startTransition(async () => {
-      const result = await removeModuleFromDay(moduleId)
+      const result = await removeItemFromDay(itemId)
 
       if (result.success) {
         router.refresh()
       } else {
-        alert(result.error || 'Erro ao remover módulo')
+        alert(result.error || 'Erro ao remover item')
       }
     })
   }
@@ -111,9 +115,9 @@ export function WeeklyPlanningCalendar({
         onCurrentWeek={handleCurrentWeek}
       />
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-4">
-        {[1, 2, 3, 4, 5, 6, 7].map((dayOfWeek) => {
+      {/* Calendar Grid - Only weekdays (Monday-Friday) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {[1, 2, 3, 4, 5].map((dayOfWeek) => {
           const date = getDateForDay(year, week, dayOfWeek)
           const isToday = today === dayOfWeek
 
@@ -123,24 +127,25 @@ export function WeeklyPlanningCalendar({
               dayName={getDayName(dayOfWeek)}
               date={formatShortDate(date)}
               dayOfWeek={dayOfWeek}
-              modules={modulesByDay[dayOfWeek] || []}
-              onAddModule={() => handleAddModule(dayOfWeek)}
-              onRemoveModule={handleRemoveModule}
+              items={itemsByDay[dayOfWeek] || []}
+              onAddItem={() => handleAddItem(dayOfWeek)}
+              onRemoveItem={handleRemoveItem}
               isToday={isToday}
             />
           )
         })}
       </div>
 
-      {/* Module Selector Dialog */}
-      <ModuleSelector
-        isOpen={isModuleSelectorOpen}
+      {/* Item Selector Dialog */}
+      <ItemSelector
+        isOpen={isItemSelectorOpen}
         onClose={() => {
-          setIsModuleSelectorOpen(false)
+          setIsItemSelectorOpen(false)
           setSelectedDay(null)
         }}
-        onSelectModule={handleSelectModule}
+        onSelectItem={handleSelectItem}
         availableModules={availableModules}
+        availableExercises={availableExercises}
       />
 
       {/* Loading overlay */}

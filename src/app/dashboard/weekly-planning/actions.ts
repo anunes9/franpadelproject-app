@@ -1,20 +1,22 @@
 'use server'
 
 import { createSupabaseServerClient } from '@/utils/supabase/server'
-import { getAllModules } from '@/lib/contentful/modules-delivery'
-import { Module } from '@/lib/contentful/modules-delivery'
+import { getAllModules, Module } from '@/lib/contentful/modules-delivery'
+import { getAllExercises, Exercise } from '@/lib/contentful/exercises-delivery'
 import { revalidatePath } from 'next/cache'
 
-export interface WeeklyPlanModule {
+export interface WeeklyPlanItem {
   id: string
   weekly_plan_id: string
-  module_external_id: string
+  item_external_id: string
+  item_type: 'module' | 'exercise'
   day_of_week: number
   order_index: number
   notes: string | null
   created_at: string
   updated_at: string
-  module?: Module // Populated from Contentful
+  module?: Module // Populated from Contentful if type is 'module'
+  exercise?: Exercise // Populated from Contentful if type is 'exercise'
 }
 
 export interface WeeklyPlan {
@@ -28,7 +30,7 @@ export interface WeeklyPlan {
 
 export interface WeeklyPlanData {
   weeklyPlan: WeeklyPlan | null
-  modules: WeeklyPlanModule[]
+  items: WeeklyPlanItem[]
 }
 
 /**
@@ -60,38 +62,46 @@ export async function getWeeklyPlan(year: number, week: number): Promise<WeeklyP
     if (planError || !weeklyPlan) {
       return {
         weeklyPlan: null,
-        modules: [],
+        items: [],
       }
     }
 
-    // Get all modules for this weekly plan
-    const { data: planModules, error: modulesError } = await supabase
+    // Get all items for this weekly plan
+    const { data: planItems, error: itemsError } = await supabase
       .from('weekly_plan_modules')
       .select('*')
       .eq('weekly_plan_id', weeklyPlan.id)
       .order('day_of_week', { ascending: true })
       .order('order_index', { ascending: true })
 
-    if (modulesError) {
-      console.error('Error fetching weekly plan modules:', modulesError)
-      throw new Error('Erro ao buscar módulos do planeamento')
+    if (itemsError) {
+      console.error('Error fetching weekly plan items:', itemsError)
+      throw new Error('Erro ao buscar itens do planeamento')
     }
 
-    // Fetch all modules from Contentful
-    const allModules = await getAllModules()
+    // Fetch all modules and exercises from Contentful in parallel
+    const [allModules, allExercises] = await Promise.all([getAllModules(), getAllExercises()])
 
-    // Map module details from Contentful to plan modules
-    const modulesWithDetails: WeeklyPlanModule[] = (planModules || []).map((planModule) => {
-      const moduleDetails = allModules.find((m) => m.externalId === planModule.module_external_id)
-      return {
-        ...planModule,
-        module: moduleDetails,
+    // Map details from Contentful to plan items based on type
+    const itemsWithDetails: WeeklyPlanItem[] = (planItems || []).map((planItem) => {
+      if (planItem.item_type === 'exercise') {
+        const exerciseDetails = allExercises.find((e) => e.externalId === planItem.item_external_id)
+        return {
+          ...planItem,
+          exercise: exerciseDetails,
+        }
+      } else {
+        const moduleDetails = allModules.find((m) => m.externalId === planItem.item_external_id)
+        return {
+          ...planItem,
+          module: moduleDetails,
+        }
       }
     })
 
     return {
       weeklyPlan,
-      modules: modulesWithDetails,
+      items: itemsWithDetails,
     }
   } catch (error) {
     console.error('Error in getWeeklyPlan:', error)
@@ -100,12 +110,13 @@ export async function getWeeklyPlan(year: number, week: number): Promise<WeeklyP
 }
 
 /**
- * Add a module to a specific day in the weekly plan
+ * Add an item (module or exercise) to a specific day in the weekly plan
  */
-export async function addModuleToDay(
+export async function addItemToDay(
   year: number,
   week: number,
-  moduleExternalId: string,
+  itemExternalId: string,
+  itemType: 'module' | 'exercise',
   dayOfWeek: number
 ): Promise<{ success: boolean; error?: string }> {
   try {
@@ -172,17 +183,18 @@ export async function addModuleToDay(
       orderIndex = existingModules[0].order_index + 1
     }
 
-    // Insert the module
+    // Insert the item
     const { error: insertError } = await supabase.from('weekly_plan_modules').insert({
       weekly_plan_id: weeklyPlanId,
-      module_external_id: moduleExternalId,
+      item_external_id: itemExternalId,
+      item_type: itemType,
       day_of_week: dayOfWeek,
       order_index: orderIndex,
     })
 
     if (insertError) {
-      console.error('Error inserting module:', insertError)
-      return { success: false, error: 'Erro ao adicionar módulo' }
+      console.error('Error inserting item:', insertError)
+      return { success: false, error: 'Erro ao adicionar item' }
     }
 
     // Revalidate the page
@@ -196,9 +208,9 @@ export async function addModuleToDay(
 }
 
 /**
- * Remove a module from the weekly plan
+ * Remove an item from the weekly plan
  */
-export async function removeModuleFromDay(moduleId: string): Promise<{ success: boolean; error?: string }> {
+export async function removeItemFromDay(itemId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createSupabaseServerClient()
 
@@ -211,12 +223,12 @@ export async function removeModuleFromDay(moduleId: string): Promise<{ success: 
       return { success: false, error: 'Não autorizado' }
     }
 
-    // Delete the module (RLS will ensure user owns it)
-    const { error: deleteError } = await supabase.from('weekly_plan_modules').delete().eq('id', moduleId)
+    // Delete the item (RLS will ensure user owns it)
+    const { error: deleteError } = await supabase.from('weekly_plan_modules').delete().eq('id', itemId)
 
     if (deleteError) {
-      console.error('Error deleting module:', deleteError)
-      return { success: false, error: 'Erro ao remover módulo' }
+      console.error('Error deleting item:', deleteError)
+      return { success: false, error: 'Erro ao remover item' }
     }
 
     // Revalidate the page
@@ -230,10 +242,10 @@ export async function removeModuleFromDay(moduleId: string): Promise<{ success: 
 }
 
 /**
- * Update module order or notes
+ * Update item order or notes
  */
-export async function updateModuleOrder(
-  moduleId: string,
+export async function updateItemOrder(
+  itemId: string,
   newOrderIndex: number
 ): Promise<{ success: boolean; error?: string }> {
   try {
@@ -248,15 +260,15 @@ export async function updateModuleOrder(
       return { success: false, error: 'Não autorizado' }
     }
 
-    // Update the module
+    // Update the item
     const { error: updateError } = await supabase
       .from('weekly_plan_modules')
       .update({ order_index: newOrderIndex })
-      .eq('id', moduleId)
+      .eq('id', itemId)
 
     if (updateError) {
-      console.error('Error updating module order:', updateError)
-      return { success: false, error: 'Erro ao atualizar ordem do módulo' }
+      console.error('Error updating item order:', updateError)
+      return { success: false, error: 'Erro ao atualizar ordem do item' }
     }
 
     // Revalidate the page
@@ -277,6 +289,18 @@ export async function getAvailableModules(): Promise<Module[]> {
     return await getAllModules()
   } catch (error) {
     console.error('Error fetching available modules:', error)
+    return []
+  }
+}
+
+/**
+ * Get all available exercises from Contentful
+ */
+export async function getAvailableExercises(): Promise<Exercise[]> {
+  try {
+    return await getAllExercises()
+  } catch (error) {
+    console.error('Error fetching available exercises:', error)
     return []
   }
 }

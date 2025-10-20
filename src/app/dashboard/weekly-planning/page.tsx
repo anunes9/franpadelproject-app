@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { WeeklyPlanningCalendar } from '@/components/training-planner/weekly-planning-calendar'
 import PageHeader from '@/components/PageHeader'
-import { getWeeklyPlan, getAvailableModules } from './actions'
+import { getWeeklyPlan, getAvailableModules, getAvailableExercises } from './actions'
 import { getCurrentWeek } from '@/utils/date-helpers'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -14,7 +14,11 @@ interface WeeklyPlanningPageProps {
 
 async function WeeklyPlanningContent({ year, week }: { year: number; week: number }) {
   // Fetch data in parallel
-  const [weeklyPlanData, availableModules] = await Promise.all([getWeeklyPlan(year, week), getAvailableModules()])
+  const [weeklyPlanData, availableModules, availableExercises] = await Promise.all([
+    getWeeklyPlan(year, week),
+    getAvailableModules(),
+    getAvailableExercises(),
+  ])
 
   if (!weeklyPlanData) {
     return (
@@ -30,6 +34,7 @@ async function WeeklyPlanningContent({ year, week }: { year: number; week: numbe
       initialWeek={week}
       weeklyPlanData={weeklyPlanData}
       availableModules={availableModules}
+      availableExercises={availableExercises}
     />
   )
 }
@@ -47,9 +52,9 @@ function WeeklyPlanningLoadingSkeleton() {
         <Skeleton className="h-9 w-32" />
       </div>
 
-      {/* Calendar Grid Skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-4">
-        {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+      {/* Calendar Grid Skeleton - Only weekdays */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {[1, 2, 3, 4, 5].map((day) => (
           <Skeleton key={day} className="h-[300px]" />
         ))}
       </div>
