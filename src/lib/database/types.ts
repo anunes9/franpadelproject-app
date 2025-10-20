@@ -183,6 +183,64 @@ export interface Database {
           updated_at?: string
         }
       }
+      weekly_plans: {
+        Row: {
+          id: string
+          user_id: string
+          year: number
+          week_number: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          year: number
+          week_number: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          year?: number
+          week_number?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      weekly_plan_modules: {
+        Row: {
+          id: string
+          weekly_plan_id: string
+          module_external_id: string
+          day_of_week: number
+          order_index: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          weekly_plan_id: string
+          module_external_id: string
+          day_of_week: number
+          order_index?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          weekly_plan_id?: string
+          module_external_id?: string
+          day_of_week?: number
+          order_index?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

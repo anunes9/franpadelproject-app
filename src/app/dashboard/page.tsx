@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Dumbbell, Award } from 'lucide-react'
+import { BookOpen, Dumbbell, Award, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import { StatsRow } from '@/components/Stats'
 import { DashboardHeader } from '@/components/DashboardHeader'
@@ -11,7 +11,7 @@ export default function DashboardPage() {
       <DashboardHeader />
 
       {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Beginner Course Card */}
         <Link href="/dashboard/beginner">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
@@ -76,6 +76,31 @@ export default function DashboardPage() {
 
                 <Button className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white">Ver mais</Button>
               </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Weekly Planning Card */}
+        <Link href="/dashboard/weekly-planning">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
+            <CardHeader>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">Planeamento Semanal</CardTitle>
+                  <CardDescription>Organiza os teus treinos semanais</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-between h-full">
+              <p className="text-muted-foreground mb-4">
+                Planeia os teus módulos de treino para cada dia da semana e mantém-te organizado.
+              </p>
+              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
+                Gerir Planeamento
+              </Button>
             </CardContent>
           </Card>
         </Link>

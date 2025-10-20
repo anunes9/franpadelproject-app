@@ -32,6 +32,7 @@ export default function Header() {
   const navigationItems = [
     { href: '/dashboard/beginner', label: 'Iniciado', icon: BookOpen },
     { href: '/dashboard/intermediate', label: 'Intermédio', icon: BookOpen },
+    { href: '/dashboard/weekly-planning', label: 'Planeamento', icon: Calendar },
     { href: '/dashboard/exercises', label: 'Exercícios', icon: Dumbbell },
     { href: '/dashboard/certification', label: 'Certificação', icon: Award },
   ]
