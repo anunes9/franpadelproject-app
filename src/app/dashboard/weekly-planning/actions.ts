@@ -304,3 +304,94 @@ export async function getAvailableExercises(): Promise<Exercise[]> {
     return []
   }
 }
+
+/**
+ * Get details for a specific day with full module and exercise information
+ */
+export async function getDayDetails(
+  year: number,
+  week: number,
+  dayOfWeek: number
+): Promise<{
+  date: Date
+  items: WeeklyPlanItem[]
+  weekInfo: { year: number; week: number }
+} | null> {
+  try {
+    const supabase = await createSupabaseServerClient()
+
+    // Check authentication
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+    if (authError || !user) {
+      throw new Error('Não autorizado')
+    }
+
+    // Get or create weekly plan
+    const { data: weeklyPlan } = await supabase
+      .from('weekly_plans')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('year', year)
+      .eq('week_number', week)
+      .single()
+
+    // If no plan exists, return empty with date info
+    if (!weeklyPlan) {
+      const { getDateForDay } = await import('@/utils/date-helpers')
+      const date = getDateForDay(year, week, dayOfWeek)
+      return {
+        date,
+        items: [],
+        weekInfo: { year, week },
+      }
+    }
+
+    // Get items for this specific day
+    const { data: planItems, error: itemsError } = await supabase
+      .from('weekly_plan_modules')
+      .select('*')
+      .eq('weekly_plan_id', weeklyPlan.id)
+      .eq('day_of_week', dayOfWeek)
+      .order('order_index', { ascending: true })
+
+    if (itemsError) {
+      console.error('Error fetching day items:', itemsError)
+      throw new Error('Erro ao buscar itens do dia')
+    }
+
+    // Fetch all modules and exercises from Contentful in parallel
+    const [allModules, allExercises] = await Promise.all([getAllModules(), getAllExercises()])
+
+    // Map details from Contentful to plan items based on type
+    const itemsWithDetails: WeeklyPlanItem[] = (planItems || []).map((planItem) => {
+      if (planItem.item_type === 'exercise') {
+        const exerciseDetails = allExercises.find((e) => e.externalId === planItem.item_external_id)
+        return {
+          ...planItem,
+          exercise: exerciseDetails,
+        }
+      } else {
+        const moduleDetails = allModules.find((m) => m.externalId === planItem.item_external_id)
+        return {
+          ...planItem,
+          module: moduleDetails,
+        }
+      }
+    })
+
+    const { getDateForDay } = await import('@/utils/date-helpers')
+    const date = getDateForDay(year, week, dayOfWeek)
+
+    return {
+      date,
+      items: itemsWithDetails,
+      weekInfo: { year, week },
+    }
+  } catch (error) {
+    console.error('Error in getDayDetails:', error)
+    return null
+  }
+}

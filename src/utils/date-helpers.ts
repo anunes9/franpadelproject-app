@@ -204,6 +204,81 @@ export function getNextWeek(year: number, week: number): { year: number; week: n
 }
 
 /**
+ * Get previous day (handles week boundaries)
+ * @param year - Current ISO year
+ * @param week - Current ISO week number
+ * @param dayOfWeek - Current day of week (1=Monday, 7=Sunday)
+ * @returns Object with previous day's year, week, and dayOfWeek
+ */
+export function getPreviousDay(
+  year: number,
+  week: number,
+  dayOfWeek: number
+): { year: number; week: number; dayOfWeek: number } {
+  if (dayOfWeek > 1) {
+    // Same week, previous day
+    return { year, week, dayOfWeek: dayOfWeek - 1 }
+  }
+
+  // Go to previous week's last day (Friday for weekdays)
+  const prevWeek = getPreviousWeek(year, week)
+  return { ...prevWeek, dayOfWeek: 5 } // Friday
+}
+
+/**
+ * Get next day (handles week boundaries)
+ * @param year - Current ISO year
+ * @param week - Current ISO week number
+ * @param dayOfWeek - Current day of week (1=Monday, 7=Sunday)
+ * @returns Object with next day's year, week, and dayOfWeek
+ */
+export function getNextDay(
+  year: number,
+  week: number,
+  dayOfWeek: number
+): { year: number; week: number; dayOfWeek: number } {
+  if (dayOfWeek < 5) {
+    // Same week, next day (only weekdays)
+    return { year, week, dayOfWeek: dayOfWeek + 1 }
+  }
+
+  // Go to next week's first day (Monday)
+  const nextWeek = getNextWeek(year, week)
+  return { ...nextWeek, dayOfWeek: 1 } // Monday
+}
+
+/**
+ * Format full date in Portuguese
+ * @param date - The date to format
+ * @returns Formatted string (e.g., "Segunda-feira, 14 de Outubro de 2025")
+ */
+export function formatFullDate(date: Date): string {
+  const dayNames = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
+
+  const monthNames = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ]
+
+  const dayName = dayNames[date.getDay()]
+  const day = date.getDate()
+  const month = monthNames[date.getMonth()]
+  const year = date.getFullYear()
+
+  return `${dayName}, ${day} de ${month} de ${year}`
+}
+
+/**
  * Helper to capitalize first letter
  */
 function capitalize(str: string): string {

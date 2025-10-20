@@ -127,6 +127,8 @@ export function WeeklyPlanningCalendar({
               dayName={getDayName(dayOfWeek)}
               date={formatShortDate(date)}
               dayOfWeek={dayOfWeek}
+              year={year}
+              week={week}
               items={itemsByDay[dayOfWeek] || []}
               onAddItem={() => handleAddItem(dayOfWeek)}
               onRemoveItem={handleRemoveItem}
