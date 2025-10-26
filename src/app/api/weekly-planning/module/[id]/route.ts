@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/utils/supabase/server'
  * DELETE /api/weekly-planning/module/[id]
  * Remove a module from the weekly plan
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createSupabaseServerClient()
 
@@ -18,7 +18,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const moduleId = params.id
+    const { id: moduleId } = await params
 
     if (!moduleId) {
       return NextResponse.json({ error: 'ID do módulo em falta' }, { status: 400 })
@@ -66,7 +66,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
  * PUT /api/weekly-planning/module/[id]
  * Update module order or notes
  */
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createSupabaseServerClient()
 
@@ -79,7 +79,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const moduleId = params.id
+    const { id: moduleId } = await params
     const body = await request.json()
     const { orderIndex, notes } = body
 

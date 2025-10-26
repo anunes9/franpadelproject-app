@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/utils/supabase/server'
  * GET /api/weekly-planning/[year]/[week]
  * Fetch user's weekly plan for a specific week
  */
-export async function GET(request: NextRequest, { params }: { params: { year: string; week: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ year: string; week: string }> }) {
   try {
     const supabase = await createSupabaseServerClient()
 
@@ -18,8 +18,9 @@ export async function GET(request: NextRequest, { params }: { params: { year: st
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const year = parseInt(params.year)
-    const week = parseInt(params.week)
+    const { year: yearStr, week: weekStr } = await params
+    const year = parseInt(yearStr)
+    const week = parseInt(weekStr)
 
     // Validate parameters
     if (isNaN(year) || isNaN(week) || week < 1 || week > 53) {
