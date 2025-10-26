@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { DayCard } from './day-card'
 import { WeekNavigator } from './week-navigator'
 import { ItemSelector } from './item-selector'
@@ -33,7 +33,6 @@ export function WeeklyPlanningCalendar({
   availableExercises,
 }: WeeklyPlanningCalendarProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
   const [isItemSelectorOpen, setIsItemSelectorOpen] = useState(false)

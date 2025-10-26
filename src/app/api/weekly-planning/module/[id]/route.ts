@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 
 /**
  * DELETE /api/weekly-planning/module/[id]
@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/server'
  */
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
 
     // Check authentication
     const {
@@ -42,7 +42,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     // The RLS policy will handle authorization, but we can add extra check
-    // @ts-ignore - TypeScript doesn't understand the nested structure
+    // @ts-expect-error - TypeScript doesn't understand the nested structure
     if (module.weekly_plans.user_id !== user.id) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
     }
@@ -68,7 +68,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
  */
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
 
     // Check authentication
     const {

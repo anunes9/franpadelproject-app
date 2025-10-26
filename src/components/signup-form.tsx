@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 
 export function SignupForm() {
@@ -21,7 +20,6 @@ export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const router = useRouter()
   const { signUp } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {

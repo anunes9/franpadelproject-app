@@ -1,21 +1,9 @@
 import { getIntermediateModules } from '@/lib/contentful/modules-delivery'
-import BackNavigation from '@/components/BackNavigation'
 import { CourseHeader } from '@/components/courses/CourseHeader'
 import { CourseCard } from '@/components/courses/CourseCard'
 
 export default async function IntermediateCoursePage() {
   const modules = await getIntermediateModules()
-
-  // Mock user progress - in a real app, this would come from the database
-  const userProgress = [
-    // Add user progress data here when available
-  ]
-
-  const getModuleStatus = (externalId: string, index: number) => {
-    // For now, all modules are unlocked
-    // In a real app, this would check user progress and prerequisites
-    return 'available'
-  }
 
   return (
     <>
@@ -30,11 +18,9 @@ export default async function IntermediateCoursePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modules.map((module, index) => {
-              const status = getModuleStatus(module.externalId, index)
-
-              return <CourseCard key={module.id} status={status} module={module} />
-            })}
+            {modules.map((module) => (
+              <CourseCard key={module.id} status={'available'} module={module} />
+            ))}
           </div>
         )}
       </div>

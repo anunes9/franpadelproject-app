@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 
 /**
  * POST /api/weekly-planning
@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/server'
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
 
     // Check authentication
     const {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     // First, ensure weekly plan exists for this user/year/week
     let weeklyPlanId: string
 
-    const { data: existingPlan, error: findError } = await supabase
+    const { data: existingPlan } = await supabase
       .from('weekly_plans')
       .select('id')
       .eq('user_id', user.id)

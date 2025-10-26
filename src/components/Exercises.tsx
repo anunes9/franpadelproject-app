@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Dumbbell, X, ImageIcon } from 'lucide-react'
+import { Dumbbell, ImageIcon } from 'lucide-react'
 import { Field } from '@/components/Field'
 import { useState } from 'react'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useId, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useResizeObserver } from '@wojtekmaj/react-hooks'
 import { pdfjs, Document, Page } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
@@ -24,7 +24,6 @@ const maxWidth = 800
 type PDFFile = string | File | null
 
 export default function PDFViewer({ url }: { url: string }) {
-  const fileId = useId()
   const [file, setFile] = useState<PDFFile>(url)
   const [numPages, setNumPages] = useState<number>()
   const [currentPage, setCurrentPage] = useState<number>(1)

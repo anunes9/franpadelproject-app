@@ -3,7 +3,7 @@
 'use server'
 
 import { createSupabaseServerClient } from '@/utils/supabase/server'
-import { QuizResponse, QuizAttemptData, calculateQuizScore, formatResponsesForStorage } from './quiz-types'
+import { QuizResponse, calculateQuizScore, formatResponsesForStorage } from './quiz-types'
 
 export interface QuizSubmissionData {
   moduleExternalId: string

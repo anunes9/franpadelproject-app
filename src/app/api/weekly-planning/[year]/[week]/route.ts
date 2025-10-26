@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createSupabaseServerClient } from '@/utils/supabase/server'
 
 /**
  * GET /api/weekly-planning/[year]/[week]
@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/server'
  */
 export async function GET(request: NextRequest, { params }: { params: { year: string; week: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
 
     // Check authentication
     const {

@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth'
 import Image from 'next/image'
 
 export const DashboardHeader = () => {
-  const { user, userProfile, loading } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return (
     <div className="mb-8 flex flex-col md:flex-row gap-8 justify-between items-center">

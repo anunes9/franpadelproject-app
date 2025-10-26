@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Play, Clock, X, Target, Zap, Users } from 'lucide-react'
+import { Play, Clock, Target, Zap, Users } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import ExerciseModal from './ExerciseModal'
 
