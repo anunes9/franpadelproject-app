@@ -6,7 +6,6 @@ import { LocaleLink } from '@/components/LocaleLink'
 import { usePathname, useRouter } from '@/i18n/routing'
 import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import Image from 'next/image'
 
 export default function Header() {
@@ -76,7 +75,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <LanguageSwitcher />
             <Button variant="ghost" size="sm" asChild>
               <LocaleLink href="/dashboard/profile" prefetch={false} className="flex items-center space-x-2">
                 {userProfile?.avatar_url ? (

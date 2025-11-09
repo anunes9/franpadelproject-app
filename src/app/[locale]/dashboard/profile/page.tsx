@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { User, Trophy, Target, Clock, Save } from 'lucide-react'
+import { User, Trophy, Target, Clock, Save, Globe } from 'lucide-react'
 import { StatsRow } from '@/components/Stats'
 import { useAuth } from '@/hooks/useAuth'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 
 const recentActivity = [] as any[]
@@ -30,6 +32,7 @@ const skillLevels = [
 
 export default function ProfilePage() {
   const { user, userProfile, loading } = useAuth()
+  const t = useTranslations('profile')
 
   if (loading) {
     return (
@@ -128,6 +131,20 @@ export default function ProfilePage() {
                 <Save className="h-4 w-4 mr-2" />
                 Guardar Alterações
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Language Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Globe className="h-5 w-5" />
+                <span>Idioma / Language</span>
+              </CardTitle>
+              <CardDescription>Seleciona o teu idioma preferido / Select your preferred language</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <LanguageSwitcher />
             </CardContent>
           </Card>
 
