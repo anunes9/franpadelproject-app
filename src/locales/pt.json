@@ -82,7 +82,18 @@
     "passwordTooShort": "A palavra-passe deve ter pelo menos 6 caracteres",
     "invalidEmail": "Por favor, introduz um endereço de email válido",
     "checkEmailConfirmation": "Verifica o teu email para um link de confirmação para completares o teu registo!",
-    "unexpectedError": "Ocorreu um erro inesperado. Por favor, tenta novamente."
+    "unexpectedError": "Ocorreu um erro inesperado. Por favor, tenta novamente.",
+    "userNotFound": "Utilizador não encontrado. Contacta a nossa equipa para criares uma conta.",
+    "checkEmailForCode": "Verifica o teu email para o código de verificação!",
+    "sendingCode": "A enviar código...",
+    "sendVerificationCode": "Enviar Código de Verificação",
+    "enterVerificationCode": "Introduzir Código de Verificação",
+    "codeSentTo": "Enviamos um código de 6 dígitos para",
+    "verificationCode": "Código de Verificação",
+    "enterSixDigitCode": "Introduz código de 6 dígitos",
+    "verifying": "A verificar...",
+    "verifyCode": "Verificar Código",
+    "back": "Voltar"
   },
   "dashboard": {
     "welcome": "Bem-vindo",

@@ -82,7 +82,18 @@
     "passwordTooShort": "Password must be at least 6 characters long",
     "invalidEmail": "Please enter a valid email address",
     "checkEmailConfirmation": "Check your email for a confirmation link to complete your registration!",
-    "unexpectedError": "An unexpected error occurred. Please try again."
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "userNotFound": "User not found. Contact our team to create an account.",
+    "checkEmailForCode": "Check your email for the verification code!",
+    "sendingCode": "Sending Code...",
+    "sendVerificationCode": "Send Code",
+    "enterVerificationCode": "Enter Verification Code",
+    "codeSentTo": "We sent a 6-digit code to",
+    "verificationCode": "Verification Code",
+    "enterSixDigitCode": "Enter 6-digit code",
+    "verifying": "Verifying...",
+    "verifyCode": "Verify Code",
+    "back": "Back"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -165,4 +176,3 @@
     "editProfile": "Edit Profile"
   }
 }
-
