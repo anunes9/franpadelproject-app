@@ -3,12 +3,18 @@ import BackNavigation from '@/components/BackNavigation'
 import PageHeader from '@/components/PageHeader'
 import { getAllExercises } from '@/lib/contentful/exercises-delivery'
 import ExerciseCardClient from '@/components/ExerciseCardClient'
+import { type Locale } from '@/i18n/config'
 
 // Simple icon selection - just cycle through available icon names
 const iconNames = ['Target', 'Zap', 'Users', 'Clock']
 
-export default async function ExercisesPage() {
-  const contentfulExercises = await getAllExercises()
+interface ExercisesPageProps {
+  params: Promise<{ locale: Locale }>
+}
+
+export default async function ExercisesPage({ params }: ExercisesPageProps) {
+  const { locale } = await params
+  const contentfulExercises = await getAllExercises(locale)
 
   // Transform Contentful exercises to match the expected UI format
   const exercises = contentfulExercises.map((exercise, index) => ({

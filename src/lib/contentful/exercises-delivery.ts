@@ -1,5 +1,6 @@
 import { getEntries, initializeContentfulDeliveryClient } from './delivery-client'
 import { validateDeliveryConfig } from './config'
+import { contentfulLocaleMap, type Locale } from '@/i18n/config'
 
 export interface Exercise {
   id: string
@@ -13,13 +14,15 @@ export interface Exercise {
   }
 }
 
-export async function getAllExercises(): Promise<Exercise[]> {
+export async function getAllExercises(locale: Locale = 'en'): Promise<Exercise[]> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log('🔍 Fetching exercises from Contentful Delivery API...')
 
@@ -28,7 +31,7 @@ export async function getAllExercises(): Promise<Exercise[]> {
       content_type: 'exercises',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {

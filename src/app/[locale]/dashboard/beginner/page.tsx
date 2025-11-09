@@ -2,9 +2,15 @@ import { getBeginnerModules } from '@/lib/contentful/modules-delivery'
 import { getAllUserModuleProgress } from '@/lib/database/quiz-utils'
 import { CourseHeader } from '@/components/courses/CourseHeader'
 import { CourseCard } from '@/components/courses/CourseCard'
+import { type Locale } from '@/i18n/config'
 
-export default async function BeginnerCoursePage() {
-  const modules = await getBeginnerModules()
+interface BeginnerCoursePageProps {
+  params: Promise<{ locale: Locale }>
+}
+
+export default async function BeginnerCoursePage({ params }: BeginnerCoursePageProps) {
+  const { locale } = await params
+  const modules = await getBeginnerModules(locale)
 
   // Get user's progress for all modules
   let userProgress: any[] = []

@@ -1,6 +1,7 @@
 import { getEntries, initializeContentfulDeliveryClient } from './delivery-client'
 import { validateDeliveryConfig } from './config'
 import { FILE_TYPES } from '@/lib/utils'
+import { contentfulLocaleMap, type Locale } from '@/i18n/config'
 
 export interface Question {
   id: string
@@ -60,13 +61,15 @@ export interface Module {
   isPublished: boolean
 }
 
-export async function getBeginnerModules(): Promise<Module[]> {
+export async function getBeginnerModules(locale: Locale = 'en'): Promise<Module[]> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log('🔍 Fetching beginner modules from Contentful Delivery API...')
 
@@ -76,7 +79,7 @@ export async function getBeginnerModules(): Promise<Module[]> {
       'fields.level': 'Beginner',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {
@@ -133,13 +136,15 @@ export async function getBeginnerModules(): Promise<Module[]> {
   }
 }
 
-export async function getIntermediateModules(): Promise<Module[]> {
+export async function getIntermediateModules(locale: Locale = 'en'): Promise<Module[]> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log('🔍 Fetching intermediate modules from Contentful Delivery API...')
 
@@ -149,7 +154,7 @@ export async function getIntermediateModules(): Promise<Module[]> {
       'fields.level': 'Intermediate',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {
@@ -206,13 +211,15 @@ export async function getIntermediateModules(): Promise<Module[]> {
   }
 }
 
-export async function getModuleByExternalId(externalId: string): Promise<Module | null> {
+export async function getModuleByExternalId(externalId: string, locale: Locale = 'en'): Promise<Module | null> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log(`🔍 Fetching module with externalId: ${externalId}`)
 
@@ -222,7 +229,7 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
       'fields.externalId': externalId,
       include: 2, // Include 2 levels of linked entries
       limit: 1,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {
@@ -302,13 +309,15 @@ export async function getModuleByExternalId(externalId: string): Promise<Module 
   }
 }
 
-export async function getAllModules(): Promise<Module[]> {
+export async function getAllModules(locale: Locale = 'en'): Promise<Module[]> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log('🔍 Fetching all modules from Contentful Delivery API...')
 
@@ -317,7 +326,7 @@ export async function getAllModules(): Promise<Module[]> {
       content_type: 'modules',
       include: 2, // Include 2 levels of linked entries
       limit: 100,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {
@@ -383,13 +392,15 @@ export async function getAllModules(): Promise<Module[]> {
   }
 }
 
-export async function getModulesByLevel(level: string): Promise<Module[]> {
+export async function getModulesByLevel(level: string, locale: Locale = 'en'): Promise<Module[]> {
   try {
     // Initialize Contentful delivery client
     initializeContentfulDeliveryClient()
 
     // Validate configuration
     validateDeliveryConfig()
+
+    const contentfulLocale = contentfulLocaleMap[locale] || contentfulLocaleMap.en
 
     console.log(`🔍 Fetching ${level} modules from Contentful Delivery API...`)
 
@@ -399,7 +410,7 @@ export async function getModulesByLevel(level: string): Promise<Module[]> {
       'fields.level': level,
       include: 2, // Include 2 levels of linked entries
       limit: 100,
-      locale: 'pt',
+      locale: contentfulLocale,
     })
 
     if (entries.items.length === 0) {

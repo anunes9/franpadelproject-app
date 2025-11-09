@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, XCircle, Clock } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { submitQuiz } from '@/app/dashboard/beginner/actions'
 import { getUserQuizAttempts, getUserModuleProgress, getLatestQuizAttemptResponses } from '@/lib/database/quiz-utils'
 
@@ -36,6 +37,7 @@ interface QuizState {
 }
 
 export default function QuizComponent({ questions, moduleExternalId }: QuizComponentProps) {
+  const t = useTranslations('quiz')
   const [quizState, setQuizState] = useState<QuizState>({
     responses: {},
     isSubmitting: false,
@@ -71,7 +73,7 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
         loadedFromPreviousAttempt: !prev.submitted && !!latestResponses?.responses,
       }))
     } catch (error) {
-      console.error('Falha ao carregar os dados do quiz:', error)
+      console.error(t('failedToLoadQuizData'), error)
     }
   }
 
@@ -87,7 +89,7 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
 
   const handleSubmit = async () => {
     if (Object.keys(quizState.responses).length !== questions.length) {
-      alert('Por favor, responde a todas as perguntas antes de submeter.')
+      alert(t('pleaseAnswerAll'))
       return
     }
 
@@ -133,11 +135,11 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
         // Reload quiz data to get updated attempts and progress
         await loadQuizData()
       } else {
-        throw new Error(result.error || 'Falha ao submeter o quiz')
+        throw new Error(result.error || t('quizSubmissionError'))
       }
     } catch (error) {
       console.error('Quiz submission error:', error)
-      alert('Falha ao submeter o quiz. Por favor, tenta novamente.')
+      alert(t('quizSubmissionError'))
       setQuizState((prev) => ({ ...prev, isSubmitting: false }))
     }
   }
@@ -168,37 +170,35 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
             )}
           </div>
 
-          <h3 className="text-2xl font-bold mb-2">{quizState.result.isPassed ? 'Parabéns!' : 'Continua a tentar!'}</h3>
+          <h3 className="text-2xl font-bold mb-2">{quizState.result.isPassed ? t('congratulations') : t('keepTrying')}</h3>
 
           <p className="text-muted-foreground mb-4">
-            {quizState.result.isPassed
-              ? 'Passaste o quiz! Módulo concluído!'
-              : 'Precisas de 80% para passar. Revê o material e tenta novamente.'}
+            {quizState.result.isPassed ? t('quizPassed') : t('quizFailed')}
           </p>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">{quizState.result.scorePercentage.toFixed(1)}%</div>
-              <div className="text-sm text-muted-foreground">Pontuação</div>
+              <div className="text-sm text-muted-foreground">{t('score')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {quizState.result.correctAnswers}/{quizState.result.totalQuestions}
               </div>
-              <div className="text-sm text-muted-foreground">Corretas</div>
+              <div className="text-sm text-muted-foreground">{t('correct')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">#{quizState.result.attemptNumber}</div>
-              <div className="text-sm text-muted-foreground">Tentativa</div>
+              <div className="text-sm text-muted-foreground">{t('attempt')}</div>
             </div>
           </div>
 
           <div className="flex gap-3 justify-center">
             <Button onClick={resetQuiz} variant="outline">
-              Tentar Novamente
+              {t('tryAgain')}
             </Button>
             {quizState.result.isPassed && (
-              <Button onClick={() => (window.location.href = '/dashboard/beginner')}>Voltar ao Curso</Button>
+              <Button onClick={() => (window.location.href = '/dashboard/beginner')}>{t('backToCourse')}</Button>
             )}
           </div>
         </div>
@@ -206,13 +206,13 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
         {/* Previous Attempts */}
         {quizState.previousAttempts.length > 1 && (
           <div className="p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-medium mb-3">Tentativas Anteriores</h4>
+            <h4 className="font-medium mb-3">{t('previousAttempts')}</h4>
             <div className="space-y-2">
               {quizState.previousAttempts
                 .filter((attempt) => attempt.attempt_number !== quizState.result?.attemptNumber)
                 .map((attempt, index) => (
                   <div key={attempt.id} className="flex justify-between items-center text-sm">
-                    <span>Tentativa #{attempt.attempt_number}</span>
+                    <span>{t('attemptNumber', { number: attempt.attempt_number })}</span>
                     <span className="font-medium">{attempt.score_percentage.toFixed(1)}%</span>
                   </div>
                 ))}
@@ -230,8 +230,7 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
       {quizState.loadedFromPreviousAttempt && (
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>Respostas carregadas:</strong> As tuas respostas da tentativa anterior foram carregadas. Podes
-            modificá-las ou submeter como estão.
+            <strong>{t('answersLoaded')}:</strong> {t('answersLoadedDescription')}
           </p>
         </div>
       )}
@@ -268,17 +267,21 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
         >
           {quizState.isSubmitting ? (
             <>
-              <Clock className="h-4 w-4 mr-2 animate-spin" />A submeter...
+              <Clock className="h-4 w-4 mr-2 animate-spin" />
+              {t('submitting')}
             </>
           ) : (
-            'Submeter Respostas'
+            t('submitAnswers')
           )}
         </Button>
       </div>
 
       {/* Progress indicator */}
       <div className="text-center text-sm text-muted-foreground">
-        {Object.keys(quizState.responses).length} de {questions.length} perguntas respondidas
+        {t('questionsAnswered', {
+          answered: Object.keys(quizState.responses).length,
+          total: questions.length,
+        })}
       </div>
     </div>
   )

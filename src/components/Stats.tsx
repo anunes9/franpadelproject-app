@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 export const Stats = ({ label, value }: { label: string; value: number }) => (
   <div className="text-center p-6 bg-card rounded-lg border border-border">
     <div className="text-2xl font-bold text-primary mb-1">{value}</div>
@@ -6,11 +8,12 @@ export const Stats = ({ label, value }: { label: string; value: number }) => (
 )
 
 export const StatsRow = () => {
+  const t = useTranslations('dashboard')
   const stats = [
-    { label: 'Módulos Completos', value: 0 },
-    { label: 'Exercícios Completos', value: 0 },
-    { label: 'Horas Praticadas', value: 0 },
-    { label: 'Progresso Geral', value: 0 },
+    { label: t('modulesComplete'), value: 0 },
+    { label: t('exercisesComplete'), value: 0 },
+    { label: t('hoursPracticed'), value: 0 },
+    { label: t('generalProgress'), value: 0 },
   ]
 
   return (

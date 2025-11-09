@@ -7,19 +7,20 @@ import AdditionalResources from '@/components/AdditionalResources'
 import Exercises from '@/components/Exercises'
 import QuizComponent from '@/components/QuizComponent'
 import PDFViewerWrapper from '@/components/PDFViewerWrapper'
-import { MarkdownRenderer } from '@/components/MarkdownRenderer'
+import { type Locale } from '@/i18n/config'
 
 interface ModulePageProps {
   params: Promise<{
+    locale: Locale
     externalId: string
   }>
 }
 
 export default async function ModulePage({ params }: ModulePageProps) {
-  const { externalId } = await params
+  const { locale, externalId } = await params
 
   // Fetch module data from Contentful
-  const course = await getModuleByExternalId(externalId)
+  const course = await getModuleByExternalId(externalId, locale)
 
   if (!course) notFound()
 
@@ -38,14 +39,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
           <Field title="Apresentação" icon={<FileText className="h-5 w-5" />}>
             <div className="px-4">
               <PDFViewerWrapper url={course.presentation.fields.file.url} />
-            </div>
-          </Field>
-        )}
-
-        {course.technicalContent && (
-          <Field title="Conteúdo Teórico" icon={<FileText className="h-5 w-5" />}>
-            <div className="px-4">
-              <MarkdownRenderer content={course.technicalContent} />
             </div>
           </Field>
         )}

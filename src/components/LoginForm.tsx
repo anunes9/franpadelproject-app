@@ -6,11 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
-import Link from 'next/link'
+import { LocaleLink } from '@/components/LocaleLink'
 
 export function LoginForm() {
+  const t = useTranslations('auth')
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -36,7 +38,7 @@ export function LoginForm() {
       router.push('/dashboard')
       router.refresh() // Refresh to update the session state
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.')
+      setError(t('unexpectedError'))
       console.error('Login error:', err)
     } finally {
       setIsLoading(false)
@@ -51,14 +53,14 @@ export function LoginForm() {
 
           <div className="space-y-2">
             <Label htmlFor="email" className="text-card-foreground font-medium">
-              Email
+              {t('email')}
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('enterEmail')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 bg-input border-border focus:ring-2 focus:ring-accent focus:border-accent"
@@ -70,14 +72,14 @@ export function LoginForm() {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-card-foreground font-medium">
-              Password
+              {t('password')}
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
+                placeholder={t('enterPassword')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 pr-10 bg-input border-border focus:ring-2 focus:ring-accent focus:border-accent"
@@ -104,16 +106,16 @@ export function LoginForm() {
                 disabled={isLoading}
               />
               <Label htmlFor="remember" className="text-sm text-muted-foreground">
-                Remember me
+                {t('rememberMe')}
               </Label>
             </div>
-            <Link
+            <LocaleLink
               href="/auth/forgot-password"
               className="text-sm text-accent hover:text-accent/80 transition-colors"
               prefetch={false}
             >
-              Forgot password?
-            </Link>
+              {t('forgotPassword')}
+            </LocaleLink>
           </div>
 
           <Button
@@ -124,10 +126,10 @@ export function LoginForm() {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing In...
+                {t('signingIn')}
               </>
             ) : (
-              'Sign In'
+              t('signIn')
             )}
           </Button>
         </form>
@@ -149,9 +151,9 @@ export function LoginForm() {
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            {'Não tens uma conta? '}
+            {t('noAccount')}{' '}
             <a href="#" className="text-accent hover:text-accent/80 font-medium transition-colors">
-              Regista-te aqui
+              {t('signUpHere')}
             </a>
           </p>
         </div>

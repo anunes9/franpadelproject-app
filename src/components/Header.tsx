@@ -2,15 +2,18 @@
 
 import { Button } from '@/components/ui/button'
 import { User, LogOut, BookOpen, Dumbbell, Award, Calendar } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
+import { LocaleLink } from '@/components/LocaleLink'
+import { usePathname, useRouter } from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import Image from 'next/image'
 
 export default function Header() {
   const router = useRouter()
   const pathname = usePathname()
   const { user, userProfile, signOut } = useAuth()
+  const t = useTranslations()
 
   const handleLogout = async () => {
     try {
@@ -30,11 +33,11 @@ export default function Header() {
   }
 
   const navigationItems = [
-    { href: '/dashboard/beginner', label: 'Iniciado', icon: BookOpen },
-    { href: '/dashboard/intermediate', label: 'Intermédio', icon: BookOpen },
-    { href: '/dashboard/weekly-planning', label: 'Planeamento', icon: Calendar },
-    { href: '/dashboard/exercises', label: 'Exercícios', icon: Dumbbell },
-    { href: '/dashboard/certification', label: 'Certificação', icon: Award },
+    { href: '/dashboard/beginner', label: t('navigation.beginner'), icon: BookOpen },
+    { href: '/dashboard/intermediate', label: t('navigation.intermediate'), icon: BookOpen },
+    { href: '/dashboard/weekly-planning', label: t('navigation.planning'), icon: Calendar },
+    { href: '/dashboard/exercises', label: t('navigation.exercises'), icon: Dumbbell },
+    { href: '/dashboard/certification', label: t('navigation.certification'), icon: Award },
   ]
 
   return (
@@ -42,13 +45,13 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
-            <Link
+            <LocaleLink
               href="/dashboard"
               className="text-2xl font-bold text-foreground hover:text-primary transition-colors"
               prefetch={false}
             >
               <Image src="/fran-methodology-logo.png" alt="Fran Methodology" width={160} height={160} />
-            </Link>
+            </LocaleLink>
           </div>
 
           {/* Navigation Menu */}
@@ -63,30 +66,31 @@ export default function Header() {
                   asChild
                   className={isActive ? 'bg-primary text-primary-foreground' : ''}
                 >
-                  <Link href={item.href} prefetch={false} className="flex items-center space-x-2">
+                  <LocaleLink href={item.href} prefetch={false} className="flex items-center space-x-2">
                     <item.icon className="h-4 w-4" />
                     <span>{item.label}</span>
-                  </Link>
+                  </LocaleLink>
                 </Button>
               )
             })}
           </nav>
 
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard/profile" prefetch={false} className="flex items-center space-x-2">
+              <LocaleLink href="/dashboard/profile" prefetch={false} className="flex items-center space-x-2">
                 {userProfile?.avatar_url ? (
                   <Image src={userProfile.avatar_url} alt="User Avatar" width={28} height={28} />
                 ) : (
                   <User className="h-4 w-4" />
                 )}
-                <span>{userProfile?.full_name || user?.email || 'Perfil'}</span>
-              </Link>
+                <span>{userProfile?.full_name || user?.email || t('navigation.profile')}</span>
+              </LocaleLink>
             </Button>
 
             <Button variant="ghost" size="sm" onClick={handleLogout} className="cursor-pointer">
               <LogOut className="h-4 w-4 mr-2" />
-              Sair
+              {t('navigation.logout')}
             </Button>
           </div>
         </div>

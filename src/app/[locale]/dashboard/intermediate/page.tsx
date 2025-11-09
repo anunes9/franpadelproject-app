@@ -1,9 +1,15 @@
 import { getIntermediateModules } from '@/lib/contentful/modules-delivery'
 import { CourseHeader } from '@/components/courses/CourseHeader'
 import { CourseCard } from '@/components/courses/CourseCard'
+import { type Locale } from '@/i18n/config'
 
-export default async function IntermediateCoursePage() {
-  const modules = await getIntermediateModules()
+interface IntermediateCoursePageProps {
+  params: Promise<{ locale: Locale }>
+}
+
+export default async function IntermediateCoursePage({ params }: IntermediateCoursePageProps) {
+  const { locale } = await params
+  const modules = await getIntermediateModules(locale)
 
   return (
     <>

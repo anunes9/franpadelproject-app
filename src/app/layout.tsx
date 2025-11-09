@@ -1,33 +1,9 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-
-import './globals.css'
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
-
-export const metadata: Metadata = {
-  title: 'Fran Padel Project',
-  description: 'Fran Methodology App',
-}
-
+// This layout should never be reached because middleware redirects to [locale]
+// But we need it for Next.js structure
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-      <Analytics />
-    </html>
-  )
+  return children
 }
