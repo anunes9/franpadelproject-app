@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { DayCard } from './day-card'
 import { WeekNavigator } from './week-navigator'
 import { ItemSelector } from './item-selector'
-import { WeeklyPlanData, addItemToDay, removeItemFromDay } from '@/app/dashboard/weekly-planning/actions'
+import { WeeklyPlanData, addItemToDay, removeItemFromDay } from '@/app/[locale]/dashboard/weekly-planning/actions'
 import { Module } from '@/lib/contentful/modules-delivery'
 import { Exercise } from '@/lib/contentful/exercises-delivery'
 import {

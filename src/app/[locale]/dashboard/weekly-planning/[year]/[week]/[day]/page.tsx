@@ -2,7 +2,11 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { DayDetailView } from '@/components/training-planner/day-detail-view'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getDayDetails, getAvailableModules, getAvailableExercises } from '@/app/dashboard/weekly-planning/actions'
+import {
+  getDayDetails,
+  getAvailableModules,
+  getAvailableExercises,
+} from '@/app/[locale]/dashboard/weekly-planning/actions'
 
 interface DayDetailPageProps {
   params: Promise<{

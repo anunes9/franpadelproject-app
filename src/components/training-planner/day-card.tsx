@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X, Clock, GripVertical, BookOpen, Dumbbell, Image as ImageIcon } from 'lucide-react'
-import { WeeklyPlanItem } from '@/app/dashboard/weekly-planning/actions'
+import { WeeklyPlanItem } from '@/app/[locale]/dashboard/weekly-planning/actions'
 import Link from 'next/link'
 
 interface DayCardProps {

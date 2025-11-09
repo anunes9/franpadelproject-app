@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, XCircle, Clock } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { submitQuiz } from '@/app/dashboard/beginner/actions'
+import { submitQuiz } from '@/app/[locale]/dashboard/beginner/actions'
 import { getUserQuizAttempts, getUserModuleProgress, getLatestQuizAttemptResponses } from '@/lib/database/quiz-utils'
 
 interface Question {
@@ -170,11 +170,11 @@ export default function QuizComponent({ questions, moduleExternalId }: QuizCompo
             )}
           </div>
 
-          <h3 className="text-2xl font-bold mb-2">{quizState.result.isPassed ? t('congratulations') : t('keepTrying')}</h3>
+          <h3 className="text-2xl font-bold mb-2">
+            {quizState.result.isPassed ? t('congratulations') : t('keepTrying')}
+          </h3>
 
-          <p className="text-muted-foreground mb-4">
-            {quizState.result.isPassed ? t('quizPassed') : t('quizFailed')}
-          </p>
+          <p className="text-muted-foreground mb-4">{quizState.result.isPassed ? t('quizPassed') : t('quizFailed')}</p>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
