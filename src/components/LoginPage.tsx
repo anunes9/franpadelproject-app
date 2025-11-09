@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
 import { useRouter } from '@/i18n/routing'
-import { useTranslations, useLocale } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
 import { LocaleLink } from '@/components/LocaleLink'
 
@@ -19,7 +19,6 @@ export function LoginPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const [step, setStep] = useState<'email' | 'otp'>('email')
   const router = useRouter()
-  const locale = useLocale()
   const { signInWithOTP, verifyOTP } = useAuth()
   const t = useTranslations('auth')
 
@@ -65,8 +64,8 @@ export function LoginPage() {
       // Wait a bit for the session to be established
       // Then redirect to dashboard with locale prefix
       setTimeout(() => {
-        // Use window.location for a full page reload to ensure cookies are set
-        window.location.href = `/${locale}/dashboard`
+        router.push('/dashboard')
+        router.refresh()
       }, 500)
     } catch (err) {
       setError(t('unexpectedError'))

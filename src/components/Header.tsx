@@ -54,7 +54,7 @@ export default function Header() {
           </div>
 
           {/* Navigation Menu */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          {/* <nav className="hidden lg:flex items-center space-x-1">
             {navigationItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
               return (
@@ -72,7 +72,7 @@ export default function Header() {
                 </Button>
               )
             })}
-          </nav>
+          </nav> */}
 
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" asChild>
