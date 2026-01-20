@@ -3,10 +3,18 @@
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/client'
-import { dbUtils } from '@/lib/database/utils'
-import { Database } from '@/lib/database/types'
 
-type UserProfile = Database['public']['Tables']['users']['Row']
+export interface UserProfile {
+  id: string
+  email: string
+  full_name: string | null
+  role: 'admin' | 'sales' | 'client'
+  avatar_url: string | null
+  club_name: string | null
+  club_avatar_url: string | null
+  created_at: string
+  updated_at: string
+}
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
@@ -25,7 +33,13 @@ export function useAuth() {
       // Fetch user profile if user is authenticated
       if (session?.user?.id) {
         try {
-          const profile = await dbUtils.getCurrentUserProfile(session.user.id)
+          const { data: profile, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (error) throw error
           setUserProfile(profile)
         } catch (error) {
           console.error('Error fetching user profile:', error)
@@ -49,7 +63,13 @@ export function useAuth() {
       // Fetch user profile if user is authenticated
       if (session?.user?.id) {
         try {
-          const profile = await dbUtils.getCurrentUserProfile(session.user.id)
+          const { data: profile, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (error) throw error
           setUserProfile(profile)
         } catch (error) {
           console.error('Error fetching user profile:', error)
@@ -63,7 +83,7 @@ export function useAuth() {
     })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth])
+  }, [supabase])
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({

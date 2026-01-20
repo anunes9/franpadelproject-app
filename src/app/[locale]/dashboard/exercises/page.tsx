@@ -1,96 +1,97 @@
-import { Button } from '@/components/ui/button'
-import BackNavigation from '@/components/BackNavigation'
-import PageHeader from '@/components/PageHeader'
 import { getAllExercises } from '@/lib/contentful/exercises-delivery'
-import ExerciseCardClient from '@/components/ExerciseCardClient'
-import { type Locale } from '@/i18n/config'
+import { getLocale } from 'next-intl/server'
+import { Dumbbell, Filter, Search, PlayCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
-// Simple icon selection - just cycle through available icon names
-const iconNames = ['Target', 'Zap', 'Users', 'Clock']
-
-interface ExercisesPageProps {
-  params: Promise<{ locale: Locale }>
-}
-
-export default async function ExercisesPage({ params }: ExercisesPageProps) {
-  const { locale } = await params
-  const contentfulExercises = await getAllExercises(locale)
-
-  // Transform Contentful exercises to match the expected UI format
-  const exercises = contentfulExercises.map((exercise, index) => ({
-    id: exercise.id,
-    title: exercise.title,
-    category: 'Técnico', // Default category
-    difficulty: 'Beginner', // All exercises are Beginner as requested
-    duration: '20 min', // Default duration
-    description: exercise.description || 'No description available',
-    completed: false, // This would typically come from user progress tracking
-    iconName: iconNames[index % iconNames.length], // Pass icon name as string
-    externalId: exercise.externalId,
-    media: exercise.media,
-  }))
-
-  const categories = ['Todos', 'Técnico', 'Táctico']
-
-  const completedExercises = exercises.filter((ex) => ex.completed).length
-  const totalExercises = exercises.length
-  const progressPercentage = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0
+export default async function ExercisesPage() {
+  const locale = await getLocale()
+  const exercises = await getAllExercises(locale as any)
 
   return (
-    <>
-      <PageHeader
-        title="Biblioteca de Exercícios"
-        description="Coleção abrangente de exercícios técnicos e de tácticos"
-        badgeText={`${totalExercises} Exercícios`}
-        progressPercentage={progressPercentage}
-        completedCount={completedExercises}
-        totalCount={totalExercises}
-        progressLabel={`${completedExercises}/${totalExercises} Exercícios`}
-      />
+    <div className="flex flex-col gap-8 pb-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-indigo-600 mb-1">
+            <Dumbbell className="h-5 w-5" />
+            <span className="text-sm font-bold uppercase tracking-widest">Training Library</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-p-blue md:text-4xl">
+            Padel Exercises
+          </h1>
+          <p className="text-p-blue/60 text-lg max-w-2xl">
+            Browse our collection of dynamics and exercises to improve specific areas of your game.
+          </p>
+        </div>
 
-      {/* Category Tabs */}
-      <div className="flex gap-4 mb-8 bg-muted p-1 rounded-lg w-fit">
-        {categories.map((category) => (
-          <Button key={category} variant={category === 'Todos' ? 'default' : 'ghost'} size="sm" className="rounded-md">
-            {category}
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-p-blue/40" />
+            <Input 
+              placeholder="Search exercises..." 
+              className="pl-10 h-12 bg-white border-p-gray rounded-xl focus-visible:ring-p-green"
+            />
+          </div>
+          <Button variant="outline" className="border-p-gray text-p-blue gap-2 rounded-xl h-12 px-6">
+            <Filter className="h-4 w-4" />
+            Category
           </Button>
+        </div>
+      </div>
+
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {exercises.map((exercise) => (
+          <Card key={exercise.id} className="border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all">
+            <div className="relative aspect-video bg-slate-100 flex items-center justify-center overflow-hidden">
+              {exercise.media?.url ? (
+                <video 
+                  src={exercise.media.url} 
+                  className="w-full h-full object-cover"
+                  muted
+                  playsInline
+                />
+              ) : (
+                <div className="absolute inset-0 bg-indigo-50 flex items-center justify-center">
+                  <PlayCircle className="h-12 w-12 text-indigo-200 group-hover:text-indigo-400 transition-colors" />
+                </div>
+              )}
+              <div className="absolute top-3 left-3 flex gap-2">
+                <Badge className="bg-white/90 text-p-blue border-none backdrop-blur-sm">
+                  Video
+                </Badge>
+              </div>
+            </div>
+            
+            <CardContent className="p-5">
+              <div className="flex items-center gap-1 text-p-blue/40 text-[10px] font-bold uppercase tracking-widest mb-1">
+                <span>Exercise {exercise.externalId}</span>
+              </div>
+              <h3 className="text-lg font-bold text-p-blue mb-2 group-hover:text-p-green transition-colors">
+                {exercise.title}
+              </h3>
+              <p className="text-sm text-p-blue/60 line-clamp-2">
+                {exercise.description}
+              </p>
+            </CardContent>
+            
+            <CardFooter className="p-5 pt-0">
+              <Button variant="ghost" className="w-full bg-p-gray text-p-blue hover:bg-p-blue hover:text-white rounded-xl font-bold py-6 transition-all">
+                View Detail
+              </Button>
+            </CardFooter>
+          </Card>
         ))}
       </div>
 
-      {/* Exercises Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {exercises
-          .sort((a, b) => a.title.localeCompare(b.title))
-          .map((exercise) => (
-            <ExerciseCardClient key={exercise.id} exercise={exercise} />
-          ))}
-      </div>
-
-      {/* Exercise Stats */}
-      {/* <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-green-600 mb-1">{completedExercises}</div>
-          <div className="text-sm text-muted-foreground">Completed</div>
+      {exercises.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-p-gray text-center">
+          <Dumbbell className="h-12 w-12 text-p-gray mb-4" />
+          <h3 className="text-xl font-bold text-p-blue mb-2">No exercises found</h3>
+          <p className="text-p-blue/60">The exercise library is currently empty. Check back soon!</p>
         </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-primary mb-1">
-            {exercises.filter((ex) => ex.category === 'Technical').length}
-          </div>
-          <div className="text-sm text-muted-foreground">Technical Drills</div>
-        </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-accent mb-1">
-            {exercises.filter((ex) => ex.category === 'Tactical').length}
-          </div>
-          <div className="text-sm text-muted-foreground">Tactical Exercises</div>
-        </div>
-        <div className="text-center p-6 bg-card rounded-lg border border-border">
-          <div className="text-2xl font-bold text-orange-600 mb-1">
-            {exercises.filter((ex) => ex.category === 'Fitness').length}
-          </div>
-          <div className="text-sm text-muted-foreground">Fitness Training</div>
-        </div>
-      </div> */}
-    </>
+      )}
+    </div>
   )
 }
