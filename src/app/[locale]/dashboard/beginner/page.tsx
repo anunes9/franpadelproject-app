@@ -23,21 +23,14 @@ export default async function BeginnerPage() {
             Master the fundamentals of padel. This course covers everything from basic shots to court positioning.
           </p>
         </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" className="border-p-gray text-p-blue gap-2 rounded-xl h-12 px-6">
-            <Filter className="h-4 w-4" />
-            Filter
-          </Button>
-        </div>
       </div>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((module) => (
-          <ModuleCard 
-            key={module.id} 
-            module={module} 
-            hrefPrefix="/dashboard/beginner" 
+          <ModuleCard
+            key={module.id}
+            module={module}
+            hrefPrefix="/dashboard/beginner"
           />
         ))}
       </div>

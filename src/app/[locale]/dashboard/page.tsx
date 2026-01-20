@@ -155,7 +155,7 @@ export default async function DashboardPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter className="p-0 mt-auto pt-6">
-                  <LocaleLink href={section.href} className="w-full">
+                  <LocaleLink href={section.href} className="w-full cursor-pointer">
                     <Button className="w-full bg-p-gray text-p-blue hover:bg-p-blue hover:text-white border-none shadow-none rounded-xl font-bold py-6 transition-all group-hover:bg-p-blue group-hover:text-white">
                       {section.id === 'planning' ? t('managePlanning') : t('viewMore')}
                       <ArrowRight className="ml-2 h-4 w-4" />

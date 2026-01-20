@@ -3,12 +3,12 @@
 import { useTranslations } from 'next-intl'
 import { LocaleLink } from './LocaleLink'
 import { usePathname } from 'next/navigation'
-import { 
-  LayoutDashboard, 
-  GraduationCap, 
-  Trophy, 
-  Calendar, 
-  Dumbbell, 
+import {
+  LayoutDashboard,
+  GraduationCap,
+  Trophy,
+  Calendar,
+  Dumbbell,
   User,
   ChevronRight
 } from 'lucide-react'
@@ -29,8 +29,8 @@ function SidebarItem({ href, icon, label, isActive, onClick }: SidebarItemProps)
       onClick={onClick}
       className={cn(
         "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group",
-        isActive 
-          ? "bg-p-blue text-white shadow-lg shadow-p-blue/20" 
+        isActive
+          ? "bg-p-blue text-white shadow-lg shadow-p-blue/20"
           : "text-p-blue/70 hover:bg-p-gray hover:text-p-blue"
       )}
     >
@@ -104,7 +104,7 @@ export function DashboardSidebar({ onItemClick }: DashboardSidebarProps) {
           {navItems.map((item) => {
             // Check if the current pathname matches the item href
             // We need to account for the locale prefix, e.g., /en/dashboard
-            const isActive = pathname.endsWith(item.href) || 
+            const isActive = pathname.endsWith(item.href) ||
                             (item.href !== '/dashboard' && pathname.includes(item.href))
 
             return (
@@ -121,7 +121,7 @@ export function DashboardSidebar({ onItemClick }: DashboardSidebarProps) {
         </nav>
       </div>
 
-      <div className="mt-auto px-4 py-6 bg-p-green-light rounded-3xl mx-2">
+      <div className="px-4 py-6 bg-p-green-light rounded-3xl mx-2">
         <h3 className="text-p-blue font-bold text-sm mb-1">Padel Academy</h3>
         <p className="text-p-blue/60 text-xs mb-3">Learn from the experts and become a pro player.</p>
         <div className="w-full bg-white/50 h-2 rounded-full overflow-hidden">

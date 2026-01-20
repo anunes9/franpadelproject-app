@@ -24,10 +24,10 @@ export function LanguageSwitcher() {
       {locales.map((loc) => (
         <Button
           key={loc}
-          variant={locale === loc ? 'default' : 'ghost'}
           size="sm"
+          variant="outline"
           onClick={() => handleLocaleChange(loc)}
-          className={locale === loc ? 'bg-primary text-primary-foreground' : ''}
+          className={locale === loc ? 'bg-p-green/50' : ''}
         >
           {localeNames[loc]}
         </Button>

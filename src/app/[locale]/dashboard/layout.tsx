@@ -13,11 +13,11 @@ export default function DashboardLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-p-gray/30">
+    <div className="min-h-screen bg-p-gray">
       <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
-      
-      <div className="container flex-1 items-start md:grid md:grid-cols-[260px_1fr] md:gap-6 lg:grid-cols-[300px_1fr] lg:gap-10 px-4 md:px-6 py-6 md:py-10">
-        <aside className="fixed top-24 z-30 hidden h-[calc(100vh-8rem)] w-full shrink-0 md:sticky md:block">
+
+      <div className="flex-1 items-start xl:grid xl:grid-cols-[260px_1fr] xl:gap-6 2xl:grid-cols-[300px_1fr] 2xl:gap-10 px-4 md:px-6 py-6 md:py-10">
+        <aside className="fixed top-24 z-30 hidden h-[calc(100vh-8rem)] w-full shrink-0 xl:sticky xl:block">
           <div className="h-full rounded-3xl bg-white border border-p-gray/50 shadow-sm overflow-hidden">
             <DashboardSidebar />
           </div>

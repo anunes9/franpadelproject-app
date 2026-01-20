@@ -24,22 +24,23 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-p-gray bg-white">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-p-blue"
+            className="xl:hidden text-p-blue hover:text-p-blue/80 hover:bg-p-gray/50 rounded-full p-2 cursor-pointer"
             onClick={onMenuClick}
           >
             <Menu className="h-6 w-6" />
           </Button>
+
           <div className="flex items-center gap-2">
             <Image
               src="/fran-padel-project-logo.svg"
               alt="Fran Padel Project"
-              width={140}
-              height={40}
+              width={100}
+              height={32}
               className="hidden md:block"
             />
             <Image
@@ -52,13 +53,13 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2 xl:gap-4">
           <LanguageSwitcher />
-          
-          <div className="h-8 w-[1px] bg-p-gray mx-1 hidden md:block" />
+
+          <div className="h-8 w-[1px] bg-p-gray mx-1 hidden xl:block" />
 
           <div className="flex items-center gap-2">
-            <div className="hidden md:flex flex-col items-end mr-2">
+            <div className="hidden xl:flex flex-col items-end mr-2">
               <span className="text-sm font-medium text-p-blue leading-none">
                 {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
               </span>

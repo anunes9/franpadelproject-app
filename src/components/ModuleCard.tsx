@@ -17,12 +17,12 @@ export function ModuleCard({ module, hrefPrefix }: ModuleCardProps) {
   const t = useTranslations('common')
 
   return (
-    <Card className="flex flex-col h-full border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all">
-      <div className="relative aspect-video bg-p-blue flex items-center justify-center overflow-hidden">
+    <Card className="flex flex-col h-full border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all p-0 gap-2">
         {/* Placeholder for module image/video teaser */}
+      {/* <div className="relative aspect-video bg-p-blue flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-p-blue to-slate-800" />
         <PlayCircle className="h-12 w-12 text-p-green/40 group-hover:text-p-green transition-colors relative z-10" />
-        
+
         <div className="absolute top-3 left-3 flex gap-2">
           <Badge className="bg-white/10 text-white border-none backdrop-blur-md">
             {module.level}
@@ -31,7 +31,9 @@ export function ModuleCard({ module, hrefPrefix }: ModuleCardProps) {
             {module.duration}
           </Badge>
         </div>
-      </div>
+      </div> */}
+
+      <div className="h-8 bg-p-blue" />
 
       <CardHeader className="p-5 pb-2">
         <div className="flex items-center gap-1 text-p-blue/40 text-[10px] font-bold uppercase tracking-widest mb-1">
@@ -47,7 +49,7 @@ export function ModuleCard({ module, hrefPrefix }: ModuleCardProps) {
         <p className="text-sm text-p-blue/60 line-clamp-3 mb-4">
           {module.description}
         </p>
-        
+
         <div className="flex flex-wrap gap-2">
           {module.topics?.slice(0, 3).map((topic, i) => (
             <span key={i} className="text-[10px] font-semibold text-p-blue/40 bg-p-gray px-2 py-0.5 rounded-full uppercase">
@@ -63,7 +65,7 @@ export function ModuleCard({ module, hrefPrefix }: ModuleCardProps) {
       </CardContent>
 
       <CardFooter className="p-5 pt-0">
-        <LocaleLink href={`${hrefPrefix}/${module.externalId}`} className="w-full">
+        <LocaleLink href={`${hrefPrefix}/${module.externalId}`} className="w-full cursor-pointer">
           <Button variant="ghost" className="w-full justify-between px-4 py-6 rounded-xl bg-p-gray text-p-blue hover:bg-p-blue hover:text-white transition-all group-hover:bg-p-blue group-hover:text-white">
             <span className="font-bold">{t('viewMore')}</span>
             <ChevronRight className="h-4 w-4" />
