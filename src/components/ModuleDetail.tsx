@@ -1,6 +1,6 @@
 'use client'
 
-import { Module } from '@/lib/contentful/modules-delivery'
+import { Module, Exercise } from '@/lib/contentful/modules-delivery'
 import { MarkdownRenderer } from './MarkdownRenderer'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
@@ -10,14 +10,16 @@ import {
   PlayCircle,
   FileText,
   ChevronLeft,
-  ArrowRight
+  ArrowRight,
+  Video,
+  X
 } from 'lucide-react'
 import { LocaleLink } from './LocaleLink'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog'
 import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import { cn, detectFileType, FILE_TYPES } from '@/lib/utils'
 import Image from 'next/image'
 
 interface ModuleDetailProps {
@@ -34,10 +36,17 @@ function normalizeUrl(url: string): string {
   return url
 }
 
+type ResourceFile = {
+  url: string
+  fileName: string
+  contentType: string
+}
+
 export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
   const t = useTranslations('common')
   const [activeTab, setActiveTab] = useState<'content' | 'exercises' | 'quiz' | 'resources'>('content')
-  const [selectedExercise, setSelectedExercise] = useState<Module['exercises'] extends (infer E)[] ? E : never | null>(null)
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
+  const [selectedResource, setSelectedResource] = useState<ResourceFile | null>(null)
 
   return (
     <div className="flex flex-col gap-8 pb-12">
@@ -214,9 +223,91 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
           {activeTab === 'resources' && (
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 flex flex-col gap-6">
               <h3 className="text-xl font-bold text-p-blue mb-2">Module Resources</h3>
+
+              {/* Inline File Viewer */}
+              {selectedResource && (() => {
+                const fileType = detectFileType(selectedResource.url, selectedResource.fileName)
+
+                return (
+                  <div className="bg-white border border-p-gray/50 rounded-2xl overflow-hidden shadow-sm mb-4">
+                    <div className="flex items-center justify-between p-4 border-b border-p-gray/50 bg-p-gray/30">
+                      <div className="flex items-center gap-3">
+                        {fileType === FILE_TYPES.VIDEO ? (
+                          <Video className="h-5 w-5 text-p-blue" />
+                        ) : (
+                          <FileText className="h-5 w-5 text-p-blue" />
+                        )}
+                        <div>
+                          <h4 className="text-base font-bold text-p-blue">{selectedResource.fileName}</h4>
+                          <p className="text-xs text-p-blue/60">
+                            {fileType === FILE_TYPES.PDF ? 'PDF Document' : fileType === FILE_TYPES.VIDEO ? 'Video File' : 'Document'}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSelectedResource(null)}
+                        className="h-8 w-8 rounded-full hover:bg-p-gray text-p-blue/60 hover:text-p-blue"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="h-[70vh] bg-p-gray/20">
+                      {fileType === FILE_TYPES.PDF ? (
+                        <div className="w-full h-full bg-p-gray rounded-none overflow-hidden">
+                          <iframe
+                            src={selectedResource.url}
+                            className="w-full h-full border-0"
+                            title={selectedResource.fileName}
+                            allow="fullscreen"
+                          />
+                        </div>
+                      ) : fileType === FILE_TYPES.VIDEO ? (
+                        <div className="w-full h-full bg-black rounded-none overflow-hidden flex items-center justify-center">
+                          <video
+                            src={selectedResource.url}
+                            controls
+                            autoPlay
+                            muted
+                            className="w-full h-full max-h-full object-contain"
+                            controlsList="nodownload"
+                          >
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-p-gray rounded-none">
+                          <div className="text-center">
+                            <FileText className="h-16 w-16 text-p-blue/40 mx-auto mb-4" />
+                            <p className="text-p-blue/60 mb-4">Preview not available for this file type.</p>
+                            <Button
+                              onClick={() => window.open(selectedResource.url, '_blank')}
+                              className="bg-p-blue text-white hover:bg-p-green"
+                            >
+                              Download File
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })()}
+
               <div className="flex flex-col gap-3">
                 {module.presentation && (
-                  <Button className="w-full justify-between bg-p-gray hover:bg-p-blue hover:text-white text-p-blue border-none rounded-xl py-6 transition-all">
+                  <Button
+                    onClick={() => setSelectedResource({
+                      url: normalizeUrl(module.presentation!.fields.file.url),
+                      fileName: module.presentation!.fields.file.fileName,
+                      contentType: module.presentation!.fields.file.contentType
+                    })}
+                    className={cn(
+                      "w-full justify-between bg-p-gray hover:bg-p-blue hover:text-white text-p-blue border-none rounded-xl py-6 transition-all",
+                      selectedResource?.fileName === module.presentation.fields.file.fileName && "bg-p-blue text-white"
+                    )}
+                  >
                     <div className="flex items-center gap-2">
                       <FileText className="h-5 w-5" />
                       <span className="font-medium">Presentation PDF</span>
@@ -224,15 +315,34 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
                     <ChevronLeft className="h-4 w-4 rotate-180 opacity-50" />
                   </Button>
                 )}
-                {module.documents?.map((doc, i) => (
-                  <Button key={i} className="w-full justify-between bg-p-gray hover:bg-p-blue hover:text-white text-p-blue border-none rounded-xl py-6 transition-all">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-5 w-5" />
-                      <span className="font-medium truncate max-w-[200px]">{doc.fields.file.fileName}</span>
-                    </div>
-                    <ChevronLeft className="h-4 w-4 rotate-180 opacity-50" />
-                  </Button>
-                ))}
+                {module.documents?.map((doc, i) => {
+                  const fileType = detectFileType(doc.fields.file.url, doc.fields.file.fileName)
+                  const isSelected = selectedResource?.fileName === doc.fields.file.fileName
+                  return (
+                    <Button
+                      key={i}
+                      onClick={() => setSelectedResource({
+                        url: normalizeUrl(doc.fields.file.url),
+                        fileName: doc.fields.file.fileName,
+                        contentType: doc.fields.file.contentType
+                      })}
+                      className={cn(
+                        "w-full justify-between bg-p-gray hover:bg-p-blue hover:text-white text-p-blue border-none rounded-xl py-6 transition-all",
+                        isSelected && "bg-p-blue text-white"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        {fileType === FILE_TYPES.VIDEO ? (
+                          <Video className="h-5 w-5" />
+                        ) : (
+                          <FileText className="h-5 w-5" />
+                        )}
+                        <span className="font-medium truncate max-w-[200px]">{doc.fields.file.fileName}</span>
+                      </div>
+                      <ChevronLeft className="h-4 w-4 rotate-180 opacity-50" />
+                    </Button>
+                  )
+                })}
                 {(!module.presentation && (!module.documents || module.documents.length === 0)) && (
                   <div className="text-center py-12">
                     <div className="bg-p-gray/50 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -248,9 +358,13 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
       </div>
 
       {/* Exercise Detail Modal */}
-      <Dialog open={!!selectedExercise} onOpenChange={(open) => !open && setSelectedExercise(null)}>
+      <Dialog open={!!selectedExercise} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedExercise(null)
+        }
+      }}>
         <DialogContent className="w-[80%] overflow-y-auto bg-white border-p-gray/50 p-6">
-          {selectedExercise && (
+          {selectedExercise ? (
             <>
               <DialogHeader className="mb-4">
                 <DialogTitle className="text-2xl font-bold text-p-blue mb-2">
@@ -273,9 +387,10 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
                 </div>
               )}
             </>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
+
     </div>
   )
 }
