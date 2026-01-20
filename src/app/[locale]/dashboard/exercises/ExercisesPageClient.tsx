@@ -1,14 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { type Exercise } from '@/lib/contentful/exercises-delivery'
-import { Dumbbell, Filter, Search, PlayCircle } from 'lucide-react'
+import { Dumbbell, Search, PlayCircle, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import Image from 'next/image'
+import { markExerciseComplete } from '../actions'
+import { useRouter } from 'next/navigation'
 
 // Helper function to normalize URLs (convert protocol-relative to absolute)
 function normalizeUrl(url: string): string {
@@ -21,11 +23,27 @@ function normalizeUrl(url: string): string {
 
 interface ExercisesPageClientProps {
   exercises: Exercise[]
+  completedExerciseIds?: Set<string>
 }
 
-export function ExercisesPageClient({ exercises: initialExercises }: ExercisesPageClientProps) {
+export function ExercisesPageClient({ exercises: initialExercises, completedExerciseIds = new Set() }: ExercisesPageClientProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const [exercises] = useState(initialExercises)
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
+  const [completedExercises, setCompletedExercises] = useState<Set<string>>(completedExerciseIds)
+
+  const handleMarkComplete = async (exerciseExternalId: string) => {
+    startTransition(async () => {
+      try {
+        await markExerciseComplete(exerciseExternalId)
+        setCompletedExercises(prev => new Set(prev).add(exerciseExternalId))
+        router.refresh()
+      } catch (error) {
+        console.error('Error marking exercise as complete:', error)
+      }
+    })
+  }
 
   return (
     <div className="flex flex-col gap-8 pb-12">
@@ -79,9 +97,12 @@ export function ExercisesPageClient({ exercises: initialExercises }: ExercisesPa
                   </div>
                 )}
                 <div className="absolute top-3 left-3 flex gap-2">
-                  <Badge className="bg-white/90 text-p-blue border-none backdrop-blur-sm">
-                    Image
-                  </Badge>
+                  {completedExercises.has(exercise.externalId) && (
+                    <Badge className="bg-p-green text-white border-none backdrop-blur-sm">
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      Completed
+                    </Badge>
+                  )}
                 </div>
               </div>
 
@@ -126,11 +147,33 @@ export function ExercisesPageClient({ exercises: initialExercises }: ExercisesPa
               </DialogHeader>
               {selectedExercise.media?.url && (
                 <div className="relative w-full min-h-[60vh] bg-p-gray rounded-xl overflow-hidden flex items-center justify-center">
-                  <img
+                  <Image
                     src={normalizeUrl(selectedExercise.media.url)}
                     alt={selectedExercise.title || 'Exercise image'}
-                    className="object-contain w-full h-full"
+                    fill
+                    className="object-contain"
+                    sizes="90vw"
                   />
+                </div>
+              )}
+
+              {/* Completion Button */}
+              {selectedExercise && !completedExercises.has(selectedExercise.externalId) && (
+                <div className="mt-6 pt-6 border-t border-p-gray/50">
+                  <Button
+                    onClick={() => handleMarkComplete(selectedExercise.externalId)}
+                    disabled={isPending}
+                    className="w-full bg-p-green text-white hover:bg-p-green/90 px-8 py-6 rounded-xl font-bold transition-all"
+                  >
+                    {isPending ? (
+                      'Marking as Complete...'
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-2 h-5 w-5" />
+                        Mark Exercise as Complete
+                      </>
+                    )}
+                  </Button>
                 </div>
               )}
             </>

@@ -28,9 +28,9 @@ export default async function WeeklyPlanningPage({
     let level = undefined
 
     if (dbItem.item_type === 'module') {
-      const module = modules.find(m => m.externalId === dbItem.item_external_id)
-      title = module?.title || 'Unknown Module'
-      level = module?.level
+      const moduleItem = modules.find(m => m.externalId === dbItem.item_external_id)
+      title = moduleItem?.title || 'Unknown Module'
+      level = moduleItem?.level
     } else {
       const exercise = exercises.find(e => e.externalId === dbItem.item_external_id)
       title = exercise?.title || 'Unknown Exercise'

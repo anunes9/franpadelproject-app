@@ -1,8 +1,7 @@
 import { getBeginnerModules } from '@/lib/contentful/modules-delivery'
 import { getLocale } from 'next-intl/server'
 import { ModuleCard } from '@/components/ModuleCard'
-import { GraduationCap, Filter } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { GraduationCap } from 'lucide-react'
 
 export default async function BeginnerPage() {
   const locale = await getLocale()
@@ -39,7 +38,7 @@ export default async function BeginnerPage() {
         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-p-gray text-center">
           <GraduationCap className="h-12 w-12 text-p-gray mb-4" />
           <h3 className="text-xl font-bold text-p-blue mb-2">No modules found</h3>
-          <p className="text-p-blue/60">We couldn't find any beginner modules at the moment. Please check back later.</p>
+          <p className="text-p-blue/60">We couldn&apos;t find any beginner modules at the moment. Please check back later.</p>
         </div>
       )}
     </div>

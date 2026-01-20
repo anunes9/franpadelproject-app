@@ -1,13 +1,11 @@
-import { getTranslations } from 'next-intl/server'
-import { Trophy, CheckCircle2, Lock, ArrowRight, GraduationCap, Award } from 'lucide-react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Trophy, CheckCircle2, Lock, GraduationCap, Award } from 'lucide-react'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 export default async function CertificationPage() {
-  const t = await getTranslations('dashboard')
 
   const certifications = [
     {

@@ -46,7 +46,7 @@ export default async function IntermediatePage() {
         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-p-gray text-center">
           <Trophy className="h-12 w-12 text-p-gray mb-4" />
           <h3 className="text-xl font-bold text-p-blue mb-2">No modules found</h3>
-          <p className="text-p-blue/60">We couldn't find any intermediate modules at the moment. Please check back later.</p>
+          <p className="text-p-blue/60">We couldn&apos;t find any intermediate modules at the moment. Please check back later.</p>
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getBeginnerModules, getIntermediateModules } from '@/lib/contentful/modules-delivery'
 import { getAllExercises } from '@/lib/contentful/exercises-delivery'
+import { getCompletionStats, getModuleCompletionStatus } from './actions'
 import {
   GraduationCap,
   Trophy,
@@ -25,17 +26,41 @@ export default async function DashboardPage() {
   const intermediateModules = await getIntermediateModules(locale as any)
   const exercises = await getAllExercises(locale as any)
 
+  // Get completion stats
+  const { modulesCompleted, exercisesCompleted } = await getCompletionStats()
+
+  // Get module completion status for progress calculation
+  const allModuleIds = [
+    ...beginnerModules.map(m => m.externalId),
+    ...intermediateModules.map(m => m.externalId)
+  ]
+  const moduleCompletionStatus = await getModuleCompletionStatus(allModuleIds)
+
+  // Calculate beginner and intermediate completion counts
+  const beginnerCompleted = beginnerModules.filter(
+    m => moduleCompletionStatus[m.externalId]
+  ).length
+  const intermediateCompleted = intermediateModules.filter(
+    m => moduleCompletionStatus[m.externalId]
+  ).length
+
+  // Calculate overall progress percentage
+  const totalModules = beginnerModules.length + intermediateModules.length
+  const overallProgress = totalModules > 0 
+    ? Math.round((modulesCompleted / totalModules) * 100)
+    : 0
+
   const stats = [
     {
       label: t('modulesComplete'),
-      value: '0',
+      value: modulesCompleted.toString(),
       total: beginnerModules.length + intermediateModules.length,
       icon: <GraduationCap className="h-5 w-5 text-p-green" />,
       color: 'bg-p-green-light'
     },
     {
       label: t('exercisesComplete'),
-      value: '0',
+      value: exercisesCompleted.toString(),
       total: exercises.length,
       icon: <Dumbbell className="h-5 w-5 text-p-blue" />,
       color: 'bg-blue-50'
@@ -182,33 +207,43 @@ export default async function DashboardPage() {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-p-blue/60 font-medium">Certification Pathway</span>
-                <span className="text-p-blue font-bold">12%</span>
+                <span className="text-p-blue font-bold">{overallProgress}%</span>
               </div>
               <div className="h-3 bg-p-gray rounded-full overflow-hidden">
-                <div className="h-full bg-p-green w-[12%]" />
+                <div className="h-full bg-p-green transition-all" style={{ width: `${overallProgress}%` }} />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
-                <CheckCircle2 className="h-5 w-5 text-p-green shrink-0 mt-0.5" />
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${beginnerCompleted > 0 ? 'text-p-green' : 'text-slate-300'}`} />
                 <div>
                   <p className="text-sm font-bold text-p-blue">Beginner Level</p>
-                  <p className="text-xs text-p-blue/60">0 of 8 modules complete</p>
+                  <p className="text-xs text-p-blue/60">
+                    {beginnerCompleted} of {beginnerModules.length} modules complete
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
-                <CheckCircle2 className="h-5 w-5 text-slate-300 shrink-0 mt-0.5" />
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${intermediateCompleted > 0 ? 'text-p-green' : 'text-slate-300'}`} />
                 <div>
                   <p className="text-sm font-bold text-p-blue">Intermediate Level</p>
-                  <p className="text-xs text-p-blue/60">Not started</p>
+                  <p className="text-xs text-p-blue/60">
+                    {intermediateCompleted > 0 
+                      ? `${intermediateCompleted} of ${intermediateModules.length} modules complete`
+                      : 'Not started'}
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
-                <CheckCircle2 className="h-5 w-5 text-slate-300 shrink-0 mt-0.5" />
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${modulesCompleted === totalModules && totalModules > 0 ? 'text-p-green' : 'text-slate-300'}`} />
                 <div>
                   <p className="text-sm font-bold text-p-blue">Certification</p>
-                  <p className="text-xs text-p-blue/60">Requirements pending</p>
+                  <p className="text-xs text-p-blue/60">
+                    {modulesCompleted === totalModules && totalModules > 0
+                      ? 'Ready for certification'
+                      : 'Requirements pending'}
+                  </p>
                 </div>
               </div>
             </div>

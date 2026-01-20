@@ -2,6 +2,7 @@ import { getModuleByExternalId } from '@/lib/contentful/modules-delivery'
 import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { ModuleDetail } from '@/components/ModuleDetail'
+import { isModuleComplete } from '../../actions'
 
 export default async function BeginnerModuleDetailPage({
   params,
@@ -10,11 +11,13 @@ export default async function BeginnerModuleDetailPage({
 }) {
   const { externalId } = await params
   const locale = await getLocale()
-  const module = await getModuleByExternalId(externalId, locale as any)
+  const moduleData = await getModuleByExternalId(externalId, locale as any)
 
-  if (!module) {
+  if (!moduleData) {
     notFound()
   }
 
-  return <ModuleDetail module={module} backHref="/dashboard/beginner" />
+  const isCompleted = await isModuleComplete(externalId)
+
+  return <ModuleDetail module={moduleData} backHref="/dashboard/beginner" isCompleted={isCompleted} />
 }

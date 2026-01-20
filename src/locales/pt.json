@@ -173,7 +173,15 @@
   },
   "profile": {
     "profile": "Perfil",
-    "editProfile": "Editar Perfil"
+    "editProfile": "Editar Perfil",
+    "accountInformation": "Informações da Conta",
+    "viewAndManage": "Visualizar e gerir as informações da sua conta",
+    "emailAddress": "Endereço de Email",
+    "club": "Clube",
+    "noClubAssigned": "Nenhum clube atribuído",
+    "accountStatus": "Estado da Conta",
+    "memberSince": "Membro desde",
+    "noNameSet": "Nome não definido"
   }
 }
 

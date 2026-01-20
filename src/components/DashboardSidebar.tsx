@@ -105,7 +105,7 @@ export function DashboardSidebar({ onItemClick }: DashboardSidebarProps) {
             // Check if the current pathname matches the item href
             // We need to account for the locale prefix, e.g., /en/dashboard
             const isActive = pathname.endsWith(item.href) ||
-                            (item.href !== '/dashboard' && pathname.includes(item.href))
+              (item.href !== '/dashboard' && pathname.includes(item.href))
 
             return (
               <SidebarItem
@@ -119,15 +119,6 @@ export function DashboardSidebar({ onItemClick }: DashboardSidebarProps) {
             )
           })}
         </nav>
-      </div>
-
-      <div className="px-4 py-6 bg-p-green-light rounded-3xl mx-2">
-        <h3 className="text-p-blue font-bold text-sm mb-1">Padel Academy</h3>
-        <p className="text-p-blue/60 text-xs mb-3">Learn from the experts and become a pro player.</p>
-        <div className="w-full bg-white/50 h-2 rounded-full overflow-hidden">
-          <div className="bg-p-green h-full w-[45%]" />
-        </div>
-        <p className="text-[10px] text-p-blue/40 mt-2 font-medium uppercase tracking-tighter">45% Course Complete</p>
       </div>
     </aside>
   )

@@ -12,19 +12,22 @@ import {
   ChevronLeft,
   ArrowRight,
   Video,
-  X
+  X,
+  CheckCircle2
 } from 'lucide-react'
 import { LocaleLink } from './LocaleLink'
-import { useTranslations } from 'next-intl'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Card, CardHeader, CardTitle } from './ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { cn, detectFileType, FILE_TYPES } from '@/lib/utils'
 import Image from 'next/image'
+import { markModuleComplete } from '@/app/[locale]/dashboard/actions'
+import { useRouter } from 'next/navigation'
 
 interface ModuleDetailProps {
   module: Module
   backHref: string
+  isCompleted?: boolean
 }
 
 // Helper function to normalize URLs (convert protocol-relative to absolute)
@@ -42,11 +45,25 @@ type ResourceFile = {
   contentType: string
 }
 
-export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
-  const t = useTranslations('common')
+export function ModuleDetail({ module, backHref, isCompleted: initialIsCompleted = false }: ModuleDetailProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const [activeTab, setActiveTab] = useState<'content' | 'exercises' | 'quiz' | 'resources'>('content')
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
   const [selectedResource, setSelectedResource] = useState<ResourceFile | null>(null)
+  const [isCompleted, setIsCompleted] = useState(initialIsCompleted)
+
+  const handleMarkComplete = async () => {
+    startTransition(async () => {
+      try {
+        await markModuleComplete(module.externalId)
+        setIsCompleted(true)
+        router.refresh()
+      } catch (error) {
+        console.error('Error marking module as complete:', error)
+      }
+    })
+  }
 
   return (
     <div className="flex flex-col gap-8 pb-12">
@@ -67,6 +84,12 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
 
         {/* Module Details */}
         <div className="flex flex-col flex-wrap items-end gap-2">
+          {isCompleted && (
+            <Badge className="bg-p-green text-white border-none px-3 py-1">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              Completed
+            </Badge>
+          )}
           {module.duration && (
             <div className="flex items-center gap-2 text-p-blue/70">
               <Clock className="h-4 w-4 text-p-blue/50" />
@@ -157,6 +180,26 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
               {!module.content && !module.technicalContent && (
                 <p className="text-p-blue/40 text-sm italic text-center py-12">No content available for this module.</p>
               )}
+              
+              {/* Completion Button */}
+              {!isCompleted && (
+                <div className="mt-8 pt-8 border-t border-p-gray/50">
+                  <Button
+                    onClick={handleMarkComplete}
+                    disabled={isPending}
+                    className="w-full bg-p-green text-white hover:bg-p-green/90 px-8 py-6 rounded-xl font-bold transition-all"
+                  >
+                    {isPending ? (
+                      'Marking as Complete...'
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-2 h-5 w-5" />
+                        Mark Module as Complete
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
@@ -211,7 +254,7 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
               </div>
               <h3 className="text-xl font-bold text-p-blue mb-2">Knowledge Assessment</h3>
               <p className="text-p-blue/60 max-w-md mx-auto mb-8">
-                Ready to test what you've learned? Complete this quiz with at least 80% correct answers to unlock the next module.
+                Ready to test what you&apos;ve learned? Complete this quiz with at least 80% correct answers to unlock the next module.
               </p>
               <Button className="bg-p-blue text-white hover:bg-p-green px-8 py-6 rounded-xl font-bold transition-all">
                 Start Quiz
@@ -378,11 +421,12 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
               </DialogHeader>
               {selectedExercise.media?.url && (
                 <div className="relative w-full min-h-[60vh] bg-p-gray rounded-xl overflow-hidden flex items-center justify-center">
-                  <img
+                  <Image
                     src={normalizeUrl(selectedExercise.media.url)}
                     alt={selectedExercise.title || 'Exercise image'}
-                    className="object-contain w-full h-full"
-                  // sizes="90vw"
+                    fill
+                    className="object-contain"
+                    sizes="90vw"
                   />
                 </div>
               )}

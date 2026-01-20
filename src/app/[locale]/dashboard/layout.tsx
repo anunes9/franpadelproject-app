@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { DashboardHeader } from '@/components/DashboardHeader'
 import { DashboardSidebar } from '@/components/DashboardSidebar'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
@@ -33,7 +34,7 @@ export default function DashboardLayout({
         <SheetContent side="left" className="p-0 w-[300px] border-none">
           <div className="h-full bg-white">
             <div className="p-6 border-b border-p-gray">
-              <img src="/fran-padel-project-logo.svg" alt="Fran Padel Project" className="h-10" />
+              <Image src="/fran-padel-project-logo.svg" alt="Fran Padel Project" width={120} height={40} className="h-10 w-auto" />
             </div>
             <DashboardSidebar onItemClick={() => setIsSidebarOpen(false)} />
           </div>

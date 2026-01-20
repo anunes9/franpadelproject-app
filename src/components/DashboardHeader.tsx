@@ -14,7 +14,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const t = useTranslations('navigation')
-  const { signOut, user } = useAuth()
+  const { signOut, user, userProfile } = useAuth()
   const router = useRouter()
 
   const handleLogout = async () => {
@@ -59,12 +59,9 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <div className="h-8 w-[1px] bg-p-gray mx-1 hidden xl:block" />
 
           <div className="flex items-center gap-2">
-            <div className="hidden xl:flex flex-col items-end mr-2">
-              <span className="text-sm font-medium text-p-blue leading-none">
-                {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
-              </span>
-              <span className="text-xs text-slate-500">
-                {user?.email}
+            <div className="hidden xl:flex items-center mr-2">
+              <span className="text-sm font-medium text-p-blue">
+                {userProfile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
               </span>
             </div>
             <Button

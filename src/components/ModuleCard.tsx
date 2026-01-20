@@ -2,9 +2,8 @@
 
 import { Module } from '@/lib/contentful/modules-delivery'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Clock, BookOpen, ChevronRight, PlayCircle } from 'lucide-react'
+import { BookOpen, ChevronRight } from 'lucide-react'
 import { LocaleLink } from './LocaleLink'
 import { useTranslations } from 'next-intl'
 
