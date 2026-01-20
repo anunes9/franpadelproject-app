@@ -5,10 +5,19 @@ import { getAllModules } from '@/lib/contentful/modules-delivery'
 import { getAllExercises } from '@/lib/contentful/exercises-delivery'
 import { getLocale } from 'next-intl/server'
 
-export default async function WeeklyPlanningPage() {
+export default async function WeeklyPlanningPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ year?: string; week?: string }>
+}) {
   const locale = await getLocale()
-  const { year, week } = getCurrentWeek()
-  
+  const params = await searchParams
+  const currentWeekData = getCurrentWeek()
+
+  // Use searchParams if available, otherwise use current week
+  const year = params.year ? parseInt(params.year, 10) : currentWeekData.year
+  const week = params.week ? parseInt(params.week, 10) : currentWeekData.week
+
   const plan = await getWeeklyPlan(year, week)
   const modules = await getAllModules(locale as any)
   const exercises = await getAllExercises(locale as any)
@@ -32,6 +41,7 @@ export default async function WeeklyPlanningPage() {
       item_external_id: dbItem.item_external_id,
       item_type: dbItem.item_type,
       day_of_week: dbItem.day_of_week,
+      date: dbItem.date,
       title,
       level
     }
@@ -48,10 +58,13 @@ export default async function WeeklyPlanningPage() {
         </p>
       </div>
 
-      <WeeklyPlanningCalendar 
-        initialItems={initialItems} 
-        currentYear={year} 
-        currentWeek={week} 
+      <WeeklyPlanningCalendar
+        initialItems={initialItems}
+        currentYear={year}
+        currentWeek={week}
+        planId={plan?.id || null}
+        modules={modules}
+        exercises={exercises}
       />
     </div>
   )
