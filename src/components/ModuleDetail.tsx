@@ -15,6 +15,7 @@ import {
 import { LocaleLink } from './LocaleLink'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
@@ -36,6 +37,7 @@ function normalizeUrl(url: string): string {
 export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
   const t = useTranslations('common')
   const [activeTab, setActiveTab] = useState<'content' | 'exercises' | 'quiz' | 'resources'>('content')
+  const [selectedExercise, setSelectedExercise] = useState<Module['exercises'] extends (infer E)[] ? E : never | null>(null)
 
   return (
     <div className="flex flex-col gap-8 pb-12">
@@ -157,12 +159,16 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
                   const mediaUrl = exercise.media?.url ? normalizeUrl(exercise.media.url) : null
 
                   return (
-                    <Card key={exercise.id} className="border-p-gray/50 shadow-none hover:border-p-green/50 transition-colors">
+                    <Card
+                      key={exercise.id}
+                      className="border-p-gray/50 shadow-none hover:border-p-green/50 transition-colors cursor-pointer"
+                      onClick={() => setSelectedExercise(exercise)}
+                    >
                       <div className="aspect-video bg-p-gray relative overflow-hidden group">
                         {mediaUrl ? (
                           <Image
                             src={mediaUrl}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             width={400}
                             height={225}
                             alt={exercise.title || 'Exercise image'}
@@ -174,7 +180,10 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
                         )}
                       </div>
                       <CardHeader className="p-4">
-                        <CardTitle className="text-base text-p-blue">{exercise.title}</CardTitle>
+                        <CardTitle className="text-base text-p-blue mb-2">{exercise.title}</CardTitle>
+                        {exercise.description && (
+                          <p className="text-sm text-p-blue/60 line-clamp-2">{exercise.description}</p>
+                        )}
                       </CardHeader>
                     </Card>
                   )
@@ -237,6 +246,36 @@ export function ModuleDetail({ module, backHref }: ModuleDetailProps) {
           )}
         </div>
       </div>
+
+      {/* Exercise Detail Modal */}
+      <Dialog open={!!selectedExercise} onOpenChange={(open) => !open && setSelectedExercise(null)}>
+        <DialogContent className="w-[80%] overflow-y-auto bg-white border-p-gray/50 p-6">
+          {selectedExercise && (
+            <>
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-2xl font-bold text-p-blue mb-2">
+                  {selectedExercise.title}
+                </DialogTitle>
+                {selectedExercise.description && (
+                  <DialogDescription className="text-p-blue/70 text-base">
+                    {selectedExercise.description}
+                  </DialogDescription>
+                )}
+              </DialogHeader>
+              {selectedExercise.media?.url && (
+                <div className="relative w-full min-h-[60vh] bg-p-gray rounded-xl overflow-hidden flex items-center justify-center">
+                  <img
+                    src={normalizeUrl(selectedExercise.media.url)}
+                    alt={selectedExercise.title || 'Exercise image'}
+                    className="object-contain w-full h-full"
+                  // sizes="90vw"
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
