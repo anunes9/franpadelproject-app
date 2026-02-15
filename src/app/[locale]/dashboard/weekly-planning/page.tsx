@@ -1,95 +1,71 @@
-import { Suspense } from 'react'
-import { WeeklyPlanningCalendar } from '@/components/training-planner/weekly-planning-calendar'
-import PageHeader from '@/components/PageHeader'
-import { getWeeklyPlan, getAvailableModules, getAvailableExercises } from './actions'
 import { getCurrentWeek } from '@/utils/date-helpers'
-import { Skeleton } from '@/components/ui/skeleton'
+import { getWeeklyPlan } from './actions'
+import { WeeklyPlanningCalendar } from '@/components/WeeklyPlanningCalendar'
+import { getAllModules } from '@/lib/contentful/modules-delivery'
+import { getAllExercises } from '@/lib/contentful/exercises-delivery'
+import { getLocale } from 'next-intl/server'
 
-interface WeeklyPlanningPageProps {
-  searchParams: Promise<{
-    year?: string
-    week?: string
-  }>
-}
-
-async function WeeklyPlanningContent({ year, week }: { year: number; week: number }) {
-  // Fetch data in parallel
-  const [weeklyPlanData, availableModules, availableExercises] = await Promise.all([
-    getWeeklyPlan(year, week),
-    getAvailableModules(),
-    getAvailableExercises(),
-  ])
-
-  if (!weeklyPlanData) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">Erro ao carregar o planeamento semanal</p>
-      </div>
-    )
-  }
-
-  return (
-    <WeeklyPlanningCalendar
-      initialYear={year}
-      initialWeek={week}
-      weeklyPlanData={weeklyPlanData}
-      availableModules={availableModules}
-      availableExercises={availableExercises}
-    />
-  )
-}
-
-function WeeklyPlanningLoadingSkeleton() {
-  return (
-    <div className="space-y-6">
-      {/* Week Navigator Skeleton */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-10 w-10" />
-          <Skeleton className="h-16 w-[200px]" />
-          <Skeleton className="h-10 w-10" />
-        </div>
-        <Skeleton className="h-9 w-32" />
-      </div>
-
-      {/* Calendar Grid Skeleton - Only weekdays */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {[1, 2, 3, 4, 5].map((day) => (
-          <Skeleton key={day} className="h-[300px]" />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-export default async function WeeklyPlanningPage({ searchParams }: WeeklyPlanningPageProps) {
-  // Await searchParams in Next.js 15
+export default async function WeeklyPlanningPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ year?: string; week?: string }>
+}) {
+  const locale = await getLocale()
   const params = await searchParams
+  const currentWeekData = getCurrentWeek()
 
-  // Get year and week from search params or use current week
-  const currentWeek = getCurrentWeek()
-  const year = params.year ? parseInt(params.year) : currentWeek.year
-  const week = params.week ? parseInt(params.week) : currentWeek.week
+  // Use searchParams if available, otherwise use current week
+  const year = params.year ? parseInt(params.year, 10) : currentWeekData.year
+  const week = params.week ? parseInt(params.week, 10) : currentWeekData.week
 
-  // Validate parameters
-  if (isNaN(year) || isNaN(week) || week < 1 || week > 53) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">Parâmetros de semana inválidos</p>
-      </div>
-    )
-  }
+  const plan = await getWeeklyPlan(year, week)
+  const modules = await getAllModules(locale as any)
+  const exercises = await getAllExercises(locale as any)
+
+  // Map database items to include titles and levels from Contentful
+  const initialItems = plan?.weekly_plan_modules?.map((dbItem: any) => {
+    let title = 'Unknown'
+    let level = undefined
+
+    if (dbItem.item_type === 'module') {
+      const moduleItem = modules.find(m => m.externalId === dbItem.item_external_id)
+      title = moduleItem?.title || 'Unknown Module'
+      level = moduleItem?.level
+    } else {
+      const exercise = exercises.find(e => e.externalId === dbItem.item_external_id)
+      title = exercise?.title || 'Unknown Exercise'
+    }
+
+    return {
+      id: dbItem.id,
+      item_external_id: dbItem.item_external_id,
+      item_type: dbItem.item_type,
+      day_of_week: dbItem.day_of_week,
+      date: dbItem.date,
+      title,
+      level
+    }
+  }) || []
 
   return (
-    <>
-      <PageHeader
-        title="Planeamento Semanal"
-        description="Organize os seus módulos de treino para cada dia da semana"
-      />
+    <div className="flex flex-col gap-8 pb-12">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-p-blue md:text-4xl">
+          Weekly Planning
+        </h1>
+        <p className="text-p-blue/60 text-lg">
+          Organize your training routine and track your progress.
+        </p>
+      </div>
 
-      <Suspense fallback={<WeeklyPlanningLoadingSkeleton />}>
-        <WeeklyPlanningContent year={year} week={week} />
-      </Suspense>
-    </>
+      <WeeklyPlanningCalendar
+        initialItems={initialItems}
+        currentYear={year}
+        currentWeek={week}
+        planId={plan?.id || null}
+        modules={modules}
+        exercises={exercises}
+      />
+    </div>
   )
 }

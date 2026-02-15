@@ -25,3 +25,4 @@ CREATE INDEX idx_weekly_plan_modules_plan_type ON weekly_plan_modules(weekly_pla
 -- Add comments for documentation
 COMMENT ON COLUMN weekly_plan_modules.item_type IS 'Type of item: module or exercise';
 COMMENT ON COLUMN weekly_plan_modules.item_external_id IS 'References externalId field in Contentful (modules or exercises content type)';
+

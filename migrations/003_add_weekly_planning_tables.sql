@@ -115,3 +115,4 @@ COMMENT ON COLUMN weekly_plans.week_number IS 'ISO week number (1-53) following 
 COMMENT ON COLUMN weekly_plan_modules.day_of_week IS 'Day of week: 1=Monday, 2=Tuesday, ..., 7=Sunday (ISO 8601)';
 COMMENT ON COLUMN weekly_plan_modules.order_index IS 'Order of module when multiple modules are assigned to the same day';
 COMMENT ON COLUMN weekly_plan_modules.module_external_id IS 'References externalId field in Contentful modules content type';
+

@@ -1,4 +1,4 @@
-import { LoginPage } from '@/components/LoginPage'
+import { LoginPage } from '@/templates/login'
 import Image from 'next/image'
 
 export default function HomePage() {

@@ -1,60 +1,46 @@
 import { getBeginnerModules } from '@/lib/contentful/modules-delivery'
-import { getAllUserModuleProgress } from '@/lib/database/quiz-utils'
-import { CourseHeader } from '@/components/courses/CourseHeader'
-import { CourseCard } from '@/components/courses/CourseCard'
-import { type Locale } from '@/i18n/config'
+import { getLocale } from 'next-intl/server'
+import { ModuleCard } from '@/components/ModuleCard'
+import { GraduationCap } from 'lucide-react'
 
-interface BeginnerCoursePageProps {
-  params: Promise<{ locale: Locale }>
-}
-
-export default async function BeginnerCoursePage({ params }: BeginnerCoursePageProps) {
-  const { locale } = await params
-  const modules = await getBeginnerModules(locale)
-
-  // Get user's progress for all modules
-  let userProgress: any[] = []
-  try {
-    userProgress = await getAllUserModuleProgress()
-  } catch (error) {
-    console.error('Failed to load user progress:', error)
-  }
-
-  const getModuleStatus = (moduleExternalId: string) => {
-    const progress = userProgress.find((p) => p.module_external_id === moduleExternalId)
-
-    if (progress?.status === 'completed') return 'completed'
-    else if (progress?.status === 'in_progress') return 'in-progress'
-
-    return 'available'
-  }
-
-  // const completedModules = modules.filter(
-  //   (module, index) => getModuleStatus(module.externalId, index) === 'completed'
-  // ).length
-  // const totalModules = modules.length
-  // const progressPercentage = totalModules > 0 ? (completedModules / totalModules) * 100 : 0
+export default async function BeginnerPage() {
+  const locale = await getLocale()
+  const modules = await getBeginnerModules(locale as any)
 
   return (
-    <>
-      <CourseHeader modules={modules} level="Beginner" />
-
-      {/* Modules Grid */}
-      <div>
-        {modules.length === 0 ? (
-          <div className="text-center py-12">
-            <span className="text-muted-foreground mb-4">Nenhum módulo encontrado</span>
+    <div className="flex flex-col gap-8 pb-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-p-blue/40 mb-1">
+            <GraduationCap className="h-5 w-5" />
+            <span className="text-sm font-bold uppercase tracking-widest">Level 1</span>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modules.map((module) => {
-              const status = getModuleStatus(module.externalId)
-              // const progress = userProgress.find((p) => p.module_external_id === module.externalId)
-              return <CourseCard key={module.id} status={status} module={module} />
-            })}
-          </div>
-        )}
+          <h1 className="text-3xl font-bold tracking-tight text-p-blue md:text-4xl">
+            Methodology - Beginner
+          </h1>
+          <p className="text-p-blue/60 text-lg max-w-2xl">
+            Master the fundamentals of padel. This course covers everything from basic shots to court positioning.
+          </p>
+        </div>
       </div>
-    </>
+
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {modules.map((module) => (
+          <ModuleCard
+            key={module.id}
+            module={module}
+            hrefPrefix="/dashboard/beginner"
+          />
+        ))}
+      </div>
+
+      {modules.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-p-gray text-center">
+          <GraduationCap className="h-12 w-12 text-p-gray mb-4" />
+          <h3 className="text-xl font-bold text-p-blue mb-2">No modules found</h3>
+          <p className="text-p-blue/60">We couldn&apos;t find any beginner modules at the moment. Please check back later.</p>
+        </div>
+      )}
+    </div>
   )
 }

@@ -50,7 +50,7 @@ export function ResetPasswordForm() {
     }
 
     checkAuth()
-  }, [searchParams])
+  }, [searchParams, supabase.auth])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,188 +1,265 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getTranslations, getLocale } from 'next-intl/server'
+import { getBeginnerModules, getIntermediateModules } from '@/lib/contentful/modules-delivery'
+import { getAllExercises } from '@/lib/contentful/exercises-delivery'
+import { getCompletionStats, getModuleCompletionStatus } from './actions'
+import {
+  GraduationCap,
+  Trophy,
+  Dumbbell,
+  Calendar,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  Layout
+} from 'lucide-react'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Dumbbell, Award, Calendar } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { LocaleLink } from '@/components/LocaleLink'
-import { getTranslations } from 'next-intl/server'
-import { StatsRow } from '@/components/Stats'
-import { DashboardHeader } from '@/components/DashboardHeader'
 
 export default async function DashboardPage() {
+  const locale = await getLocale()
   const t = await getTranslations('dashboard')
+
+  // Fetch data from Contentful
+  const beginnerModules = await getBeginnerModules(locale as any)
+  const intermediateModules = await getIntermediateModules(locale as any)
+  const exercises = await getAllExercises(locale as any)
+
+  // Get completion stats
+  const { modulesCompleted, exercisesCompleted } = await getCompletionStats()
+
+  // Get module completion status for progress calculation
+  const allModuleIds = [
+    ...beginnerModules.map(m => m.externalId),
+    ...intermediateModules.map(m => m.externalId)
+  ]
+  const moduleCompletionStatus = await getModuleCompletionStatus(allModuleIds)
+
+  // Calculate beginner and intermediate completion counts
+  const beginnerCompleted = beginnerModules.filter(
+    m => moduleCompletionStatus[m.externalId]
+  ).length
+  const intermediateCompleted = intermediateModules.filter(
+    m => moduleCompletionStatus[m.externalId]
+  ).length
+
+  // Calculate overall progress percentage
+  const totalModules = beginnerModules.length + intermediateModules.length
+  const overallProgress = totalModules > 0 
+    ? Math.round((modulesCompleted / totalModules) * 100)
+    : 0
+
+  const stats = [
+    {
+      label: t('modulesComplete'),
+      value: modulesCompleted.toString(),
+      total: beginnerModules.length + intermediateModules.length,
+      icon: <GraduationCap className="h-5 w-5 text-p-green" />,
+      color: 'bg-p-green-light'
+    },
+    {
+      label: t('exercisesComplete'),
+      value: exercisesCompleted.toString(),
+      total: exercises.length,
+      icon: <Dumbbell className="h-5 w-5 text-p-blue" />,
+      color: 'bg-blue-50'
+    },
+    {
+      label: t('hoursPracticed'),
+      value: '12',
+      icon: <Clock className="h-5 w-5 text-orange-500" />,
+      color: 'bg-orange-50'
+    }
+  ]
+
+  const sections = [
+    {
+      id: 'beginner',
+      title: t('methodologyBeginner'),
+      description: t('beginnerDescription'),
+      fullDescription: t('beginnerFullDescription'),
+      icon: <GraduationCap className="h-8 w-8 text-white" />,
+      href: '/dashboard/beginner',
+      count: beginnerModules.length,
+      color: 'bg-p-blue',
+      badge: 'Level 1'
+    },
+    {
+      id: 'intermediate',
+      title: t('methodologyIntermediate'),
+      description: t('intermediateDescription'),
+      fullDescription: t('intermediateFullDescription'),
+      icon: <Trophy className="h-8 w-8 text-white" />,
+      href: '/dashboard/intermediate',
+      count: intermediateModules.length,
+      color: 'bg-p-green',
+      badge: 'Level 2'
+    },
+    {
+      id: 'planning',
+      title: t('weeklyPlanning'),
+      description: t('weeklyPlanningDescription'),
+      fullDescription: t('weeklyPlanningFullDescription'),
+      icon: <Calendar className="h-8 w-8 text-white" />,
+      href: '/dashboard/weekly-planning',
+      color: 'bg-slate-700',
+      badge: 'Personalized'
+    },
+    {
+      id: 'exercises',
+      title: t('exercises'),
+      description: t('exercisesDescription'),
+      fullDescription: t('exercisesFullDescription'),
+      icon: <Dumbbell className="h-8 w-8 text-white" />,
+      href: '/dashboard/exercises',
+      count: exercises.length,
+      color: 'bg-indigo-600',
+      badge: 'Library'
+    }
+  ]
+
   return (
-    <>
-      <DashboardHeader />
-
-      {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Beginner Course Card */}
-        <LocaleLink href="/dashboard/beginner">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                  <BookOpen className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">{t('methodologyBeginner')}</CardTitle>
-                  <CardDescription>{t('beginnerDescription')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-              <p className="text-muted-foreground mb-4">{t('beginnerFullDescription')}</p>
-
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-muted-foreground">{t('progress')}: 0/10 mesociclos</span>
-                  <span className="text-sm font-medium text-primary">0% {t('complete')}</span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2 mb-4">
-                  <div className="bg-primary h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-
-                <Button className="w-full cursor-pointer">{t('viewMore')}</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </LocaleLink>
-
-        {/* Intermediate Course Card */}
-        <LocaleLink href="/dashboard/intermediate">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-orange-500/10 rounded-lg group-hover:bg-orange-500/20 transition-colors">
-                  <BookOpen className="h-6 w-6 text-orange-600" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">{t('methodologyIntermediate')}</CardTitle>
-                  <CardDescription>{t('intermediateDescription')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-              <p className="text-muted-foreground mb-4">{t('intermediateFullDescription')}</p>
-
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-muted-foreground">{t('progress')}: 0/1 mesociclos</span>
-                  <span className="text-sm font-medium text-orange-600">0% {t('complete')}</span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2 mb-4">
-                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-
-                <Button className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white">{t('viewMore')}</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </LocaleLink>
-
-        {/* Weekly Planning Card */}
-        <LocaleLink href="/dashboard/weekly-planning">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
-                  <Calendar className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">{t('weeklyPlanning')}</CardTitle>
-                  <CardDescription>{t('weeklyPlanningDescription')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-              <p className="text-muted-foreground mb-4">{t('weeklyPlanningFullDescription')}</p>
-              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
-                {t('managePlanning')}
-              </Button>
-            </CardContent>
-          </Card>
-        </LocaleLink>
-
-        {/* Exercises List Card */}
-        <LocaleLink href="/dashboard/exercises">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 transition-colors">
-                  <Dumbbell className="h-6 w-6 text-accent" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">{t('exercises')}</CardTitle>
-                  <CardDescription>{t('exercisesDescription')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-              <p className="text-muted-foreground mb-4">{t('exercisesFullDescription')}</p>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-muted-foreground">{t('availableExercises')}</span>
-                <span className="text-sm font-medium text-accent">{t('exercisesAvailable')}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                <div className="text-center p-2 bg-muted rounded">
-                  <div className="text-lg font-semibold text-foreground">0</div>
-                  <div className="text-xs text-muted-foreground">{t('completed')}</div>
-                </div>
-                <div className="text-center p-2 bg-muted rounded">
-                  <div className="text-lg font-semibold text-foreground">64</div>
-                  <div className="text-xs text-muted-foreground">{t('remaining')}</div>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
-                {t('viewExercises')}
-              </Button>
-            </CardContent>
-          </Card>
-        </LocaleLink>
-
-        {/* Certification Card */}
-        <LocaleLink href="/dashboard/certification">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-            <CardHeader>
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-yellow-500/10 rounded-lg group-hover:bg-yellow-500/20 transition-colors">
-                  <Award className="h-6 w-6 text-yellow-600" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl">{t('certification')}</CardTitle>
-                  <CardDescription>{t('certificationDescription')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-              <p className="text-muted-foreground mb-4">{t('certificationFullDescription')}</p>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-muted-foreground">{t('requirements')}</span>
-                <span className="text-sm font-medium text-yellow-600">0/3 {t('completed')}</span>
-              </div>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center space-x-2">
-                  {/* <div className="w-2 h-2 bg-green-500 rounded-full"></div> */}
-                  <div className="w-2 h-2 bg-muted rounded-full"></div>
-                  <span className="text-sm text-muted-foreground">{t('completeBeginnerCourse')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-muted rounded-full"></div>
-                  <span className="text-sm text-muted-foreground">{t('passPracticalAssessment')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-muted rounded-full"></div>
-                  <span className="text-sm text-muted-foreground">{t('completeFinalExam')}</span>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full bg-transparent cursor-pointer">
-                {t('viewProgress')}
-              </Button>
-            </CardContent>
-          </Card>
-        </LocaleLink>
+    <div className="flex flex-col gap-8 pb-12">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-p-blue md:text-4xl">
+          {t('welcome')}!
+        </h1>
+        <p className="text-p-blue/60 text-lg">
+          {t('welcomeMessage')}
+        </p>
       </div>
 
-      {/* Quick Stats */}
-      <StatsRow />
-    </>
+      {/* Stats Grid */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+        {stats.map((stat, i) => (
+          <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-p-blue/60 mb-1">{stat.label}</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold text-p-blue">{stat.value}</span>
+                    {stat.total && (
+                      <span className="text-sm text-p-blue/40">/ {stat.total}</span>
+                    )}
+                  </div>
+                </div>
+                <div className={`p-3 rounded-2xl ${stat.color} transition-transform group-hover:scale-110`}>
+                  {stat.icon}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Main Sections */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+        {sections.map((section) => (
+          <Card key={section.id} className="border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all">
+            <div className="flex flex-col md:flex-row h-full">
+              <div className={`w-full md:w-32 lg:w-40 ${section.color} flex items-center justify-center p-6 shrink-0`}>
+                {section.icon}
+              </div>
+              <div className="flex-1 flex flex-col p-6">
+                <div className="flex justify-between items-start mb-2">
+                  <Badge variant="secondary" className="bg-p-gray text-p-blue/60 hover:bg-p-gray font-semibold">
+                    {section.badge}
+                  </Badge>
+                  {section.count !== undefined && (
+                    <span className="text-xs font-bold text-p-blue/40 uppercase tracking-wider">
+                      {section.count} {section.id === 'exercises' ? 'Dynamics' : 'Modules'}
+                    </span>
+                  )}
+                </div>
+                <CardHeader className="p-0 mb-2">
+                  <CardTitle className="text-xl text-p-blue">{section.title}</CardTitle>
+                  <CardDescription className="text-p-blue/60 line-clamp-2">
+                    {section.fullDescription}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter className="p-0 mt-auto pt-6">
+                  <LocaleLink href={section.href} className="w-full cursor-pointer">
+                    <Button className="w-full bg-p-gray text-p-blue hover:bg-p-blue hover:text-white border-none shadow-none rounded-xl font-bold py-6 transition-all group-hover:bg-p-blue group-hover:text-white">
+                      {section.id === 'planning' ? t('managePlanning') : t('viewMore')}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </LocaleLink>
+                </CardFooter>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Progress Card */}
+      <Card className="border-none shadow-sm bg-white overflow-hidden">
+        <CardHeader className="pb-2">
+          <div className="flex items-center gap-2 text-p-green mb-1">
+            <Layout className="h-5 w-5" />
+            <span className="text-sm font-bold uppercase tracking-wider">{t('generalProgress')}</span>
+          </div>
+          <CardTitle className="text-2xl text-p-blue">{t('progress')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-p-blue/60 font-medium">Certification Pathway</span>
+                <span className="text-p-blue font-bold">{overallProgress}%</span>
+              </div>
+              <div className="h-3 bg-p-gray rounded-full overflow-hidden">
+                <div className="h-full bg-p-green transition-all" style={{ width: `${overallProgress}%` }} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${beginnerCompleted > 0 ? 'text-p-green' : 'text-slate-300'}`} />
+                <div>
+                  <p className="text-sm font-bold text-p-blue">Beginner Level</p>
+                  <p className="text-xs text-p-blue/60">
+                    {beginnerCompleted} of {beginnerModules.length} modules complete
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${intermediateCompleted > 0 ? 'text-p-green' : 'text-slate-300'}`} />
+                <div>
+                  <p className="text-sm font-bold text-p-blue">Intermediate Level</p>
+                  <p className="text-xs text-p-blue/60">
+                    {intermediateCompleted > 0 
+                      ? `${intermediateCompleted} of ${intermediateModules.length} modules complete`
+                      : 'Not started'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-p-gray/50">
+                <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${modulesCompleted === totalModules && totalModules > 0 ? 'text-p-green' : 'text-slate-300'}`} />
+                <div>
+                  <p className="text-sm font-bold text-p-blue">Certification</p>
+                  <p className="text-xs text-p-blue/60">
+                    {modulesCompleted === totalModules && totalModules > 0
+                      ? 'Ready for certification'
+                      : 'Requirements pending'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="bg-p-blue p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <p className="text-p-green text-sm font-bold uppercase tracking-widest mb-1">Academy Pro</p>
+            <p className="text-white font-medium">Unlock all features and get certified!</p>
+          </div>
+          <Button className="bg-p-green text-white hover:bg-white hover:text-p-blue border-none rounded-xl px-8 font-bold py-6">
+            Get Certified
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }
+

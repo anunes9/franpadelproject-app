@@ -58,11 +58,11 @@ export async function logout() {
   redirect('/')
 }
 
-export async function updateUser(name: string) {
+export async function updateUser(fullName: string) {
   const supabase = await createSupabaseServerClient()
   const session = await supabase.auth.getUser()
 
-  const { error } = await supabase.from('users_app').update({ name }).eq('id', session.data.user?.id).select()
+  const { error } = await supabase.from('users').update({ full_name: fullName }).eq('id', session.data.user?.id).select()
 
   if (error) {
     return false

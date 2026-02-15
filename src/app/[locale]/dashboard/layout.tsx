@@ -1,18 +1,53 @@
-import Header from '@/components/Header'
-import BackToTop from '@/components/BackToTop'
-import Footer from '@/components/Footer'
+"use client";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+import { useState } from "react";
+import Image from "next/image";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-50">
-        <Header />
+    <div className="min-h-screen bg-p-gray">
+      <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
+
+      <div className="flex-1 items-start xl:grid xl:grid-cols-[260px_1fr] xl:gap-6 2xl:grid-cols-[300px_1fr] 2xl:gap-10 px-4 md:px-6 py-6 md:py-10">
+        <aside className="fixed top-24 z-30 hidden h-[calc(100vh-8rem)] w-full shrink-0 xl:sticky xl:block">
+          <div className="h-full rounded-3xl bg-white border border-p-gray/50 shadow-sm overflow-hidden">
+            <DashboardSidebar />
+          </div>
+        </aside>
+
+        <main className="flex w-full flex-col overflow-hidden">{children}</main>
       </div>
 
-      <main className="max-w-screen-xl min-h-[calc(100vh-9rem)] mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
-
-      <Footer />
-      <BackToTop />
+      {/* Mobile Sidebar */}
+      <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+        <SheetContent side="left" className="p-0 w-[300px] border-none">
+          <VisuallyHidden>
+            <SheetTitle>Navigation</SheetTitle>
+          </VisuallyHidden>
+          <div className="h-full bg-white">
+            <div className="p-6 border-b border-p-gray">
+              <Image
+                src="/fran-padel-project-logo.svg"
+                alt="Fran Padel Project"
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
+            </div>
+            <DashboardSidebar onItemClick={() => setIsSidebarOpen(false)} />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
-  )
+  );
 }

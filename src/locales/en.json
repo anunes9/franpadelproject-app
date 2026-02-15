@@ -173,6 +173,14 @@
   },
   "profile": {
     "profile": "Profile",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "accountInformation": "Account Information",
+    "viewAndManage": "View and manage your account information",
+    "emailAddress": "Email Address",
+    "club": "Club",
+    "noClubAssigned": "No club assigned",
+    "accountStatus": "Account Status",
+    "memberSince": "Member Since",
+    "noNameSet": "No name set"
   }
 }
