@@ -1,17 +1,18 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { DashboardHeader } from '@/components/DashboardHeader'
-import { DashboardSidebar } from '@/components/DashboardSidebar'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { useState } from "react";
+import Image from "next/image";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-p-gray">
@@ -24,22 +25,29 @@ export default function DashboardLayout({
           </div>
         </aside>
 
-        <main className="flex w-full flex-col overflow-hidden">
-          {children}
-        </main>
+        <main className="flex w-full flex-col overflow-hidden">{children}</main>
       </div>
 
       {/* Mobile Sidebar */}
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetContent side="left" className="p-0 w-[300px] border-none">
+          <VisuallyHidden>
+            <SheetTitle>Navigation</SheetTitle>
+          </VisuallyHidden>
           <div className="h-full bg-white">
             <div className="p-6 border-b border-p-gray">
-              <Image src="/fran-padel-project-logo.svg" alt="Fran Padel Project" width={120} height={40} className="h-10 w-auto" />
+              <Image
+                src="/fran-padel-project-logo.svg"
+                alt="Fran Padel Project"
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
             </div>
             <DashboardSidebar onItemClick={() => setIsSidebarOpen(false)} />
           </div>
         </SheetContent>
       </Sheet>
     </div>
-  )
+  );
 }
