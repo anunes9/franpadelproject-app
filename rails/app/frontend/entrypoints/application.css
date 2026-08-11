@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #12283f;
+  --color-ink-soft: #1c3a57;
+  --color-ink-mute: #9bb3b0;
+  --color-teal: #6fb69b;
+  --color-teal-deep: #3e8c71;
+  --color-paper: #f7f8f6;
+  --color-line: #e2e6e2;
+  --color-mist: #eef2ef;
+  --color-muted: #7a8b93;
+  --color-danger: #b4705a;
+
+  --font-dash-sans: "Archivo", system-ui, sans-serif;
+  --font-dash-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/*
+  Tailwind v4 changed the default border color to `currentcolor`. This
+  compatibility layer (ported from src/app/globals.css in the Next.js app)
+  keeps unstyled borders looking like Tailwind v3's default gray.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
