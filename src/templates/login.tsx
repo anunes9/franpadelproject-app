@@ -6,9 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Loader2, ArrowLeft, CheckCircle } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
 import { useAuth } from "@/hooks/useAuth";
-import { LocaleLink } from "@/components/LocaleLink";
 import { verifyOTPAndReturn } from "@/app/auth/actions";
 
 export function LoginPage() {
@@ -19,8 +17,6 @@ export function LoginPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [step, setStep] = useState<"email" | "otp">("email");
   const { signInWithOTP } = useAuth();
-  const locale = useLocale();
-  const t = useTranslations("auth");
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,20 +28,14 @@ export function LoginPage() {
       const { error } = await signInWithOTP(email);
 
       if (error) {
-        // User not found error - "Signups not allowed for otp"
-        setError(
-          t("userNotFound") ||
-            "User not found. Contact our team to create an account.",
-        );
+        setError("User not found. Contact our team to create an account.");
         return;
       }
 
-      setSuccess(
-        t("checkEmailForCode") || "Check your email for the verification code!",
-      );
+      setSuccess("Check your email for the verification code!");
       setStep("otp");
     } catch (err) {
-      setError(t("unexpectedError"));
+      setError("An unexpected error occurred. Please try again.");
       console.error("OTP send error:", err);
     } finally {
       setIsLoading(false);
@@ -61,15 +51,15 @@ export function LoginPage() {
       const result = await verifyOTPAndReturn(email, otp);
 
       if (!result.success) {
-        setError(result.error ?? t("unexpectedError"));
+        setError(result.error ?? "An unexpected error occurred. Please try again.");
         setIsLoading(false);
         return;
       }
 
       // Hard redirect — server action already set the session cookies
-      window.location.href = `/${locale}/dashboard`;
+      window.location.href = "/dashboard";
     } catch (err) {
-      setError(t("unexpectedError"));
+      setError("An unexpected error occurred. Please try again.");
       console.error("OTP verification error:", err);
       setIsLoading(false);
     }
@@ -98,14 +88,14 @@ export function LoginPage() {
                 htmlFor="email"
                 className="text-card-foreground font-medium"
               >
-                {t("email")}
+                Email
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t("enterEmail")}
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 bg-input border-border focus:ring-2 focus:ring-accent focus:border-accent !font-normal"
@@ -123,10 +113,10 @@ export function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("sendingCode") || "Sending Code..."}
+                  Sending Code...
                 </>
               ) : (
-                t("sendVerificationCode") || "Send Code"
+                "Send Code"
               )}
             </Button>
           </form>
@@ -134,11 +124,10 @@ export function LoginPage() {
           <form onSubmit={handleVerifyOTP} className="space-y-4 mb-8">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-card-foreground mb-2">
-                {t("enterVerificationCode") || "Enter Verification Code"}
+                Enter Verification Code
               </h2>
               <p className="text-muted-foreground">
-                {t("codeSentTo") || "We sent a 6-digit code to"}{" "}
-                <strong>{email}</strong>
+                We sent a 6-digit code to <strong>{email}</strong>
               </p>
             </div>
 
@@ -157,12 +146,12 @@ export function LoginPage() {
 
             <div className="space-y-2">
               <Label htmlFor="otp" className="text-card-foreground font-medium">
-                {t("verificationCode") || "Verification Code"}
+                Verification Code
               </Label>
               <Input
                 id="otp"
                 type="text"
-                placeholder={t("enterSixDigitCode") || "Enter 6-digit code"}
+                placeholder="Enter 6-digit code"
                 value={otp}
                 onChange={(e) =>
                   setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -183,7 +172,7 @@ export function LoginPage() {
                 disabled={isLoading}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                {t("back") || "Back"}
+                Back
               </Button>
               <Button
                 type="submit"
@@ -193,10 +182,10 @@ export function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("verifying") || "Verifying..."}
+                    Verifying...
                   </>
                 ) : (
-                  t("verifyCode") || "Verify Code"
+                  "Verify Code"
                 )}
               </Button>
             </div>
@@ -205,13 +194,13 @@ export function LoginPage() {
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            {t("noAccount")}{" "}
-            <LocaleLink
+            Don&apos;t have an account?{" "}
+            <a
               href="#"
               className="text-accent hover:text-accent/80 font-medium transition-colors"
             >
-              {t("signUpHere")}
-            </LocaleLink>
+              Sign up here
+            </a>
           </p>
         </div>
       </CardContent>
