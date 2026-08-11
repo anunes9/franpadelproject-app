@@ -14,6 +14,9 @@
 
   --font-dash-sans: "Archivo", system-ui, sans-serif;
   --font-dash-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
 }
 
 /*
