@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get "/dashboard/exercises", to: "exercises#index"
   get "/dashboard/exercises/:ref", to: "exercises#show"
   get "/dashboard/plan", to: "plan#index"
+  get "/dashboard/profile", to: "profile#index"
 
   # Wrapped in devise_scope so Devise can resolve request.env["devise.mapping"]
   # for this route — without it, SessionsController#new raises
