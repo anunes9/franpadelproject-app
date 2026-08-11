@@ -19,38 +19,34 @@ export function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [isValidToken, setIsValidToken] = useState<boolean | null>(null)
 
   const router = useRouter()
   const searchParams = useSearchParams()
   const { updatePassword } = useAuth()
   const supabase = createClient()
 
-  // Check if we have a valid reset token or if user is authenticated
+  // Direct tokens in the URL (password reset flow) are known synchronously,
+  // so they don't need an effect — only the session lookup below is async.
+  const hasUrlToken = Boolean(
+    searchParams.get('access_token') && searchParams.get('refresh_token')
+  )
+  const [isValidToken, setIsValidToken] = useState<boolean | null>(
+    hasUrlToken ? true : null,
+  )
+
+  // Check if user is already authenticated (invitation flow via callback)
   useEffect(() => {
-    const accessToken = searchParams.get('access_token')
-    const refreshToken = searchParams.get('refresh_token')
+    if (hasUrlToken) return
 
-    // Check for direct tokens in URL (password reset flow)
-    if (accessToken && refreshToken) {
-      setIsValidToken(true)
-      return
-    }
-
-    // Check if user is already authenticated (invitation flow via callback)
     const checkAuth = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-      if (session?.user) {
-        setIsValidToken(true)
-      } else {
-        setIsValidToken(false)
-      }
+      setIsValidToken(!!session?.user)
     }
 
     checkAuth()
-  }, [searchParams, supabase.auth])
+  }, [hasUrlToken, supabase.auth])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

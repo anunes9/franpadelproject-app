@@ -11,7 +11,7 @@ const publicRoutes = [
   '/auth/verify',
 ]
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
   const response = NextResponse.next({ request })
 
