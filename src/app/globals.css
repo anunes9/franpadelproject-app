@@ -16,6 +16,20 @@
   --color-btn-background-hover: hsl(var(--btn-background-hover));
 
   --color-dimmed: hsl(var(--dimmed));
+
+  --color-ink: #12283f;
+  --color-ink-soft: #1c3a57;
+  --color-ink-mute: #9bb3b0;
+  --color-teal: #6fb69b;
+  --color-teal-deep: #3e8c71;
+  --color-paper: #f7f8f6;
+  --color-line: #e2e6e2;
+  --color-mist: #eef2ef;
+  --color-muted: #7a8b93;
+  --color-danger: #b4705a;
+
+  --font-dash-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-dash-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 /*
