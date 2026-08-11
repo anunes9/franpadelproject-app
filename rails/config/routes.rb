@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/dashboard", to: "dashboard#index", as: :dashboard
   get "/dashboard/courses", to: "courses#index"
   get "/dashboard/courses/:id", to: "courses#show"
+  get "/dashboard/courses/:id/quiz", to: "courses#quiz"
 
   # Wrapped in devise_scope so Devise can resolve request.env["devise.mapping"]
   # for this route — without it, SessionsController#new raises

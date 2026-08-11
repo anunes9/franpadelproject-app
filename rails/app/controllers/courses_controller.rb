@@ -16,4 +16,14 @@ class CoursesController < DashboardController
       exercises: exercises
     }
   end
+
+  def quiz
+    course_module = DashboardData.find_module(params[:id])
+    return head :not_found unless course_module
+
+    render inertia: "Courses/Quiz", props: {
+      id: course_module[:id],
+      quiz: DashboardData::QUIZ
+    }
+  end
 end
