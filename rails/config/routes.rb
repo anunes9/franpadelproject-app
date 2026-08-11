@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     get "(*path)", to: redirect { |params, req| "#{req.protocol}localhost:#{req.port}/#{params[:path]}" }
   end
   get "/dashboard", to: "dashboard#index", as: :dashboard
+  get "/dashboard/courses", to: "courses#index"
+  get "/dashboard/courses/:id", to: "courses#show"
 
   # Wrapped in devise_scope so Devise can resolve request.env["devise.mapping"]
   # for this route — without it, SessionsController#new raises
