@@ -9,7 +9,7 @@ import { Mail, Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { useAuth } from "@/hooks/useAuth";
 import { LocaleLink } from "@/components/LocaleLink";
-import { verifyOTPAndReturn } from "@/app/[locale]/auth/actions";
+import { verifyOTPAndReturn } from "@/app/auth/actions";
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
