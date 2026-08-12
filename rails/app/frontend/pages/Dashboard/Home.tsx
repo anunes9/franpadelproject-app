@@ -34,34 +34,27 @@ function Home() {
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
       <div className="mx-auto flex max-w-[1120px] flex-col gap-7">
-        <div className="flex items-center justify-between lg:hidden">
-          <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-[34px] w-auto" />
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
-            {dashboardUser.initials}
-          </div>
-        </div>
-
         <PageHeader eyebrow="Beginner course" title={'Good afternoon, ' + dashboardUser.name.split(' ')[0]} />
 
-        <div className="grid gap-4 lg:grid-cols-[2fr_1fr_1fr]">
+        <div className="grid gap-4 grid-cols-3">
           <div className="flex flex-col gap-4 rounded-[18px] bg-ink p-5 text-paper lg:p-6">
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-ink-mute">
               Course progress
             </span>
-            <div className="flex items-baseline gap-3">
-              <span className="text-[38px] font-extrabold tracking-[-0.03em] lg:text-[44px]">
-                {courseStats.progress}%
-              </span>
-              <span className="text-sm text-ink-mute">
-                {courseStats.modulesDone} of {courseStats.modulesTotal} modules complete
-              </span>
-            </div>
+            <span className="text-[38px] font-extrabold tracking-[-0.03em] lg:text-[44px]">
+              {courseStats.progress}%
+            </span>
+            <span className="text-sm text-ink-mute">
+              {courseStats.modulesDone} of {courseStats.modulesTotal} modules complete
+            </span>
             <ProgressBar value={courseStats.progress} tone="dark" />
           </div>
+
           <div className="flex flex-col gap-1.5 rounded-[18px] border border-line bg-white p-5 lg:p-6">
             <span className="text-[34px] font-bold text-ink">{courseStats.exercisesDone}</span>
             <span className="text-[13px] text-muted">Exercises completed</span>
           </div>
+
           <div className="flex flex-col gap-1.5 rounded-[18px] border border-line bg-white p-5 lg:p-6">
             <span className="text-[34px] font-bold text-ink">{courseStats.averageQuiz}%</span>
             <span className="text-[13px] text-muted">Average quiz score</span>

@@ -51,6 +51,20 @@ function Sidebar() {
   )
 }
 
+function MobileHeader() {
+  const { props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { dashboardUser } = props
+
+  return (
+    <div className="flex items-center justify-between px-5 pt-6 lg:hidden">
+      <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-12 w-auto" />
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
+        {dashboardUser.initials}
+      </div>
+    </div>
+  )
+}
+
 function BottomTabs() {
   const { url } = usePage()
   const tabs = NAV.filter((n) => n.href !== '/dashboard/plan')
@@ -73,7 +87,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-paper font-dash-sans">
       <Sidebar />
-      <main className="min-w-0 flex-1 pb-28 lg:pb-0">{children}</main>
+      <main className="min-w-0 flex-1 pb-28 lg:pb-0">
+        <MobileHeader />
+        {children}
+      </main>
       <BottomTabs />
     </div>
   )
