@@ -37,6 +37,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Ruby language server used by editors (e.g. Zed) for autocomplete/intellisense
+  gem "solargraph", require: false
 end
 
 gem "rspec-rails", "~> 8.0", :groups => [:development, :test]

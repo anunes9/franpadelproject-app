@@ -81,6 +81,9 @@ src/app/admin
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# Solargraph cache
+/.yardoc
+
 /.yarn-integrity
 
 /node_modules
