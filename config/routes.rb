@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  ActiveAdmin.routes(self)
   devise_for :users, controllers: { sessions: "sessions" }
 
   # Redirect to localhost from 127.0.0.1 to use same IP address with Vite server

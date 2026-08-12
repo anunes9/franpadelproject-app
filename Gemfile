@@ -48,3 +48,6 @@ gem "factory_bot_rails", "~> 6.5", :groups => [:development, :test]
 gem "devise", "~> 5.0"
 gem "inertia_rails", "~> 3.22"
 gem "vite_rails", "~> 3.11"
+
+# Admin panel for managing users [https://activeadmin.info]
+gem "activeadmin"
