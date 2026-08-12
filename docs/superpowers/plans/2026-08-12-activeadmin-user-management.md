@@ -125,7 +125,7 @@ git commit -m "Install ActiveAdmin, gated to admin users only"
 
 ---
 
-### Task 2: Build the User admin resource — DONE (commit pending)
+### Task 2: Build the User admin resource — DONE (commit `fb0a87d`)
 
 > **One correction found via TDD:** Ransack's `role_eq` casts a submitted value with a naive `#to_i`, not Rails' enum-aware type casting — `role_eq: "sales"` silently became `0` and matched `admin` instead of raising or matching `sales`. Fixed by having the filter's `<select>` submit the enum's real integer values (`User.roles.to_a`) rather than its string keys (`User.roles.keys`). The **form** doesn't have this problem — `f.input :role` submits through the model's `role=` setter on create/update, which *does* use Rails' proper enum casting. Only Ransack's filter path is affected. See Steps 4-5 below for the corrected code.
 
@@ -307,7 +307,7 @@ git commit -m "Add User ActiveAdmin resource with search, edit, create, delete"
 
 ---
 
-### Task 3: `rails admin:create` task for production/staging admin accounts
+### Task 3: `rails admin:create` task for production/staging admin accounts — DONE (commit `26b72cc`)
 
 **Files:**
 - Create: `lib/tasks/admin.rake`
@@ -318,7 +318,7 @@ git commit -m "Add User ActiveAdmin resource with search, edit, create, delete"
 
 `db/seeds.rb` already creates `admin@example.com` for local dev (alongside fake sales/client accounts) — this task is for staging/production, where you won't run `db:seed`.
 
-- [ ] **Step 1: Write the failing specs**
+- [x] **Step 1: Write the failing specs**
 
 Create `spec/tasks/admin_create_spec.rb`:
 
@@ -372,7 +372,7 @@ RSpec.describe "admin:create rake task" do
 end
 ```
 
-- [ ] **Step 2: Run the specs and confirm they fail**
+- [x] **Step 2: Run the specs and confirm they fail**
 
 ```bash
 bundle exec rspec spec/tasks/admin_create_spec.rb
@@ -380,7 +380,7 @@ bundle exec rspec spec/tasks/admin_create_spec.rb
 
 Expected: `Don't know how to build task 'admin:create'` (the task doesn't exist yet).
 
-- [ ] **Step 3: Create the rake task**
+- [x] **Step 3: Create the rake task**
 
 Create `lib/tasks/admin.rake`:
 
@@ -408,7 +408,7 @@ namespace :admin do
 end
 ```
 
-- [ ] **Step 4: Run the specs and confirm they pass**
+- [x] **Step 4: Run the specs and confirm they pass**
 
 ```bash
 bundle exec rspec spec/tasks/admin_create_spec.rb
@@ -416,7 +416,7 @@ bundle exec rspec spec/tasks/admin_create_spec.rb
 
 Expected: `3 examples, 0 failures`.
 
-- [ ] **Step 5: Run the full suite one last time**
+- [x] **Step 5: Run the full suite one last time**
 
 ```bash
 bundle exec rspec
@@ -424,7 +424,7 @@ bundle exec rspec
 
 Expected: all examples pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/tasks/admin.rake spec/tasks/admin_create_spec.rb
