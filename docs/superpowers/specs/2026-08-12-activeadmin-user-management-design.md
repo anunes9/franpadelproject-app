@@ -76,10 +76,14 @@ future work).
     build via `@tailwindcss/vite`, so a second unused entrypoint would just
     be dead weight). Reuses the `tailwindcss` npm package already in
     `package.json`; no new Node tooling. This hooks `css:build` into
-    `assets:precompile` and `test:prepare` automatically. No watcher added
-    to `Procfile.dev` for now — admin styling changes rarely; a manual
-    `bin/rails css:build` after editing `active_admin.css` is enough to
-    start with.
+    `assets:precompile` and `test:prepare` automatically.
+  - `cssbundling-rails`'s installer gitignores `/app/assets/builds/*` and
+    appends a `css: npm run build:css --watch` line to `Procfile.dev` —
+    kept as-is (standard behavior), since Propshaft only serves whatever
+    file already exists on disk; without either the watcher or a build
+    step, `/admin` would 500 on a fresh checkout. `bin/rails css:build` is
+    run once during setup so the file exists immediately, before relying
+    on the watcher for subsequent local changes.
 
 ## Data model
 
@@ -88,10 +92,17 @@ already exists and is reused as-is for the admin-access check.
 
 ## Components
 
-- `ApplicationController#authenticate_admin!` (private) — calls
-  `authenticate_user!`, then redirects to `root_path` with an alert if
-  `current_user` is not `admin?`. This is the one authorization check the
-  app needs.
+- `authenticate_admin!` defined directly on `ActiveAdmin::BaseController`
+  (reopened in `config/initializers/active_admin.rb`, after the
+  `ActiveAdmin.setup` block) — calls `authenticate_user!`, then redirects
+  to `root_path` with an alert if `current_user` is not `admin?`. This has
+  to live on `ActiveAdmin::BaseController` rather than our own
+  `ApplicationController`: ActiveAdmin's controllers inherit from
+  `InheritedResources::Base`, not from `ApplicationController`, so a
+  method defined only on the latter would not be visible to
+  `config.authentication_method`. `authenticate_user!`/`current_user`
+  themselves work either way because Devise patches those into
+  `ActionController::Base` globally.
 - `config/initializers/active_admin.rb` — generated file, hand-edited to
   set:
   - `config.authentication_method = :authenticate_admin!`
@@ -162,5 +173,3 @@ already exists and is reused as-is for the admin-access check.
 - Content admin CMS: real DB models for course modules, exercises,
   quizzes, and weekly plans (replacing `DashboardData`), registered in
   ActiveAdmin alongside users.
-- A `Procfile.dev` watcher for ActiveAdmin's CSS, if manual rebuilds prove
-  annoying in practice.
