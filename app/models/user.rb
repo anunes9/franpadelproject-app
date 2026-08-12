@@ -5,4 +5,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :validatable
 
   enum :role, { admin: 0, sales: 1, client: 2 }
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[email role created_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
 end
