@@ -4,9 +4,9 @@
 
 **Goal:** Let admins (`User#role == :admin`) sign into an ActiveAdmin panel at `/admin` and manage users (search, view, edit, create, delete), using their existing app credentials — no separate admin-user system.
 
-**Architecture:** `activeadmin` gem mounted at `/admin`, gated by a custom `authenticate_admin!` check that reuses Devise's existing `User`/`current_user`. ActiveAdmin 3.5's JS ships via `importmap-rails`; its Tailwind-based CSS ships via `cssbundling-rails`, built independently of this app's existing Vite pipeline (which stays untouched).
+**Architecture:** `activeadmin` gem mounted at `/admin`, gated by a custom `authenticate_admin!` check that reuses Devise's existing `User`/`current_user`. **Revised during execution:** the installed ActiveAdmin 3.5.2 (unlike its unreleased `master` branch, which Task 1's original research was mistakenly based on) still ships Sprockets/jQuery-based assets, not importmap/Tailwind — `importmap-rails`/`cssbundling-rails` were never actually used. Instead, ActiveAdmin's JS/CSS were compiled *once* via a temporary `sprockets-rails`+`sassc-rails` detour, and the static output was committed to `app/assets/builds/active_admin.{css,js}` for Propshaft to serve going forward, with no ongoing jQuery/Sprockets dependency. See Task 1 for the corrected steps actually taken.
 
-**Tech Stack:** Rails 8.1, Ruby 3.3.12, Devise 5, ActiveAdmin 3.5, importmap-rails, cssbundling-rails, RSpec + FactoryBot.
+**Tech Stack:** Rails 8.1, Ruby 3.3.12, Devise 5, ActiveAdmin 3.5.2, RSpec + FactoryBot.
 
 ## Global Constraints
 
@@ -18,180 +18,110 @@
 
 ---
 
-### Task 1: Install ActiveAdmin and gate it to admins only
+### Task 1: Install ActiveAdmin and gate it to admins only — DONE (commit `0084517`)
 
-**Files:**
-- Modify: `Gemfile`, `Gemfile.lock` (via `bundle install`)
-- Create (via generators): `config/initializers/active_admin.rb`, `app/admin/dashboard.rb`, `app/assets/stylesheets/active_admin.css`, `tailwind-active_admin.config.js`, `config/importmap.rb`, `app/javascript/application.js`, `app/assets/stylesheets/application.tailwind.css` (created then removed — see steps)
-- Modify: `config/routes.rb`, `package.json`, `Procfile.dev`, `.gitignore` (auto-updated by generators)
-- Create: `spec/requests/admin_spec.rb`
+> **Revised during execution.** The steps originally written here (`importmap-rails` + Tailwind-based `cssbundling-rails`) were based on ActiveAdmin's unreleased `master` branch, not the actually-installed **3.5.2**, which still depends on `jquery-rails` and generates Sprockets/SCSS assets. What follows is what was *actually* done, kept for the historical record — see the corrected **Architecture** note at the top of this doc.
+
+**Files actually touched:**
+- Modified: `Gemfile`, `Gemfile.lock` (added `activeadmin` only — `importmap-rails`/`cssbundling-rails` were never kept)
+- Modified: `config/routes.rb` (`ActiveAdmin.routes(self)`, inserted right after `Rails.application.routes.draw do` — not "near the end" as originally guessed)
+- Created: `config/initializers/active_admin.rb`, `app/admin/dashboard.rb`
+- Created: `app/assets/builds/active_admin.css`, `app/assets/builds/active_admin.js` — **committed**, not gitignored (see below)
+- Created: `spec/requests/admin_spec.rb`
 
 **Interfaces:**
 - Produces: `authenticate_admin!` — an instance method on `ActiveAdmin::BaseController` that later tasks (and ActiveAdmin itself, via `config.authentication_method`) rely on to gate every admin controller action.
 
-- [ ] **Step 1: Add the three gems**
+- [x] **Step 1: Add the gem**
 
-Edit `Gemfile`, after the `gem "vite_rails", "~> 3.11"` line (currently line 50), add:
+Added only `gem "activeadmin"` to `Gemfile` (not `importmap-rails`/`cssbundling-rails` — irrelevant to the installed version), then `bundle install`. Pulled in `arbre`, `formtastic`, `ransack`, `inherited_resources`, `kaminari`, and **`jquery-rails`** — that last one was the first sign the master-branch research didn't match reality.
 
-```ruby
-
-# Admin panel for managing users [https://activeadmin.info]
-gem "activeadmin"
-# JS for Active Admin's UI, via ES module imports (no bundler needed) [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
-# Builds Active Admin's Tailwind CSS bundle, independent of the app's Vite pipeline [https://github.com/rails/cssbundling-rails]
-gem "cssbundling-rails"
-```
-
-Run:
-
-```bash
-bundle install
-```
-
-Expected: `Bundle complete!`, `Gemfile.lock` updated with `activeadmin`, `importmap-rails`, `cssbundling-rails`, and their dependencies (`arbre`, `formtastic`, `ransack`, `inherited_resources`, `kaminari`, etc.).
-
-- [ ] **Step 2: Run the ActiveAdmin install generator against the existing `User` model**
+- [x] **Step 2: Run the ActiveAdmin install generator against the existing `User` model**
 
 ```bash
 bin/rails generate active_admin:install User --skip-users --skip-comments
 ```
 
-- `--skip-users` is required: without it, the generator re-runs Devise's own generator against `User`, which already has `database_authenticatable` and a matching migration — re-running it would generate a redundant/conflicting migration.
-- `--skip-comments` skips ActiveAdmin's resource-commenting feature and its migration (not needed here).
-- Passing `User` (instead of the default `AdminUser`) still makes the generator fill in the initializer with the right method names (`authenticate_user!`, `current_user`, `destroy_user_session_path`) — those lines are generated as comments because of `--skip-users`; Step 5 below edits them in.
+Reasoning for the flags was correct and held up: `--skip-users` avoids re-running Devise's generator against the already-Devise-enabled `User`; `--skip-comments` skips the unneeded comments feature/migration.
 
-Expected output includes: `create config/initializers/active_admin.rb`, `create app/admin/dashboard.rb`, `route ActiveAdmin.routes(self)` (appended near the end of `config/routes.rb`, before the closing `end`), `create app/assets/stylesheets/active_admin.css`, `create tailwind-active_admin.config.js`. No migration is created (confirm with `git status` — no new file under `db/migrate/`).
+Actual output: `create config/initializers/active_admin.rb`, `create app/admin/dashboard.rb`, `route ActiveAdmin.routes(self)`, plus (via the nested `active_admin:assets` generator) `create app/assets/javascripts/active_admin.js` (a Sprockets `//= require active_admin/base` directive) and `create app/assets/stylesheets/active_admin.scss` — **not** `active_admin.css` / `tailwind-active_admin.config.js` as originally expected. No migration created, confirmed via `git status`.
 
-- [ ] **Step 3: Wire up the JS (importmap-rails)**
+- [x] **Step 3 (revised): Compile ActiveAdmin's real assets once via a temporary Sprockets detour**
 
-```bash
-bin/rails importmap:install
-```
-
-Expected: creates `config/importmap.rb` and `app/javascript/application.js`. Nothing to wire manually — ActiveAdmin's own layout already calls `javascript_importmap_tags` itself, and this app's own layout (used by the Inertia/React pages) doesn't need it, since Inertia doesn't use import maps. No conflict with the existing Vite setup: importmap-rails uses `app/javascript`, Vite uses `app/frontend` (see `config/vite.json`).
-
-- [ ] **Step 4: Wire up the CSS (cssbundling-rails), targeting ActiveAdmin's stylesheet**
+Propshaft can't process either generated file (`.scss` needs a Sass compiler; the `//= require` directive is Sprockets-only), and the installed 3.5.2 needs actual jQuery/jQuery UI JS to function, not just CSS. Rather than wire a permanent second pipeline, compiled once and kept only the static output:
 
 ```bash
-bin/rails css:install:tailwind
+# Temporarily, in Gemfile:
+#   gem "sprockets-rails"
+#   gem "sassc-rails"
+bundle install
+
+# Sprockets requires a manifest declaring what to precompile:
+#   app/assets/config/manifest.js:
+#     //= link active_admin.js
+#     //= link active_admin.css
+
+RAILS_ENV=development bin/rails assets:precompile
 ```
 
-This generates a default `app/assets/stylesheets/application.tailwind.css` and a `build:css` npm script pointing at it — not what we want, since this app's real frontend already has its own Tailwind build via `@tailwindcss/vite`. It also creates `app/assets/builds/` (with the `.gitignore` entries for it) and appends a `css: npm run build:css --watch` line to `Procfile.dev` — keep both of those as generated.
-
-`cssbundling-rails`'s installer assumes Yarn or Bun for the package-install step, and this project uses npm (`package-lock.json`, no `yarn.lock`) — it will either fail outright (no `yarn` binary) or, worse, silently create a stray `yarn.lock`. Don't rely on it; install `@tailwindcss/cli` explicitly via npm instead, and check for/remove any `yarn.lock` it may have created:
+This produced real compiled output in `public/assets/`: `active_admin-<hash>.css` (161KB — normalize.css + all of ActiveAdmin's real styles) and `active_admin-<hash>.js` (652KB — jQuery 3.7.1 + jQuery UI + ActiveAdmin's own JS, fully bundled). Copied both to stable, unhashed names:
 
 ```bash
-npm install @tailwindcss/cli
-rm -f yarn.lock  # only if it appeared; this project's package manager is npm
+cp public/assets/active_admin-<hash>.css app/assets/builds/active_admin.css
+cp public/assets/active_admin-<hash>.js  app/assets/builds/active_admin.js
 ```
 
-Remove the unused default stylesheet:
+Removed the now-redundant uncompiled sources (`app/assets/javascripts/active_admin.js`, `app/assets/stylesheets/active_admin.scss`) — Propshaft would otherwise see two files both logically named `active_admin.js`/`active_admin.css` (one real, one an unprocessable stub), which is ambiguous. Then removed the temporary gems and `app/assets/config/manifest.js`, ran `bundle install` again, and deleted `public/assets/` (Sprockets' scratch output, already gitignored, not needed anymore).
 
-```bash
-rm app/assets/stylesheets/application.tailwind.css
-```
+**`app/assets/builds/active_admin.{css,js}` are committed to git**, unlike a typical `cssbundling-rails` setup — there's no watcher process regenerating them, so if they were gitignored a fresh checkout would 500 on `/admin`. They only need regenerating (repeat this step) if ActiveAdmin itself is upgraded.
 
-Edit `package.json`'s `build:css` script (added by the generator under `"scripts"`) to read:
+ActiveAdmin's default asset registration already points at exactly these logical names (`ActiveAdmin.application.stylesheets`/`.javascripts` default to `"active_admin.css"`/`"active_admin.js"`, rendered via plain `stylesheet_link_tag`/`javascript_include_tag` when `use_webpacker` is false, which it is by default) — so no changes were needed to `config/initializers/active_admin.rb` for asset *paths*, only for authentication (Step 4).
 
-```json
-"build:css": "tailwindcss -i ./app/assets/stylesheets/active_admin.css -o ./app/assets/builds/active_admin.css --minify"
-```
+- [x] **Step 4: Wire authentication — edit `config/initializers/active_admin.rb`**
 
-Confirm `npm run check` still passes afterward, to catch any accidental breakage of the existing frontend's Tailwind setup.
+Uncommented and fixed:
 
-Run the build once so the compiled CSS exists on disk (`cssbundling-rails` gitignores `app/assets/builds/*`, so nothing is committed — this file must be (re)built on every fresh checkout, which is what the `Procfile.dev` watcher handles for local dev):
-
-```bash
-bin/rails css:build
-```
-
-Expected: `app/assets/builds/active_admin.css` now exists and contains real compiled CSS (not the raw `@import "tailwindcss";` from the source file).
-
-- [ ] **Step 5: Wire authentication — edit `config/initializers/active_admin.rb`**
-
-Find these three generated (commented-out) lines and uncomment/fix them:
-
-```ruby
-  # config.authentication_method = :authenticate_user!
-```
-→
 ```ruby
   config.authentication_method = :authenticate_admin!
-```
-
-```ruby
-  # config.current_user_method = :current_user
-```
-→
-```ruby
   config.current_user_method = :current_user
 ```
 
-Leave `config.logout_link_path = :destroy_user_session_path` as generated (already correct, not commented out).
+(`config.logout_link_path = :destroy_user_session_path` was already correct as generated, not commented out.)
 
-At the very end of the same file (after the `ActiveAdmin.setup do |config| ... end` block), add:
+At the end of the file:
 
 ```ruby
-ActiveAdmin::BaseController.class_eval do
-  def authenticate_admin!
-    authenticate_user!
-    redirect_to root_path, alert: "You are not authorized to access this page." unless current_user.admin?
+Rails.application.config.to_prepare do
+  ActiveAdmin::BaseController.class_eval do
+    def authenticate_admin!
+      authenticate_user!
+      redirect_to root_path, alert: "You are not authorized to access this page." unless current_user.admin?
+    end
   end
 end
 ```
 
-This must be defined on `ActiveAdmin::BaseController`, not on `ApplicationController`: ActiveAdmin's controllers inherit from `InheritedResources::Base`, not from `ApplicationController`, so `config.authentication_method` (which does `send(method_name)` on the ActiveAdmin controller instance) would never find a method defined only on `ApplicationController`. `authenticate_user!`/`current_user` themselves are found either way because Devise patches those onto `ActionController::Base` globally.
+Two things the original plan got wrong here: (1) this must be defined on `ActiveAdmin::BaseController`, not `ApplicationController` — AA's controllers inherit from `InheritedResources::Base`, so a method on `ApplicationController` alone would never be found by `config.authentication_method`'s `send`. `authenticate_user!`/`current_user` are found either way because Devise patches those onto `ActionController::Base` globally. (2) `class_eval`-ing `ActiveAdmin::BaseController` directly at initializer load time raised `NameError: uninitialized constant InheritedResources::Base` — some of AA's dependencies aren't safely loadable that early in boot. Wrapping it in `Rails.application.config.to_prepare` (runs after all initializers, and again on each reload in development) fixed it.
 
-- [ ] **Step 6: Write the failing request spec**
+- [x] **Step 5: Write the request spec and confirm it passes**
 
-Create `spec/requests/admin_spec.rb`:
-
-```ruby
-require "rails_helper"
-
-RSpec.describe "Admin panel access", type: :request do
-  it "redirects an anonymous visitor to the login page" do
-    get "/admin"
-    expect(response).to redirect_to(new_user_session_path)
-  end
-
-  it "redirects an authenticated non-admin user away with an alert" do
-    user = create(:user, role: :client)
-    sign_in user
-    get "/admin"
-    expect(response).to redirect_to(root_path)
-    expect(flash[:alert]).to eq("You are not authorized to access this page.")
-  end
-
-  it "allows an authenticated admin to reach the admin panel" do
-    admin = create(:user, role: :admin)
-    sign_in admin
-    get "/admin"
-    expect(response).to have_http_status(200)
-  end
-end
-```
-
-- [ ] **Step 7: Run the spec and confirm all three examples pass**
+`spec/requests/admin_spec.rb` — exactly as originally planned (anonymous → redirected to login; non-admin → redirected to root with the alert; admin → 200). Also spot-checked (throwaway spec, not kept) that the response body actually contains resolved `<link>`/`<script>` tags pointing at digested `active_admin-*.css`/`.js` URLs, confirming Propshaft is serving the committed static bundle correctly.
 
 ```bash
-bundle exec rspec spec/requests/admin_spec.rb
+bundle exec rspec spec/requests/admin_spec.rb   # 3 examples, 0 failures
+bundle exec rspec                                # 31 examples, 0 failures (28 pre-existing + 3 new)
 ```
 
-Expected: `3 examples, 0 failures`. If Step 5 was skipped or misapplied, the second and third examples fail (no auth check means every request gets a 200, not a redirect).
-
-- [ ] **Step 8: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add Gemfile Gemfile.lock config/initializers/active_admin.rb config/routes.rb \
-  config/importmap.rb app/admin/dashboard.rb app/assets/stylesheets/active_admin.css \
-  app/assets/builds/.keep tailwind-active_admin.config.js app/javascript/application.js \
-  package.json package-lock.json Procfile.dev .gitignore spec/requests/admin_spec.rb
+  app/admin/dashboard.rb app/assets/builds/active_admin.css app/assets/builds/active_admin.js \
+  package-lock.json spec/requests/admin_spec.rb
 git commit -m "Install ActiveAdmin, gated to admin users only"
 ```
 
-(`git status` first to confirm you're not missing any generator-created file, that `app/assets/builds/active_admin.css` itself is *not* staged — it should already be gitignored — and that no `yarn.lock` got created.)
+(`package-lock.json` picked up an unrelated cosmetic diff — npm inferred the lockfile's `name` field from the directory name since `package.json` has none set — harmless, left as-is.)
 
 ---
 
