@@ -125,7 +125,9 @@ git commit -m "Install ActiveAdmin, gated to admin users only"
 
 ---
 
-### Task 2: Build the User admin resource
+### Task 2: Build the User admin resource — DONE (commit pending)
+
+> **One correction found via TDD:** Ransack's `role_eq` casts a submitted value with a naive `#to_i`, not Rails' enum-aware type casting — `role_eq: "sales"` silently became `0` and matched `admin` instead of raising or matching `sales`. Fixed by having the filter's `<select>` submit the enum's real integer values (`User.roles.to_a`) rather than its string keys (`User.roles.keys`). The **form** doesn't have this problem — `f.input :role` submits through the model's `role=` setter on create/update, which *does* use Rails' proper enum casting. Only Ransack's filter path is affected. See Steps 4-5 below for the corrected code.
 
 **Files:**
 - Create: `app/admin/users.rb`
@@ -136,7 +138,7 @@ git commit -m "Install ActiveAdmin, gated to admin users only"
 - Consumes: `authenticate_admin!` from Task 1 (already wired globally — no changes needed here, just exercised by the new specs).
 - Produces: `User.ransackable_attributes` / `User.ransackable_associations` — later admin resources (none planned yet) would need their own equivalents; this task's methods are User-specific, not reusable.
 
-- [ ] **Step 1: Allowlist which `User` columns ActiveAdmin/Ransack may filter and sort on**
+- [x] **Step 1: Allowlist which `User` columns ActiveAdmin/Ransack may filter and sort on**
 
 Ransack 4 (a dependency of ActiveAdmin) denies filtering on any model by default, as a security measure, until the model explicitly allowlists safe columns — otherwise `/admin/users` raises as soon as ActiveAdmin tries to build its filter sidebar. The naive fix (`authorizable_ransackable_attributes`, which ActiveAdmin's own docs sometimes show) allowlists **every** column, including `encrypted_password` — wrong for a model with sensitive columns. Explicitly list only the safe ones instead.
 
@@ -161,7 +163,7 @@ class User < ApplicationRecord
 end
 ```
 
-- [ ] **Step 2: Write the failing request specs**
+- [x] **Step 2: Write the failing request specs**
 
 Create `spec/requests/admin/users_spec.rb`:
 
@@ -182,7 +184,10 @@ RSpec.describe "Admin users management", type: :request do
 
   it "filters users by role" do
     create(:user, email: "sales-person@example.com", role: :sales)
-    get "/admin/users", params: { q: { role_eq: "sales" } }
+    # The rendered filter <select> submits the enum's integer value (see
+    # app/admin/users.rb) -- not the string key, which Ransack's role_eq
+    # would silently miscast via a naive #to_i.
+    get "/admin/users", params: { q: { role_eq: User.roles["sales"] } }
     expect(response).to have_http_status(200)
     expect(response.body).to include("sales-person@example.com")
   end
@@ -224,17 +229,17 @@ RSpec.describe "Admin users management", type: :request do
 end
 ```
 
-- [ ] **Step 3: Run the specs and confirm they fail**
+- [x] **Step 3: Run the specs and confirm they fail**
 
 ```bash
 bundle exec rspec spec/requests/admin/users_spec.rb
 ```
 
-Expected: routing errors (`No route matches [GET] "/admin/users"`) — `app/admin/users.rb` doesn't exist yet, so ActiveAdmin hasn't registered any routes for it.
+Actual: 404s (not routing exceptions, but same root cause) — `app/admin/users.rb` doesn't exist yet, so ActiveAdmin hasn't registered any routes for it.
 
-- [ ] **Step 4: Create the User admin resource**
+- [x] **Step 4: Create the User admin resource**
 
-Create `app/admin/users.rb`:
+Create `app/admin/users.rb` (the `filter :role` line differs from the original draft — see the correction note above):
 
 ```ruby
 ActiveAdmin.register User do
@@ -249,7 +254,11 @@ ActiveAdmin.register User do
   end
 
   filter :email
-  filter :role, as: :select, collection: -> { User.roles.keys }
+  # Ransack's role_eq casts the submitted value with a naive #to_i (not
+  # Rails' enum-aware type casting), so a string key like "sales" silently
+  # becomes 0 and matches "admin" instead. Submit the enum's real integer
+  # values instead of its string keys to avoid that.
+  filter :role, as: :select, collection: -> { User.roles.to_a }
 
   form do |f|
     f.inputs "User Details" do
@@ -271,23 +280,25 @@ ActiveAdmin.register User do
 end
 ```
 
-- [ ] **Step 5: Run the specs and confirm they pass**
+(First pass used `User.roles.keys` for the filter, matching the form. That passed 5/6 specs but silently returned the wrong user for the role filter — caught by the "filters users by role" spec actually asserting on *which* user came back, not just a 200. Worth remembering: a filter test that only checks the status code wouldn't have caught this.)
+
+- [x] **Step 5: Run the specs and confirm they pass**
 
 ```bash
 bundle exec rspec spec/requests/admin/users_spec.rb
 ```
 
-Expected: `6 examples, 0 failures`.
+Result: `6 examples, 0 failures`.
 
-- [ ] **Step 6: Run the full suite to check for regressions**
+- [x] **Step 6: Run the full suite to check for regressions**
 
 ```bash
 bundle exec rspec
 ```
 
-Expected: all examples pass, including `spec/requests/admin_spec.rb` from Task 1 and the pre-existing specs.
+Result: `37 examples, 0 failures` (31 from Task 1 + 6 new).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/admin/users.rb app/models/user.rb spec/requests/admin/users_spec.rb
