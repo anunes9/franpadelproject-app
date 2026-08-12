@@ -23,7 +23,6 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   <<: *default
   database: fran_padel_academy_development
@@ -91,18 +90,13 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: fran_padel_academy_production
-    username: fran_padel_academy
-    password: <%= ENV["FRAN_PADEL_ACADEMY_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *primary_production
-    database: fran_padel_academy_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: fran_padel_academy_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: fran_padel_academy_production_cable
     migrations_paths: db/cable_migrate
