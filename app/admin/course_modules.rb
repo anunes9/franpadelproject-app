@@ -1,6 +1,6 @@
 ActiveAdmin.register CourseModule do
   permit_params :slug, :level, :position, :title, :description, :duration, :topics_text, :content,
-                documents: []
+                new_documents: []
 
   index do
     selectable_column
@@ -44,8 +44,8 @@ ActiveAdmin.register CourseModule do
           end
         end
       end
-      f.input :documents, as: :file, input_html: { multiple: true },
-                          hint: "Upload one or more documents (PDF, images, etc). Users can view but not download them. Existing documents are kept unless removed above."
+      f.input :new_documents, as: :file, input_html: { multiple: true },
+                              hint: "Upload one or more documents (PDF, images, etc). Users can view but not download them. Existing documents are kept unless removed above."
     end
 
     f.actions

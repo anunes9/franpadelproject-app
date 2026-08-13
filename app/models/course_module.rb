@@ -17,6 +17,13 @@ class CourseModule < ApplicationRecord
     self.topics = value.to_s.split(",").map(&:strip).reject(&:blank?)
   end
 
+  # Assigning `documents=` directly (has_many_attached's own writer) replaces
+  # the whole collection. This virtual attribute appends instead, so
+  # uploading a new document in the admin doesn't remove the existing ones.
+  def new_documents=(files)
+    documents.attach(files) if files.present?
+  end
+
   def sections
     return [] if content.blank?
 

@@ -51,10 +51,21 @@ RSpec.describe "Admin course modules management", type: :request do
     target = create(:course_module)
     file = fixture_file_upload(Rails.root.join("spec/fixtures/files/sample.pdf"), "application/pdf")
 
-    patch "/admin/course_modules/#{target.id}", params: { course_module: { documents: [file] } }
+    patch "/admin/course_modules/#{target.id}", params: { course_module: { new_documents: [file] } }
 
     expect(target.reload.documents.count).to eq(1)
     expect(target.documents.first.filename.to_s).to eq("sample.pdf")
+  end
+
+  it "keeps existing documents when uploading another one" do
+    target = create(:course_module)
+    target.documents.attach(io: StringIO.new("pdf"), filename: "old.pdf", content_type: "application/pdf")
+    file = fixture_file_upload(Rails.root.join("spec/fixtures/files/sample.pdf"), "application/pdf")
+
+    patch "/admin/course_modules/#{target.id}", params: { course_module: { new_documents: [file] } }
+
+    expect(target.reload.documents.count).to eq(2)
+    expect(target.documents.map { |d| d.filename.to_s }).to contain_exactly("old.pdf", "sample.pdf")
   end
 
   it "removes a document" do
