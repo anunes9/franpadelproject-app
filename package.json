@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@biomejs/biome": "^2.5.8",
     "@inertiajs/core": "^3.6.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
@@ -12,7 +13,12 @@
     "vite-plugin-ruby": "^5.2.2"
   },
   "scripts": {
-    "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check:biome": "biome check --write ."
   },
   "dependencies": {
     "@inertiajs/react": "^3.6.1",
