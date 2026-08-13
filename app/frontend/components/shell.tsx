@@ -18,11 +18,11 @@ function Sidebar() {
   const { dashboardUser } = props
 
   return (
-    <aside className="hidden lg:flex w-[248px] shrink-0 flex-col gap-8 bg-ink px-5 py-7">
+    <aside className="hidden lg:flex w-64 shrink-0 flex-col gap-8 bg-ink px-5 py-7">
       <img
         src="/fran-methodology-logo.png"
         alt="Fran Methodology"
-        className="h-10 w-auto brightness-0 invert opacity-95"
+        className="h-auto w-auto brightness-0 invert opacity-95"
       />
       <nav className="flex flex-col gap-1">
         {NAV.map((item) => (
@@ -56,8 +56,8 @@ function MobileHeader() {
   const { dashboardUser } = props
 
   return (
-    <div className="flex items-center justify-between px-5 pt-6 lg:hidden">
-      <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-12 w-auto" />
+    <div className="flex items-center justify-between p-2 lg:hidden border-b h-12">
+      <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-20 w-auto" />
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
         {dashboardUser.initials}
       </div>
@@ -100,9 +100,8 @@ export function PageHeader({ eyebrow, title }: { eyebrow?: string; title: string
   return (
     <div className="flex items-end justify-between gap-6">
       <div>
-        {eyebrow ? (
-          <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">{eyebrow}</div>
-        ) : null}
+        {eyebrow && <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">{eyebrow}</div>}
+
         <h1 className="mt-1.5 text-[27px] font-bold tracking-[-0.02em] text-ink lg:text-[34px] lg:tracking-[-0.025em]">
           {title}
         </h1>
