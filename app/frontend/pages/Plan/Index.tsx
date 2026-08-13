@@ -57,23 +57,33 @@ function Index() {
           <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 lg:flex">
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">Exercise library</span>
             {exercises.map((e) => (
-              <div
+              <button
                 key={e.ref}
+                type="button"
                 draggable
                 onDragStart={() => setDragging(e.ref)}
                 onDragEnd={() => setDragging(null)}
-                className="cursor-grab rounded-[10px] border border-line px-3 py-2.5 text-[13px] text-ink hover:border-teal hover:bg-paper"
+                className="cursor-grab rounded-[10px] border border-line px-3 py-2.5 text-left text-[13px] text-ink hover:border-teal hover:bg-paper"
               >
                 {e.title}
-              </div>
+              </button>
             ))}
           </div>
 
           <div className="flex flex-col gap-2.5 lg:grid lg:grid-cols-7 lg:gap-2.5">
             {days.map((day) => (
+              // biome-ignore lint/a11y/useSemanticElements: also a drop target holding nested <button>s, can't itself be one
               <div
                 key={day}
+                role="button"
+                tabIndex={0}
                 onClick={() => {
+                  add(day, picked)
+                  setPicked(null)
+                }}
+                onKeyDown={(ev) => {
+                  if (ev.key !== 'Enter' && ev.key !== ' ') return
+                  ev.preventDefault()
                   add(day, picked)
                   setPicked(null)
                 }}
