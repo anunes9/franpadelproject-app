@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   enum :role, { admin: 0, sales: 1, client: 2 }
 
+  has_many :user_module_progresses, dependent: :destroy
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[email role created_at]
   end
