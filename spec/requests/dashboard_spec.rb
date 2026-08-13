@@ -7,7 +7,7 @@ RSpec.describe "Dashboard", type: :request do
   end
 
   it "renders the real dashboard home for an authenticated user" do
-    user = create(:user)
+    user = create(:user, name: "Ana Costa")
     create(:course_module, slug: "module-1", title: "Real Module")
     sign_in user
 
@@ -16,5 +16,6 @@ RSpec.describe "Dashboard", type: :request do
     expect(response).to have_http_status(200)
     expect(response.body).to include('"component":"Dashboard/Home"')
     expect(response.body).to include("Real Module")
+    expect(response.body).to include("Ana Costa")
   end
 end

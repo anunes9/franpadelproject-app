@@ -2,7 +2,7 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   inertia_share do
-    { dashboardUser: DashboardData::USER }
+    { dashboardUser: current_user.dashboard_profile_json }
   end
 
   def index

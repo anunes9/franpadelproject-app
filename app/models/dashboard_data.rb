@@ -93,11 +93,6 @@ module DashboardData
     "Thursday" => ["EX-08"], "Friday" => [], "Saturday" => [], "Sunday" => []
   }.freeze
 
-  USER = {
-    name: "Miguel Santos", initials: "MS", email: "miguel.santos@email.pt",
-    age: 34, level: "Beginner", club: "Padel Clube Lisboa", memberSince: "Mar 2026"
-  }.freeze
-
   COURSE_STATS = {
     progress: 31, modulesDone: 2, modulesTotal: 8, exercisesDone: 14, averageQuiz: 86
   }.freeze
