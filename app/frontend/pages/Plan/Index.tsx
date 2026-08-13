@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import type { ReactNode } from 'react'
 import { usePage } from '@inertiajs/react'
+import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { AppShell, PageHeader } from '../../components/shell'
 import type { Exercise } from '../../types/dashboard-data'
 
@@ -54,9 +54,7 @@ function Index() {
         <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
           {/* Desktop: draggable library */}
           <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 lg:flex">
-            <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              Exercise library
-            </span>
+            <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">Exercise library</span>
             {exercises.map((e) => (
               <div
                 key={e.ref}

@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
-import { ProgressBar, StatusBadge, Topic } from '../../components/ui'
 import { AppShell, PageHeader } from '../../components/shell'
+import { ProgressBar, StatusBadge, Topic } from '../../components/ui'
 import type { Module } from '../../types/dashboard-data'
 
 interface Props {
@@ -32,9 +32,7 @@ function Index() {
               }
             >
               <div className="text-sm font-bold lg:text-lg">{l.name}</div>
-              <div className={'mt-1 text-[11px] lg:text-[13px] ' + (l.active ? 'text-ink-mute' : '')}>
-                {l.meta}
-              </div>
+              <div className={'mt-1 text-[11px] lg:text-[13px] ' + (l.active ? 'text-ink-mute' : '')}>{l.meta}</div>
             </div>
           ))}
         </div>

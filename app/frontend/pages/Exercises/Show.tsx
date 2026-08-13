@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
-import { MediaPlaceholder, Topic } from '../../components/ui'
 import { AppShell } from '../../components/shell'
+import { MediaPlaceholder, Topic } from '../../components/ui'
 import type { Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
@@ -34,9 +34,7 @@ function Show() {
             <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               {exercise.category} · {exercise.ref}
             </div>
-            <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-ink lg:text-[32px]">
-              {exercise.title}
-            </h1>
+            <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-ink lg:text-[32px]">{exercise.title}</h1>
           </div>
           <p className="text-[15px] leading-relaxed text-[#3B4B54]">{exercise.description}</p>
           <div className="flex gap-2">

@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
-import type { ReactNode } from 'react'
 import { Link, usePage } from '@inertiajs/react'
+import type { ReactNode } from 'react'
+import { useMemo, useState } from 'react'
 import { AppShell } from '../../components/shell'
 import type { QuizQuestion } from '../../types/dashboard-data'
 
@@ -15,10 +15,7 @@ function Quiz() {
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const score = useMemo(
-    () => quiz.reduce((n, q, i) => n + (answers[i] === q.correct ? 1 : 0), 0),
-    [answers, quiz],
-  )
+  const score = useMemo(() => quiz.reduce((n, q, i) => n + (answers[i] === q.correct ? 1 : 0), 0), [answers, quiz])
   const passed = score / quiz.length >= 0.75
   const question = quiz[index]
   const picked = answers[index]
@@ -108,13 +105,14 @@ function Quiz() {
             </span>
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-[#E9EDE9]">
-            <div className="h-full bg-teal-deep transition-all" style={{ width: ((index + 1) / quiz.length) * 100 + '%' }} />
+            <div
+              className="h-full bg-teal-deep transition-all"
+              style={{ width: ((index + 1) / quiz.length) * 100 + '%' }}
+            />
           </div>
         </div>
 
-        <h1 className="text-[23px] font-bold leading-tight tracking-[-0.02em] text-ink lg:text-[28px]">
-          {question.q}
-        </h1>
+        <h1 className="text-[23px] font-bold leading-tight tracking-[-0.02em] text-ink lg:text-[28px]">{question.q}</h1>
 
         <div className="flex flex-col gap-2.5">
           {question.options.map((option, i) => {
@@ -129,9 +127,7 @@ function Quiz() {
                   (on ? 'border-ink bg-ink text-paper' : 'border-line bg-white text-ink hover:border-teal')
                 }
               >
-                <span className={'pt-0.5 font-dash-mono text-xs ' + (on ? 'text-teal' : 'text-muted')}>
-                  {'ABC'[i]}
-                </span>
+                <span className={'pt-0.5 font-dash-mono text-xs ' + (on ? 'text-teal' : 'text-muted')}>{'ABC'[i]}</span>
                 <span className="text-[15px] leading-snug">{option}</span>
               </button>
             )

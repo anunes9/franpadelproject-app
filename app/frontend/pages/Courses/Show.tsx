@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
-import { Eyebrow } from '../../components/ui'
 import { AppShell } from '../../components/shell'
+import { Eyebrow } from '../../components/ui'
 import type { ContentSection, Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
@@ -26,9 +26,7 @@ function Show() {
             ← Beginner course
           </Link>
           <div>
-            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-teal">
-              {courseModule.title}
-            </div>
+            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-teal">{courseModule.title}</div>
             <h1 className="mt-1.5 text-[26px] font-bold tracking-[-0.02em] lg:text-[38px]">
               {courseModule.description}
             </h1>
@@ -53,7 +51,10 @@ function Show() {
           <div className="flex flex-col gap-2">
             <Eyebrow>Materials</Eyebrow>
             {MATERIALS.map((doc) => (
-              <div key={doc.name} className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3">
+              <div
+                key={doc.name}
+                className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3"
+              >
                 <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">{doc.kind}</span>
                 <span className="flex-1 text-sm text-ink">{doc.name}</span>
                 <span className="text-xs text-muted">{doc.meta}</span>

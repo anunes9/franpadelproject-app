@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import type { ReactNode } from 'react'
 import { usePage } from '@inertiajs/react'
-import { CategoryFilter, ExerciseCard } from '../../components/ui'
+import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { AppShell, PageHeader } from '../../components/shell'
+import { CategoryFilter, ExerciseCard } from '../../components/ui'
 import type { Exercise } from '../../types/dashboard-data'
 
 interface Props {
