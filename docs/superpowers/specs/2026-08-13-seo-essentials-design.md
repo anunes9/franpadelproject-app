@@ -85,17 +85,19 @@ client-side, after JS runs. Non-JS crawlers, and critically social-preview
 bots (Facebook/Slack/WhatsApp/X link unfurlers never execute JavaScript),
 would never see them — defeating the point of adding OG tags at all.
 
-Instead, drive the tags from `SessionsController#new` using the layout's
-existing (currently unused) `content_for` hooks —
-`app/views/layouts/application.html.erb:4` already reads
-`content_for(:title)`, and line 12 already has `<%= yield :head %>`. Both
-are populated unconditionally in the real Rails response, independent of
-Inertia/SSR/JS:
+Instead, drive the tags from `SessionsController#new` using instance
+variables the layout already reads — `app/views/layouts/application.html.erb:4`
+reads `content_for(:title)` (now falling back from `@title`), and line 12's
+`<%= yield :head %>` is joined by a new `<%= render @head_partial if @head_partial %>`.
+Both are populated unconditionally in the real Rails response, independent
+of Inertia/SSR/JS. (`content_for` itself turned out not to be callable from
+a controller action — it's a view-only helper — so ivars are used instead
+of the originally-planned `content_for(:head) { ... }` call.)
 
 ```ruby
 def new
-  content_for(:title) { "Fran Padel Academy — Curso de Padel Online" }
-  content_for(:head) { render "sessions/seo_meta" }
+  @title = "Fran Padel Academy — Curso de Padel Online"
+  @head_partial = "sessions/seo_meta"
   render inertia: "Auth/Login", props: { errors: flash[:alert] ? { base: "invalid_credentials" } : {} }
 end
 ```
