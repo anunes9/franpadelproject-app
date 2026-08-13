@@ -124,9 +124,9 @@ function BottomTabs() {
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-paper font-dash-sans">
+    <div className="flex h-screen overflow-hidden bg-paper font-dash-sans">
       <Sidebar />
-      <main className="min-w-0 flex-1 pb-28 lg:pb-0">
+      <main className="min-w-0 flex-1 overflow-y-auto pb-28 lg:pb-0">
         <MobileHeader />
         {children}
       </main>
