@@ -75,38 +75,47 @@ Static file, same reasoning as `robots.txt`.
 
 ### Meta tags on the login page
 
-`app/frontend/pages/Auth/Login.tsx` currently renders no `<Head>` at all;
-the document `<title>` comes from the static default in
-`app/views/layouts/application.html.erb`. The app already has Inertia SSR
-wired up (`inertia_ssr_head` in the layout), so an Inertia `<Head>` block
-placed in the page component renders server-side into the initial HTML —
-crawlers that don't execute JS still see it, and it also updates correctly
-if a user navigates back to `/` client-side.
+**Correction from the original design:** the layout calls `inertia_ssr_head`,
+but Inertia SSR is not actually enabled (`config.ssr_enabled` is never set
+in `config/initializers/inertia_rails.rb`) — verified directly: the raw
+response body for `GET /` is a ~2KB shell containing only the `data-page`
+JSON blob, none of the actual rendered form/video markup. That means an
+Inertia `<Head>` block in `Login.tsx` would only attach these tags
+client-side, after JS runs. Non-JS crawlers, and critically social-preview
+bots (Facebook/Slack/WhatsApp/X link unfurlers never execute JavaScript),
+would never see them — defeating the point of adding OG tags at all.
 
-Add, using `@inertiajs/react`'s `<Head>`:
+Instead, drive the tags from `SessionsController#new` using the layout's
+existing (currently unused) `content_for` hooks —
+`app/views/layouts/application.html.erb:4` already reads
+`content_for(:title)`, and line 12 already has `<%= yield :head %>`. Both
+are populated unconditionally in the real Rails response, independent of
+Inertia/SSR/JS:
 
-```tsx
-<Head>
-  <title>Fran Padel Academy — Curso de Padel Online</title>
-  <meta
-    name="description"
-    content="Curso de padel online com módulos de vídeo, exercícios técnicos e táticos, testes de conhecimentos e plano de treino semanal personalizado."
-  />
-  <link rel="canonical" href="https://app.franpadelproject.com/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Fran Padel Academy" />
-  <meta
-    property="og:description"
-    content="Curso de padel online com módulos de vídeo, exercícios técnicos e táticos, testes de conhecimentos e plano de treino semanal personalizado."
-  />
-  <meta property="og:url" content="https://app.franpadelproject.com/" />
-  <meta property="og:image" content="https://app.franpadelproject.com/og-image.png" />
-  <meta property="og:locale" content="pt_PT" />
-  <meta name="twitter:card" content="summary_large_image" />
-</Head>
+```ruby
+def new
+  content_for(:title) { "Fran Padel Academy — Curso de Padel Online" }
+  content_for(:head) { render "sessions/seo_meta" }
+  render inertia: "Auth/Login", props: { errors: flash[:alert] ? { base: "invalid_credentials" } : {} }
+end
+```
+
+`app/views/sessions/_seo_meta.html.erb`:
+
+```erb
+<meta name="description" content="Curso de padel online com módulos de vídeo, exercícios técnicos e táticos, testes de conhecimentos e plano de treino semanal personalizado.">
+<link rel="canonical" href="https://app.franpadelproject.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fran Padel Academy">
+<meta property="og:description" content="Curso de padel online com módulos de vídeo, exercícios técnicos e táticos, testes de conhecimentos e plano de treino semanal personalizado.">
+<meta property="og:url" content="https://app.franpadelproject.com/">
+<meta property="og:image" content="https://app.franpadelproject.com/og-image.png">
+<meta property="og:locale" content="pt_PT">
+<meta name="twitter:card" content="summary_large_image">
 ```
 
 Exact copy is a draft; the user may edit wording before/after implementation.
+No change to `Login.tsx` or `@inertiajs/react`'s `<Head>` is needed.
 
 ### OG image — `public/og-image.png`
 
