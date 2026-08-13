@@ -7,8 +7,10 @@ interface Profile {
   initials: string
   email: string
   role: string
-  age: number
-  club: string
+  age: number | null
+  level: string | null
+  hand: string | null
+  club: string | null
   memberSince: string
 }
 
@@ -22,8 +24,10 @@ function Show() {
   const rows: Array<[string, string]> = [
     ['Email', profile.email],
     ['Role', profile.role],
-    ['Age', String(profile.age)],
-    ['Club', profile.club],
+    ['Age', profile.age ? String(profile.age) : '—'],
+    ['Level', profile.level ?? '—'],
+    ['Hand', profile.hand ?? '—'],
+    ['Club', profile.club ?? '—'],
   ]
 
   function handleLogout() {
@@ -40,7 +44,7 @@ function Show() {
           <div>
             <h1 className="text-[21px] font-bold tracking-[-0.02em] text-ink lg:text-[28px]">{profile.name}</h1>
             <div className="mt-0.5 text-[13px] text-muted lg:text-sm">
-              {profile.club} · Member since {profile.memberSince}
+              {profile.club ? `${profile.club} · ` : ''}Member since {profile.memberSince}
             </div>
           </div>
         </div>

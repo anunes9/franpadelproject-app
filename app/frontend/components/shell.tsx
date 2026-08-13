@@ -47,7 +47,7 @@ function Sidebar() {
         </div>
         <div>
           <div className="text-[13px] font-semibold text-paper">{dashboardUser.name}</div>
-          <div className="text-[11px] text-muted">{dashboardUser.club}</div>
+          {dashboardUser.club && <div className="text-[11px] text-muted">{dashboardUser.club}</div>}
         </div>
       </div>
     </aside>

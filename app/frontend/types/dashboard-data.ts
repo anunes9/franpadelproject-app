@@ -44,5 +44,5 @@ export interface QuizQuestion {
 export interface DashboardUser {
   name: string
   initials: string
-  club: string
+  club: string | null
 }
