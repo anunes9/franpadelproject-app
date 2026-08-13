@@ -39,4 +39,18 @@ RSpec.describe "Sessions", type: :request do
     get "/"
     expect(response).to redirect_to(dashboard_path)
   end
+
+  it "includes a meta description, canonical link, and Open Graph tags" do
+    get "/"
+
+    expect(response.body).to include('<meta name="description" content="Curso de padel online com módulos de vídeo, exercícios técnicos e táticos, testes de conhecimentos e plano de treino semanal personalizado.">')
+    expect(response.body).to include('<link rel="canonical" href="https://app.franpadelproject.com/">')
+    expect(response.body).to include('<meta property="og:image" content="https://app.franpadelproject.com/og-image.png">')
+  end
+
+  it "sets a descriptive page title" do
+    get "/"
+
+    expect(response.body).to include("<title data-inertia>Fran Padel Academy — Curso de Padel Online</title>")
+  end
 end

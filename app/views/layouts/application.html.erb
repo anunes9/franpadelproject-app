@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title data-inertia><%= content_for(:title) || "Fran Padel Academy" %></title>
+    <title data-inertia><%= @title || content_for(:title) || "Fran Padel Academy" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Fran Padel Academy">
@@ -10,6 +10,7 @@
     <%= csp_meta_tag %>
 
     <%= yield :head %>
+    <%= render @head_partial if @head_partial %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>

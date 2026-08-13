@@ -5,6 +5,8 @@ class SessionsController < Devise::SessionsController
   # action itself renders. It also sets flash[:alert] to the "invalid email
   # or password" message before recalling, which is surfaced here as a prop.
   def new
+    @title = "Fran Padel Academy — Curso de Padel Online"
+    @head_partial = "sessions/seo_meta"
     render inertia: "Auth/Login", props: { errors: flash[:alert] ? { base: "invalid_credentials" } : {} }
   end
 
