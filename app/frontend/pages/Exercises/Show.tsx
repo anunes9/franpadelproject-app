@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { AppShell } from '../../components/shell'
 import { MediaPlaceholder, Topic } from '../../components/ui'
 import type { Exercise, Module } from '../../types/dashboard-data'
+import { useTranslation } from '@/i18n/useTranslation'
 
 interface Props {
   [key: string]: unknown
@@ -12,12 +13,13 @@ interface Props {
 
 function Show() {
   const { exercise, courseModule } = usePage<Props>().props
+  const { t } = useTranslation()
 
   return (
     <div>
       <div className="relative">
         <MediaPlaceholder
-          label={exercise.media + ' · full-screen media placeholder'}
+          label={t('exercises.show.mediaPlaceholderSuffix', { media: exercise.media })}
           tone="dark"
           className="h-[300px] lg:h-[460px]"
         />
@@ -25,7 +27,7 @@ function Show() {
           href="/dashboard/exercises"
           className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1.5 text-[13px] text-paper"
         >
-          ← Back
+          {t('common.back')}
         </Link>
       </div>
 
@@ -39,18 +41,18 @@ function Show() {
           </div>
           <p className="text-[15px] leading-relaxed text-[#3B4B54]">{exercise.description}</p>
           <div className="flex gap-2">
-            <Topic>{courseModule?.title ?? 'Module'}</Topic>
+            <Topic>{courseModule?.title ?? t('exercises.show.defaultModuleLabel')}</Topic>
             <Topic>{exercise.duration}</Topic>
           </div>
           <div className="mt-2 flex gap-2.5">
             <button type="button" className="flex-1 rounded-full bg-ink py-3.5 text-[15px] font-semibold text-paper">
-              Mark complete
+              {t('exercises.show.markComplete')}
             </button>
             <Link
               href="/dashboard/plan"
               className="rounded-full border border-line bg-white px-5 py-3.5 text-[15px] font-semibold text-ink"
             >
-              Add to plan
+              {t('exercises.show.addToPlan')}
             </Link>
           </div>
         </div>
