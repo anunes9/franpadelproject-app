@@ -1,11 +1,13 @@
 import { useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import { useTranslation } from '@/i18n/useTranslation'
 
 interface Props {
   errors: { base?: string }
 }
 
 export default function Login({ errors }: Props) {
+  const { t } = useTranslation()
   // Nested under `user` because Devise's SessionsController reads
   // credentials from params[:user][:email] / params[:user][:password].
   const { data, setData, post, processing } = useForm({
@@ -33,7 +35,7 @@ export default function Login({ errors }: Props) {
         <div className="w-full max-w-md">
           <img
             src="/fran-padel-project-logo.svg"
-            alt="Padel Academy"
+            alt={t('auth.login.logoAlt')}
             width={260}
             height={200}
             className="mx-auto mb-8"
@@ -42,11 +44,11 @@ export default function Login({ errors }: Props) {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl bg-white p-6">
             {errors.base && (
               <p role="alert" className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
-                {errors.base}
+                {errors.base === 'invalid_credentials' ? t('auth.login.invalidCredentials') : errors.base}
               </p>
             )}
             <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
-              Email
+              {t('auth.login.emailLabel')}
               <input
                 type="email"
                 value={data.user.email}
@@ -55,7 +57,7 @@ export default function Login({ errors }: Props) {
               />
             </label>
             <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
-              Password
+              {t('auth.login.passwordLabel')}
               <input
                 type="password"
                 value={data.user.password}
@@ -68,7 +70,7 @@ export default function Login({ errors }: Props) {
               disabled={processing}
               className="mt-2 rounded-full bg-ink py-3 text-[15px] font-semibold text-paper disabled:opacity-60"
             >
-              {processing ? 'Logging in…' : 'Log in'}
+              {processing ? t('auth.login.submitting') : t('auth.login.submit')}
             </button>
           </form>
         </div>
