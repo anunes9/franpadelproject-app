@@ -7,6 +7,7 @@ class User < ApplicationRecord
   enum :role, { admin: 0, sales: 1, client: 2 }
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
   enum :hand, { left: 0, right: 1 }
+  enum :locale, { pt: 0, en: 1 }
 
   belongs_to :club, optional: true
   has_many :user_module_progresses, dependent: :destroy

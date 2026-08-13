@@ -30,6 +30,14 @@ RSpec.describe User, type: :model do
     expect(User.hands.keys).to match_array(%w[left right])
   end
 
+  it "defines the expected locale values" do
+    expect(User.locales.keys).to match_array(%w[pt en])
+  end
+
+  it "defaults to pt" do
+    expect(create(:user).locale).to eq("pt")
+  end
+
   it "authenticates with the correct password" do
     user = create(:user, password: "password123")
     expect(user.valid_password?("password123")).to be true
