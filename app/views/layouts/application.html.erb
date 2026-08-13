@@ -23,8 +23,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app %>
+    <%# Propshaft's :app symbol bulk-includes every CSS file under app/assets/**/*.css,
+        which would also sweep in ActiveAdmin's app/assets/builds/active_admin.css and
+        load its global resets on every page. Reference the app stylesheet explicitly
+        instead -- ActiveAdmin's own layout loads active_admin.css only on /admin. %>
+    <%= stylesheet_link_tag "application" %>
     <%= vite_react_refresh_tag %>
     <%= vite_client_tag %>
     <%= vite_typescript_tag "inertia.tsx" %>
