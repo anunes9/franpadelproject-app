@@ -23,7 +23,6 @@ function Show() {
 
   const rows: Array<[string, string]> = [
     ['Email', profile.email],
-    ['Role', profile.role],
     ['Age', profile.age ? String(profile.age) : '—'],
     ['Level', profile.level ?? '—'],
     ['Hand', profile.hand ?? '—'],

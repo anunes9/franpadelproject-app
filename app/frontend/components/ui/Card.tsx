@@ -8,7 +8,7 @@ export function Card({
   tone = 'light',
 }: {
   title?: string
-  content: string | number
+  content?: string | number
   details?: string
   progress?: number
   tone?: 'light' | 'dark'
@@ -20,11 +20,13 @@ export function Card({
       <div className="flex flex-col gap-4">
         {title && <span className="font-dash-mono text-sm uppercase tracking-[0.12em] text-ink-mute">{title}</span>}
 
-        <span
-          className={`text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] ${tone === 'light' ? 'text-ink' : ''}`}
-        >
-          {content}
-        </span>
+        {content && (
+          <span
+            className={`text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] ${tone === 'light' ? 'text-ink' : ''}`}
+          >
+            {content}
+          </span>
+        )}
       </div>
 
       {(details || progress) && (

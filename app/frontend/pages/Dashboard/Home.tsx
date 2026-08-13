@@ -38,7 +38,7 @@ function Home() {
         <PageHeader title={'Good afternoon, ' + dashboardUser.name.split(' ')[0]} />
 
         {/*Hero Cards*/}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
           <Card
             title="Course progress"
             content={`${courseStats.progress}%`}
@@ -53,7 +53,7 @@ function Home() {
         </div>
 
         {/*Modules*/}
-        <div className="grid items-start gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid items-start gap-6 xl:grid-cols-[1fr_320px]">
           {/*In Progress Module*/}
           <div className="flex flex-col gap-3">
             <Eyebrow>Continue where you left off</Eyebrow>
@@ -65,6 +65,7 @@ function Home() {
               progress={current.progress}
               topics={current.topics}
               pill="in progress"
+              variant="index"
             />
 
             {/*All Module*/}
@@ -79,7 +80,9 @@ function Home() {
                   description={m.description}
                   progress={m.progress}
                   duration={m.duration}
-                  pill={m.progress === 100 ? 'completed' : undefined}
+                  pill={m.progress === 100 ? 'completed' : 'open'}
+                  topics={m.topics}
+                  variant="index"
                 />
               ))}
             </div>

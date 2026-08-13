@@ -59,7 +59,7 @@ function MobileHeader() {
   const { dashboardUser } = props
 
   return (
-    <div className="flex items-center justify-between p-2 lg:hidden border-b h-12">
+    <div className="flex items-center justify-between p-2 lg:hidden h-12">
       <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-20 w-auto" />
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
         {dashboardUser.initials}
