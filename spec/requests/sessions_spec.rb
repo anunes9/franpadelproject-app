@@ -14,7 +14,7 @@ RSpec.describe "Sessions", type: :request do
     # failure (see devise/failure_app.rb#recall) and forces a 422 status,
     # rather than issuing a redirect.
     expect(response).to have_http_status(:unprocessable_content)
-    expect(response.body).to include("Invalid email or password.")
+    expect(response.body).to include('"base":"invalid_credentials"')
   end
 
   it "logs out and redirects to login" do
