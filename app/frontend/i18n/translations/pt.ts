@@ -1,0 +1,166 @@
+import type { en } from './en'
+
+export const pt = {
+  common: {
+    nav: {
+      dashboard: 'Painel',
+      home: 'Início',
+      courses: 'Cursos',
+      exercises: 'Exercícios',
+      weeklyPlan: 'Plano semanal',
+      plan: 'Plano',
+      profile: 'Perfil',
+    },
+    signOut: 'Terminar sessão',
+    back: '← Voltar',
+    category: {
+      all: 'Todos',
+      technical: 'Técnico',
+      tactical: 'Tático',
+    },
+    status: {
+      completed: 'concluído',
+      inProgress: 'em curso',
+      open: 'aberto',
+      locked: 'bloqueado',
+    },
+    days: {
+      short: {
+        mon: 'SEG',
+        tue: 'TER',
+        wed: 'QUA',
+        thu: 'QUI',
+        fri: 'SEX',
+        sat: 'SÁB',
+        sun: 'DOM',
+      },
+      long: {
+        monday: 'Segunda-feira',
+        tuesday: 'Terça-feira',
+        wednesday: 'Quarta-feira',
+        thursday: 'Quinta-feira',
+        friday: 'Sexta-feira',
+        saturday: 'Sábado',
+        sunday: 'Domingo',
+      },
+    },
+    logoAlt: {
+      franMethodology: 'Fran Methodology',
+    },
+  },
+  auth: {
+    login: {
+      logoAlt: 'Academia de Padel',
+      emailLabel: 'Email',
+      passwordLabel: 'Palavra-passe',
+      submit: 'Iniciar sessão',
+      submitting: 'A iniciar sessão…',
+      invalidCredentials: 'Email ou palavra-passe inválidos',
+    },
+  },
+  dashboard: {
+    home: {
+      greeting: 'Boa tarde, {{name}}',
+      stats: {
+        courseProgress: 'Progresso do curso',
+        modulesCompleteDetail: '{{done}} de {{total}} módulos concluídos',
+        exercisesCompleted: 'Exercícios concluídos',
+        averageQuizScore: 'Pontuação média nos testes',
+      },
+      continueEyebrow: 'Continuar onde parou',
+      modulesEyebrow: 'Módulos',
+      thisWeekEyebrow: 'Esta semana',
+      planLink: 'Plano',
+      weekPlan: {
+        dragExerciseHere: 'Arraste um exercício para aqui',
+        mondayItem: 'Serviço cortado, cotovelo acima de 90º · Técnico',
+        wednesdayItem: 'Exercício do semáforo · Técnico',
+        thursdayItem: 'Saída de vidro, lado dominante · Tático',
+      },
+    },
+  },
+  courses: {
+    index: {
+      eyebrow: 'Curso de iniciação · 8 módulos',
+      title: 'Cursos',
+      level: {
+        beginner: 'Iniciação',
+        beginnerMeta: '8 módulos',
+        intermediate: 'Intermédio',
+        advanced: 'Avançado',
+        locked: 'Bloqueado',
+      },
+    },
+    show: {
+      backLink: '← Curso de iniciação',
+      documentKind: {
+        pdf: 'PDF',
+        image: 'IMAGEM',
+        video: 'VÍDEO',
+        file: 'FICHEIRO',
+      },
+      documentsCount: '{{count}} documentos',
+      exercisesCount: '{{count}} exercícios',
+      materialsEyebrow: 'Materiais',
+      viewDocument: 'Ver',
+      moduleExercisesTitle: 'Exercícios do módulo',
+      moduleExercisesDetail: '{{count}} exercícios · 2 concluídos',
+      knowledgeCheckTitle: 'Teste de conhecimentos',
+      knowledgeCheckDetail: '4 perguntas · desbloqueia a conclusão do módulo',
+      startKnowledgeCheck: 'Iniciar teste de conhecimentos',
+      moduleCompleted: 'Módulo concluído',
+      markComplete: 'Marcar módulo como concluído',
+      markingComplete: 'A marcar como concluído…',
+    },
+    quiz: {
+      knowledgeCheckLabel: 'Teste de conhecimentos',
+      correctCount: '{{score}} / {{total}} corretas',
+      passedMessage: 'Aprovado — módulo marcado como concluído.',
+      failedMessage: 'Abaixo de 75% — reveja o material e tente novamente.',
+      notAnswered: 'Sem resposta',
+      correctLabel: 'Correta: {{answer}}',
+      retake: 'Repetir',
+      nextModule: 'Próximo módulo',
+      questionProgress: 'Pergunta {{current}} de {{total}}',
+      selectAnAnswer: 'Selecione uma resposta',
+      submit: 'Submeter',
+      continue: 'Continuar',
+    },
+  },
+  plan: {
+    index: {
+      eyebrow: 'Arraste exercícios para um dia',
+      title: 'Plano semanal',
+      mobileHintPicked: 'Agora toque num dia para adicionar',
+      mobileHintDefault: 'Toque num exercício e depois num dia',
+      exerciseLibrary: 'Biblioteca de exercícios',
+      dropHere: 'Largar aqui',
+    },
+  },
+  profile: {
+    show: {
+      rowLabel: {
+        email: 'Email',
+        age: 'Idade',
+        level: 'Nível',
+        hand: 'Mão',
+        club: 'Clube',
+      },
+      emptyValue: '—',
+      memberSince: 'Membro desde {{date}}',
+      language: 'Idioma',
+    },
+  },
+  exercises: {
+    index: {
+      eyebrow: 'Biblioteca',
+      title: 'Exercícios',
+    },
+    show: {
+      mediaPlaceholderSuffix: '{{media}} · marcador de ecrã inteiro',
+      defaultModuleLabel: 'Módulo',
+      markComplete: 'Marcar como concluído',
+      addToPlan: 'Adicionar ao plano',
+    },
+  },
+} satisfies typeof en
