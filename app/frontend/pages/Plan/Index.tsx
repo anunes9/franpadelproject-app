@@ -3,17 +3,29 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { AppShell, PageHeader } from '../../components/shell'
 import type { Exercise } from '../../types/dashboard-data'
+import { useTranslation } from '@/i18n/useTranslation'
+import type { TranslationKey } from '@/i18n/translations'
 
 interface Props {
   [key: string]: unknown
   days: string[]
-  shortDay: Record<string, string>
   defaultPlan: Record<string, string[]>
   exercises: Exercise[]
 }
 
+const SHORT_DAY_KEY: Record<string, TranslationKey> = {
+  Monday: 'common.days.short.mon',
+  Tuesday: 'common.days.short.tue',
+  Wednesday: 'common.days.short.wed',
+  Thursday: 'common.days.short.thu',
+  Friday: 'common.days.short.fri',
+  Saturday: 'common.days.short.sat',
+  Sunday: 'common.days.short.sun',
+}
+
 function Index() {
-  const { days, shortDay, defaultPlan, exercises } = usePage<Props>().props
+  const { days, defaultPlan, exercises } = usePage<Props>().props
+  const { t } = useTranslation()
   const [plan, setPlan] = useState<Record<string, string[]>>(defaultPlan)
   const [dragging, setDragging] = useState<string | null>(null)
   const [picked, setPicked] = useState<string | null>(null)
@@ -30,9 +42,9 @@ function Index() {
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
       <div className="mx-auto flex max-w-[1120px] flex-col gap-5">
-        <PageHeader eyebrow="Drag exercises into a day" title="Weekly plan" />
+        <PageHeader eyebrow={t('plan.index.eyebrow')} title={t('plan.index.title')} />
         <p className="text-[13px] text-muted lg:hidden">
-          {picked ? 'Now tap a day to add it' : 'Tap an exercise, then a day'}
+          {picked ? t('plan.index.mobileHintPicked') : t('plan.index.mobileHintDefault')}
         </p>
 
         {/* Mobile: tap-to-assign tray */}
@@ -55,7 +67,9 @@ function Index() {
         <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
           {/* Desktop: draggable library */}
           <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 lg:flex">
-            <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">Exercise library</span>
+            <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+              {t('plan.index.exerciseLibrary')}
+            </span>
             {exercises.map((e) => (
               <button
                 key={e.ref}
@@ -95,7 +109,7 @@ function Index() {
                 }}
                 className="flex flex-col gap-2 rounded-[14px] border border-line bg-white p-3 lg:min-h-[320px]"
               >
-                <span className="font-dash-mono text-[10px] tracking-[0.1em] text-muted">{shortDay[day]}</span>
+                <span className="font-dash-mono text-[10px] tracking-[0.1em] text-muted">{t(SHORT_DAY_KEY[day])}</span>
                 {plan[day].map((ref) => {
                   const e = getExercise(ref)
                   return (
@@ -115,7 +129,7 @@ function Index() {
                 })}
                 {plan[day].length === 0 ? (
                   <div className="rounded-[10px] border border-dashed border-line px-2 py-4 text-center text-[11px] text-[#B7C0BA]">
-                    Drop here
+                    {t('plan.index.dropHere')}
                   </div>
                 ) : null}
               </div>

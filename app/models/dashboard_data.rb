@@ -83,11 +83,6 @@ module DashboardData
 
   DAYS = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday].freeze
 
-  SHORT_DAY = {
-    "Monday" => "MON", "Tuesday" => "TUE", "Wednesday" => "WED",
-    "Thursday" => "THU", "Friday" => "FRI", "Saturday" => "SAT", "Sunday" => "SUN"
-  }.freeze
-
   DEFAULT_PLAN = {
     "Monday" => ["EX-01"], "Tuesday" => [], "Wednesday" => ["EX-06"],
     "Thursday" => ["EX-08"], "Friday" => [], "Saturday" => [], "Sunday" => []
