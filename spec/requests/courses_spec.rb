@@ -50,4 +50,21 @@ RSpec.describe "Courses", type: :request do
     expect(response.body).to include('"filename":"slides.pdf"')
     expect(response.body).to include("disposition=inline")
   end
+
+  describe "PATCH /dashboard/courses/:id/complete" do
+    it "marks the module done for the current user and redirects back to it" do
+      course_module = create(:course_module, slug: "module-1")
+
+      patch "/dashboard/courses/module-1/complete"
+
+      expect(response).to redirect_to("/dashboard/courses/module-1")
+      progress = UserModuleProgress.find_by(user: user, course_module: course_module)
+      expect(progress).to have_attributes(status: "done", progress: 100)
+    end
+
+    it "404s for an unknown module id" do
+      patch "/dashboard/courses/nope/complete"
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

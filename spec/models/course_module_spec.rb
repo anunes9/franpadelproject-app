@@ -101,6 +101,61 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
+  describe "#complete_for!" do
+    it "marks the module done and full progress for the user" do
+      user = create(:user)
+      course_module = create(:course_module)
+
+      course_module.complete_for!(user)
+
+      progress = UserModuleProgress.find_by(user: user, course_module: course_module)
+      expect(progress).to have_attributes(status: "done", progress: 100)
+    end
+
+    it "updates the existing progress row instead of duplicating it" do
+      user = create(:user)
+      course_module = create(:course_module)
+      create(:user_module_progress, user: user, course_module: course_module, status: :current, progress: 40)
+
+      course_module.complete_for!(user)
+
+      expect(UserModuleProgress.where(user: user, course_module: course_module).count).to eq(1)
+    end
+
+    it "unlocks the next module in position order for that user" do
+      user = create(:user)
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+
+      first.complete_for!(user)
+
+      next_progress = UserModuleProgress.find_by(user: user, course_module: second)
+      expect(next_progress).to have_attributes(status: "current", progress: 0)
+    end
+
+    it "does not downgrade the next module if it's already current or done" do
+      user = create(:user)
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+      create(:user_module_progress, user: user, course_module: second, status: :done, progress: 100)
+
+      first.complete_for!(user)
+
+      next_progress = UserModuleProgress.find_by(user: user, course_module: second)
+      expect(next_progress).to have_attributes(status: "done", progress: 100)
+    end
+
+    it "does nothing to other users' progress" do
+      user = create(:user)
+      other_user = create(:user)
+      course_module = create(:course_module)
+
+      course_module.complete_for!(user)
+
+      expect(UserModuleProgress.find_by(user: other_user, course_module: course_module)).to be_nil
+    end
+  end
+
   describe ".dashboard_list_for" do
     it "returns every module with the given user's progress merged in" do
       user = create(:user)

@@ -18,6 +18,15 @@ class CoursesController < DashboardController
     }
   end
 
+  def complete
+    course_module = CourseModule.find_by(slug: params[:id])
+    return head :not_found unless course_module
+
+    course_module.complete_for!(current_user)
+
+    redirect_to "/dashboard/courses/#{course_module.slug}"
+  end
+
   def quiz
     course_module = CourseModule.find_by(slug: params[:id])
     return head :not_found unless course_module

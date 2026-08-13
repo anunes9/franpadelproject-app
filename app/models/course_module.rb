@@ -54,6 +54,19 @@ class CourseModule < ApplicationRecord
     }
   end
 
+  def complete_for!(user)
+    transaction do
+      progress = UserModuleProgress.find_or_initialize_by(user: user, course_module: self)
+      progress.update!(status: :done, progress: 100)
+
+      next_module = self.class.where(level: level).where("position > ?", position).order(:position).first
+      if next_module
+        next_progress = UserModuleProgress.find_or_initialize_by(user: user, course_module: next_module)
+        next_progress.update!(status: :current) if next_progress.locked?
+      end
+    end
+  end
+
   def self.dashboard_list_for(user)
     modules = ordered.to_a
     progresses = UserModuleProgress.where(user: user, course_module_id: modules.map(&:id))

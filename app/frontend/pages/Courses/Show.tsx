@@ -1,5 +1,5 @@
-import { Link, usePage } from '@inertiajs/react'
-import type { ReactNode } from 'react'
+import { Link, router, usePage } from '@inertiajs/react'
+import { type ReactNode, useState } from 'react'
 import { AppShell } from '../../components/shell'
 import { Eyebrow } from '../../components/ui'
 import type { ContentSection, CourseDocument, Exercise, Module } from '../../types/dashboard-data'
@@ -20,6 +20,16 @@ function documentKind(contentType: string) {
 
 function Show() {
   const { courseModule, sections, exercises, documents } = usePage<Props>().props
+  const [completing, setCompleting] = useState(false)
+
+  function handleComplete() {
+    setCompleting(true)
+    router.patch(
+      `/dashboard/courses/${courseModule.id}/complete`,
+      {},
+      { preserveScroll: true, onFinish: () => setCompleting(false) },
+    )
+  }
 
   return (
     <div>
@@ -111,6 +121,21 @@ function Show() {
               Start knowledge check
             </Link>
           </div>
+
+          {courseModule.status === 'done' ? (
+            <div className="rounded-full border border-line bg-white py-3.5 text-center text-[15px] font-semibold text-muted">
+              Module completed
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleComplete}
+              disabled={completing}
+              className="rounded-full bg-teal-deep py-3.5 text-center text-[15px] font-semibold text-paper transition-opacity disabled:opacity-60"
+            >
+              {completing ? 'Marking as complete…' : 'Mark module as complete'}
+            </button>
+          )}
         </div>
       </div>
     </div>
