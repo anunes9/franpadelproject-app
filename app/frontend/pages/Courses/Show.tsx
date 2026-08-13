@@ -2,21 +2,24 @@ import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { AppShell } from '../../components/shell'
 import { Eyebrow } from '../../components/ui'
-import type { ContentSection, Exercise, Module } from '../../types/dashboard-data'
+import type { ContentSection, CourseDocument, Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
   courseModule: Module
   sections: ContentSection[]
   exercises: Exercise[]
+  documents: CourseDocument[]
 }
 
-const MATERIALS = [
-  { kind: 'PDF', name: 'Game Initiation Model — slides', meta: '4.2 MB' },
-  { kind: 'MP4', name: 'Slice serve — court demo', meta: '6:12' },
-]
+function documentKind(contentType: string) {
+  if (contentType === 'application/pdf') return 'PDF'
+  if (contentType.startsWith('image/')) return 'IMAGE'
+  if (contentType.startsWith('video/')) return 'VIDEO'
+  return contentType.split('/')[1]?.toUpperCase() ?? 'FILE'
+}
 
 function Show() {
-  const { courseModule, sections, exercises } = usePage<Props>().props
+  const { courseModule, sections, exercises, documents } = usePage<Props>().props
 
   return (
     <div>
@@ -40,7 +43,7 @@ function Show() {
           </div>
           <div className="flex gap-5 text-xs text-ink-mute">
             <span>{courseModule.duration}</span>
-            <span>{MATERIALS.length} documents</span>
+            <span>{documents.length} documents</span>
             <span>{exercises.length} exercises</span>
           </div>
         </div>
@@ -48,19 +51,26 @@ function Show() {
 
       <div className="px-5 py-6 lg:px-10 lg:py-10">
         <div className="mx-auto flex max-w-[880px] flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <Eyebrow>Materials</Eyebrow>
-            {MATERIALS.map((doc) => (
-              <div
-                key={doc.name}
-                className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3"
-              >
-                <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">{doc.kind}</span>
-                <span className="flex-1 text-sm text-ink">{doc.name}</span>
-                <span className="text-xs text-muted">{doc.meta}</span>
-              </div>
-            ))}
-          </div>
+          {documents.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <Eyebrow>Materials</Eyebrow>
+              {documents.map((doc) => (
+                <a
+                  key={doc.id}
+                  href={doc.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 transition-colors hover:border-teal"
+                >
+                  <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">
+                    {documentKind(doc.contentType)}
+                  </span>
+                  <span className="flex-1 text-sm text-ink">{doc.filename}</span>
+                  <span className="text-xs text-muted">View</span>
+                </a>
+              ))}
+            </div>
+          )}
 
           <div className="flex flex-col gap-5">
             {sections.map((s) => (

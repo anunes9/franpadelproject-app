@@ -2,6 +2,7 @@ class CourseModule < ApplicationRecord
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
 
   has_many :user_module_progresses, dependent: :destroy
+  has_many_attached :documents
 
   validates :slug, :title, :description, :duration, presence: true
   validates :slug, uniqueness: true
@@ -23,6 +24,19 @@ class CourseModule < ApplicationRecord
       heading, *rest = chunk.strip.lines.map(&:strip)
       items = rest.select { |line| line.start_with?("- ") }.map { |line| line.delete_prefix("- ") }
       { heading: heading, items: items }
+    end
+  end
+
+  # Inline-viewable URLs only (disposition: "inline") -- documents are meant
+  # to be viewed in the app, not saved locally by the user.
+  def documents_json
+    documents.map do |document|
+      {
+        id: document.id,
+        filename: document.filename.to_s,
+        contentType: document.content_type,
+        url: Rails.application.routes.url_helpers.rails_blob_path(document, disposition: "inline", only_path: true)
+      }
     end
   end
 

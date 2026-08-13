@@ -40,4 +40,14 @@ RSpec.describe "Courses", type: :request do
     expect(response.body).to include('"status":"done"')
     expect(response.body).to include('"progress":100')
   end
+
+  it "lists a module's documents with inline-disposition urls, no download attribute needed" do
+    course_module = create(:course_module, slug: "module-1")
+    course_module.documents.attach(io: StringIO.new("pdf"), filename: "slides.pdf", content_type: "application/pdf")
+
+    get "/dashboard/courses/module-1"
+
+    expect(response.body).to include('"filename":"slides.pdf"')
+    expect(response.body).to include("disposition=inline")
+  end
 end

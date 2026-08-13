@@ -18,6 +18,13 @@ export interface Module {
   sections?: ContentSection[]
 }
 
+export interface CourseDocument {
+  id: number
+  filename: string
+  contentType: string
+  url: string
+}
+
 export interface Exercise {
   ref: string
   title: string

@@ -46,4 +46,24 @@ RSpec.describe "Admin course modules management", type: :request do
     target = create(:course_module)
     expect { delete "/admin/course_modules/#{target.id}" }.to change(CourseModule, :count).by(-1)
   end
+
+  it "uploads a document" do
+    target = create(:course_module)
+    file = fixture_file_upload(Rails.root.join("spec/fixtures/files/sample.pdf"), "application/pdf")
+
+    patch "/admin/course_modules/#{target.id}", params: { course_module: { documents: [file] } }
+
+    expect(target.reload.documents.count).to eq(1)
+    expect(target.documents.first.filename.to_s).to eq("sample.pdf")
+  end
+
+  it "removes a document" do
+    target = create(:course_module)
+    target.documents.attach(io: StringIO.new("pdf"), filename: "old.pdf", content_type: "application/pdf")
+    document = target.documents.first
+
+    delete "/admin/course_modules/#{target.id}/remove_document", params: { document_id: document.id }
+
+    expect(target.reload.documents.count).to eq(0)
+  end
 end

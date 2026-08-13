@@ -13,7 +13,8 @@ class CoursesController < DashboardController
     render inertia: "Courses/Show", props: {
       courseModule: course_module.as_dashboard_json(progress),
       sections: course_module.sections,
-      exercises: exercises
+      exercises: exercises,
+      documents: course_module.documents_json
     }
   end
 

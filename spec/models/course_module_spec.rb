@@ -82,6 +82,25 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
+  describe "#documents_json" do
+    it "returns an empty array when no documents are attached" do
+      expect(create(:course_module).documents_json).to eq([])
+    end
+
+    it "returns each attached document's filename, content type, and an inline-disposition url" do
+      course_module = create(:course_module)
+      course_module.documents.attach(
+        io: StringIO.new("pdf content"), filename: "slides.pdf", content_type: "application/pdf"
+      )
+
+      json = course_module.documents_json
+
+      expect(json.size).to eq(1)
+      expect(json.first).to include(filename: "slides.pdf", contentType: "application/pdf")
+      expect(json.first[:url]).to include("disposition=inline")
+    end
+  end
+
   describe ".dashboard_list_for" do
     it "returns every module with the given user's progress merged in" do
       user = create(:user)
