@@ -1,13 +1,15 @@
+import { Book02Icon, Calendar03Icon, Dumbbell02Icon, Home01Icon, User03Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import type { DashboardUser } from '../types/dashboard-data'
 
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard', tab: 'Home' },
-  { href: '/dashboard/courses', label: 'Courses', tab: 'Courses' },
-  { href: '/dashboard/exercises', label: 'Exercises', tab: 'Exercises' },
-  { href: '/dashboard/plan', label: 'Weekly plan', tab: 'Plan' },
-  { href: '/dashboard/profile', label: 'Profile', tab: 'Profile' },
+  { href: '/dashboard', label: 'Dashboard', tab: 'Home', icon: Home01Icon },
+  { href: '/dashboard/courses', label: 'Courses', tab: 'Courses', icon: Book02Icon },
+  { href: '/dashboard/exercises', label: 'Exercises', tab: 'Exercises', icon: Dumbbell02Icon },
+  { href: '/dashboard/plan', label: 'Weekly plan', tab: 'Plan', icon: Calendar03Icon },
+  { href: '/dashboard/profile', label: 'Profile', tab: 'Profile', icon: User03Icon },
 ]
 
 const isActive = (pathname: string, href: string) =>
@@ -30,10 +32,11 @@ function Sidebar() {
             key={item.href}
             href={item.href}
             className={
-              'rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
+              'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
               (isActive(url, item.href) ? 'bg-teal/15 text-paper' : 'text-ink-mute hover:text-paper')
             }
           >
+            <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} className="shrink-0" />
             {item.label}
           </Link>
         ))}
@@ -74,8 +77,13 @@ function BottomTabs() {
         const on = isActive(url, item.href)
         return (
           <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1.5">
-            <span className={'h-[18px] w-[18px] rounded-[5px] ' + (on ? 'bg-ink' : 'bg-[#C9D2CD]')} />
-            <span className={'text-[11px] font-semibold ' + (on ? 'text-ink' : 'text-[#C9D2CD]')}>{item.tab}</span>
+            <HugeiconsIcon
+              icon={item.icon}
+              size={20}
+              strokeWidth={1.5}
+              className={on ? 'text-ink' : 'text-[#C9D2CD]'}
+            />
+            <span className={`text-[11px] font-semibold ${on ? 'text-ink' : 'text-[#C9D2CD]'}`}>{item.tab}</span>
           </Link>
         )
       })}
