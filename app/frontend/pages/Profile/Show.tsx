@@ -1,6 +1,8 @@
 import { router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { AppShell } from '../../components/shell'
+import { useTranslation } from '@/i18n/useTranslation'
+import type { Locale } from '@/types'
 
 interface Profile {
   name: string
@@ -21,17 +23,22 @@ interface Props {
 
 function Show() {
   const { profile } = usePage<Props>().props
+  const { t, locale } = useTranslation()
 
   const rows: Array<[string, string]> = [
-    ['Email', profile.email],
-    ['Age', profile.age ? String(profile.age) : '—'],
-    ['Level', profile.level ?? '—'],
-    ['Hand', profile.hand ?? '—'],
-    ['Club', profile.club ?? '—'],
+    [t('profile.show.rowLabel.email'), profile.email],
+    [t('profile.show.rowLabel.age'), profile.age ? String(profile.age) : t('profile.show.emptyValue')],
+    [t('profile.show.rowLabel.level'), profile.level ?? t('profile.show.emptyValue')],
+    [t('profile.show.rowLabel.hand'), profile.hand ?? t('profile.show.emptyValue')],
+    [t('profile.show.rowLabel.club'), profile.club ?? t('profile.show.emptyValue')],
   ]
 
   function handleLogout() {
     router.delete('/users/sign_out')
+  }
+
+  function handleLocaleChange(next: Locale) {
+    router.patch('/locale', { locale: next }, { preserveScroll: true })
   }
 
   return (
@@ -44,7 +51,8 @@ function Show() {
           <div>
             <h1 className="text-[21px] font-bold tracking-[-0.02em] text-ink lg:text-[28px]">{profile.name}</h1>
             <div className="mt-0.5 text-[13px] text-muted lg:text-sm">
-              {profile.club ? `${profile.club} · ` : ''}Member since {profile.memberSince}
+              {profile.club ? `${profile.club} · ` : ''}
+              {t('profile.show.memberSince', { date: profile.memberSince })}
             </div>
           </div>
         </div>
@@ -56,6 +64,24 @@ function Show() {
               <span className="text-sm text-ink">{value}</span>
             </div>
           ))}
+          <div className="flex justify-between border-b border-[#E9EDE9] py-3.5 last:border-0">
+            <span className="text-sm text-muted">{t('profile.show.language')}</span>
+            <div className="flex gap-1 rounded-full border border-line p-0.5">
+              {(['pt', 'en'] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleLocaleChange(option)}
+                  className={
+                    'rounded-full px-3 py-1 text-xs font-semibold uppercase transition-colors ' +
+                    (locale === option ? 'bg-ink text-paper' : 'text-muted')
+                  }
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <button
@@ -63,7 +89,7 @@ function Show() {
           onClick={handleLogout}
           className="w-full rounded-full border border-line py-3.5 text-[15px] font-semibold text-danger"
         >
-          Sign out
+          {t('common.signOut')}
         </button>
       </div>
     </div>
