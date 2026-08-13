@@ -9,15 +9,24 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
+import { useTranslation } from '@/i18n/useTranslation'
 import type { DashboardUser } from '../types/dashboard-data'
 
-const NAV = [
-  { href: '/dashboard', label: 'Dashboard', tab: 'Home', icon: Home01Icon },
-  { href: '/dashboard/courses', label: 'Courses', tab: 'Courses', icon: Book02Icon },
-  { href: '/dashboard/exercises', label: 'Exercises', tab: 'Exercises', icon: Dumbbell02Icon },
-  { href: '/dashboard/plan', label: 'Weekly plan', tab: 'Plan', icon: Calendar03Icon },
-  { href: '/dashboard/profile', label: 'Profile', tab: 'Profile', icon: User03Icon },
-]
+function useNav() {
+  const { t } = useTranslation()
+  return [
+    { href: '/dashboard', label: t('common.nav.dashboard'), tab: t('common.nav.home'), icon: Home01Icon },
+    { href: '/dashboard/courses', label: t('common.nav.courses'), tab: t('common.nav.courses'), icon: Book02Icon },
+    {
+      href: '/dashboard/exercises',
+      label: t('common.nav.exercises'),
+      tab: t('common.nav.exercises'),
+      icon: Dumbbell02Icon,
+    },
+    { href: '/dashboard/plan', label: t('common.nav.weeklyPlan'), tab: t('common.nav.plan'), icon: Calendar03Icon },
+    { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
+  ]
+}
 
 const isActive = (pathname: string, href: string) =>
   href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
@@ -29,16 +38,18 @@ function handleSignOut() {
 function Sidebar() {
   const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
   const { dashboardUser } = props
+  const { t } = useTranslation()
+  const nav = useNav()
 
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col gap-8 bg-ink px-5 py-7">
       <img
         src="/fran-methodology-logo.png"
-        alt="Fran Methodology"
+        alt={t('common.logoAlt.franMethodology')}
         className="h-auto w-auto brightness-0 invert opacity-95"
       />
       <nav className="flex flex-col gap-1">
-        {NAV.map((item) => (
+        {nav.map((item) => (
           <Link
             key={item.href}
             href={item.href}
@@ -57,7 +68,7 @@ function Sidebar() {
           className="flex items-center gap-2.5 rounded-lg bg-danger px-3 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-danger/90"
         >
           <HugeiconsIcon icon={Logout03Icon} size={18} strokeWidth={1.5} className="shrink-0" />
-          Sign out
+          {t('common.signOut')}
         </button>
       </nav>
       <div className="mt-auto flex items-center gap-2.5 border-t border-paper/10 pt-4">
@@ -76,10 +87,11 @@ function Sidebar() {
 function MobileHeader() {
   const { props } = usePage<{ dashboardUser: DashboardUser }>()
   const { dashboardUser } = props
+  const { t } = useTranslation()
 
   return (
     <div className="flex items-center justify-between p-2 lg:hidden h-12">
-      <img src="/fran-methodology-logo.png" alt="Fran Methodology" className="h-20 w-auto" />
+      <img src="/fran-methodology-logo.png" alt={t('common.logoAlt.franMethodology')} className="h-20 w-auto" />
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
         {dashboardUser.initials}
       </div>
@@ -89,10 +101,10 @@ function MobileHeader() {
 
 function BottomTabs() {
   const { url } = usePage()
-  const tabs = NAV.filter((n) => n.href !== '/dashboard/plan')
+  const nav = useNav().filter((n) => n.href !== '/dashboard/plan')
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pb-7 pt-2.5 lg:hidden">
-      {tabs.map((item) => {
+      {nav.map((item) => {
         const on = isActive(url, item.href)
         return (
           <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1.5">
