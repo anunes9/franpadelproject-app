@@ -1,5 +1,8 @@
 class Club < ApplicationRecord
+  include OrganizesAttachments
+
   has_one_attached :logo
+  organizes_attachment :logo, folder: -> { "clubs/#{id}/logo" }
   has_many :users, dependent: :nullify
 
   validates :name, presence: true, uniqueness: true

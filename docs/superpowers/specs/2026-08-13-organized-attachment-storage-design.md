@@ -59,7 +59,7 @@ class CourseModule < ApplicationRecord
   organizes_attachment :documents, folder: -> { "course_modules/#{slug}/documents" }
 ```
 
-`organizes_attachment` registers an `after_save` callback. On every save, it
+`organizes_attachment` registers an `after_commit` callback (on create/update). After the record's transaction commits (the point at which ActiveStorage itself has actually finished uploading bytes to the service, not merely saved the blob row), it
 looks at every blob currently attached to that association and, for each one
 whose storage key is still a "flat" default token (no `/` in it), computes
 an organized key and moves the underlying file to that key.
@@ -99,7 +99,7 @@ found. This only affects the storage key — the blob's `filename` column
 
 - `app/models/concerns/organizes_attachments.rb`:
   - `organizes_attachment(name, folder:)` class macro, registers the
-    `after_save` callback described above.
+    `after_commit` callback described above (Active Storage's own `has_one_attached`/`has_many_attached` upload the file's bytes in their own `after_commit`, not `after_save` — see Architecture).
   - A private helper to build the organized key (sanitize + collision-suffix
     loop, as described above).
   - A private helper to actually move a blob to a new key, implemented using
@@ -127,7 +127,7 @@ found. This only affects the storage key — the blob's `filename` column
    a normal ActiveStorage random key at this point (id/slug may not exist
    yet for a brand-new record).
 2. The record saves.
-3. `after_save` (from `organizes_attachment`) runs: for each attached blob
+3. `after_commit` (from `organizes_attachment`) runs: for each attached blob
    on that association with a flat (non-organized) key, it computes the
    target key from the `folder` lambda (now safe to evaluate — the record
    is persisted) + sanitized filename, and rekeys the blob in storage as
@@ -138,12 +138,19 @@ found. This only affects the storage key — the blob's `filename` column
 
 ## Error handling
 
-- If the rekey step fails (e.g. a transient storage error during
-  download/upload/delete), it raises inside the `after_save` callback,
-  aborting the surrounding save transaction. The admin sees a failed save
-  rather than silently keeping a file under its old random key. Acceptable
-  here because this is a low-volume, admin-only path — failing loudly beats
-  failing silently.
+- Because the rekey step runs in `after_commit`, the parent record's save
+  has already committed by the time it runs — a failure here **cannot**
+  roll back the club/course module save or the attachment itself (there is
+  no surrounding transaction left to abort). If the rekey step fails (e.g. a
+  transient storage error during download/upload/delete), the exception
+  still propagates out of `save`/`save!`, so it's visible in the request's
+  error response/logs, but the record and its attachment are left intact
+  under the blob's original flat key — which still works fine, just isn't
+  organized yet. Since our check is "does the key contain `/`", the next
+  time that record is saved, the callback retries the same blob and
+  organizes it then. No dedicated retry mechanism is needed — this falls
+  out naturally from checking the key's shape rather than tracking "already
+  attempted" state.
 - If the delete of the old key fails *after* the new key has already been
   uploaded and `blob.key` updated, the old file is orphaned in storage
   (wasted space, not user-visible, no dangling reference since nothing
