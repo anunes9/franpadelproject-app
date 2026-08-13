@@ -5,6 +5,7 @@ import { Eyebrow } from '../../components/ui'
 import type { ContentSection, CourseDocument, Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
+  [key: string]: unknown
   courseModule: Module
   sections: ContentSection[]
   exercises: Exercise[]

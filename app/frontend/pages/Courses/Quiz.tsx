@@ -5,6 +5,7 @@ import { AppShell } from '../../components/shell'
 import type { QuizQuestion } from '../../types/dashboard-data'
 
 interface Props {
+  [key: string]: unknown
   id: string
   quiz: QuizQuestion[]
 }

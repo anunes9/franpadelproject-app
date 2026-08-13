@@ -5,6 +5,7 @@ import { AppShell, PageHeader } from '../../components/shell'
 import type { Exercise } from '../../types/dashboard-data'
 
 interface Props {
+  [key: string]: unknown
   days: string[]
   shortDay: Record<string, string>
   defaultPlan: Record<string, string[]>

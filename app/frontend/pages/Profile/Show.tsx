@@ -15,6 +15,7 @@ interface Profile {
 }
 
 interface Props {
+  [key: string]: unknown
   profile: Profile
 }
 

@@ -6,6 +6,7 @@ import { usePage } from '@inertiajs/react'
 import { Card } from '@/components/ui'
 
 interface Props {
+  [key: string]: unknown
   modules: Module[]
 }
 

@@ -6,6 +6,7 @@ import { CategoryFilter, ExerciseCard } from '../../components/ui'
 import type { Exercise } from '../../types/dashboard-data'
 
 interface Props {
+  [key: string]: unknown
   exercises: Exercise[]
 }
 

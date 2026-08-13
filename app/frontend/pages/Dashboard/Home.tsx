@@ -14,6 +14,7 @@ interface CourseStats {
 }
 
 interface Props {
+  [key: string]: unknown
   courseStats: CourseStats
   modules: Module[]
   dashboardUser: DashboardUser

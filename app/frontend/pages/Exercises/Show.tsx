@@ -5,6 +5,7 @@ import { MediaPlaceholder, Topic } from '../../components/ui'
 import type { Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
+  [key: string]: unknown
   exercise: Exercise
   courseModule: Module | null
 }
