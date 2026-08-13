@@ -24,19 +24,9 @@ client.hand = :right
 client.club = club
 client.save!
 
-course_modules_data = JSON.parse(Rails.root.join("docs/courses/beginner.json").read)
-
-course_modules_data.each_with_index do |data, index|
-  CourseModule.find_or_create_by!(slug: data["externalId"]) do |course_module|
-    course_module.level = :beginner
-    course_module.position = index + 1
-    course_module.title = data["title"]["pt"]
-    course_module.description = data["description"]["pt"]
-    course_module.topics = data["topics"]["pt"]
-    course_module.duration = data["duration"]["pt"]
-    course_module.content = data["content"]["pt"]
-  end
-end
+require "rake"
+Rails.application.load_tasks unless Rake::Task.task_defined?("course_modules:import")
+Rake::Task["course_modules:import"].execute
 
 progress_by_slug = {
   "module-1" => { status: :done, progress: 100 },
