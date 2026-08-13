@@ -44,5 +44,8 @@ module FranPadelAcademy
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
+
+    # Insert first so it can reject scanner requests before they reach asset serving or routing.
+    config.middleware.insert_before 0, Rack::Attack
   end
 end

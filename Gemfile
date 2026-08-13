@@ -54,3 +54,6 @@ gem "vite_rails", "~> 3.11"
 
 # Admin panel for managing users [https://activeadmin.info]
 gem "activeadmin"
+
+# Blocks/throttles scanner and bot traffic before it reaches the app [https://github.com/rack/rack-attack]
+gem "rack-attack"
