@@ -10,9 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_11_185942) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_103802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.string "description", null: false
+    t.string "duration", null: false
+    t.integer "level", default: 0, null: false
+    t.integer "position", null: false
+    t.string "slug", null: false
+    t.string "title", null: false
+    t.jsonb "topics", default: [], null: false
+    t.datetime "updated_at", null: false
+    t.index ["level", "position"], name: "index_course_modules_on_level_and_position"
+    t.index ["slug"], name: "index_course_modules_on_slug", unique: true
+  end
+
+  create_table "user_module_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_module_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "progress", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["course_module_id"], name: "index_user_module_progresses_on_course_module_id"
+    t.index ["user_id", "course_module_id"], name: "index_user_module_progresses_on_user_and_course_module", unique: true
+    t.index ["user_id"], name: "index_user_module_progresses_on_user_id"
+  end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -22,4 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_11_185942) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
+
+  add_foreign_key "user_module_progresses", "course_modules"
+  add_foreign_key "user_module_progresses", "users"
 end
