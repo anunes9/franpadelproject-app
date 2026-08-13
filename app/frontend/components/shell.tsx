@@ -1,6 +1,13 @@
-import { Book02Icon, Calendar03Icon, Dumbbell02Icon, Home01Icon, User03Icon } from '@hugeicons/core-free-icons'
+import {
+  Book02Icon,
+  Calendar03Icon,
+  Dumbbell02Icon,
+  Home01Icon,
+  Logout03Icon,
+  User03Icon,
+} from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Link, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import type { DashboardUser } from '../types/dashboard-data'
 
@@ -14,6 +21,10 @@ const NAV = [
 
 const isActive = (pathname: string, href: string) =>
   href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
+
+function handleSignOut() {
+  router.delete('/users/sign_out')
+}
 
 function Sidebar() {
   const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
@@ -40,6 +51,14 @@ function Sidebar() {
             {item.label}
           </Link>
         ))}
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="flex items-center gap-2.5 rounded-lg bg-danger px-3 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-danger/90"
+        >
+          <HugeiconsIcon icon={Logout03Icon} size={18} strokeWidth={1.5} className="shrink-0" />
+          Sign out
+        </button>
       </nav>
       <div className="mt-auto flex items-center gap-2.5 border-t border-paper/10 pt-4">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-[13px] font-bold text-ink">
