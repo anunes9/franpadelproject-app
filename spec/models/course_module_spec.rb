@@ -101,6 +101,35 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
+  describe "organized document storage" do
+    it "stores a document under course_modules/{slug}/documents/{filename}" do
+      course_module = create(:course_module, slug: "beginner-101")
+      course_module.documents.attach(io: StringIO.new("pdf"), filename: "syllabus.pdf", content_type: "application/pdf")
+
+      expect(course_module.documents.first.blob.key).to eq("course_modules/beginner-101/documents/syllabus.pdf")
+    end
+
+    it "suffixes the key when two documents share the same filename" do
+      course_module = create(:course_module, slug: "beginner-101")
+      course_module.documents.attach(io: StringIO.new("pdf one"), filename: "syllabus.pdf", content_type: "application/pdf")
+      course_module.documents.attach(io: StringIO.new("pdf two"), filename: "syllabus.pdf", content_type: "application/pdf")
+
+      keys = course_module.documents.map { |document| document.blob.key }
+      expect(keys).to contain_exactly(
+        "course_modules/beginner-101/documents/syllabus.pdf",
+        "course_modules/beginner-101/documents/syllabus-2.pdf"
+      )
+    end
+
+    it "organizes documents attached through the new_documents= writer used by the admin form" do
+      course_module = create(:course_module, slug: "beginner-101")
+
+      course_module.new_documents = [{ io: StringIO.new("pdf"), filename: "handout.pdf", content_type: "application/pdf" }]
+
+      expect(course_module.documents.first.blob.key).to eq("course_modules/beginner-101/documents/handout.pdf")
+    end
+  end
+
   describe "#complete_for!" do
     it "marks the module done and full progress for the user" do
       user = create(:user)

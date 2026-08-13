@@ -1,8 +1,11 @@
 class CourseModule < ApplicationRecord
+  include OrganizesAttachments
+
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
 
   has_many :user_module_progresses, dependent: :destroy
   has_many_attached :documents
+  organizes_attachment :documents, folder: -> { "course_modules/#{slug}/documents" }
 
   validates :slug, :title, :description, :duration, presence: true
   validates :slug, uniqueness: true
