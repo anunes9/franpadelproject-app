@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { AppShell } from '../../components/shell'
 import type { QuizQuestion } from '../../types/dashboard-data'
+import { useTranslation } from '@/i18n/useTranslation'
 
 interface Props {
   [key: string]: unknown
@@ -12,6 +13,7 @@ interface Props {
 
 function Quiz() {
   const { id, quiz } = usePage<Props>().props
+  const { t } = useTranslation()
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [submitted, setSubmitted] = useState(false)
@@ -33,18 +35,18 @@ function Quiz() {
         <div className="mx-auto flex max-w-[720px] flex-col gap-5">
           <div className="flex flex-col gap-2 rounded-[18px] bg-ink p-6 text-paper">
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-ink-mute">
-              Knowledge check
+              {t('courses.quiz.knowledgeCheckLabel')}
             </span>
             <div className="flex items-baseline gap-3">
               <span className="text-[46px] font-extrabold tracking-[-0.03em]">
                 {Math.round((score / quiz.length) * 100)}%
               </span>
               <span className="text-[15px] text-ink-mute">
-                {score} / {quiz.length} correct
+                {t('courses.quiz.correctCount', { score, total: quiz.length })}
               </span>
             </div>
             <span className={'text-sm ' + (passed ? 'text-teal' : 'text-[#E2A87A]')}>
-              {passed ? 'Passed — module marked complete.' : 'Below 75% — review the material and try again.'}
+              {passed ? t('courses.quiz.passedMessage') : t('courses.quiz.failedMessage')}
             </span>
           </div>
 
@@ -58,8 +60,12 @@ function Quiz() {
                     <div className="text-[13px] text-teal-deep">✓ {q.options[answers[i]]}</div>
                   ) : (
                     <div className="flex flex-col gap-1">
-                      <div className="text-[13px] text-danger">✗ {q.options[answers[i]] ?? 'Not answered'}</div>
-                      <div className="text-[13px] text-muted">Correct: {q.options[q.correct]}</div>
+                      <div className="text-[13px] text-danger">
+                        ✗ {q.options[answers[i]] ?? t('courses.quiz.notAnswered')}
+                      </div>
+                      <div className="text-[13px] text-muted">
+                        {t('courses.quiz.correctLabel', { answer: q.options[q.correct] })}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -73,13 +79,13 @@ function Quiz() {
               onClick={reset}
               className="flex-1 rounded-full border border-line bg-white py-3.5 text-[15px] font-semibold text-ink"
             >
-              Retake
+              {t('courses.quiz.retake')}
             </button>
             <Link
               href="/dashboard/courses"
               className="flex-1 rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper"
             >
-              Next module
+              {t('courses.quiz.nextModule')}
             </Link>
           </div>
         </div>
@@ -94,15 +100,15 @@ function Quiz() {
           <div className="flex items-center justify-between">
             {index === 0 ? (
               <Link href={'/dashboard/courses/' + id} className="text-[13px] text-muted">
-                ← Back
+                {t('common.back')}
               </Link>
             ) : (
               <button type="button" onClick={() => setIndex(index - 1)} className="text-[13px] text-muted">
-                ← Back
+                {t('common.back')}
               </button>
             )}
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-              Question {index + 1} of {quiz.length}
+              {t('courses.quiz.questionProgress', { current: index + 1, total: quiz.length })}
             </span>
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-[#E9EDE9]">
@@ -144,7 +150,11 @@ function Quiz() {
             (picked === undefined ? 'bg-[#E9EDE9] text-[#A3B0B7]' : 'bg-ink text-paper')
           }
         >
-          {picked === undefined ? 'Select an answer' : index === quiz.length - 1 ? 'Submit' : 'Continue'}
+          {picked === undefined
+            ? t('courses.quiz.selectAnAnswer')
+            : index === quiz.length - 1
+              ? t('courses.quiz.submit')
+              : t('courses.quiz.continue')}
         </button>
       </div>
     </div>
