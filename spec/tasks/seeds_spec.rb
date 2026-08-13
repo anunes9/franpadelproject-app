@@ -25,4 +25,19 @@ RSpec.describe "db/seeds.rb" do
     expect(progress.status).to eq("current")
     expect(progress.progress).to eq(40)
   end
+
+  it "creates one club matching today's hardcoded values" do
+    expect(Club.count).to eq(1)
+    expect(Club.first.name).to eq("Padel Clube Lisboa")
+  end
+
+  it "gives the client user a real name, age, level, hand, and club" do
+    client = User.find_by(email: "client@example.com")
+
+    expect(client.name).to eq("Miguel Santos")
+    expect(client.age).to eq(34)
+    expect(client.level).to eq("beginner")
+    expect(client.hand).to eq("right")
+    expect(client.club.name).to eq("Padel Clube Lisboa")
+  end
 end

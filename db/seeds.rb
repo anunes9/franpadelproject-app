@@ -1,17 +1,28 @@
-User.find_or_create_by!(email: "admin@example.com") do |user|
-  user.password = "password123"
-  user.role = :admin
+club = Club.find_or_create_by!(name: "Padel Clube Lisboa") do |c|
+  c.location = "Lisboa, Portugal"
 end
 
-User.find_or_create_by!(email: "sales@example.com") do |user|
-  user.password = "password123"
-  user.role = :sales
-end
+admin = User.find_or_initialize_by(email: "admin@example.com")
+admin.password = "password123" if admin.new_record?
+admin.role = :admin
+admin.name = "Admin User"
+admin.save!
 
-User.find_or_create_by!(email: "client@example.com") do |user|
-  user.password = "password123"
-  user.role = :client
-end
+sales = User.find_or_initialize_by(email: "sales@example.com")
+sales.password = "password123" if sales.new_record?
+sales.role = :sales
+sales.name = "Sales User"
+sales.save!
+
+client = User.find_or_initialize_by(email: "client@example.com")
+client.password = "password123" if client.new_record?
+client.role = :client
+client.name = "Miguel Santos"
+client.age = 34
+client.level = :beginner
+client.hand = :right
+client.club = club
+client.save!
 
 course_modules_data = JSON.parse(Rails.root.join("docs/courses/beginner.json").read)
 
