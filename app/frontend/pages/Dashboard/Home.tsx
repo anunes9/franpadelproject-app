@@ -4,6 +4,7 @@ import { AppShell, PageHeader } from '../../components/shell'
 import { Card, Eyebrow } from '../../components/ui'
 import type { DashboardUser, Module } from '../../types/dashboard-data'
 import { ModuleCard } from '@/components/ui/ModuleCard'
+import { useTranslation } from '@/i18n/useTranslation'
 
 interface CourseStats {
   progress: number
@@ -21,43 +22,53 @@ interface Props {
 }
 
 const WEEK = [
-  { day: 'MON', state: 'done' },
-  { day: 'TUE', state: 'empty' },
-  { day: 'WED', state: 'today' },
-  { day: 'THU', state: 'planned' },
-  { day: 'FRI', state: 'empty' },
-  { day: 'SAT', state: 'empty' },
+  { day: 'mon', state: 'done' },
+  { day: 'tue', state: 'empty' },
+  { day: 'wed', state: 'today' },
+  { day: 'thu', state: 'planned' },
+  { day: 'fri', state: 'empty' },
+  { day: 'sat', state: 'empty' },
+] as const
+
+const WEEK_PLAN_ROWS = [
+  { day: 'monday', item: 'mondayItem' },
+  { day: 'wednesday', item: 'wednesdayItem' },
+  { day: 'thursday', item: 'thursdayItem' },
 ] as const
 
 function Home() {
   const { courseStats, modules, dashboardUser } = usePage<Props>().props
+  const { t } = useTranslation()
   const current = modules.find((m) => m.status === 'current') ?? modules[0]
 
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
       <div className="mx-auto flex max-w-5xl flex-col gap-7">
-        <PageHeader title={'Good afternoon, ' + dashboardUser.name.split(' ')[0]} />
+        <PageHeader title={t('dashboard.home.greeting', { name: dashboardUser.name.split(' ')[0] })} />
 
         {/*Hero Cards*/}
         <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
           <Card
-            title="Course progress"
+            title={t('dashboard.home.stats.courseProgress')}
             content={`${courseStats.progress}%`}
-            details={`${courseStats.modulesDone} of ${courseStats.modulesTotal} modules complete`}
+            details={t('dashboard.home.stats.modulesCompleteDetail', {
+              done: courseStats.modulesDone,
+              total: courseStats.modulesTotal,
+            })}
             progress={courseStats.progress}
             tone="dark"
           />
 
-          <Card title="Exercises completed" content={courseStats.exercisesDone} />
+          <Card title={t('dashboard.home.stats.exercisesCompleted')} content={courseStats.exercisesDone} />
 
-          <Card title="Average quiz score" content={`${courseStats.averageQuiz}%`} />
+          <Card title={t('dashboard.home.stats.averageQuizScore')} content={`${courseStats.averageQuiz}%`} />
         </div>
 
         {/*Modules*/}
         <div className="grid items-start gap-6 xl:grid-cols-[1fr_320px]">
           {/*In Progress Module*/}
           <div className="flex flex-col gap-3">
-            <Eyebrow>Continue where you left off</Eyebrow>
+            <Eyebrow>{t('dashboard.home.continueEyebrow')}</Eyebrow>
 
             <ModuleCard
               href={'/dashboard/courses/' + current.id}
@@ -65,13 +76,13 @@ function Home() {
               description={current.description}
               progress={current.progress}
               topics={current.topics}
-              pill="in progress"
+              pill={t('common.status.inProgress')}
               variant="index"
             />
 
             {/*All Module*/}
             <div className="mt-3 flex flex-col gap-3">
-              <Eyebrow>Modules</Eyebrow>
+              <Eyebrow>{t('dashboard.home.modulesEyebrow')}</Eyebrow>
 
               {modules.slice(0, 5).map((m) => (
                 <ModuleCard
@@ -81,7 +92,7 @@ function Home() {
                   description={m.description}
                   progress={m.progress}
                   duration={m.duration}
-                  pill={m.progress === 100 ? 'completed' : 'open'}
+                  pill={m.progress === 100 ? t('common.status.completed') : t('common.status.open')}
                   topics={m.topics}
                   variant="index"
                 />
@@ -92,10 +103,10 @@ function Home() {
           {/*Plan for this week*/}
           <div className="flex flex-col gap-3">
             <div className="flex items-baseline justify-between">
-              <Eyebrow>This week</Eyebrow>
+              <Eyebrow>{t('dashboard.home.thisWeekEyebrow')}</Eyebrow>
 
               <Link href="/dashboard/plan" className="text-[13px] font-semibold">
-                Plan
+                {t('dashboard.home.planLink')}
               </Link>
             </div>
 
@@ -111,7 +122,7 @@ function Home() {
                   <div
                     className={'font-dash-mono text-[10px] ' + (d.state === 'today' ? 'text-ink-mute' : 'text-muted')}
                   >
-                    {d.day}
+                    {t(`common.days.short.${d.day}`)}
                   </div>
                   <div
                     className={
@@ -124,15 +135,11 @@ function Home() {
             </div>
 
             <div className="hidden flex-col gap-3.5 rounded-[18px] border border-line bg-white p-[18px] lg:flex">
-              {[
-                ['Monday', 'Slice serve, elbow above 90º · Technical'],
-                ['Wednesday', 'Traffic light stop drill · Technical'],
-                ['Thursday', 'Glass exit, dominant side · Tactical'],
-              ].map(([day, item]) => (
-                <div key={day} className="flex flex-col gap-1.5">
-                  <span className="text-[13px] font-semibold text-ink">{day}</span>
+              {WEEK_PLAN_ROWS.map((row) => (
+                <div key={row.day} className="flex flex-col gap-1.5">
+                  <span className="text-[13px] font-semibold text-ink">{t(`common.days.long.${row.day}`)}</span>
                   <div className="rounded-[10px] border border-dashed border-[#C9D2CD] px-3 py-2.5 text-[13px] text-[#3B4B54]">
-                    {item}
+                    {t(`dashboard.home.weekPlan.${row.item}`)}
                   </div>
                 </div>
               ))}
@@ -140,7 +147,7 @@ function Home() {
                 href="/dashboard/plan"
                 className="rounded-[10px] border border-dashed border-line px-3 py-3.5 text-center text-xs text-[#A3B0B7]"
               >
-                Drag an exercise here
+                {t('dashboard.home.weekPlan.dragExerciseHere')}
               </Link>
             </div>
           </div>
