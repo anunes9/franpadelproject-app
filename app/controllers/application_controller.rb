@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
       current_user: current_user && {
         email: current_user.email,
         role: current_user.role
-      }
+      },
+      locale: current_user&.locale || "pt"
     }
   end
 end

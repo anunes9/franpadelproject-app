@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get "/dashboard/exercises/:ref", to: "exercises#show"
   get "/dashboard/plan", to: "plan#index"
   get "/dashboard/profile", to: "profile#index"
+  patch "/locale", to: "locales#update"
 
   # Wrapped in devise_scope so Devise can resolve request.env["devise.mapping"]
   # for this route — without it, SessionsController#new raises

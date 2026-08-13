@@ -18,4 +18,13 @@ RSpec.describe "Dashboard", type: :request do
     expect(response.body).to include("Real Module")
     expect(response.body).to include("Ana Costa")
   end
+
+  it "shares the signed-in user's locale" do
+    user = create(:user, name: "Ana Costa", locale: :en)
+    sign_in user
+
+    get "/dashboard"
+
+    expect(response.body).to include('"locale":"en"')
+  end
 end

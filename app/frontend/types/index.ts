@@ -3,4 +3,8 @@ export type FlashData = {
   alert?: string
 }
 
-export type SharedProps = {}
+export type Locale = 'pt' | 'en'
+
+export type SharedProps = {
+  locale: Locale
+}

@@ -29,6 +29,11 @@ RSpec.describe "Sessions", type: :request do
     expect(response.body).to include("data-page")
   end
 
+  it "shares the pt locale by default for guests" do
+    get "/"
+    expect(response.body).to include('"locale":"pt"')
+  end
+
   it "redirects an already-authenticated visitor away from the login page" do
     sign_in user
     get "/"
