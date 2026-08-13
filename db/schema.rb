@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_13_122056) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_122334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -79,11 +79,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_122056) do
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "age"
+    t.uuid "club_id"
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.integer "hand"
+    t.integer "level"
+    t.string "name", null: false
     t.integer "role", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.index ["club_id"], name: "index_users_on_club_id"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
@@ -91,4 +97,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_122056) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "user_module_progresses", "course_modules"
   add_foreign_key "user_module_progresses", "users"
+  add_foreign_key "users", "clubs"
 end

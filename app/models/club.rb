@@ -1,5 +1,6 @@
 class Club < ApplicationRecord
   has_one_attached :logo
+  has_many :users, dependent: :nullify
 
   validates :name, presence: true, uniqueness: true
 

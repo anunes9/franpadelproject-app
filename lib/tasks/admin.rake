@@ -11,6 +11,7 @@ namespace :admin do
     user = User.find_or_initialize_by(email: email)
     user.password = password
     user.role = :admin
+    user.name = email.split("@").first if user.name.blank?
 
     if user.save
       puts "Admin user '#{email}' #{user.previously_new_record? ? "created" : "updated"}."

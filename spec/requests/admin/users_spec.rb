@@ -25,7 +25,10 @@ RSpec.describe "Admin users management", type: :request do
   it "creates a user with a password" do
     expect {
       post "/admin/users", params: {
-        user: { email: "new@example.com", role: "client", password: "password123", password_confirmation: "password123" }
+        user: {
+          email: "new@example.com", role: "client", name: "New User",
+          password: "password123", password_confirmation: "password123"
+        }
       }
     }.to change(User, :count).by(1)
 
@@ -55,5 +58,16 @@ RSpec.describe "Admin users management", type: :request do
   it "deletes a user" do
     target = create(:user)
     expect { delete "/admin/users/#{target.id}" }.to change(User, :count).by(-1)
+  end
+
+  it "assigns a user to a club" do
+    club = create(:club, name: "Padel Clube Lisboa")
+    target = create(:user)
+
+    patch "/admin/users/#{target.id}", params: {
+      user: { email: target.email, role: target.role, club_id: club.id, password: "", password_confirmation: "" }
+    }
+
+    expect(target.reload.club).to eq(club)
   end
 end

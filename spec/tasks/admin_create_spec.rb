@@ -26,6 +26,7 @@ RSpec.describe "admin:create rake task" do
 
     user = User.find_by(email: "newadmin@example.com")
     expect(user.role).to eq("admin")
+    expect(user.name).to eq("newadmin")
   end
 
   it "promotes an existing user to admin instead of creating a duplicate" do
