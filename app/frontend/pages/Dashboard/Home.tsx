@@ -30,7 +30,7 @@ const WEEK = [
 
 function Home() {
   const { courseStats, modules, dashboardUser } = usePage<Props>().props
-  const current = modules.find((m) => m.status === 'current')!
+  const current = modules.find((m) => m.status === 'current') ?? modules[0]
 
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
