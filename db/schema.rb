@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_13_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +66,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_130000) do
     t.index ["slug"], name: "index_course_modules_on_slug", unique: true
   end
 
+  create_table "exercise_completions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "exercise_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["exercise_id"], name: "index_exercise_completions_on_exercise_id"
+    t.index ["user_id", "exercise_id"], name: "index_exercise_completions_on_user_and_exercise", unique: true
+    t.index ["user_id"], name: "index_exercise_completions_on_user_id"
+  end
+
+  create_table "exercises", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "category"
+    t.text "content"
+    t.uuid "course_module_id", null: false
+    t.datetime "created_at", null: false
+    t.text "description", null: false
+    t.string "duration"
+    t.string "ref", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_module_id"], name: "index_exercises_on_course_module_id"
+    t.index ["ref"], name: "index_exercises_on_ref", unique: true
+  end
+
   create_table "user_module_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_module_id", null: false
     t.datetime "created_at", null: false
@@ -96,6 +120,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_130000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "exercise_completions", "exercises"
+  add_foreign_key "exercise_completions", "users"
+  add_foreign_key "exercises", "course_modules"
   add_foreign_key "user_module_progresses", "course_modules"
   add_foreign_key "user_module_progresses", "users"
   add_foreign_key "users", "clubs"

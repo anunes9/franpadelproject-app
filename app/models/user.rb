@@ -11,6 +11,7 @@ class User < ApplicationRecord
 
   belongs_to :club, optional: true
   has_many :user_module_progresses, dependent: :destroy
+  has_many :exercise_completions, dependent: :destroy
 
   validates :name, presence: true
 

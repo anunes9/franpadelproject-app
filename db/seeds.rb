@@ -27,6 +27,7 @@ client.save!
 require "rake"
 Rails.application.load_tasks unless Rake::Task.task_defined?("course_modules:import")
 Rake::Task["course_modules:import"].execute
+Rake::Task["exercises:import"].execute
 
 progress_by_slug = {
   "module-1" => { status: :done, progress: 100 },

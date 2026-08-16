@@ -66,6 +66,7 @@ export const pt = {
         modulesCompleteDetail: '{{done}} de {{total}} módulos concluídos',
         exercisesCompleted: 'Exercícios concluídos',
         averageQuizScore: 'Pontuação média nos testes',
+        noData: 'N/D',
       },
       continueEyebrow: 'Continuar onde parou',
       modulesEyebrow: 'Módulos',
@@ -103,6 +104,7 @@ export const pt = {
       exercisesCount: '{{count}} exercícios',
       materialsEyebrow: 'Materiais',
       viewDocument: 'Ver',
+      closeDocument: 'Fechar',
       moduleExercisesTitle: 'Exercícios do módulo',
       moduleExercisesDetail: '{{count}} exercícios · 2 concluídos',
       knowledgeCheckTitle: 'Teste de conhecimentos',
@@ -159,6 +161,7 @@ export const pt = {
     show: {
       mediaPlaceholderSuffix: '{{media}} · marcador de ecrã inteiro',
       defaultModuleLabel: 'Módulo',
+      detailsEyebrow: 'Detalhes',
       markComplete: 'Marcar como concluído',
       addToPlan: 'Adicionar ao plano',
     },

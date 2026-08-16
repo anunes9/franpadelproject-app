@@ -102,12 +102,13 @@ function MobileHeader() {
 function BottomTabs() {
   const { url } = usePage()
   const nav = useNav().filter((n) => n.href !== '/dashboard/plan')
+
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pb-7 pt-2.5 lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pt-2.5 pb-2 lg:hidden">
       {nav.map((item) => {
         const on = isActive(url, item.href)
         return (
-          <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1.5">
+          <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1">
             <HugeiconsIcon
               icon={item.icon}
               size={20}
@@ -126,7 +127,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-paper font-dash-sans">
       <Sidebar />
-      <main className="min-w-0 flex-1 overflow-y-auto pb-28 lg:pb-0">
+      <main className="min-w-0 flex-1 overflow-y-auto pb-28">
         <MobileHeader />
         {children}
       </main>

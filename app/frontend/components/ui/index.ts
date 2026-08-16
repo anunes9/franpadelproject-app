@@ -1,5 +1,6 @@
 export { Card } from './Card'
 export { CategoryFilter } from './CategoryFilter'
+export { DocumentViewerModal } from './DocumentViewerModal'
 export { ExerciseCard } from './ExerciseCard'
 export { Eyebrow } from './Eyebrow'
 export { MediaPlaceholder } from './MediaPlaceholder'

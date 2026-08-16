@@ -64,6 +64,7 @@ export const en = {
         modulesCompleteDetail: '{{done}} of {{total}} modules complete',
         exercisesCompleted: 'Exercises completed',
         averageQuizScore: 'Average quiz score',
+        noData: 'N/A',
       },
       continueEyebrow: 'Continue where you left off',
       modulesEyebrow: 'Modules',
@@ -101,6 +102,7 @@ export const en = {
       exercisesCount: '{{count}} exercises',
       materialsEyebrow: 'Materials',
       viewDocument: 'View',
+      closeDocument: 'Close',
       moduleExercisesTitle: 'Module exercises',
       moduleExercisesDetail: '{{count}} drills · 2 completed',
       knowledgeCheckTitle: 'Knowledge check',
@@ -157,6 +159,7 @@ export const en = {
     show: {
       mediaPlaceholderSuffix: '{{media}} · full-screen media placeholder',
       defaultModuleLabel: 'Module',
+      detailsEyebrow: 'Details',
       markComplete: 'Mark complete',
       addToPlan: 'Add to plan',
     },

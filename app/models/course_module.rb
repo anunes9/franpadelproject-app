@@ -4,6 +4,7 @@ class CourseModule < ApplicationRecord
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
 
   has_many :user_module_progresses, dependent: :destroy
+  has_many :exercises, -> { order(:ref) }, dependent: :destroy
   has_many_attached :documents
   organizes_attachment :documents, folder: -> { "course_modules/#{slug}/documents" }
 
@@ -82,6 +83,21 @@ class CourseModule < ApplicationRecord
     progresses = UserModuleProgress.where(user: user, course_module_id: modules.map(&:id))
                                     .index_by(&:course_module_id)
     modules.map { |m| m.as_dashboard_json(progresses[m.id]) }
+  end
+
+  # exercisesDone/averageQuiz have no real tracking yet (exercises and quizzes
+  # aren't backed by database models) -- they stay at 0/nil until that exists.
+  def self.dashboard_stats_for(user)
+    modules_total = count
+    progresses = UserModuleProgress.where(user: user, course_module_id: pluck(:id))
+
+    {
+      progress: modules_total.zero? ? 0 : (progresses.sum(:progress).to_f / modules_total).round,
+      modulesDone: progresses.done.count,
+      modulesTotal: modules_total,
+      exercisesDone: 0,
+      averageQuiz: nil
+    }
   end
 
   def self.ransackable_attributes(_auth_object = nil)

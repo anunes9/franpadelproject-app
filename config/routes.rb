@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   patch "/dashboard/courses/:id/complete", to: "courses#complete"
   get "/dashboard/courses/:id/quiz", to: "courses#quiz"
   get "/dashboard/exercises", to: "exercises#index"
-  get "/dashboard/exercises/:ref", to: "exercises#show"
+  get "/dashboard/exercises/:ref", to: "exercises#show", format: false, constraints: { ref: /[^\/]+/ }
+  patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }
   get "/dashboard/plan", to: "plan#index"
   get "/dashboard/profile", to: "profile#index"
   patch "/locale", to: "locales#update"

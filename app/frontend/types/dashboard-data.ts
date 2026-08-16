@@ -31,6 +31,7 @@ export interface Exercise {
   category: 'Technical' | 'Tactical'
   media: 'VIDEO' | 'IMAGE' | 'GIF'
   description: string
+  content: string | null
   moduleId: string
   duration: string
 }

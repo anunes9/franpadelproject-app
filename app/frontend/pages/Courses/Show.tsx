@@ -1,7 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
 import { AppShell } from '../../components/shell'
-import { Eyebrow } from '../../components/ui'
+import { DocumentViewerModal, Eyebrow } from '../../components/ui'
 import type { ContentSection, CourseDocument, Exercise, Module } from '../../types/dashboard-data'
 import { useTranslation } from '@/i18n/useTranslation'
 import type { TranslationKey } from '@/i18n/translations'
@@ -25,20 +25,21 @@ function Show() {
   const { courseModule, sections, exercises, documents } = usePage<Props>().props
   const { t } = useTranslation()
   const [completing, setCompleting] = useState(false)
+  const [viewingDocument, setViewingDocument] = useState<CourseDocument | null>(null)
 
   function handleComplete() {
     setCompleting(true)
     router.patch(
       `/dashboard/courses/${courseModule.id}/complete`,
       {},
-      { preserveScroll: true, onFinish: () => setCompleting(false) },
+      { preserveScroll: true, onFinish: () => setCompleting(false) }
     )
   }
 
   return (
     <div>
       <div className="bg-ink px-5 pb-6 pt-6 text-paper lg:px-10 lg:pb-10 lg:pt-9">
-        <div className="mx-auto flex max-w-[880px] flex-col gap-3.5">
+        <div className="mx-auto flex max-w-220 flex-col gap-3.5">
           <Link href="/dashboard/courses" className="text-[13px] text-ink-mute hover:text-paper">
             {t('courses.show.backLink')}
           </Link>
@@ -69,19 +70,18 @@ function Show() {
             <div className="flex flex-col gap-2">
               <Eyebrow>{t('courses.show.materialsEyebrow')}</Eyebrow>
               {documents.map((doc) => (
-                <a
+                <button
                   key={doc.id}
-                  href={doc.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 transition-colors hover:border-teal"
+                  type="button"
+                  onClick={() => setViewingDocument(doc)}
+                  className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 text-left transition-colors hover:border-teal"
                 >
                   <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">
                     {documentKind(doc.contentType, t)}
                   </span>
                   <span className="flex-1 text-sm text-ink">{doc.filename}</span>
                   <span className="text-xs text-muted">{t('courses.show.viewDocument')}</span>
-                </a>
+                </button>
               ))}
             </div>
           )}
@@ -144,6 +144,14 @@ function Show() {
           )}
         </div>
       </div>
+
+      {viewingDocument && (
+        <DocumentViewerModal
+          document={viewingDocument}
+          onClose={() => setViewingDocument(null)}
+          closeLabel={t('courses.show.closeDocument')}
+        />
+      )}
     </div>
   )
 }

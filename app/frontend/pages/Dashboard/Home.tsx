@@ -11,7 +11,7 @@ interface CourseStats {
   modulesDone: number
   modulesTotal: number
   exercisesDone: number
-  averageQuiz: number
+  averageQuiz: number | null
 }
 
 interface Props {
@@ -61,7 +61,10 @@ function Home() {
 
           <Card title={t('dashboard.home.stats.exercisesCompleted')} content={courseStats.exercisesDone} />
 
-          <Card title={t('dashboard.home.stats.averageQuizScore')} content={`${courseStats.averageQuiz}%`} />
+          <Card
+            title={t('dashboard.home.stats.averageQuizScore')}
+            content={courseStats.averageQuiz != null ? `${courseStats.averageQuiz}%` : t('dashboard.home.stats.noData')}
+          />
         </div>
 
         {/*Modules*/}

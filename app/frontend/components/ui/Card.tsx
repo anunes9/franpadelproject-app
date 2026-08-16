@@ -20,7 +20,7 @@ export function Card({
       <div className="flex flex-col gap-4">
         {title && <span className="font-dash-mono text-sm uppercase tracking-[0.12em] text-ink-mute">{title}</span>}
 
-        {content && (
+        {content != null && content !== '' && (
           <span
             className={`text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] ${tone === 'light' ? 'text-ink' : ''}`}
           >
@@ -29,11 +29,11 @@ export function Card({
         )}
       </div>
 
-      {(details || progress) && (
+      {(details || progress != null) && (
         <div className="flex flex-col gap-4">
           {details && <span className="text-sm text-ink-mute">{details}</span>}
 
-          {progress && <ProgressBar value={progress} tone="dark" />}
+          {progress != null && <ProgressBar value={progress} tone="dark" />}
         </div>
       )}
     </div>

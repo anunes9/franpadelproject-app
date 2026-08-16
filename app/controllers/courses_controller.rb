@@ -8,7 +8,7 @@ class CoursesController < DashboardController
     return head :not_found unless course_module
 
     progress = UserModuleProgress.find_by(user: current_user, course_module: course_module)
-    exercises = DashboardData::EXERCISES.select { |e| e[:moduleId] == course_module.slug }
+    exercises = course_module.exercises.map { |e| e.as_dashboard_json(current_user) }
 
     render inertia: "Courses/Show", props: {
       courseModule: course_module.as_dashboard_json(progress),
