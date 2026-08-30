@@ -19,8 +19,10 @@ export function CategoryFilter({ value, onChange }: { value: string; onChange: (
           type="button"
           onClick={() => onChange(c)}
           className={
-            'rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ' +
-            (value === c ? 'border-ink bg-ink text-paper' : 'border-line bg-white text-[#56666F] hover:border-teal')
+            'rounded-full border px-4 py-2 text-[13px] font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-150 ' +
+            (value === c
+              ? 'border-ink bg-ink text-paper shadow-card-dark'
+              : 'border-line bg-white text-muted-strong shadow-card hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:hover:translate-y-0')
           }
         >
           {t(CATEGORY_LABEL_KEY[c])}

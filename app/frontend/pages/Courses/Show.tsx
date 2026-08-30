@@ -12,6 +12,7 @@ interface Props {
   sections: ContentSection[]
   exercises: Exercise[]
   documents: CourseDocument[]
+  quizQuestionCount: number
 }
 
 function documentKind(contentType: string, t: (key: TranslationKey) => string) {
@@ -22,7 +23,7 @@ function documentKind(contentType: string, t: (key: TranslationKey) => string) {
 }
 
 function Show() {
-  const { courseModule, sections, exercises, documents } = usePage<Props>().props
+  const { courseModule, sections, exercises, documents, quizQuestionCount } = usePage<Props>().props
   const { t } = useTranslation()
   const [completing, setCompleting] = useState(false)
   const [viewingDocument, setViewingDocument] = useState<CourseDocument | null>(null)
@@ -74,7 +75,7 @@ function Show() {
                   key={doc.id}
                   type="button"
                   onClick={() => setViewingDocument(doc)}
-                  className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 text-left transition-colors hover:border-teal"
+                  className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 text-left shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
                 >
                   <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">
                     {documentKind(doc.contentType, t)}
@@ -94,7 +95,7 @@ function Show() {
                   {s.items.map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
                       <span className="mt-2 h-[5px] w-[5px] shrink-0 rounded-full bg-teal" />
-                      <span className="text-sm leading-relaxed text-[#3B4B54]">{item}</span>
+                      <span className="text-sm leading-relaxed text-ink-body">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -104,32 +105,37 @@ function Show() {
 
           <Link
             href="/dashboard/exercises"
-            className="flex items-center justify-between rounded-2xl border border-line bg-white p-4 transition-colors hover:border-teal"
+            className="flex items-center justify-between rounded-2xl border border-line bg-white p-4 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
           >
             <span>
               <span className="block text-[15px] font-bold text-ink">{t('courses.show.moduleExercisesTitle')}</span>
               <span className="mt-0.5 block text-[13px] text-muted">
-                {t('courses.show.moduleExercisesDetail', { count: exercises.length })}
+                {t('courses.show.moduleExercisesDetail', {
+                  count: exercises.length,
+                  completed: exercises.filter((e) => e.completed).length,
+                })}
               </span>
             </span>
             <span className="text-lg text-teal-deep">→</span>
           </Link>
 
-          <div className="flex flex-col gap-3 rounded-2xl bg-mist p-[18px]">
+          <div className="flex flex-col gap-3 rounded-2xl bg-mist p-[18px] shadow-card">
             <div>
               <div className="text-[15px] font-bold text-ink">{t('courses.show.knowledgeCheckTitle')}</div>
-              <div className="mt-0.5 text-[13px] text-[#56666F]">{t('courses.show.knowledgeCheckDetail')}</div>
+              <div className="mt-0.5 text-[13px] text-muted-strong">
+                {t('courses.show.knowledgeCheckDetail', { count: quizQuestionCount })}
+              </div>
             </div>
             <Link
               href={'/dashboard/courses/' + courseModule.id + '/quiz'}
-              className="rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper"
+              className="rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper shadow-card-dark transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
             >
               {t('courses.show.startKnowledgeCheck')}
             </Link>
           </div>
 
           {courseModule.status === 'done' ? (
-            <div className="rounded-full border border-line bg-white py-3.5 text-center text-[15px] font-semibold text-muted">
+            <div className="rounded-full border border-line bg-white py-3.5 text-center text-[15px] font-semibold text-muted shadow-card">
               {t('courses.show.moduleCompleted')}
             </div>
           ) : (
@@ -137,7 +143,7 @@ function Show() {
               type="button"
               onClick={handleComplete}
               disabled={completing}
-              className="rounded-full bg-teal-deep py-3.5 text-center text-[15px] font-semibold text-paper transition-opacity disabled:opacity-60"
+              className="rounded-full bg-teal-deep py-3.5 text-center text-[15px] font-semibold text-paper shadow-card-dark transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:opacity-60 motion-reduce:active:scale-100"
             >
               {completing ? t('courses.show.markingComplete') : t('courses.show.markComplete')}
             </button>

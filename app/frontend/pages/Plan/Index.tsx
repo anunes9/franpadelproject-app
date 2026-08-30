@@ -11,6 +11,7 @@ interface Props {
   days: string[]
   defaultPlan: Record<string, string[]>
   exercises: Exercise[]
+  preselectedExercise: string | null
 }
 
 const SHORT_DAY_KEY: Record<string, TranslationKey> = {
@@ -24,11 +25,13 @@ const SHORT_DAY_KEY: Record<string, TranslationKey> = {
 }
 
 function Index() {
-  const { days, defaultPlan, exercises } = usePage<Props>().props
+  const { days, defaultPlan, exercises, preselectedExercise } = usePage<Props>().props
   const { t } = useTranslation()
   const [plan, setPlan] = useState<Record<string, string[]>>(defaultPlan)
   const [dragging, setDragging] = useState<string | null>(null)
-  const [picked, setPicked] = useState<string | null>(null)
+  const [picked, setPicked] = useState<string | null>(() =>
+    preselectedExercise && exercises.some((e) => e.ref === preselectedExercise) ? preselectedExercise : null
+  )
 
   const getExercise = (ref: string) => exercises.find((e) => e.ref === ref)
 
@@ -55,8 +58,10 @@ function Index() {
               type="button"
               onClick={() => setPicked(picked === e.ref ? null : e.ref)}
               className={
-                'whitespace-nowrap rounded-full border px-3.5 py-2 text-[13px] font-semibold ' +
-                (picked === e.ref ? 'border-teal-deep bg-teal-deep text-paper' : 'border-line bg-white text-[#56666F]')
+                'whitespace-nowrap rounded-full border px-3.5 py-2 text-[13px] font-semibold transition-[transform,box-shadow] duration-150 ' +
+                (picked === e.ref
+                  ? 'border-teal-deep bg-teal-deep text-paper shadow-card-dark'
+                  : 'border-line bg-white text-muted-strong shadow-card')
               }
             >
               {e.title}
@@ -66,7 +71,7 @@ function Index() {
 
         <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
           {/* Desktop: draggable library */}
-          <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 lg:flex">
+          <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 shadow-card lg:flex">
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               {t('plan.index.exerciseLibrary')}
             </span>
@@ -107,7 +112,7 @@ function Index() {
                   add(day, dragging)
                   setDragging(null)
                 }}
-                className="flex flex-col gap-2 rounded-[14px] border border-line bg-white p-3 lg:min-h-[320px]"
+                className="flex flex-col gap-2 rounded-[14px] border border-line bg-white p-3 shadow-card lg:min-h-[320px]"
               >
                 <span className="font-dash-mono text-[10px] tracking-[0.1em] text-muted">{t(SHORT_DAY_KEY[day])}</span>
                 {plan[day].map((ref) => {
@@ -120,7 +125,7 @@ function Index() {
                         ev.stopPropagation()
                         remove(day, ref)
                       }}
-                      className="flex items-center justify-between gap-2 rounded-[10px] bg-mist p-2.5 text-left text-xs leading-snug text-ink"
+                      className="flex items-center justify-between gap-2 rounded-[10px] bg-mist p-2.5 text-left text-xs leading-snug text-ink shadow-[0_1px_3px_0_rgba(18,40,63,0.12)]"
                     >
                       <span>{e?.title ?? ref}</span>
                       <span className="text-muted">×</span>
@@ -128,7 +133,7 @@ function Index() {
                   )
                 })}
                 {plan[day].length === 0 ? (
-                  <div className="rounded-[10px] border border-dashed border-line px-2 py-4 text-center text-[11px] text-[#B7C0BA]">
+                  <div className="rounded-[10px] border border-dashed border-line px-2 py-4 text-center text-[11px] text-muted-faint">
                     {t('plan.index.dropHere')}
                   </div>
                 ) : null}

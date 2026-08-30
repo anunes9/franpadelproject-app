@@ -42,7 +42,7 @@ function Sidebar() {
   const nav = useNav()
 
   return (
-    <aside className="hidden lg:flex w-64 shrink-0 flex-col gap-8 bg-ink px-5 py-7">
+    <aside className="relative z-10 hidden w-64 shrink-0 flex-col gap-8 bg-gradient-to-b from-ink-soft to-ink px-5 py-7 shadow-[8px_0_28px_-16px_rgba(4,10,18,0.4)] lg:flex">
       <img
         src="/fran-methodology-logo.png"
         alt={t('common.logoAlt.franMethodology')}
@@ -55,7 +55,9 @@ function Sidebar() {
             href={item.href}
             className={
               'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
-              (isActive(url, item.href) ? 'bg-teal/15 text-paper' : 'text-ink-mute hover:text-paper')
+              (isActive(url, item.href)
+                ? 'bg-teal/15 text-paper shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]'
+                : 'text-ink-mute hover:text-paper')
             }
           >
             <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} className="shrink-0" />
@@ -90,7 +92,7 @@ function MobileHeader() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex items-center justify-between p-2 lg:hidden h-12">
+    <div className="flex h-12 items-center justify-between border-b border-line/80 bg-paper p-2 lg:hidden">
       <img src="/fran-methodology-logo.png" alt={t('common.logoAlt.franMethodology')} className="h-20 w-auto" />
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
         {dashboardUser.initials}
@@ -104,7 +106,7 @@ function BottomTabs() {
   const nav = useNav().filter((n) => n.href !== '/dashboard/plan')
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pt-2.5 pb-2 lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pt-2.5 pb-2 shadow-dock lg:hidden">
       {nav.map((item) => {
         const on = isActive(url, item.href)
         return (
@@ -113,9 +115,9 @@ function BottomTabs() {
               icon={item.icon}
               size={20}
               strokeWidth={1.5}
-              className={on ? 'text-ink' : 'text-[#C9D2CD]'}
+              className={on ? 'text-ink' : 'text-line-strong'}
             />
-            <span className={`text-[11px] font-semibold ${on ? 'text-ink' : 'text-[#C9D2CD]'}`}>{item.tab}</span>
+            <span className={`text-[11px] font-semibold ${on ? 'text-ink' : 'text-line-strong'}`}>{item.tab}</span>
           </Link>
         )
       })}

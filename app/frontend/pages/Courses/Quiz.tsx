@@ -33,7 +33,7 @@ function Quiz() {
     return (
       <div className="px-5 py-6 lg:px-10 lg:py-10">
         <div className="mx-auto flex max-w-[720px] flex-col gap-5">
-          <div className="flex flex-col gap-2 rounded-[18px] bg-ink p-6 text-paper">
+          <div className="flex flex-col gap-2 rounded-[18px] bg-gradient-to-br from-ink-soft to-ink p-6 text-paper shadow-card-dark">
             <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-ink-mute">
               {t('courses.quiz.knowledgeCheckLabel')}
             </span>
@@ -54,7 +54,7 @@ function Quiz() {
             {quiz.map((q, i) => {
               const right = answers[i] === q.correct
               return (
-                <div key={q.q} className="flex flex-col gap-1.5 rounded-[14px] border border-line bg-white px-4 py-3.5">
+                <div key={q.q} className="flex flex-col gap-1.5 rounded-[14px] border border-line bg-white px-4 py-3.5 shadow-card">
                   <div className="text-sm font-semibold leading-snug text-ink">{q.q}</div>
                   {right ? (
                     <div className="text-[13px] text-teal-deep">✓ {q.options[answers[i]]}</div>
@@ -77,13 +77,13 @@ function Quiz() {
             <button
               type="button"
               onClick={reset}
-              className="flex-1 rounded-full border border-line bg-white py-3.5 text-[15px] font-semibold text-ink"
+              className="flex-1 rounded-full border border-line bg-white py-3.5 text-[15px] font-semibold text-ink shadow-card transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
             >
               {t('courses.quiz.retake')}
             </button>
             <Link
               href="/dashboard/courses"
-              className="flex-1 rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper"
+              className="flex-1 rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper shadow-card-dark transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
             >
               {t('courses.quiz.nextModule')}
             </Link>
@@ -111,7 +111,7 @@ function Quiz() {
               {t('courses.quiz.questionProgress', { current: index + 1, total: quiz.length })}
             </span>
           </div>
-          <div className="h-1 overflow-hidden rounded-full bg-[#E9EDE9]">
+          <div className="h-1 overflow-hidden rounded-full bg-track">
             <div
               className="h-full bg-teal-deep transition-all"
               style={{ width: ((index + 1) / quiz.length) * 100 + '%' }}
@@ -130,8 +130,10 @@ function Quiz() {
                 type="button"
                 onClick={() => setAnswers({ ...answers, [index]: i })}
                 className={
-                  'flex items-start gap-3 rounded-[14px] border px-4 py-4 text-left transition-colors ' +
-                  (on ? 'border-ink bg-ink text-paper' : 'border-line bg-white text-ink hover:border-teal')
+                  'flex items-start gap-3 rounded-[14px] border px-4 py-4 text-left transition-[transform,box-shadow,border-color,background-color,color] duration-200 motion-reduce:transition-colors ' +
+                  (on
+                    ? 'border-ink bg-ink text-paper shadow-card-dark'
+                    : 'border-line bg-white text-ink shadow-card hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:hover:translate-y-0')
                 }
               >
                 <span className={'pt-0.5 font-dash-mono text-xs ' + (on ? 'text-teal' : 'text-muted')}>{'ABC'[i]}</span>
@@ -146,8 +148,8 @@ function Quiz() {
           disabled={picked === undefined}
           onClick={() => (index === quiz.length - 1 ? setSubmitted(true) : setIndex(index + 1))}
           className={
-            'rounded-full py-3.5 text-[15px] font-semibold ' +
-            (picked === undefined ? 'bg-[#E9EDE9] text-[#A3B0B7]' : 'bg-ink text-paper')
+            'rounded-full py-3.5 text-[15px] font-semibold transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100 ' +
+            (picked === undefined ? 'bg-track text-muted-soft' : 'bg-ink text-paper shadow-card-dark')
           }
         >
           {picked === undefined

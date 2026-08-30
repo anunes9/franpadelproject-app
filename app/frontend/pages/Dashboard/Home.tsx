@@ -119,7 +119,7 @@ function Home() {
                   key={d.day}
                   className={
                     'flex-1 rounded-xl border py-2.5 text-center ' +
-                    (d.state === 'today' ? 'border-ink bg-ink' : 'border-line bg-white')
+                    (d.state === 'today' ? 'border-ink bg-ink shadow-card-dark' : 'border-line bg-white shadow-card')
                   }
                 >
                   <div
@@ -137,18 +137,18 @@ function Home() {
               ))}
             </div>
 
-            <div className="hidden flex-col gap-3.5 rounded-[18px] border border-line bg-white p-[18px] lg:flex">
+            <div className="hidden flex-col gap-3.5 rounded-[18px] border border-line bg-white p-[18px] shadow-card lg:flex">
               {WEEK_PLAN_ROWS.map((row) => (
                 <div key={row.day} className="flex flex-col gap-1.5">
                   <span className="text-[13px] font-semibold text-ink">{t(`common.days.long.${row.day}`)}</span>
-                  <div className="rounded-[10px] border border-dashed border-[#C9D2CD] px-3 py-2.5 text-[13px] text-[#3B4B54]">
+                  <div className="rounded-[10px] border border-dashed border-line-strong px-3 py-2.5 text-[13px] text-ink-body">
                     {t(`dashboard.home.weekPlan.${row.item}`)}
                   </div>
                 </div>
               ))}
               <Link
                 href="/dashboard/plan"
-                className="rounded-[10px] border border-dashed border-line px-3 py-3.5 text-center text-xs text-[#A3B0B7]"
+                className="rounded-[10px] border border-dashed border-line px-3 py-3.5 text-center text-xs text-muted-soft"
               >
                 {t('dashboard.home.weekPlan.dragExerciseHere')}
               </Link>

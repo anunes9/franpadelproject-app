@@ -28,7 +28,7 @@ export function ModuleCard({
     return (
       <Link
         href={href}
-        className={`flex flex-col gap-2 md:gap-4 rounded-2xl border border-line p-4 transition-colors hover:border-teal ${bgColor}`}
+        className={`flex flex-col gap-2 md:gap-4 rounded-2xl border border-line p-4 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0 ${bgColor}`}
       >
         <div className="flex justify-between items-center">
           <span className="min-w-24 font-dash-mono text-lg font-black uppercase text-ink whitespace-nowrap">
@@ -62,7 +62,7 @@ export function ModuleCard({
   return (
     <Link
       href={href}
-      className={`flex flex-col md:flex-row md:items-center gap-2 md:gap-4 rounded-2xl border border-line p-4 transition-colors hover:border-teal ${bgColor}`}
+      className={`flex flex-col md:flex-row md:items-center gap-2 md:gap-4 rounded-2xl border border-line p-4 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0 ${bgColor}`}
     >
       <div className="flex md:flex-col justify-between items-center">
         <span className="min-w-24 font-dash-mono text-lg font-black uppercase text-ink whitespace-nowrap">{title}</span>

@@ -41,7 +41,10 @@ export default function Login({ errors }: Props) {
             className="mx-auto mb-8"
           />
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl bg-white p-6">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 rounded-2xl bg-white/95 p-6 shadow-float backdrop-blur-sm"
+          >
             {errors.base && (
               <p role="alert" className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
                 {errors.base === 'invalid_credentials' ? t('auth.login.invalidCredentials') : errors.base}
@@ -51,6 +54,8 @@ export default function Login({ errors }: Props) {
               {t('auth.login.emailLabel')}
               <input
                 type="email"
+                name="email"
+                autoComplete="email"
                 value={data.user.email}
                 onChange={(e) => setData('user', { ...data.user, email: e.target.value })}
                 className="rounded-lg border border-line px-3 py-2.5 text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
@@ -60,6 +65,8 @@ export default function Login({ errors }: Props) {
               {t('auth.login.passwordLabel')}
               <input
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={data.user.password}
                 onChange={(e) => setData('user', { ...data.user, password: e.target.value })}
                 className="rounded-lg border border-line px-3 py-2.5 text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
@@ -68,7 +75,7 @@ export default function Login({ errors }: Props) {
             <button
               type="submit"
               disabled={processing}
-              className="mt-2 rounded-full bg-ink py-3 text-[15px] font-semibold text-paper disabled:opacity-60"
+              className="mt-2 rounded-full bg-ink py-3 text-[15px] font-semibold text-paper shadow-card-dark transition-transform duration-150 active:scale-[0.98] disabled:opacity-60 motion-reduce:active:scale-100"
             >
               {processing ? t('auth.login.submitting') : t('auth.login.submit')}
             </button>

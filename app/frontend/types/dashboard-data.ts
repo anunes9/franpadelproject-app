@@ -29,11 +29,12 @@ export interface Exercise {
   ref: string
   title: string
   category: 'Technical' | 'Tactical'
-  media: 'VIDEO' | 'IMAGE' | 'GIF'
+  media: CourseDocument[]
   description: string
   content: string | null
   moduleId: string
   duration: string
+  completed: boolean
 }
 
 export interface QuizQuestion {

@@ -232,6 +232,15 @@ ActiveAdmin.setup do |config|
   #
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
+  #
+  # EasyMDE (vendored -- see app/assets/builds/easymde.min.js and
+  # app/assets/stylesheets/easymde.min.css) powers the Markdown editor on the
+  # Course Module / Exercise "content" fields. admin_content_editor.js wires
+  # it up on any textarea[data-easymde] and must load after easymde.min.js.
+  config.register_stylesheet "easymde.min.css"
+  config.register_stylesheet "admin_custom.css"
+  config.register_javascript "easymde.min.js"
+  config.register_javascript "admin_content_editor.js"
 
   # == CSV options
   #

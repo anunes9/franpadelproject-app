@@ -1,5 +1,5 @@
-import { Link, usePage } from '@inertiajs/react'
-import { Fragment } from 'react'
+import { Link, router, usePage } from '@inertiajs/react'
+import { Fragment, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AppShell } from '../../components/shell'
 import { Eyebrow, MediaPlaceholder, Topic } from '../../components/ui'
@@ -28,18 +28,30 @@ function renderBoldText(text: string) {
 function Show() {
   const { exercise, courseModule } = usePage<Props>().props
   const { t } = useTranslation()
+  const [completing, setCompleting] = useState(false)
+
+  function handleComplete() {
+    setCompleting(true)
+    router.patch(
+      `/dashboard/exercises/${exercise.ref}/complete`,
+      {},
+      { preserveScroll: true, onFinish: () => setCompleting(false) }
+    )
+  }
+
+  const image = exercise.media.find((file) => file.contentType.startsWith('image/'))
 
   return (
     <div>
       <div className="relative">
-        <MediaPlaceholder
-          label={t('exercises.show.mediaPlaceholderSuffix', { media: exercise.media })}
-          tone="dark"
-          className="h-75 lg:h-115"
-        />
+        {image ? (
+          <img src={image.url} alt={exercise.title} className="h-75 w-full object-cover lg:h-115" />
+        ) : (
+          <MediaPlaceholder label={t('exercises.show.mediaPlaceholderSuffix')} tone="dark" className="h-75 lg:h-115" />
+        )}
         <Link
           href="/dashboard/exercises"
-          className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1.5 text-[13px] text-paper"
+          className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1.5 text-[13px] text-paper shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm"
         >
           {t('common.back')}
         </Link>
@@ -54,7 +66,7 @@ function Show() {
             <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-ink lg:text-[32px]">{exercise.title}</h1>
           </div>
 
-          <p className="text-[15px] leading-relaxed text-[#3B4B54]">{exercise.description}</p>
+          <p className="text-[15px] leading-relaxed text-ink-body">{exercise.description}</p>
 
           <div className="flex gap-2">
             <Topic>{courseModule?.title ?? t('exercises.show.defaultModuleLabel')}</Topic>
@@ -64,13 +76,13 @@ function Show() {
           {exercise.content && (
             <div className="flex flex-col gap-2">
               <Eyebrow>{t('exercises.show.detailsEyebrow')}</Eyebrow>
-              <div className="flex flex-col gap-1.5 rounded-2xl border border-line bg-white p-4">
+              <div className="flex flex-col gap-1.5 rounded-2xl border border-line bg-white p-4 shadow-card">
                 {exercise.content
                   .split('\n')
                   .map((line) => line.trim())
                   .filter(Boolean)
                   .map((line) => (
-                    <p key={line} className="text-[15px] leading-relaxed text-[#3B4B54]">
+                    <p key={line} className="text-[15px] leading-relaxed text-ink-body">
                       {renderBoldText(line)}
                     </p>
                   ))}
@@ -79,16 +91,24 @@ function Show() {
           )}
 
           <div className="mt-2 flex gap-2.5">
-            <button
-              type="button"
-              className="flex-1 rounded-full bg-ink py-3.5 text-sm lg:text-base font-semibold text-paper"
-            >
-              {t('exercises.show.markComplete')}
-            </button>
+            {exercise.completed ? (
+              <div className="flex-1 rounded-full border border-line bg-white py-3.5 text-center text-sm font-semibold text-muted shadow-card lg:text-base">
+                {t('exercises.show.completed')}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleComplete}
+                disabled={completing}
+                className="flex-1 rounded-full bg-ink py-3.5 text-sm lg:text-base font-semibold text-paper shadow-card-dark transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:opacity-60 motion-reduce:active:scale-100"
+              >
+                {completing ? t('exercises.show.markingComplete') : t('exercises.show.markComplete')}
+              </button>
+            )}
 
             <Link
-              href="/dashboard/plan"
-              className="rounded-full border border-line bg-white px-5 py-3.5 text-sm lg:text-base font-semibold text-ink"
+              href={`/dashboard/plan?exercise=${exercise.ref}`}
+              className="rounded-full border border-line bg-white px-5 py-3.5 text-sm lg:text-base font-semibold text-ink shadow-card transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
             >
               {t('exercises.show.addToPlan')}
             </Link>

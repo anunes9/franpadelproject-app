@@ -16,7 +16,10 @@ export function MediaPlaceholder({
   return (
     <div
       className={
-        'flex items-end justify-between p-2.5 ' + (tone === 'dark' ? 'bg-ink' : 'bg-[#E7EBE7]') + ' ' + className
+        'relative flex items-end justify-between p-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),inset_0_-28px_32px_-24px_rgba(4,10,18,0.3)] ' +
+        (tone === 'dark' ? 'bg-ink' : 'bg-[#E7EBE7]') +
+        ' ' +
+        className
       }
       style={{ backgroundImage: stripes }}
     >

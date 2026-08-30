@@ -14,7 +14,8 @@ class CoursesController < DashboardController
       courseModule: course_module.as_dashboard_json(progress),
       sections: course_module.sections,
       exercises: exercises,
-      documents: course_module.documents_json
+      documents: course_module.documents_json,
+      quizQuestionCount: DashboardData::QUIZ.length
     }
   end
 

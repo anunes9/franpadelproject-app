@@ -15,7 +15,7 @@ export function Card({
 }) {
   return (
     <div
-      className={`flex flex-col justify-between gap-4 rounded-[18px] p-4 lg:p-6 ${tone === 'light' ? 'border-line bg-white' : 'bg-ink text-paper'}`}
+      className={`flex flex-col justify-between gap-4 rounded-[18px] p-4 lg:p-6 ${tone === 'light' ? 'border border-line bg-white shadow-card' : 'bg-gradient-to-br from-ink-soft to-ink text-paper shadow-card-dark'}`}
     >
       <div className="flex flex-col gap-4">
         {title && <span className="font-dash-mono text-sm uppercase tracking-[0.12em] text-ink-mute">{title}</span>}
