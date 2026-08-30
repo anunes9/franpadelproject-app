@@ -23,6 +23,13 @@ module FranPadelAcademy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
+    # Active Storage forces image/svg+xml into content_types_to_serve_as_binary
+    # by default (blocks inline SVG XSS from arbitrary user uploads). Our
+    # exercise diagrams are curated, non-user-uploaded design assets, so let
+    # them render inline as <img> like any other image.
+    config.active_storage.content_types_to_serve_as_binary -= %w[image/svg+xml]
+    config.active_storage.content_types_allowed_inline += %w[image/svg+xml]
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
