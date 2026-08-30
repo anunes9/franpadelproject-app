@@ -53,7 +53,7 @@ namespace :exercises do
           exercise.media.attach(
             io: downloaded,
             filename: filename,
-            content_type: downloaded.content_type
+            content_type: Marcel::MimeType.for(name: filename)
           )
           puts "  Attached #{field}: #{url}"
         rescue StandardError => e
