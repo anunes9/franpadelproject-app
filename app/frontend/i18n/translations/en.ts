@@ -155,6 +155,10 @@ export const en = {
     index: {
       eyebrow: 'Library',
       title: 'Exercises',
+      allModules: 'All modules',
+      previousPage: 'Previous',
+      nextPage: 'Next',
+      pageOf: 'Page {{page}} of {{pages}}',
     },
     show: {
       mediaPlaceholderSuffix: 'Full-screen media placeholder',

@@ -5,10 +5,70 @@ RSpec.describe "Exercises", type: :request do
 
   before { sign_in user }
 
+  def inertia_props(response)
+    json = response.body[/<script data-page="app" type="application\/json">(.+?)<\/script>/m, 1]
+    JSON.parse(json)["props"]
+  end
+
   it "renders the exercises index" do
     get "/dashboard/exercises"
     expect(response).to have_http_status(200)
     expect(response.body).to include('"component":"Exercises/Index"')
+  end
+
+  describe "GET /dashboard/exercises pagination and filters" do
+    it "paginates exercises 12 per page" do
+      13.times { |n| create(:exercise, ref: "EX-#{n.to_s.rjust(2, '0')}") }
+
+      get "/dashboard/exercises"
+
+      props = inertia_props(response)
+      expect(props["exercises"].length).to eq(12)
+      expect(props["pagination"]).to eq({ "page" => 1, "pages" => 2, "count" => 13 })
+    end
+
+    it "returns the remaining exercises on page 2" do
+      13.times { |n| create(:exercise, ref: "EX-#{n.to_s.rjust(2, '0')}") }
+
+      get "/dashboard/exercises", params: { page: 2 }
+
+      props = inertia_props(response)
+      expect(props["exercises"].length).to eq(1)
+      expect(props["pagination"]["page"]).to eq(2)
+    end
+
+    it "filters by module slug" do
+      module_a = create(:course_module, slug: "module-a")
+      module_b = create(:course_module, slug: "module-b")
+      create(:exercise, ref: "EX-A", course_module: module_a)
+      create(:exercise, ref: "EX-B", course_module: module_b)
+
+      get "/dashboard/exercises", params: { module: "module-a" }
+
+      props = inertia_props(response)
+      expect(props["exercises"].map { |e| e["ref"] }).to eq(["EX-A"])
+      expect(props["pagination"]["count"]).to eq(1)
+    end
+
+    it "filters by category across all pages, not just the current page" do
+      13.times { |n| create(:exercise, ref: "TECH-#{n}", category: :technical) }
+      create(:exercise, ref: "TACT-01", category: :tactical)
+
+      get "/dashboard/exercises", params: { category: "Tactical" }
+
+      props = inertia_props(response)
+      expect(props["exercises"].map { |e| e["ref"] }).to eq(["TACT-01"])
+      expect(props["pagination"]["count"]).to eq(1)
+    end
+
+    it "exposes the list of modules for the filter" do
+      create(:course_module, slug: "module-a", title: "Module A")
+
+      get "/dashboard/exercises"
+
+      props = inertia_props(response)
+      expect(props["modules"]).to include({ "id" => "module-a", "title" => "Module A" })
+    end
   end
 
   it "renders an exercise detail page" do

@@ -37,6 +37,22 @@ export interface Exercise {
   completed: boolean
 }
 
+export interface ExerciseModuleOption {
+  id: string
+  title: string
+}
+
+export interface PaginationInfo {
+  page: number
+  pages: number
+  count: number
+}
+
+export interface ExerciseFilters {
+  category: string
+  module: string
+}
+
 export interface QuizQuestion {
   q: string
   options: string[]

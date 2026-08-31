@@ -1,7 +1,15 @@
 class ExercisesController < DashboardController
   def index
+    scope = Exercise.ordered
+    scope = scope.where(category: Exercise.categories[params[:category].downcase]) if params[:category].present? && params[:category] != "All"
+    scope = scope.joins(:course_module).where(course_modules: { slug: params[:module] }) if params[:module].present? && params[:module] != "All"
+    exercises = scope.page(params[:page]).per(12)
+
     render inertia: "Exercises/Index", props: {
-      exercises: Exercise.ordered.map { |e| e.as_dashboard_json(current_user) }
+      exercises: exercises.map { |e| e.as_dashboard_json(current_user) },
+      modules: CourseModule.ordered.map { |m| { id: m.slug, title: m.title } },
+      pagination: { page: exercises.current_page, pages: exercises.total_pages, count: exercises.total_count },
+      filters: { category: params[:category] || "All", module: params[:module] || "All" }
     }
   end
 

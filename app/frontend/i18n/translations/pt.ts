@@ -157,6 +157,10 @@ export const pt = {
     index: {
       eyebrow: 'Biblioteca',
       title: 'Exercícios',
+      allModules: 'Todos os módulos',
+      previousPage: 'Anterior',
+      nextPage: 'Seguinte',
+      pageOf: 'Página {{page}} de {{pages}}',
     },
     show: {
       mediaPlaceholderSuffix: 'Marcador de ecrã inteiro',
