@@ -19,17 +19,29 @@ interface Profile {
 interface Props {
   [key: string]: unknown
   profile: Profile
+  levelOptions: string[]
+  handOptions: string[]
 }
 
 function Show() {
-  const { profile } = usePage<Props>().props
+  const { profile, levelOptions, handOptions } = usePage<Props>().props
   const { t, locale } = useTranslation()
 
-  const rows: Array<[string, string]> = [
+  const levelLabels: Record<string, string> = {
+    beginner: t('profile.show.levelOption.beginner'),
+    intermediate: t('profile.show.levelOption.intermediate'),
+    advanced: t('profile.show.levelOption.advanced'),
+  }
+  const handLabels: Record<string, string> = {
+    left: t('profile.show.handOption.left'),
+    right: t('profile.show.handOption.right'),
+  }
+
+  const topRows: Array<[string, string]> = [
     [t('profile.show.rowLabel.email'), profile.email],
     [t('profile.show.rowLabel.age'), profile.age ? String(profile.age) : t('profile.show.emptyValue')],
-    [t('profile.show.rowLabel.level'), profile.level ?? t('profile.show.emptyValue')],
-    [t('profile.show.rowLabel.hand'), profile.hand ?? t('profile.show.emptyValue')],
+  ]
+  const bottomRows: Array<[string, string]> = [
     [t('profile.show.rowLabel.club'), profile.club ?? t('profile.show.emptyValue')],
   ]
 
@@ -39,6 +51,10 @@ function Show() {
 
   function handleLocaleChange(next: Locale) {
     router.patch('/locale', { locale: next }, { preserveScroll: true })
+  }
+
+  function handleProfileFieldChange(field: 'level' | 'hand', value: string) {
+    router.patch('/dashboard/profile', { [field]: value }, { preserveScroll: true })
   }
 
   return (
@@ -58,7 +74,43 @@ function Show() {
         </div>
 
         <div className="rounded-[18px] border border-line bg-white px-5 py-2 shadow-card">
-          {rows.map(([label, value]) => (
+          {topRows.map(([label, value]) => (
+            <div key={label} className="flex justify-between border-b border-track py-3.5 last:border-0">
+              <span className="text-sm text-muted">{label}</span>
+              <span className="text-sm text-ink">{value}</span>
+            </div>
+          ))}
+          <div className="flex justify-between border-b border-track py-3.5 last:border-0">
+            <span className="text-sm text-muted">{t('profile.show.rowLabel.level')}</span>
+            <select
+              value={profile.level?.toLowerCase() ?? ''}
+              onChange={(event) => handleProfileFieldChange('level', event.target.value)}
+              className="bg-transparent text-right text-sm text-ink"
+            >
+              {!profile.level && <option value="" disabled />}
+              {levelOptions.map((option) => (
+                <option key={option} value={option}>
+                  {levelLabels[option] ?? option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex justify-between border-b border-track py-3.5 last:border-0">
+            <span className="text-sm text-muted">{t('profile.show.rowLabel.hand')}</span>
+            <select
+              value={profile.hand?.toLowerCase() ?? ''}
+              onChange={(event) => handleProfileFieldChange('hand', event.target.value)}
+              className="bg-transparent text-right text-sm text-ink"
+            >
+              {!profile.hand && <option value="" disabled />}
+              {handOptions.map((option) => (
+                <option key={option} value={option}>
+                  {handLabels[option] ?? option}
+                </option>
+              ))}
+            </select>
+          </div>
+          {bottomRows.map(([label, value]) => (
             <div key={label} className="flex justify-between border-b border-track py-3.5 last:border-0">
               <span className="text-sm text-muted">{label}</span>
               <span className="text-sm text-ink">{value}</span>

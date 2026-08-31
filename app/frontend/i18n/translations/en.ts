@@ -146,6 +146,15 @@ export const en = {
         hand: 'Hand',
         club: 'Club',
       },
+      levelOption: {
+        beginner: 'Beginner',
+        intermediate: 'Intermediate',
+        advanced: 'Advanced',
+      },
+      handOption: {
+        left: 'Left',
+        right: 'Right',
+      },
       emptyValue: '—',
       memberSince: 'Member since {{date}}',
       language: 'Language',

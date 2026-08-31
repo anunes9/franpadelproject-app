@@ -148,6 +148,15 @@ export const pt = {
         hand: 'Mão',
         club: 'Clube',
       },
+      levelOption: {
+        beginner: 'Iniciante',
+        intermediate: 'Intermédio',
+        advanced: 'Avançado',
+      },
+      handOption: {
+        left: 'Esquerda',
+        right: 'Direita',
+      },
       emptyValue: '—',
       memberSince: 'Membro desde {{date}}',
       language: 'Idioma',

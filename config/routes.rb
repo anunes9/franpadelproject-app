@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }
   get "/dashboard/plan", to: "plan#index"
   get "/dashboard/profile", to: "profile#index"
+  patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"
 
   # Wrapped in devise_scope so Devise can resolve request.env["devise.mapping"]
