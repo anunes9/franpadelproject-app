@@ -2,8 +2,8 @@ import { Link, router, usePage } from '@inertiajs/react'
 import { Fragment, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AppShell } from '../../components/shell'
-import { Eyebrow, MediaPlaceholder, Topic } from '../../components/ui'
-import type { Exercise, Module } from '../../types/dashboard-data'
+import { DocumentViewerModal, Eyebrow, MediaPlaceholder, Topic } from '../../components/ui'
+import type { CourseDocument, Exercise, Module } from '../../types/dashboard-data'
 import { useTranslation } from '@/i18n/useTranslation'
 
 interface Props {
@@ -29,6 +29,7 @@ function Show() {
   const { exercise, courseModule } = usePage<Props>().props
   const { t } = useTranslation()
   const [completing, setCompleting] = useState(false)
+  const [viewingImage, setViewingImage] = useState<CourseDocument | null>(null)
 
   function handleComplete() {
     setCompleting(true)
@@ -39,39 +40,48 @@ function Show() {
     )
   }
 
-  const image = exercise.media.find((file) => file.contentType.startsWith('image/'))
+  const images = exercise.media.filter((file) => file.contentType.startsWith('image/'))
 
   return (
     <div>
-      <div className="relative">
-        {image ? (
-          <img src={image.url} alt={exercise.title} className="h-75 w-full object-cover lg:h-115" />
-        ) : (
-          <MediaPlaceholder label={t('exercises.show.mediaPlaceholderSuffix')} tone="dark" className="h-75 lg:h-115" />
-        )}
-        <Link
-          href="/dashboard/exercises"
-          className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1.5 text-[13px] text-paper shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-sm"
-        >
-          {t('common.back')}
-        </Link>
+      <div className="bg-ink px-5 pb-6 pt-6 text-paper lg:px-10 lg:pb-10 lg:pt-9">
+        <div className="mx-auto flex max-w-180 flex-col gap-3.5">
+          <Link href="/dashboard/exercises" className="text-[13px] text-ink-mute hover:text-paper">
+            {t('common.back')}
+          </Link>
+          <div>
+            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-teal">
+              {exercise.category} · {exercise.ref}
+            </div>
+            <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] lg:text-[32px]">{exercise.title}</h1>
+          </div>
+          <div className="flex gap-2">
+            <Topic tone="dark">{courseModule?.title ?? t('exercises.show.defaultModuleLabel')}</Topic>
+            <Topic tone="dark">{exercise.duration}</Topic>
+          </div>
+        </div>
       </div>
 
       <div className="px-5 py-5 lg:px-10 lg:py-8">
         <div className="mx-auto flex max-w-180 flex-col gap-4">
-          <div>
-            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              {exercise.category} · {exercise.ref}
+          {images.length > 0 ? (
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              {images.map((image) => (
+                <button
+                  key={image.id}
+                  type="button"
+                  onClick={() => setViewingImage(image)}
+                  className="aspect-[4/3] overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
+                >
+                  <img src={image.url} alt={exercise.title} className="h-full w-full object-contain" />
+                </button>
+              ))}
             </div>
-            <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-ink lg:text-[32px]">{exercise.title}</h1>
-          </div>
+          ) : (
+            <MediaPlaceholder label={t('exercises.show.mediaPlaceholderSuffix')} className="aspect-[4/3]" />
+          )}
 
           <p className="text-[15px] leading-relaxed text-ink-body">{exercise.description}</p>
-
-          <div className="flex gap-2">
-            <Topic>{courseModule?.title ?? t('exercises.show.defaultModuleLabel')}</Topic>
-            <Topic>{exercise.duration}</Topic>
-          </div>
 
           {exercise.content && (
             <div className="flex flex-col gap-2">
@@ -115,6 +125,14 @@ function Show() {
           </div>
         </div>
       </div>
+
+      {viewingImage && (
+        <DocumentViewerModal
+          document={viewingImage}
+          onClose={() => setViewingImage(null)}
+          closeLabel={t('courses.show.closeDocument')}
+        />
+      )}
     </div>
   )
 }
