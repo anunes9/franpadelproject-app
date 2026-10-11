@@ -3,7 +3,7 @@ class Exercise < ApplicationRecord
 
   enum :category, { technical: 0, tactical: 1 }
 
-  belongs_to :course_module
+  belongs_to :course_module, optional: true
   has_many :exercise_completions, dependent: :destroy
   has_many_attached :media
   organizes_attachment :media, folder: -> { "exercises/#{ref}/media" }
@@ -44,7 +44,7 @@ class Exercise < ApplicationRecord
       description: description,
       content: content,
       media: media_json,
-      moduleId: course_module.slug,
+      moduleId: course_module&.slug,
       completed: user ? completed_for?(user) : false
     }
   end

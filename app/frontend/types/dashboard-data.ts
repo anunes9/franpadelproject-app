@@ -32,7 +32,7 @@ export interface Exercise {
   media: CourseDocument[]
   description: string
   content: string | null
-  moduleId: string
+  moduleId: string | null
   duration: string
   completed: boolean
 }

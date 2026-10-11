@@ -88,6 +88,14 @@ RSpec.describe "Exercises", type: :request do
     expect(response.body).to include('"ref":"exercise-1.20"')
   end
 
+  it "renders a detail page for an exercise without a course module" do
+    create(:exercise, ref: "EX-02", course_module: nil)
+
+    get "/dashboard/exercises/EX-02"
+    expect(response).to have_http_status(200)
+    expect(inertia_props(response)["courseModule"]).to be_nil
+  end
+
   it "404s for an unknown exercise ref" do
     get "/dashboard/exercises/nope"
     expect(response).to have_http_status(:not_found)

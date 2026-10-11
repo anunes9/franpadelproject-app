@@ -17,11 +17,12 @@ class ExercisesController < DashboardController
     exercise = Exercise.find_by(ref: params[:ref])
     return head :not_found unless exercise
 
-    progress = UserModuleProgress.find_by(user: current_user, course_module: exercise.course_module)
+    course_module = exercise.course_module
+    progress = course_module && UserModuleProgress.find_by(user: current_user, course_module: course_module)
 
     render inertia: "Exercises/Show", props: {
       exercise: exercise.as_dashboard_json(current_user),
-      courseModule: exercise.course_module.as_dashboard_json(progress)
+      courseModule: course_module&.as_dashboard_json(progress)
     }
   end
 

@@ -5,6 +5,10 @@ RSpec.describe Exercise, type: :model do
     expect(build(:exercise)).to be_valid
   end
 
+  it "is valid without a course module" do
+    expect(build(:exercise, course_module: nil)).to be_valid
+  end
+
   it "requires a ref" do
     expect(build(:exercise, ref: nil)).not_to be_valid
   end
@@ -106,6 +110,10 @@ RSpec.describe Exercise, type: :model do
         moduleId: course_module.slug,
         completed: false
       )
+    end
+
+    it "leaves moduleId nil when the exercise has no course module" do
+      expect(build(:exercise, course_module: nil).as_dashboard_json).to include(moduleId: nil)
     end
 
     it "leaves category and duration nil when not curated yet" do
