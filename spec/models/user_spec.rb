@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
   end
 
   it "defines the expected role values" do
-    expect(User.roles.keys).to match_array(%w[admin sales client])
+    expect(User.roles.keys).to match_array(%w[admin client])
   end
 
   it "defines the expected level values" do

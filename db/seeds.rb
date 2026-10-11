@@ -8,12 +8,6 @@ admin.role = :admin
 admin.name = "Admin User"
 admin.save!
 
-sales = User.find_or_initialize_by(email: "sales@example.com")
-sales.password = "password123" if sales.new_record?
-sales.role = :sales
-sales.name = "Sales User"
-sales.save!
-
 client = User.find_or_initialize_by(email: "client@example.com")
 client.password = "password123" if client.new_record?
 client.role = :client
