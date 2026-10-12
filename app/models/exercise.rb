@@ -3,7 +3,7 @@ class Exercise < ApplicationRecord
 
   enum :category, { technical: 0, tactical: 1 }
 
-  belongs_to :course_module
+  belongs_to :course_module, optional: true
   has_many :exercise_completions, dependent: :destroy
   has_many_attached :media
   organizes_attachment :media, folder: -> { "exercises/#{ref}/media" }
@@ -35,7 +35,9 @@ class Exercise < ApplicationRecord
     exercise_completions.exists?(user: user)
   end
 
-  def as_dashboard_json(user = nil)
+  # `completed` lets a caller that already knows the answer (see
+  # .dashboard_list) skip the per-Exercise query.
+  def as_dashboard_json(user = nil, completed: nil)
     {
       ref: ref,
       title: title,
@@ -44,9 +46,23 @@ class Exercise < ApplicationRecord
       description: description,
       content: content,
       media: media_json,
-      moduleId: course_module.slug,
-      completed: user ? completed_for?(user) : false
+      moduleId: course_module&.slug,
+      completed: completed.nil? ? (user ? completed_for?(user) : false) : completed
     }
+  end
+
+  # Serializes many Exercises in a fixed number of queries, however many there
+  # are: Modules and media are preloaded and the Client's Exercise Completions
+  # are fetched once.
+  def self.dashboard_list(scope, user)
+    exercises = scope.includes(:course_module).with_attached_media.to_a
+    completed_ids = ExerciseCompletion.where(user: user, exercise_id: exercises.map(&:id)).pluck(:exercise_id).to_set
+    exercises.map { |e| e.as_dashboard_json(user, completed: completed_ids.include?(e.id)) }
+  end
+
+  # The Weekly Plan only needs to name each Exercise.
+  def self.plan_options
+    ordered.pluck(:ref, :title).map { |ref, title| { ref: ref, title: title } }
   end
 
   def self.ransackable_attributes(_auth_object = nil)

@@ -6,7 +6,7 @@ class ExercisesController < DashboardController
     exercises = scope.page(params[:page]).per(12)
 
     render inertia: "Exercises/Index", props: {
-      exercises: exercises.map { |e| e.as_dashboard_json(current_user) },
+      exercises: Exercise.dashboard_list(exercises, current_user),
       modules: CourseModule.ordered.map { |m| { id: m.slug, title: m.title } },
       pagination: { page: exercises.current_page, pages: exercises.total_pages, count: exercises.total_count },
       filters: { category: params[:category] || "All", module: params[:module] || "All" }
@@ -17,11 +17,10 @@ class ExercisesController < DashboardController
     exercise = Exercise.find_by(ref: params[:ref])
     return head :not_found unless exercise
 
-    progress = UserModuleProgress.find_by(user: current_user, course_module: exercise.course_module)
-
+    course_module = exercise.course_module
     render inertia: "Exercises/Show", props: {
       exercise: exercise.as_dashboard_json(current_user),
-      courseModule: exercise.course_module.as_dashboard_json(progress)
+      courseModule: course_module&.as_dashboard_json(course_module.state_for(current_user))
     }
   end
 

@@ -9,3 +9,8 @@ type DotPaths<T> = {
 }[keyof T & string]
 
 export type TranslationKey = DotPaths<typeof en>
+
+// A key whose value is a { one, other } pair, for useTranslation's `tn`.
+export type PluralKey = {
+  [K in TranslationKey]: K extends `${infer Base}.other` ? (`${Base}.one` extends TranslationKey ? Base : never) : never
+}[TranslationKey]

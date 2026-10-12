@@ -26,7 +26,7 @@ ActiveAdmin.register Exercise do
       row :ref
       row :title
       row :category
-      row("Course Module") { link_to exercise.course_module.title, admin_course_module_path(exercise.course_module) }
+      row("Course Module") { exercise.course_module && link_to(exercise.course_module.title, admin_course_module_path(exercise.course_module)) }
       row :duration
       row :description
       row :created_at
@@ -93,7 +93,7 @@ ActiveAdmin.register Exercise do
 
   form do |f|
     f.inputs "Exercise Details" do
-      f.input :course_module, collection: CourseModule.ordered.pluck(:title, :id)
+      f.input :course_module, collection: CourseModule.ordered.pluck(:title, :id), include_blank: true
       f.input :ref
       f.input :title
       f.input :category, as: :select, collection: Exercise.categories.keys, include_blank: true

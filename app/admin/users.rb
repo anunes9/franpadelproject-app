@@ -13,7 +13,7 @@ ActiveAdmin.register User do
 
   filter :email
   # Ransack's role_eq casts the submitted value with a naive #to_i (not
-  # Rails' enum-aware type casting), so a string key like "sales" silently
+  # Rails' enum-aware type casting), so a string key like "client" silently
   # becomes 0 and matches "admin" instead. Submit the enum's real integer
   # values instead of its string keys to avoid that.
   filter :role, as: :select, collection: -> { User.roles.to_a }

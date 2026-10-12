@@ -5,6 +5,10 @@ RSpec.describe Exercise, type: :model do
     expect(build(:exercise)).to be_valid
   end
 
+  it "is valid without a course module" do
+    expect(build(:exercise, course_module: nil)).to be_valid
+  end
+
   it "requires a ref" do
     expect(build(:exercise, ref: nil)).not_to be_valid
   end
@@ -108,6 +112,10 @@ RSpec.describe Exercise, type: :model do
       )
     end
 
+    it "leaves moduleId nil when the exercise has no course module" do
+      expect(build(:exercise, course_module: nil).as_dashboard_json).to include(moduleId: nil)
+    end
+
     it "leaves category and duration nil when not curated yet" do
       exercise = build(:exercise, category: nil, duration: nil)
 
@@ -120,6 +128,47 @@ RSpec.describe Exercise, type: :model do
       create(:exercise_completion, user: user, exercise: exercise)
 
       expect(exercise.as_dashboard_json(user)).to include(completed: true)
+    end
+  end
+
+  describe ".dashboard_list" do
+    it "marks only the given Client's completed Exercises as completed" do
+      user = create(:user)
+      done = create(:exercise, ref: "EX-A")
+      create(:exercise, ref: "EX-B")
+      create(:exercise_completion, user: user, exercise: done)
+      create(:exercise_completion, user: create(:user), exercise: Exercise.find_by(ref: "EX-B"))
+
+      list = Exercise.dashboard_list(Exercise.ordered, user)
+
+      expect(list.map { |e| [e[:ref], e[:completed]] }).to eq([["EX-A", true], ["EX-B", false]])
+    end
+
+    it "uses the same number of queries however many Exercises there are" do
+      user = create(:user)
+      count_queries = lambda do
+        n = 0
+        counter = ->(*, payload) { n += 1 unless payload[:name] == "SCHEMA" || payload[:cached] }
+        ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+          Exercise.dashboard_list(Exercise.ordered, user)
+        end
+        n
+      end
+
+      create_list(:exercise, 2)
+      few = count_queries.call
+      create_list(:exercise, 5)
+
+      expect(count_queries.call).to eq(few)
+    end
+  end
+
+  describe ".plan_options" do
+    it "returns just each Exercise's ref and title, in order" do
+      create(:exercise, ref: "EX-2", title: "Second")
+      create(:exercise, ref: "EX-1", title: "First")
+
+      expect(Exercise.plan_options).to eq([{ ref: "EX-1", title: "First" }, { ref: "EX-2", title: "Second" }])
     end
   end
 end

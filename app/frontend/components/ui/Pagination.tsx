@@ -1,4 +1,5 @@
 import { useTranslation } from '@/i18n/useTranslation'
+import { chipClass } from './styles'
 
 export function Pagination({
   page,
@@ -18,18 +19,18 @@ export function Pagination({
         type="button"
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
-        className="rounded-full border border-line bg-white px-4 py-2 text-[13px] font-semibold text-muted-strong shadow-card transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover disabled:pointer-events-none disabled:opacity-40 motion-reduce:hover:translate-y-0"
+        className={chipClass(false, 'disabled:pointer-events-none disabled:opacity-40')}
       >
         {t('exercises.index.previousPage')}
       </button>
-      <span className="text-[13px] font-medium text-muted-strong">
+      <span className="text-meta font-medium text-muted-strong tabular-nums">
         {t('exercises.index.pageOf', { page, pages })}
       </span>
       <button
         type="button"
         onClick={() => onChange(page + 1)}
         disabled={page >= pages}
-        className="rounded-full border border-line bg-white px-4 py-2 text-[13px] font-semibold text-muted-strong shadow-card transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover disabled:pointer-events-none disabled:opacity-40 motion-reduce:hover:translate-y-0"
+        className={chipClass(false, 'disabled:pointer-events-none disabled:opacity-40')}
       >
         {t('exercises.index.nextPage')}
       </button>

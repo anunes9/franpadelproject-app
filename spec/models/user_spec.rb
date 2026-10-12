@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
   end
 
   it "defines the expected role values" do
-    expect(User.roles.keys).to match_array(%w[admin sales client])
+    expect(User.roles.keys).to match_array(%w[admin client])
   end
 
   it "defines the expected level values" do
@@ -67,10 +67,10 @@ RSpec.describe User, type: :model do
   end
 
   describe "#member_since" do
-    it "formats created_at as an abbreviated month and year" do
+    it "returns created_at as an ISO 8601 date for the client to format" do
       user = create(:user)
       user.update_column(:created_at, Time.zone.local(2026, 3, 15))
-      expect(user.member_since).to eq("Mar 2026")
+      expect(user.member_since).to eq("2026-03-15")
     end
   end
 

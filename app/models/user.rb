@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # :registerable, :recoverable, :rememberable are deferred to a future spec.
   devise :database_authenticatable, :validatable
 
-  enum :role, { admin: 0, sales: 1, client: 2 }
+  enum :role, { admin: 0, client: 2 }
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
   enum :hand, { left: 0, right: 1 }
   enum :locale, { pt: 0, en: 1 }
@@ -19,8 +19,9 @@ class User < ApplicationRecord
     name.to_s.split.first(2).map { |word| word[0] }.join.upcase
   end
 
+  # ISO 8601 date; the client formats it in the Client's language.
   def member_since
-    created_at.strftime("%b %Y")
+    created_at.to_date.iso8601
   end
 
   def dashboard_profile_json

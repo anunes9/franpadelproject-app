@@ -13,13 +13,13 @@ RSpec.describe "Admin users management", type: :request do
   end
 
   it "filters users by role" do
-    create(:user, email: "sales-person@example.com", role: :sales)
+    create(:user, email: "client-person@example.com", role: :client)
     # The rendered filter <select> submits the enum's integer value (see
     # app/admin/users.rb) -- not the string key, which Ransack's role_eq
     # would silently miscast via a naive #to_i.
-    get "/admin/users", params: { q: { role_eq: User.roles["sales"] } }
+    get "/admin/users", params: { q: { role_eq: User.roles["client"] } }
     expect(response).to have_http_status(200)
-    expect(response.body).to include("sales-person@example.com")
+    expect(response.body).to include("client-person@example.com")
   end
 
   it "creates a user with a password" do
@@ -39,10 +39,10 @@ RSpec.describe "Admin users management", type: :request do
     target = create(:user, role: :client)
 
     patch "/admin/users/#{target.id}", params: {
-      user: { email: target.email, role: "sales", password: "", password_confirmation: "" }
+      user: { email: target.email, role: "admin", password: "", password_confirmation: "" }
     }
 
-    expect(target.reload.role).to eq("sales")
+    expect(target.reload.role).to eq("admin")
   end
 
   it "leaves a user's existing password valid when editing without touching it" do

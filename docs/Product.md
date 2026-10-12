@@ -1,434 +1,164 @@
-# Fran Padel Project - Product Documentation
+# Fran Padel Project - Product
+
+<!-- impeccable:product-schema 1 -->
+
+Terms in **bold capitals** are defined in [GLOSSARY.md](../GLOSSARY.md). Features marked _(not built yet)_ are agreed but not yet in the app.
 
 ## Overview
 
-**Fran Padel Project** is a comprehensive online learning platform designed specifically for padel education and training. The application provides a structured, progressive learning experience that helps players of all skill levels master padel techniques, tactics, and strategies through interactive courses, exercises, assessments, and personalized training planning.
+Fran Padel Project is an online learning platform for padel. Clients work through structured **Courses** of theory (**Modules**) and on-court drills (**Exercises**), plan their week of training, and track how far they've got. The whole platform, interface and content alike, is available in Portuguese and English.
 
-## Mission & Focus
+## Platform
 
-The platform focuses on delivering high-quality padel education through:
+web
 
-- **Structured Learning Paths**: Progressive courses organized by skill level (Beginner, Intermediate, Advanced)
-- **Practical Application**: Hands-on exercises and drills that reinforce theoretical knowledge
-- **Personalized Training**: Weekly planning tools that help students organize their practice sessions
-- **Progress Tracking**: Comprehensive tracking of learning progress across all course modules and exercises
-- **Assessment & Certification**: Knowledge checks and certification pathways to validate learning
-- **Multilingual Support**: Full localization in Portuguese and English to serve a global audience
+## Positioning
 
-## Target Audience
+The platform teaches **Fran's own methodology** for padel: one coach's structured method, delivered in a fixed order. Modules unlock in sequence, and theory, on-court Exercises and the Coach Module all follow that method. A generic padel course or a YouTube drill collection can't honestly claim to be the Fran Methodology.
 
-- **Beginner Players**: New to padel, learning fundamental techniques and game basics
-- **Intermediate Players**: Looking to refine skills and learn advanced tactics
-- **Coaches & Instructors**: Using the platform as a teaching resource
-- **Padel Clubs**: Providing structured training programs for members
-- **Individual Learners**: Self-paced learning for skill development
+## Operating Context
 
-## Core Features
+- **Desktop or laptop**: studying Modules, reading explanations and viewing Resources at a desk.
+- **Phone, off court**: reading Modules and planning the week at home or while commuting.
+- **Coach showing players**: a Coach opens an Exercise on a phone or tablet and shows it to a group, so Exercise content has to read at arm's length and to several people at once.
 
-### 1. Authentication & User Management
+On-court, mid-session use on the Client's own phone is not a confirmed primary scene.
 
-#### Authentication Methods
+## Brand Commitments
 
-- **Email/Password Authentication**: Traditional login with email and password
-- **OTP (One-Time Password)**: Passwordless login via email verification codes
-- **User Invitations**: Admin-controlled user account creation via invitation links
-- **Password Reset**: Secure password recovery via email links
-- **Email Verification**: Account verification through email confirmation
+- **Fran Padel Project** is the brand.
+- **Fran Methodology** is the teaching method (`public/fran-methodology-logo.png`, shown in the app sidebar).
+- **Fran Padel Academy** is this learning platform (page title, `application-name`, Open Graph name).
+- Portuguese is the primary language (`og:locale pt_PT`), and English is secondary. Every interface string and every piece of content exists in both.
 
-#### User Roles
+## Who it's for
 
-- **Client**: Standard user with access to courses and learning materials
-- **Sales**: Sales representatives with extended access
-- **Admin**: Full administrative access to manage content and users
+- **Players** of every Level, learning to play padel through the Courses.
+- **Coaches**, using the platform as a teaching resource and following the same Courses.
+- **Clubs**, whose **Club Manager** follows the progress of the club's Players and Coaches _(not built yet)_.
 
-#### User Profile Features
+## People and access
 
-- **Personal Information**: Full name, email, avatar
-- **Club Affiliation**: Club name and club avatar/logo
-- **Member Since**: Account creation date tracking
-- **Language Preferences**: User-selectable interface language
-- **Progress Overview**: Visual statistics and progress tracking
+- **Client**: a Player, Coach or Club Manager. Clients learn from the platform.
+- **Admin**: manages content and Clients through the admin area.
 
-### 2. Courses & Modules
+Clients sign in with email and password. Accounts are created by Admins.
 
-#### Course Structure
+_(not built yet)_: passwordless sign-in with one-time codes, invitation links, password reset, email verification.
 
-Courses are organized into three skill levels:
+### Profile
 
-- **Beginner Course**: Fundamentals of padel covering basic techniques and tactics
+A Client's profile shows their name, email, age, **Level**, playing hand, **Club** and member-since date, and lets them choose their interface language. A Player's Level is informational only: it never restricts which Courses or Modules they can open.
 
-  - 8+ comprehensive mesociclos (modules)
-  - Topics include: Service, Return, First Volley, Dynamic Balance, Trajectories, Launch techniques
-  - Progressive learning from basic to intermediate concepts
+_(not built yet)_: recording whether a Client is a Player or a Coach.
 
-- **Intermediate Course**: Advanced techniques and progressive transitions
+## Courses and Modules
 
-  - Focus on advanced tactics and strategic play
-  - Building upon beginner fundamentals
+There are three Courses, one per Level:
 
-- **Advanced Course**: (Planned) Master-level techniques and strategies
+- **Beginner**: the fundamentals of padel technique and tactics.
+- **Intermediate**: more advanced technique and tactics, building on Beginner.
+- **Advanced**: currently **Planned** (no Modules yet), shown as coming soon.
 
-#### Module Components
+Each Course is an ordered sequence of Modules (called _mesociclos_ in Portuguese). Every Course includes one **Coach Module** about teaching padel, which every Client sees and completes like any other Module.
 
-Each module (mesociclo) includes:
+A Module has:
 
-- **Title & Description**: Clear module identification and overview
-- **Topics**: Tagged topics covered in the module
-- **Duration**: Estimated time to complete
-- **Presentation**: PDF presentations with detailed instructional content
-- **Additional Resources**: Supporting documents, videos, and materials
-- **Exercises**: Linked practical exercises related to module content
-- **Knowledge Check**: Quiz component to assess understanding
-- **Progress Tracking**: Status indicators (locked, available, in progress, completed)
+- a title, description and estimated duration
+- **Topics** it covers
+- explanations, organised into sections
+- **Resources**: presentations, PDFs, videos and images, viewed inside the app
+- the **Exercises** that belong to it
+- a **Quiz** _(not built yet)_
 
-#### Module Status Management
+### Module status
 
-- **Locked**: Module not yet available (prerequisites not met)
-- **Available**: Ready to be started
-- **In Progress**: Module has been started but not completed
-- **Completed**: Module fully completed with quiz passed
+For each Client, every Module is in exactly one state, worked out from their progress:
 
-### 3. Exercises Library
+| State           | Meaning                                                                     |
+| --------------- | --------------------------------------------------------------------------- |
+| **Locked**      | The previous Module in the Course lacks Module Completion                   |
+| **Available**   | Not Locked, and the Client has no Exercise Completion or Quiz Attempt in it  |
+| **In Progress** | At least one Exercise Completion or Quiz Attempt, but no Module Completion  |
+| Completed       | **Module Completion**                                                       |
 
-#### Exercise Features
+The first Module of each Course is never Locked.
 
-- **Comprehensive Library**: 50+ exercises covering technical and tactical aspects
-- **Exercise Cards**: Visual cards with exercise details
-- **Image Viewing**: Full-screen image viewing for exercise demonstrations
-- **Categorization**: Exercises organized by type (Technical, Tactical)
-- **Exercise Details**: Title, description, external ID, and media
-- **Progress Tracking**: Completion status for each exercise
+## Exercises
 
-#### Exercise Content
+The Exercise library holds the platform's practical drills. Each Exercise has a title, description, step-by-step content, a duration and a gallery of images and videos. An Exercise usually belongs to one Module, but may stand alone in the library.
 
-Each exercise includes:
+Clients browse the library page by page and filter it by Module, and record **Exercise Completion** for any Exercise. Exercise Completion can be undone _(not built yet)_.
 
-- **Title**: Descriptive name
-- **External ID**: Unique identifier for ordering
-- **Description**: Detailed explanation (localized)
-- **Media**: Visual content (images) to support learning
-- **Category**: Classification (Technical, Tactical)
+_(not built yet)_: filtering by Topic.
 
-### 4. Quizzes & Knowledge Checks
+## Quizzes _(not built yet)_
 
-#### Quiz Features
+A Module has at most one Quiz: multiple-choice questions in Portuguese and English.
 
-- **Module Integration**: Quizzes linked to specific course modules
-- **Multiple Choice Questions**: Standard question format
-- **Answer Tracking**: Save and resume quiz attempts
-- **Scoring System**: Percentage-based scoring with pass/fail thresholds
-- **Passing Requirement**: 80% score required to pass
-- **Multiple Attempts**: Ability to retake quizzes
-- **Attempt History**: View previous quiz attempts and scores
-- **Progress Persistence**: Answers saved between sessions
+- Each submission is a **Quiz Attempt** with a score.
+- A Quiz Attempt scoring at least 80% gives a **Quiz Pass**.
+- A Quiz Pass is never lost, whatever later attempts score or however the questions are edited.
+- Clients may retake a Quiz as often as they like.
 
-#### Quiz Functionality
+## Progress
 
-- **Question Management**: Multiple questions per module
-- **Answer Validation**: Ensure all questions answered before submission
-- **Instant Feedback**: Immediate results after submission
-- **Module Completion**: Quiz completion unlocks module completion status
-- **Retry Mechanism**: Ability to review material and retake
+- **Module Completion**: a Quiz Pass (when the Module has a Quiz) plus Exercise Completion of every Exercise currently in the Module. It always reflects the Module's current content, so adding a Quiz or an Exercise can remove it, and undoing an Exercise Completion removes it too, re-locking the following Modules. A Module with neither a Quiz nor Exercises is complete for everyone.
+- **Course Completion**: Module Completion of every Module in a Course that is not Planned.
 
-### 5. Weekly Planning & Training Planner
+The dashboard shows overall progress, Modules completed out of the total, and Exercises completed.
 
-#### Planning Features
+_(not built yet)_: Module Completion worked out as above (today a Module is marked done by hand), the Exercises-completed count, quiz scores, hours practised.
 
-- **Weekly Calendar View**: Visual calendar showing Monday through Friday
-- **Module Scheduling**: Add course modules to specific days
-- **Exercise Scheduling**: Add exercises to specific days
-- **Week Navigation**: Navigate between weeks and years
-- **Item Management**: Add and remove modules/exercises from days
-- **Visual Organization**: Clear day-by-day training schedule
+## Weekly Plan
 
-#### Planning Capabilities
+A Client's **Weekly Plan** places Modules and Exercises on the days of a week. It is an intention only: planning something never records progress and never unlocks a Module, so Locked Modules can be planned too.
 
-- **Flexible Scheduling**: Plan training for any week of the year
-- **Module Selection**: Choose from available course modules
-- **Exercise Selection**: Choose from available exercises library
-- **Day-Specific Planning**: Organize different content for each day
-- **Persistent Storage**: Plans saved and accessible across sessions
+_(not built yet)_: saving plans and moving between weeks (today the planner shows a sample plan).
 
-### 6. Certification System
+## Certification _(not built yet)_
 
-#### Certification Features
+**Certification** is recognition given to a Client after Course Completion, a passed Practical Assessment and a passed Final Exam. Who runs the Practical Assessment, and what the Final Exam is, are still to be decided.
 
-- **Progress Tracking**: Track progress toward certification requirements
-- **Requirements Display**: Clear visibility of certification requirements
-- **Multi-Step Process**: Multiple requirements to complete certification
-- **Visual Progress**: Progress bars and completion indicators
+## Content management
 
-#### Certification Requirements
+Admins manage Modules, Exercises, Resources, Clubs and Clients from the admin area.
 
-- **Complete Beginner Course**: Finish all beginner modules
-- **Pass Practical Assessment**: Complete practical evaluation
-- **Complete Final Exam**: Pass final comprehensive exam
+_(not built yet)_: managing the Topic list and Quizzes.
 
-### 7. Progress Tracking & Analytics
+## Client journey
 
-#### Progress Features
+1. An Admin creates the Client's account.
+2. The Client signs in and lands on the dashboard, which shows their Courses, Module states and progress.
+3. They open the first Available Module, work through its explanations and Resources, and do its Exercises.
+4. They pass the Module's Quiz _(not built yet)_, gaining Module Completion and unlocking the next Module.
+5. They use the Exercise library and Weekly Plan to organise their practice.
+6. Completing every Module in a Course gives Course Completion.
 
-- **Module Progress**: Track completion of individual modules
-- **Course Progress**: Overall course completion percentage
-- **Exercise Progress**: Track completed exercises
-- **Quiz Scores**: Historical quiz attempt scores
-- **Visual Indicators**: Progress bars, completion badges, status icons
-- **Statistics Dashboard**: Overview of learning achievements
+## Evidence on Hand
 
-#### Progress Metrics
+- Course content for Beginner and Intermediate: `docs/courses/*.json` and `docs/Courses.md`.
+- The Exercise library: `docs/Exercises_all.csv` (about 255 rows), `docs/Exercises.md` and `docs/exercise-images.json`.
+- Draft Quiz questions for Module 1 in PT and EN: `docs/questions/`.
+- Brand assets: `public/fran-padel-project-logo.svg`, `public/fran-methodology-logo.png`, `public/og-image.png`, and the teaser video used on the sign-in page (hosted on Contentful).
+- There are no testimonials, Client numbers, Club names, results data or press. Future work must not invent any of these.
 
-- **Modules Complete**: Count of completed modules
-- **Exercises Complete**: Count of completed exercises
-- **Hours Practiced**: Time spent on learning (planned)
-- **General Progress**: Overall learning progress percentage
+## Product Principles
 
-### 8. Content Management
+1. **The method sets the order.** Module sequence and locking express the Fran Methodology, so the interface never suggests a shortcut around it.
+2. **Show only what's true.** Progress, Module states and plans reflect the Client's real data. Sample or placeholder data is labelled as such, never presented as the Client's own.
+3. **Portuguese first, bilingual always.** Design and copy start from Portuguese and must hold up in both languages, including longer PT strings.
+4. **Teach for the court.** Every Module points toward practice: Exercises and the Weekly Plan are where theory turns into play.
+5. **Show the Exercise clearly.** Exercise content has to be clear when a Coach shows it on a phone or tablet to a group of players.
 
-#### Content Types
+## Future ideas
 
-- **Modules**: Course modules with rich content
-- **Exercises**: Exercise entries with media
-- **Questions**: Quiz questions and answers
-- **Documents**: PDFs, videos, images, and other resources
-- **Presentations**: PDF presentations for modules
+Not yet agreed, kept here as a backlog of possibilities:
 
-#### Content Features
-
-- **Contentful CMS Integration**: Headless CMS for content management
-- **Localization**: Multi-language content support
-- **Media Management**: Optimized image and video handling
-- **Rich Text Support**: Markdown and rich text formatting
-- **Asset Optimization**: Automatic optimization of media assets
-
-### 9. Additional Resources
-
-#### Resource Types
-
-- **PDF Documents**: Instructional PDFs with embedded viewer
-- **Videos**: Video content with custom player
-- **Images**: Image resources with responsive display
-- **Other Documents**: Excel, Word, PowerPoint files with download fallback
-
-#### Resource Features
-
-- **Multi-Format Support**: Automatic detection and handling of file types
-- **PDF Viewer**: Built-in PDF viewer with navigation
-- **Video Player**: Custom video player with controls
-- **Image Display**: Direct image preview
-- **Download Fallback**: Download links for unsupported formats
-- **Responsive Design**: Works on all device sizes
-
-### 10. Localization & Internationalization
-
-#### Language Support
-
-- **Portuguese (PT)**: Full interface and content localization
-- **English (EN)**: Complete English translation
-- **Language Switcher**: Easy language selection in user profile
-- **Content Localization**: All course content available in both languages
-- **Dynamic Language Switching**: Change language without page reload
-
-#### Localization Features
-
-- **Interface Translation**: All UI elements translated
-- **Content Translation**: Course content, exercises, and quizzes localized
-- **Locale-Aware Routing**: URL-based locale management
-- **Contentful Locale Mapping**: Automatic mapping between app and CMS locales
-
-### 11. User Interface & Experience
-
-#### Design Principles
-
-- **Mobile-First**: Responsive design optimized for mobile devices
-- **Modern UI**: Clean, modern interface using Tailwind CSS
-- **Accessibility**: WCAG-compliant design with keyboard navigation
-- **Performance**: Optimized loading and rendering
-- **User-Friendly**: Intuitive navigation and clear information hierarchy
-
-#### UI Components
-
-- **Dashboard**: Central hub with course overview and quick access
-- **Course Cards**: Visual cards showing course/module information
-- **Progress Indicators**: Visual progress bars and completion badges
-- **Status Icons**: Clear visual indicators for module status
-- **Navigation**: Easy navigation between sections
-- **Modals**: Full-screen image viewing and interactive dialogs
-
-### 12. Technical Architecture
-
-#### Technology Stack
-
-- **Frontend Framework**: Next.js 15 with React 19
-- **Styling**: Tailwind CSS 4
-- **Type Safety**: TypeScript
-- **Content Management**: Contentful CMS (Management & Delivery APIs)
-- **Backend & Auth**: Supabase (Authentication, Database, Storage)
-- **Internationalization**: next-intl
-- **PDF Viewing**: react-pdf
-- **Form Handling**: React Hook Form
-- **UI Components**: Radix UI primitives
-
-#### Architecture Features
-
-- **Server Components**: React Server Components for optimal performance
-- **API Routes**: Next.js API routes for server-side logic
-- **Database**: PostgreSQL via Supabase
-- **File Storage**: Supabase Storage for user uploads
-- **Content Delivery**: Contentful Delivery API for optimized content
-- **Authentication**: Supabase Auth with multiple methods
-
-## User Journey
-
-### New User Flow
-
-1. **Landing Page**: Video background with login/signup options
-2. **Account Creation**: Sign up with email/password or receive invitation
-3. **Email Verification**: Verify email address
-4. **Dashboard Access**: View available courses and features
-5. **Course Selection**: Choose Beginner or Intermediate course
-6. **Module Start**: Begin first available module
-7. **Content Consumption**: View presentations, resources, exercises
-8. **Knowledge Check**: Complete module quiz
-9. **Progress Tracking**: View progress and continue to next module
-
-### Returning User Flow
-
-1. **Login**: Authenticate via password or OTP
-2. **Dashboard**: View progress and continue where left off
-3. **Module Continuation**: Resume in-progress modules
-4. **Exercise Practice**: Access exercise library for practice
-5. **Weekly Planning**: Plan upcoming training sessions
-6. **Progress Review**: Check certification progress and statistics
-
-## Content Structure
-
-### Course Hierarchy
-
-```
-Course (Beginner/Intermediate/Advanced)
-  └── Module (Mesociclo)
-      ├── Presentation (PDF)
-      ├── Additional Resources (Documents/Videos)
-      ├── Exercises (Linked Exercise Entries)
-      └── Quiz (Knowledge Check Questions)
-```
-
-### Exercise Structure
-
-```
-Exercise
-  ├── Title
-  ├── External ID
-  ├── Description (Localized)
-  └── Media (Image)
-```
-
-### Quiz Structure
-
-```
-Quiz
-  └── Questions
-      ├── Question Text
-      ├── Answers (Multiple Choice)
-      └── Correct Option
-```
-
-## Data Flow
-
-### Content Delivery
-
-1. **Contentful CMS**: Content creators manage courses, modules, exercises
-2. **Contentful Delivery API**: Published content fetched via API
-3. **Next.js Server**: Server-side data fetching and processing
-4. **Component Rendering**: React components render content
-5. **User Display**: Content displayed to users
-
-### User Progress
-
-1. **User Actions**: User completes modules, exercises, quizzes
-2. **Database Updates**: Progress saved to Supabase database
-3. **Progress Calculation**: Status calculated based on completion
-4. **UI Updates**: Progress indicators updated in real-time
-5. **Analytics**: Progress data used for statistics and recommendations
-
-## Security & Privacy
-
-### Security Features
-
-- **Secure Authentication**: Supabase Auth with industry-standard security
-- **Password Hashing**: Secure password storage
-- **Session Management**: Secure session handling
-- **Row Level Security**: Database-level access control
-- **HTTPS**: Encrypted data transmission
-- **Input Validation**: Server-side validation of all inputs
-
-### Privacy Features
-
-- **User Data Control**: Users can view and manage their data
-- **Privacy Policy**: Clear privacy policy and terms of service
-- **Data Protection**: GDPR-compliant data handling
-- **Secure Storage**: Encrypted data storage
-
-## Performance & Optimization
-
-### Performance Features
-
-- **Server-Side Rendering**: Fast initial page loads
-- **Static Generation**: Pre-rendered pages where possible
-- **Image Optimization**: Next.js Image component optimization
-- **Code Splitting**: Dynamic imports for reduced bundle size
-- **Caching**: Strategic caching of content and API responses
-- **Lazy Loading**: Components and images loaded on demand
-
-### Optimization Strategies
-
-- **Contentful CDN**: Content delivered via Contentful's CDN
-- **Database Indexing**: Optimized database queries
-- **API Optimization**: Efficient API calls with proper includes
-- **Bundle Optimization**: Tree-shaking and code splitting
-
-## Accessibility
-
-### Accessibility Features
-
-- **Semantic HTML**: Proper HTML structure
-- **ARIA Labels**: Screen reader support
-- **Keyboard Navigation**: Full keyboard accessibility
-- **Focus Management**: Clear focus indicators
-- **Color Contrast**: WCAG-compliant color contrast ratios
-- **Screen Reader Support**: Compatible with assistive technologies
-- **Responsive Design**: Works on all device sizes
-
-## Future Enhancements
-
-### Planned Features
-
-- **Advanced Course**: Complete advanced level course content
-- **Video Lessons**: Enhanced video content integration
-- **Social Features**: Community features and sharing
-- **Mobile App**: Native mobile application
-- **Offline Mode**: Offline content access
-- **Advanced Analytics**: Detailed learning analytics
-- **Gamification**: Achievements and badges
-- **Live Sessions**: Integration with live training sessions
-- **Coach Tools**: Enhanced tools for coaches
-- **Payment Integration**: Subscription and payment processing
-
-## Support & Resources
-
-### Documentation
-
-- **Feature Documentation**: Detailed documentation for each feature
-- **API Documentation**: Contentful and Supabase API usage
-- **Component Documentation**: UI component usage guides
-- **Development Guides**: Setup and development instructions
-
-### Support Channels
-
-- **User Support**: Support for platform users
-- **Technical Support**: Technical assistance for developers
-- **Content Support**: Help with content creation and management
-
-## Conclusion
-
-Fran Padel Project is a comprehensive, modern learning platform that combines structured education, practical exercises, progress tracking, and personalized planning to deliver an exceptional padel learning experience. With its focus on progressive learning, multilingual support, and user-friendly interface, it serves as a complete solution for padel education at all skill levels.
+- Advanced Course content
+- Coach tools beyond the Coach Module
+- Community and social features
+- Native mobile app and offline access
+- Achievements and badges
+- Live training sessions
+- Subscriptions and payments

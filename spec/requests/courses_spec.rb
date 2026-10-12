@@ -37,8 +37,38 @@ RSpec.describe "Courses", type: :request do
 
     get "/dashboard/courses/module-1"
 
-    expect(response.body).to include('"status":"done"')
+    expect(response.body).to include('"status":"completed"')
     expect(response.body).to include('"progress":100')
+  end
+
+  it "sends the Module's Exercise counts rather than every Exercise" do
+    user_module = create(:course_module, slug: "module-1", position: 1)
+    done = create(:exercise, course_module: user_module)
+    create(:exercise, course_module: user_module)
+    create(:exercise_completion, user: user, exercise: done)
+
+    get "/dashboard/courses/module-1"
+
+    expect(response.body).to include('"exerciseStats":{"count":2,"completed":1}')
+  end
+
+  it "redirects a Locked Module back to the courses index" do
+    create(:course_module, slug: "module-1", position: 1)
+    create(:course_module, slug: "module-2", position: 2)
+
+    get "/dashboard/courses/module-2"
+
+    expect(response).to redirect_to("/dashboard/courses")
+  end
+
+  it "refuses to complete a Locked Module" do
+    create(:course_module, slug: "module-1", position: 1)
+    locked = create(:course_module, slug: "module-2", position: 2)
+
+    patch "/dashboard/courses/module-2/complete"
+
+    expect(response).to redirect_to("/dashboard/courses")
+    expect(UserModuleProgress.find_by(user: user, course_module: locked)).to be_nil
   end
 
   it "lists a module's documents with inline-disposition urls, no download attribute needed" do

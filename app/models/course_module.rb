@@ -51,7 +51,9 @@ class CourseModule < ApplicationRecord
     end
   end
 
-  def as_dashboard_json(progress = nil)
+  # `state` is this Module's entry from `.states_for`; without one the Module
+  # is treated as Locked, so a missing state never opens a Module by accident.
+  def as_dashboard_json(state = nil)
     {
       id: slug,
       n: position,
@@ -60,9 +62,17 @@ class CourseModule < ApplicationRecord
       topics: topics,
       duration: duration,
       level: level.capitalize,
-      status: progress&.status || "locked",
-      progress: progress&.progress || 0
+      status: state ? state[:status] : "locked",
+      progress: state ? state[:progress] : 0
     }
+  end
+
+  def state_for(user)
+    self.class.states_for(user, self.class.where(level: level).to_a)[id]
+  end
+
+  def locked_for?(user)
+    state_for(user)[:status] == "locked"
   end
 
   def complete_for!(user)
@@ -78,24 +88,59 @@ class CourseModule < ApplicationRecord
     end
   end
 
-  def self.dashboard_list_for(user)
-    modules = ordered.to_a
-    progresses = UserModuleProgress.where(user: user, course_module_id: modules.map(&:id))
-                                    .index_by(&:course_module_id)
-    modules.map { |m| m.as_dashboard_json(progresses[m.id]) }
+  # A Client's state for each of `modules`, keyed by id, as
+  # { status: "locked" | "available" | "in_progress" | "completed", progress: 0..100 }.
+  #
+  # Module Completion is still the manual "mark as done" (a done
+  # UserModuleProgress row). Everything else is derived: a Module is Locked
+  # unless it's first in its Course (Level) or the previous one is completed,
+  # and In Progress once the Client has an Exercise Completion in it. Progress
+  # is the share of the Module's Exercises completed.
+  def self.states_for(user, modules = ordered.to_a)
+    ids = modules.map(&:id)
+    completed_ids = UserModuleProgress.done.where(user: user, course_module_id: ids).pluck(:course_module_id).to_set
+    exercise_counts = Exercise.where(course_module_id: ids).group(:course_module_id).count
+    completion_counts = ExerciseCompletion.joins(:exercise)
+                                          .where(user: user, exercises: { course_module_id: ids })
+                                          .group("exercises.course_module_id").count
+
+    modules.group_by(&:level).each_with_object({}) do |(_level, course_modules), states|
+      previous_completed = true
+      course_modules.sort_by(&:position).each do |m|
+        completed = completed_ids.include?(m.id)
+        done = completion_counts.fetch(m.id, 0)
+        total = exercise_counts.fetch(m.id, 0)
+
+        status =
+          if completed then "completed"
+          elsif !previous_completed then "locked"
+          elsif done.positive? then "in_progress"
+          else "available"
+          end
+        progress = completed ? 100 : (total.zero? ? 0 : (done * 100.0 / total).round)
+
+        states[m.id] = { status: status, progress: progress }
+        previous_completed = completed
+      end
+    end
   end
 
-  # exercisesDone/averageQuiz have no real tracking yet (exercises and quizzes
-  # aren't backed by database models) -- they stay at 0/nil until that exists.
+  def self.dashboard_list_for(user)
+    modules = ordered.to_a
+    states = states_for(user, modules)
+    modules.map { |m| m.as_dashboard_json(states[m.id]) }
+  end
+
+  # averageQuiz has no real tracking yet (Quizzes aren't backed by database
+  # models) -- it stays nil until that exists.
   def self.dashboard_stats_for(user)
-    modules_total = count
-    progresses = UserModuleProgress.where(user: user, course_module_id: pluck(:id))
+    states = states_for(user).values
 
     {
-      progress: modules_total.zero? ? 0 : (progresses.sum(:progress).to_f / modules_total).round,
-      modulesDone: progresses.done.count,
-      modulesTotal: modules_total,
-      exercisesDone: 0,
+      progress: states.empty? ? 0 : (states.sum { |s| s[:progress] }.to_f / states.size).round,
+      modulesDone: states.count { |s| s[:status] == "completed" },
+      modulesTotal: states.size,
+      exercisesDone: ExerciseCompletion.where(user: user).count,
       averageQuiz: nil
     }
   end
