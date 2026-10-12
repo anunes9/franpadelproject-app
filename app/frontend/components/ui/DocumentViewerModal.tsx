@@ -17,6 +17,9 @@ export function DocumentViewerModal({ document: doc, onClose, closeLabel }: Prop
   useEffect(() => {
     previouslyFocused.current = document.activeElement as HTMLElement | null
     closeButtonRef.current?.focus()
+    // The page behind the viewer stays put while it's open.
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -43,6 +46,7 @@ export function DocumentViewerModal({ document: doc, onClose, closeLabel }: Prop
     window.addEventListener('keydown', handleKeyDown)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
       previouslyFocused.current?.focus()
     }
   }, [onClose])
@@ -53,7 +57,7 @@ export function DocumentViewerModal({ document: doc, onClose, closeLabel }: Prop
       role="dialog"
       aria-modal="true"
       aria-label={doc.filename}
-      className="fixed inset-0 z-50 flex flex-col bg-ink/70 p-3 lg:p-8"
+      className="fixed inset-0 z-50 flex flex-col overscroll-contain bg-ink/70 p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:p-8"
     >
       <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col overflow-hidden rounded-2xl bg-white shadow-float">
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
@@ -62,18 +66,14 @@ export function DocumentViewerModal({ document: doc, onClose, closeLabel }: Prop
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold text-muted hover:bg-mist hover:text-ink"
+            className="shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold text-muted hover:bg-mist hover:text-ink pointer-coarse:min-h-11"
           >
             {closeLabel}
           </button>
         </div>
         <div className="flex-1 overflow-auto bg-mist">
           {doc.contentType === 'application/pdf' ? (
-            <iframe
-              src={`${doc.url}#toolbar=0&navpanes=0`}
-              title={doc.filename}
-              className="h-full w-full"
-            />
+            <iframe src={`${doc.url}#toolbar=0&navpanes=0`} title={doc.filename} className="h-full w-full" />
           ) : doc.contentType.startsWith('image/') ? (
             <img src={doc.url} alt={doc.filename} className="mx-auto max-h-full max-w-full object-contain" />
           ) : doc.contentType.startsWith('video/') ? (

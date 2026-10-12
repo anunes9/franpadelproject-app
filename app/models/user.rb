@@ -19,8 +19,9 @@ class User < ApplicationRecord
     name.to_s.split.first(2).map { |word| word[0] }.join.upcase
   end
 
+  # ISO 8601 date; the client formats it in the Client's language.
   def member_since
-    created_at.strftime("%b %Y")
+    created_at.to_date.iso8601
   end
 
   def dashboard_profile_json

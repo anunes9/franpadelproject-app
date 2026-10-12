@@ -5,23 +5,27 @@
   --color-ink-soft: #1c3a57;
   --color-ink-mute: #9bb3b0;
   --color-teal: #6fb69b;
-  --color-teal-deep: #3e8c71;
+  /* teal-deep carries teal as text, fills and white-on-teal labels, so it is
+     held at >=4.6:1 against white, paper and mist. */
+  --color-teal-deep: #357760;
+  --color-teal-line: #b9d9cb;
   --color-paper: #f7f8f6;
   --color-line: #e2e6e2;
   --color-mist: #eef2ef;
-  --color-muted: #7a8b93;
-  --color-danger: #b4705a;
+  /* Secondary text on every light surface (white, paper, mist, track):
+     >=4.6:1. muted-strong is one clear step darker for emphasised
+     secondary text. */
+  --color-muted: #5d6c73;
+  --color-danger: #a15f49;
+  /* Warm accent for "not yet" states on the dark ink surface only. */
+  --color-sand: #e2a87a;
 
   /* Recurring one-off text/border tones promoted from arbitrary hex values
-     scattered across pages -- same colors, now named so a future change is
-     a one-line edit instead of a grep. muted-soft/faint and line-strong were
-     darkened from their original values (#A3B0B7, #B7C0BA, #C9D2CD) to clear
-     4.5:1 against white -- the originals measured 1.5-2.2:1, failing WCAG AA
-     for text. */
+     scattered across pages, so a future change is a one-line edit instead of
+     a grep. line-strong is for borders (dashed outlines, usually at reduced
+     opacity), not text. */
   --color-ink-body: #3b4b54;
-  --color-muted-strong: #56666f;
-  --color-muted-soft: #6f787c;
-  --color-muted-faint: #727874;
+  --color-muted-strong: #46555c;
   --color-line-strong: #737875;
   --color-track: #e9ede9;
 
@@ -29,20 +33,48 @@
      pairs a tight "contact" shadow with a softer ambient one plus a 1px
      inner highlight that catches light along the top edge, so surfaces read
      as raised rather than just outlined. */
-  --shadow-card: inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 1px 2px 0 rgba(18, 40, 63, 0.05),
-    0 8px 20px -6px rgba(18, 40, 63, 0.12);
-  --shadow-card-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 3px 6px 0 rgba(18, 40, 63, 0.08),
+  --shadow-card:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 1px 2px 0 rgba(18, 40, 63, 0.05), 0 8px 20px -6px rgba(18, 40, 63, 0.12);
+  --shadow-card-hover:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 3px 6px 0 rgba(18, 40, 63, 0.08),
     0 22px 40px -10px rgba(18, 40, 63, 0.22);
-  --shadow-card-dark: inset 0 1px 0 0 rgba(255, 255, 255, 0.09), 0 2px 4px 0 rgba(4, 10, 18, 0.3),
-    0 20px 40px -14px rgba(4, 10, 18, 0.5);
+  --shadow-card-dark:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.09), 0 2px 4px 0 rgba(4, 10, 18, 0.3), 0 20px 40px -14px rgba(4, 10, 18, 0.5);
   --shadow-float: 0 4px 10px 0 rgba(18, 40, 63, 0.1), 0 32px 64px -16px rgba(18, 40, 63, 0.3);
   --shadow-dock: 0 -12px 24px -18px rgba(18, 40, 63, 0.18);
+  /* Small-scale depth: the sidebar's edge against the page, a planned item
+     lifted off its day, a sunken toggle track, the lit top edge of an active
+     item on ink, and the vignette on a media placeholder. */
+  --shadow-rail: 8px 0 28px -16px rgba(4, 10, 18, 0.4);
+  --shadow-chip: 0 1px 3px 0 rgba(18, 40, 63, 0.12);
+  --shadow-well: inset 0 1px 2px 0 rgba(18, 40, 63, 0.06);
+  --shadow-lit-dark: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --shadow-media: inset 0 1px 0 0 rgba(255, 255, 255, 0.25), inset 0 -28px 32px -24px rgba(4, 10, 18, 0.3);
 
-  --font-dash-sans: "Archivo", system-ui, sans-serif;
-  --font-dash-mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* Two families: Archivo for interface and reading text, IBM Plex Mono for
+     labels and data (refs, durations, counts). They are also the Tailwind
+     defaults, so pages outside the AppShell (sign-in) get them too. */
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-dash-sans: var(--font-sans);
+  --font-dash-mono: var(--font-mono);
 
-  --font-sans: "Geist", system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  /* Type roles. Tailwind's text-sm (14px, dense UI text), text-base (16px,
+     reading text and buttons) and text-lg..5xl cover the rest.
+     - label: uppercase mono labels, eyebrows, pills
+     - meta: secondary lines, chips, small actions
+     - title / title-lg: page titles (mobile / desktop) */
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1rem;
+  --text-label--letter-spacing: 0.1em;
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.25rem;
+  --text-title: 1.75rem;
+  --text-title--line-height: 1.15;
+  --text-title--letter-spacing: -0.02em;
+  --text-title-lg: 2.25rem;
+  --text-title-lg--line-height: 1.1;
+  --text-title-lg--letter-spacing: -0.025em;
 }
 
 /*
@@ -56,6 +88,23 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-line, currentcolor);
+  }
+
+  /* Browser surfaces in the palette: a teal focus ring that reads on both the
+     paper canvas and the ink sidebar, and a teal-tinted text selection. */
+  :focus-visible {
+    outline: 2px solid var(--color-teal-deep);
+    outline-offset: 2px;
+  }
+
+  .bg-ink :focus-visible,
+  aside :focus-visible {
+    outline-color: var(--color-teal);
+  }
+
+  ::selection {
+    background-color: var(--color-teal-line);
+    color: var(--color-ink);
   }
 }

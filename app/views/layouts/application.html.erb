@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= current_user&.locale || "pt" %>">
   <head>
     <title data-inertia><%= @title || content_for(:title) || "Fran Padel Academy" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Fran Padel Academy">
     <meta name="mobile-web-app-capable" content="yes">
@@ -21,8 +21,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <%# Propshaft's :app symbol bulk-includes every CSS file under app/assets/**/*.css,
         which would also sweep in ActiveAdmin's app/assets/builds/active_admin.css and

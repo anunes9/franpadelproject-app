@@ -1,8 +1,9 @@
 import { router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
-import { AppShell } from '../../components/shell'
 import { useTranslation } from '@/i18n/useTranslation'
 import type { Locale } from '@/types'
+import { AppShell } from '../../components/shell'
+import { buttonClass } from '../../components/ui'
 
 interface Profile {
   name: string
@@ -65,27 +66,35 @@ function Show() {
             {profile.initials}
           </div>
           <div>
-            <h1 className="text-[21px] font-bold tracking-[-0.02em] text-ink lg:text-[28px]">{profile.name}</h1>
-            <div className="mt-0.5 text-[13px] text-muted lg:text-sm">
+            <h1 className="text-2xl font-bold tracking-[-0.02em] text-ink lg:text-title">{profile.name}</h1>
+            <div className="mt-0.5 text-meta text-muted lg:text-sm">
               {profile.club ? `${profile.club} · ` : ''}
-              {t('profile.show.memberSince', { date: profile.memberSince })}
+              {t('profile.show.memberSince', {
+                date: new Intl.DateTimeFormat(locale === 'pt' ? 'pt-PT' : 'en-GB', {
+                  month: 'long',
+                  year: 'numeric',
+                }).format(new Date(`${profile.memberSince}T12:00:00`)),
+              })}
             </div>
           </div>
         </div>
 
         <div className="rounded-[18px] border border-line bg-white px-5 py-2 shadow-card">
           {topRows.map(([label, value]) => (
-            <div key={label} className="flex justify-between border-b border-track py-3.5 last:border-0">
+            <div
+              key={label}
+              className="flex items-center justify-between gap-4 border-b border-track py-3.5 last:border-0"
+            >
               <span className="text-sm text-muted">{label}</span>
               <span className="text-sm text-ink">{value}</span>
             </div>
           ))}
-          <div className="flex justify-between border-b border-track py-3.5 last:border-0">
+          <label className="flex items-center justify-between gap-4 border-b border-track py-3.5 last:border-0">
             <span className="text-sm text-muted">{t('profile.show.rowLabel.level')}</span>
             <select
               value={profile.level?.toLowerCase() ?? ''}
               onChange={(event) => handleProfileFieldChange('level', event.target.value)}
-              className="bg-transparent text-right text-sm text-ink"
+              className="-my-2 min-h-11 bg-transparent text-right text-base text-ink lg:text-sm"
             >
               {!profile.level && <option value="" disabled />}
               {levelOptions.map((option) => (
@@ -94,13 +103,13 @@ function Show() {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="flex justify-between border-b border-track py-3.5 last:border-0">
+          </label>
+          <label className="flex items-center justify-between gap-4 border-b border-track py-3.5 last:border-0">
             <span className="text-sm text-muted">{t('profile.show.rowLabel.hand')}</span>
             <select
               value={profile.hand?.toLowerCase() ?? ''}
               onChange={(event) => handleProfileFieldChange('hand', event.target.value)}
-              className="bg-transparent text-right text-sm text-ink"
+              className="-my-2 min-h-11 bg-transparent text-right text-base text-ink lg:text-sm"
             >
               {!profile.hand && <option value="" disabled />}
               {handOptions.map((option) => (
@@ -109,23 +118,28 @@ function Show() {
                 </option>
               ))}
             </select>
-          </div>
+          </label>
           {bottomRows.map(([label, value]) => (
-            <div key={label} className="flex justify-between border-b border-track py-3.5 last:border-0">
+            <div
+              key={label}
+              className="flex items-center justify-between gap-4 border-b border-track py-3.5 last:border-0"
+            >
               <span className="text-sm text-muted">{label}</span>
               <span className="text-sm text-ink">{value}</span>
             </div>
           ))}
-          <div className="flex justify-between border-b border-track py-3.5 last:border-0">
+          <div className="flex items-center justify-between border-b border-track py-3.5 last:border-0">
             <span className="text-sm text-muted">{t('profile.show.language')}</span>
-            <div className="flex gap-1 rounded-full border border-line bg-paper p-0.5 shadow-[inset_0_1px_2px_0_rgba(18,40,63,0.06)]">
+            <div className="flex gap-1 rounded-full border border-line bg-paper p-0.5 shadow-well">
               {(['pt', 'en'] as const).map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => handleLocaleChange(option)}
+                  aria-pressed={locale === option}
+                  lang={option}
                   className={
-                    'rounded-full px-3 py-1 text-xs font-semibold uppercase transition-[background-color,box-shadow,color] duration-150 ' +
+                    'rounded-full px-3 py-1 text-xs font-semibold uppercase transition-[background-color,box-shadow,color] duration-150 pointer-coarse:min-h-11 pointer-coarse:min-w-12 ' +
                     (locale === option ? 'bg-ink text-paper shadow-card-dark' : 'text-muted')
                   }
                 >
@@ -136,11 +150,7 @@ function Show() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="w-full rounded-full border border-line bg-white py-3.5 text-[15px] font-semibold text-danger shadow-card transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
-        >
+        <button type="button" onClick={handleLogout} className={buttonClass('danger', 'w-full')}>
           {t('common.signOut')}
         </button>
       </div>

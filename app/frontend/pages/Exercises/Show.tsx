@@ -1,10 +1,13 @@
+import { Tick02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
-import { Fragment, useState } from 'react'
 import type { ReactNode } from 'react'
-import { AppShell } from '../../components/shell'
-import { DocumentViewerModal, Eyebrow, MediaPlaceholder, Topic } from '../../components/ui'
-import type { CourseDocument, Exercise, Module } from '../../types/dashboard-data'
+import { Fragment, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import { AppShell } from '../../components/shell'
+import { BackLink, buttonClass, DocumentViewerModal, Eyebrow, MediaPlaceholder, Topic } from '../../components/ui'
+import { CATEGORY_LABEL_KEY } from '../../components/ui/CategoryFilter'
+import type { CourseDocument, Exercise, Module } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -46,18 +49,12 @@ function Show() {
     <div>
       <div className="bg-ink px-5 pb-6 pt-6 text-paper lg:px-10 lg:pb-10 lg:pt-9">
         <div className="mx-auto flex max-w-180 flex-col gap-3.5">
-          <Link href="/dashboard/exercises" className="text-[13px] text-ink-mute hover:text-paper">
-            {t('common.back')}
-          </Link>
-          <div>
-            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-teal">
-              {exercise.category} · {exercise.ref}
-            </div>
-            <h1 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] lg:text-[32px]">{exercise.title}</h1>
-          </div>
-          <div className="flex gap-2">
+          <BackLink href="/dashboard/exercises" label={t('common.back')} tone="dark" />
+          <h1 className="text-balance text-title font-bold lg:text-title-lg">{exercise.title}</h1>
+          <div className="flex flex-wrap gap-2">
+            {exercise.category && <Topic tone="dark">{t(CATEGORY_LABEL_KEY[exercise.category])}</Topic>}
             <Topic tone="dark">{courseModule?.title ?? t('exercises.show.defaultModuleLabel')}</Topic>
-            <Topic tone="dark">{exercise.duration}</Topic>
+            {exercise.duration && <Topic tone="dark">{exercise.duration}</Topic>}
           </div>
         </div>
       </div>
@@ -66,22 +63,27 @@ function Show() {
         <div className="mx-auto flex max-w-180 flex-col gap-4">
           {images.length > 0 ? (
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {images.map((image) => (
+              {images.map((image, i) => (
                 <button
                   key={image.id}
                   type="button"
                   onClick={() => setViewingImage(image)}
                   className="aspect-[4/3] overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
                 >
-                  <img src={image.url} alt={exercise.title} className="h-full w-full object-contain" />
+                  <img
+                    src={image.url}
+                    alt={t('exercises.show.imageAlt', { title: exercise.title, n: i + 1, total: images.length })}
+                    loading="lazy"
+                    className="h-full w-full object-contain"
+                  />
                 </button>
               ))}
             </div>
           ) : (
-            <MediaPlaceholder label={t('exercises.show.mediaPlaceholderSuffix')} className="aspect-[4/3]" />
+            <MediaPlaceholder label={t('exercises.show.noImages')} className="aspect-[4/3]" />
           )}
 
-          <p className="text-[15px] leading-relaxed text-ink-body">{exercise.description}</p>
+          <p className="max-w-[68ch] text-base leading-relaxed text-ink-body">{exercise.description}</p>
 
           {exercise.content && (
             <div className="flex flex-col gap-2">
@@ -92,7 +94,7 @@ function Show() {
                   .map((line) => line.trim())
                   .filter(Boolean)
                   .map((line) => (
-                    <p key={line} className="text-[15px] leading-relaxed text-ink-body">
+                    <p key={line} className="text-base leading-relaxed text-ink-body">
                       {renderBoldText(line)}
                     </p>
                   ))}
@@ -102,7 +104,8 @@ function Show() {
 
           <div className="mt-2 flex gap-2.5">
             {exercise.completed ? (
-              <div className="flex-1 rounded-full border border-line bg-white py-3.5 text-center text-sm font-semibold text-muted shadow-card lg:text-base">
+              <div className={buttonClass('done', 'flex-1')}>
+                <HugeiconsIcon icon={Tick02Icon} size={18} strokeWidth={2} className="text-teal-deep" aria-hidden />
                 {t('exercises.show.completed')}
               </div>
             ) : (
@@ -110,16 +113,13 @@ function Show() {
                 type="button"
                 onClick={handleComplete}
                 disabled={completing}
-                className="flex-1 rounded-full bg-ink py-3.5 text-sm lg:text-base font-semibold text-paper shadow-card-dark transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:opacity-60 motion-reduce:active:scale-100"
+                className={buttonClass('primary', 'flex-1')}
               >
                 {completing ? t('exercises.show.markingComplete') : t('exercises.show.markComplete')}
               </button>
             )}
 
-            <Link
-              href={`/dashboard/plan?exercise=${exercise.ref}`}
-              className="rounded-full border border-line bg-white px-5 py-3.5 text-sm lg:text-base font-semibold text-ink shadow-card transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
-            >
+            <Link href={`/dashboard/plan?exercise=${exercise.ref}`} className={buttonClass('secondary')}>
               {t('exercises.show.addToPlan')}
             </Link>
           </div>

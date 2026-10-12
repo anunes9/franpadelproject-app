@@ -66,7 +66,7 @@ RSpec.describe CourseModule, type: :model do
   end
 
   describe "#as_dashboard_json" do
-    it "defaults status and progress to locked/0 when no progress row is given" do
+    it "defaults status and progress to locked/0 when no state is given" do
       course_module = build(:course_module, slug: "module-1", position: 1, level: :beginner)
 
       expect(course_module.as_dashboard_json).to include(
@@ -74,11 +74,11 @@ RSpec.describe CourseModule, type: :model do
       )
     end
 
-    it "uses the given progress row's status and progress" do
-      course_module = create(:course_module)
-      progress = create(:user_module_progress, course_module: course_module, status: :done, progress: 100)
+    it "uses the given state's status and progress" do
+      course_module = build(:course_module)
 
-      expect(course_module.as_dashboard_json(progress)).to include(status: "done", progress: 100)
+      expect(course_module.as_dashboard_json({ status: "in_progress", progress: 50 }))
+        .to include(status: "in_progress", progress: 50)
     end
   end
 
@@ -185,17 +185,88 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
+  describe ".states_for" do
+    let(:user) { create(:user) }
+
+    it "makes the first Module of a Course available to a brand-new Client" do
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[first.id]).to eq(status: "available", progress: 0)
+      expect(states[second.id]).to eq(status: "locked", progress: 0)
+    end
+
+    it "unlocks the next Module once the previous one is completed" do
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+      third = create(:course_module, position: 3)
+      create(:user_module_progress, user: user, course_module: first, status: :done, progress: 100)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[first.id]).to eq(status: "completed", progress: 100)
+      expect(states[second.id][:status]).to eq("available")
+      expect(states[third.id][:status]).to eq("locked")
+    end
+
+    it "locks each Course independently, so every Course's first Module is open" do
+      create(:course_module, level: :beginner, position: 1)
+      intermediate_first = create(:course_module, level: :intermediate, position: 1)
+
+      expect(CourseModule.states_for(user)[intermediate_first.id][:status]).to eq("available")
+    end
+
+    it "marks a Module in progress with the share of its Exercises completed" do
+      course_module = create(:course_module, position: 1)
+      done = create(:exercise, course_module: course_module)
+      create(:exercise, course_module: course_module)
+      create(:exercise_completion, user: user, exercise: done)
+
+      expect(CourseModule.states_for(user)[course_module.id]).to eq(status: "in_progress", progress: 50)
+    end
+
+    it "ignores a stale 'current' progress row and other Clients' completions" do
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+      create(:user_module_progress, user: user, course_module: second, status: :current, progress: 40)
+      create(:user_module_progress, user: create(:user), course_module: first, status: :done, progress: 100)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[first.id][:status]).to eq("available")
+      expect(states[second.id][:status]).to eq("locked")
+    end
+  end
+
   describe ".dashboard_list_for" do
-    it "returns every module with the given user's progress merged in" do
+    it "returns every module with the given user's state merged in" do
       user = create(:user)
       done_module = create(:course_module, slug: "module-1", position: 1)
-      locked_module = create(:course_module, slug: "module-2", position: 2)
+      create(:course_module, slug: "module-2", position: 2)
+      create(:course_module, slug: "module-3", position: 3)
       create(:user_module_progress, user: user, course_module: done_module, status: :done, progress: 100)
 
       list = CourseModule.dashboard_list_for(user)
 
-      expect(list.find { |m| m[:id] == "module-1" }).to include(status: "done", progress: 100)
-      expect(list.find { |m| m[:id] == "module-2" }).to include(status: "locked", progress: 0)
+      expect(list.find { |m| m[:id] == "module-1" }).to include(status: "completed", progress: 100)
+      expect(list.find { |m| m[:id] == "module-2" }).to include(status: "available", progress: 0)
+      expect(list.find { |m| m[:id] == "module-3" }).to include(status: "locked", progress: 0)
+    end
+  end
+
+  describe ".dashboard_stats_for" do
+    it "counts completed Modules and the Client's real Exercise Completions" do
+      user = create(:user)
+      first = create(:course_module, position: 1)
+      create(:course_module, position: 2)
+      create(:user_module_progress, user: user, course_module: first, status: :done, progress: 100)
+      create(:exercise_completion, user: user, exercise: create(:exercise, course_module: first))
+
+      expect(CourseModule.dashboard_stats_for(user)).to include(
+        progress: 50, modulesDone: 1, modulesTotal: 2, exercisesDone: 1
+      )
     end
   end
 end

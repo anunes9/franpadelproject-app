@@ -1,16 +1,18 @@
+import { ArrowRight01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
-import { AppShell } from '../../components/shell'
-import { DocumentViewerModal, Eyebrow } from '../../components/ui'
-import type { ContentSection, CourseDocument, Exercise, Module } from '../../types/dashboard-data'
-import { useTranslation } from '@/i18n/useTranslation'
 import type { TranslationKey } from '@/i18n/translations'
+import { useTranslation } from '@/i18n/useTranslation'
+import { AppShell } from '../../components/shell'
+import { BackLink, buttonClass, DocumentViewerModal, Eyebrow } from '../../components/ui'
+import type { ContentSection, CourseDocument, Module } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
   courseModule: Module
   sections: ContentSection[]
-  exercises: Exercise[]
+  exerciseStats: { count: number; completed: number }
   documents: CourseDocument[]
   quizQuestionCount: number
 }
@@ -23,8 +25,8 @@ function documentKind(contentType: string, t: (key: TranslationKey) => string) {
 }
 
 function Show() {
-  const { courseModule, sections, exercises, documents, quizQuestionCount } = usePage<Props>().props
-  const { t } = useTranslation()
+  const { courseModule, sections, exerciseStats, documents, quizQuestionCount } = usePage<Props>().props
+  const { t, tn } = useTranslation()
   const [completing, setCompleting] = useState(false)
   const [viewingDocument, setViewingDocument] = useState<CourseDocument | null>(null)
 
@@ -41,12 +43,10 @@ function Show() {
     <div>
       <div className="bg-ink px-5 pb-6 pt-6 text-paper lg:px-10 lg:pb-10 lg:pt-9">
         <div className="mx-auto flex max-w-220 flex-col gap-3.5">
-          <Link href="/dashboard/courses" className="text-[13px] text-ink-mute hover:text-paper">
-            {t('courses.show.backLink')}
-          </Link>
+          <BackLink href="/dashboard/courses" label={t('courses.show.backLink')} tone="dark" />
           <div>
-            <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-teal">{courseModule.title}</div>
-            <h1 className="mt-1.5 text-[26px] font-bold tracking-[-0.02em] lg:text-[38px]">
+            <div className="font-dash-mono text-label uppercase text-teal">{courseModule.title}</div>
+            <h1 className="mt-1.5 max-w-[32ch] text-balance text-title font-bold lg:text-title-lg">
               {courseModule.description}
             </h1>
           </div>
@@ -59,8 +59,8 @@ function Show() {
           </div>
           <div className="flex gap-5 text-xs text-ink-mute">
             <span>{courseModule.duration}</span>
-            <span>{t('courses.show.documentsCount', { count: documents.length })}</span>
-            <span>{t('courses.show.exercisesCount', { count: exercises.length })}</span>
+            {documents.length > 0 && <span>{tn('courses.show.documentsCount', documents.length)}</span>}
+            <span>{tn('courses.show.exercisesCount', exerciseStats.count)}</span>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ function Show() {
                   onClick={() => setViewingDocument(doc)}
                   className="flex items-center gap-3 rounded-xl border border-line bg-white px-3.5 py-3 text-left shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
                 >
-                  <span className="font-dash-mono text-[10px] font-semibold text-teal-deep">
+                  <span className="font-dash-mono text-label font-semibold text-teal-deep">
                     {documentKind(doc.contentType, t)}
                   </span>
                   <span className="flex-1 text-sm text-ink">{doc.filename}</span>
@@ -87,15 +87,15 @@ function Show() {
             </div>
           )}
 
-          <div className="flex flex-col gap-5">
+          <div className="flex max-w-[68ch] flex-col gap-6">
             {sections.map((s) => (
               <section key={s.heading} className="flex flex-col gap-2">
-                <h2 className="text-[17px] font-bold tracking-[-0.01em] text-ink lg:text-xl">{s.heading}</h2>
+                <h2 className="text-balance text-lg font-bold tracking-[-0.01em] text-ink lg:text-xl">{s.heading}</h2>
                 <ul className="flex flex-col gap-2">
                   {s.items.map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
-                      <span className="mt-2 h-[5px] w-[5px] shrink-0 rounded-full bg-teal" />
-                      <span className="text-sm leading-relaxed text-ink-body">{item}</span>
+                      <span className="mt-[0.6875rem] h-[5px] w-[5px] shrink-0 rounded-full bg-teal" />
+                      <span className="text-base leading-relaxed text-ink-body">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -104,47 +104,45 @@ function Show() {
           </div>
 
           <Link
-            href="/dashboard/exercises"
+            href={`/dashboard/exercises?module=${courseModule.id}`}
             className="flex items-center justify-between rounded-2xl border border-line bg-white p-4 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
           >
             <span>
-              <span className="block text-[15px] font-bold text-ink">{t('courses.show.moduleExercisesTitle')}</span>
-              <span className="mt-0.5 block text-[13px] text-muted">
-                {t('courses.show.moduleExercisesDetail', {
-                  count: exercises.length,
-                  completed: exercises.filter((e) => e.completed).length,
+              <span className="block text-base font-bold text-ink">{t('courses.show.moduleExercisesTitle')}</span>
+              <span className="mt-0.5 block text-meta text-muted">
+                {tn('courses.show.moduleExercisesDetail', exerciseStats.count, {
+                  completed: exerciseStats.completed,
                 })}
               </span>
             </span>
-            <span className="text-lg text-teal-deep">→</span>
+            <HugeiconsIcon
+              icon={ArrowRight01Icon}
+              size={20}
+              strokeWidth={1.75}
+              className="shrink-0 text-teal-deep"
+              aria-hidden
+            />
           </Link>
 
           <div className="flex flex-col gap-3 rounded-2xl bg-mist p-[18px] shadow-card">
             <div>
-              <div className="text-[15px] font-bold text-ink">{t('courses.show.knowledgeCheckTitle')}</div>
-              <div className="mt-0.5 text-[13px] text-muted-strong">
-                {t('courses.show.knowledgeCheckDetail', { count: quizQuestionCount })}
+              <div className="text-base font-bold text-ink">{t('courses.show.quizTitle')}</div>
+              <div className="mt-0.5 text-meta text-muted-strong">
+                {tn('courses.show.quizDetail', quizQuestionCount)}
               </div>
             </div>
-            <Link
-              href={'/dashboard/courses/' + courseModule.id + '/quiz'}
-              className="rounded-full bg-ink py-3.5 text-center text-[15px] font-semibold text-paper shadow-card-dark transition-transform duration-150 active:scale-[0.98] motion-reduce:active:scale-100"
-            >
-              {t('courses.show.startKnowledgeCheck')}
+            <Link href={`/dashboard/courses/${courseModule.id}/quiz`} className={buttonClass('primary')}>
+              {t('courses.show.startQuiz')}
             </Link>
           </div>
 
-          {courseModule.status === 'done' ? (
-            <div className="rounded-full border border-line bg-white py-3.5 text-center text-[15px] font-semibold text-muted shadow-card">
+          {courseModule.status === 'completed' ? (
+            <div className={buttonClass('done')}>
+              <HugeiconsIcon icon={Tick02Icon} size={18} strokeWidth={2} className="text-teal-deep" aria-hidden />
               {t('courses.show.moduleCompleted')}
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={handleComplete}
-              disabled={completing}
-              className="rounded-full bg-teal-deep py-3.5 text-center text-[15px] font-semibold text-paper shadow-card-dark transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:opacity-60 motion-reduce:active:scale-100"
-            >
+            <button type="button" onClick={handleComplete} disabled={completing} className={buttonClass('accent')}>
               {completing ? t('courses.show.markingComplete') : t('courses.show.markComplete')}
             </button>
           )}

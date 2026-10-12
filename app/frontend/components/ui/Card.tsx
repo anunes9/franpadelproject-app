@@ -6,23 +6,29 @@ export function Card({
   details,
   progress,
   tone = 'light',
+  className = '',
 }: {
   title?: string
   content?: string | number
   details?: string
   progress?: number
   tone?: 'light' | 'dark'
+  className?: string
 }) {
   return (
     <div
-      className={`flex flex-col justify-between gap-4 rounded-[18px] p-4 lg:p-6 ${tone === 'light' ? 'border border-line bg-white shadow-card' : 'bg-gradient-to-br from-ink-soft to-ink text-paper shadow-card-dark'}`}
+      className={`flex flex-col justify-between gap-4 rounded-[18px] p-4 lg:p-6 ${className} ${tone === 'light' ? 'border border-line bg-white shadow-card' : 'bg-gradient-to-br from-ink-soft to-ink text-paper shadow-card-dark'}`}
     >
       <div className="flex flex-col gap-4">
-        {title && <span className="font-dash-mono text-sm uppercase tracking-[0.12em] text-ink-mute">{title}</span>}
+        {title && (
+          <span className={`font-dash-mono text-label uppercase ${tone === 'light' ? 'text-muted' : 'text-ink-mute'}`}>
+            {title}
+          </span>
+        )}
 
         {content != null && content !== '' && (
           <span
-            className={`text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] ${tone === 'light' ? 'text-ink' : ''}`}
+            className={`text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] tabular-nums ${tone === 'light' ? 'text-ink' : ''}`}
           >
             {content}
           </span>
@@ -31,7 +37,7 @@ export function Card({
 
       {(details || progress != null) && (
         <div className="flex flex-col gap-4">
-          {details && <span className="text-sm text-ink-mute">{details}</span>}
+          {details && <span className={`text-sm ${tone === 'light' ? 'text-muted' : 'text-ink-mute'}`}>{details}</span>}
 
           {progress != null && <ProgressBar value={progress} tone="dark" />}
         </div>

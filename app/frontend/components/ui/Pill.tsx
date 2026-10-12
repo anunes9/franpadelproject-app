@@ -1,17 +1,27 @@
+import type { ReactNode } from 'react'
+
+const VARIANT_CLASSES = {
+  full: 'border-teal-deep bg-teal-deep text-white',
+  default: 'border-teal-line text-teal-deep',
+  muted: 'border-line text-muted-strong',
+} as const
+
 export function Pill({
   text,
-  className,
+  className = '',
   variant = 'default',
+  icon,
 }: {
   text: string
   className?: string
-  variant?: 'full' | 'default'
+  variant?: keyof typeof VARIANT_CLASSES
+  icon?: ReactNode
 }) {
-  const style = variant === 'full' ? 'border-teal-deep bg-teal-deep text-white' : 'border-[#B9D9CB] text-teal-deep'
   return (
     <span
-      className={`whitespace-nowrap rounded-full border px-2 py-1 font-dash-mono text-[10px] uppercase tracking-[0.08em] w-fit ${style} ${className}`}
+      className={`inline-flex w-fit shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2 py-1 font-dash-mono text-label uppercase ${VARIANT_CLASSES[variant]} ${className}`}
     >
+      {icon}
       {text}
     </span>
   )

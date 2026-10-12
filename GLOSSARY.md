@@ -56,7 +56,7 @@ _Avoid_: Tier, difficulty
 
 **Resource**:
 A file attached to a Module to support it, such as a presentation, PDF, video or image.
-_Avoid_: Document, attachment, material, presentation
+_Avoid_: Document, attachment, material (except "Materiais", the Portuguese translation, used only in PT copy), presentation
 
 **Quiz**:
 A Module's set of multiple-choice questions, in Portuguese and English, that checks a Client's understanding of it. A Module has at most one.

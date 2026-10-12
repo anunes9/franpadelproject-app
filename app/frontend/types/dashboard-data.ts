@@ -1,4 +1,4 @@
-export type ModuleStatus = 'done' | 'current' | 'locked'
+export type ModuleStatus = 'locked' | 'available' | 'in_progress' | 'completed'
 
 export interface ContentSection {
   heading: string
@@ -28,12 +28,12 @@ export interface CourseDocument {
 export interface Exercise {
   ref: string
   title: string
-  category: 'Technical' | 'Tactical'
+  category: 'Technical' | 'Tactical' | null
   media: CourseDocument[]
   description: string
   content: string | null
   moduleId: string | null
-  duration: string
+  duration: string | null
   completed: boolean
 }
 

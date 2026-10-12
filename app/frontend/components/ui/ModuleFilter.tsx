@@ -1,4 +1,5 @@
 import { useTranslation } from '@/i18n/useTranslation'
+import { chipClass } from './styles'
 
 export function ModuleFilter({
   modules,
@@ -11,16 +12,12 @@ export function ModuleFilter({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0 lg:pb-0">
       <button
         type="button"
         onClick={() => onChange('All')}
-        className={
-          'rounded-full border px-4 py-2 text-[13px] font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-150 ' +
-          (value === 'All'
-            ? 'border-ink bg-ink text-paper shadow-card-dark'
-            : 'border-line bg-white text-muted-strong shadow-card hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:hover:translate-y-0')
-        }
+        aria-pressed={value === 'All'}
+        className={chipClass(value === 'All')}
       >
         {t('exercises.index.allModules')}
       </button>
@@ -29,12 +26,8 @@ export function ModuleFilter({
           key={m.id}
           type="button"
           onClick={() => onChange(m.id)}
-          className={
-            'rounded-full border px-4 py-2 text-[13px] font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-150 ' +
-            (value === m.id
-              ? 'border-ink bg-ink text-paper shadow-card-dark'
-              : 'border-line bg-white text-muted-strong shadow-card hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:hover:translate-y-0')
-          }
+          aria-pressed={value === m.id}
+          className={chipClass(value === m.id)}
         >
           {m.title}
         </button>

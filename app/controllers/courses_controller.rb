@@ -7,13 +7,17 @@ class CoursesController < DashboardController
     course_module = CourseModule.find_by(slug: params[:id])
     return head :not_found unless course_module
 
-    progress = UserModuleProgress.find_by(user: current_user, course_module: course_module)
-    exercises = course_module.exercises.map { |e| e.as_dashboard_json(current_user) }
+    state = course_module.state_for(current_user)
+    return redirect_to("/dashboard/courses") if state[:status] == "locked"
+
 
     render inertia: "Courses/Show", props: {
-      courseModule: course_module.as_dashboard_json(progress),
+      courseModule: course_module.as_dashboard_json(state),
       sections: course_module.sections,
-      exercises: exercises,
+      exerciseStats: {
+        count: course_module.exercises.count,
+        completed: ExerciseCompletion.joins(:exercise).where(user: current_user, exercises: { course_module_id: course_module.id }).count
+      },
       documents: course_module.documents_json,
       quizQuestionCount: DashboardData::QUIZ.length
     }
@@ -22,6 +26,7 @@ class CoursesController < DashboardController
   def complete
     course_module = CourseModule.find_by(slug: params[:id])
     return head :not_found unless course_module
+    return redirect_to("/dashboard/courses") if course_module.locked_for?(current_user)
 
     course_module.complete_for!(current_user)
 
@@ -31,6 +36,7 @@ class CoursesController < DashboardController
   def quiz
     course_module = CourseModule.find_by(slug: params[:id])
     return head :not_found unless course_module
+    return redirect_to("/dashboard/courses") if course_module.locked_for?(current_user)
 
     render inertia: "Courses/Quiz", props: {
       id: course_module.slug,

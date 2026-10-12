@@ -15,7 +15,7 @@ import type { DashboardUser } from '../types/dashboard-data'
 function useNav() {
   const { t } = useTranslation()
   return [
-    { href: '/dashboard', label: t('common.nav.dashboard'), tab: t('common.nav.home'), icon: Home01Icon },
+    { href: '/dashboard', label: t('common.nav.dashboard'), tab: t('common.nav.dashboard'), icon: Home01Icon },
     { href: '/dashboard/courses', label: t('common.nav.courses'), tab: t('common.nav.courses'), icon: Book02Icon },
     {
       href: '/dashboard/exercises',
@@ -42,7 +42,7 @@ function Sidebar() {
   const nav = useNav()
 
   return (
-    <aside className="relative z-10 hidden w-64 shrink-0 flex-col gap-8 bg-gradient-to-b from-ink-soft to-ink px-5 py-7 shadow-[8px_0_28px_-16px_rgba(4,10,18,0.4)] lg:flex">
+    <aside className="sticky top-0 z-10 hidden h-dvh w-64 shrink-0 flex-col gap-8 overflow-y-auto bg-gradient-to-b from-ink-soft to-ink px-5 py-7 shadow-rail lg:flex">
       <img
         src="/fran-methodology-logo.png"
         alt={t('common.logoAlt.franMethodology')}
@@ -53,11 +53,10 @@ function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive(url, item.href) ? 'page' : undefined}
             className={
               'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
-              (isActive(url, item.href)
-                ? 'bg-teal/15 text-paper shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]'
-                : 'text-ink-mute hover:text-paper')
+              (isActive(url, item.href) ? 'bg-teal/15 text-paper shadow-lit-dark' : 'text-ink-mute hover:text-paper')
             }
           >
             <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} className="shrink-0" />
@@ -74,12 +73,12 @@ function Sidebar() {
         </button>
       </nav>
       <div className="mt-auto flex items-center gap-2.5 border-t border-paper/10 pt-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-[13px] font-bold text-ink">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-meta font-bold text-ink">
           {dashboardUser.initials}
         </div>
         <div>
-          <div className="text-[13px] font-semibold text-paper">{dashboardUser.name}</div>
-          {dashboardUser.club && <div className="text-[11px] text-muted">{dashboardUser.club}</div>}
+          <div className="text-meta font-semibold text-paper">{dashboardUser.name}</div>
+          {dashboardUser.club && <div className="text-xs text-ink-mute">{dashboardUser.club}</div>}
         </div>
       </div>
     </aside>
@@ -92,32 +91,48 @@ function MobileHeader() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex h-12 items-center justify-between border-b border-line/80 bg-paper p-2 lg:hidden">
-      <img src="/fran-methodology-logo.png" alt={t('common.logoAlt.franMethodology')} className="h-20 w-auto" />
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
-        {dashboardUser.initials}
-      </div>
-    </div>
+    <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between border-b border-line/80 bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
+      <Link href="/dashboard" className="flex h-11 items-center">
+        <img
+          src="/fran-methodology-logo.png"
+          alt={t('common.logoAlt.franMethodology')}
+          width={506}
+          height={286}
+          className="-my-3 h-[4.25rem] w-auto"
+        />
+      </Link>
+      <Link
+        href="/dashboard/profile"
+        aria-label={t('common.nav.profile')}
+        className="flex h-11 w-11 items-center justify-center"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
+          {dashboardUser.initials}
+        </span>
+      </Link>
+    </header>
   )
 }
 
 function BottomTabs() {
   const { url } = usePage()
-  const nav = useNav().filter((n) => n.href !== '/dashboard/plan')
+  const nav = useNav()
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-5 pt-2.5 pb-2 shadow-dock lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-dock lg:hidden">
       {nav.map((item) => {
         const on = isActive(url, item.href)
         return (
-          <Link key={item.href} href={item.href} className="flex flex-1 flex-col items-center gap-1">
-            <HugeiconsIcon
-              icon={item.icon}
-              size={20}
-              strokeWidth={1.5}
-              className={on ? 'text-ink' : 'text-line-strong'}
-            />
-            <span className={`text-[11px] font-semibold ${on ? 'text-ink' : 'text-line-strong'}`}>{item.tab}</span>
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={on ? 'page' : undefined}
+            className="flex min-h-12 min-w-0 flex-1 flex-col items-center justify-center gap-1"
+          >
+            <HugeiconsIcon icon={item.icon} size={20} strokeWidth={1.5} className={on ? 'text-ink' : 'text-muted'} />
+            <span className={`truncate text-label font-semibold tracking-normal ${on ? 'text-ink' : 'text-muted'}`}>
+              {item.tab}
+            </span>
           </Link>
         )
       })}
@@ -125,29 +140,36 @@ function BottomTabs() {
   )
 }
 
+// The document scrolls (not an inner container), so mobile browser chrome can
+// collapse, anchors and scroll restoration work, and body scroll-lock in modals
+// takes effect. The sidebar stays put by being sticky and viewport-tall.
 export function AppShell({ children }: { children: ReactNode }) {
+  const { t } = useTranslation()
+
   return (
-    <div className="flex h-screen overflow-hidden bg-paper font-dash-sans">
+    <div className="flex min-h-dvh bg-paper font-dash-sans">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-[max(0.75rem,env(safe-area-inset-top))] focus:left-3 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-paper focus:shadow-float"
+      >
+        {t('common.skipToContent')}
+      </a>
       <Sidebar />
-      <main className="min-w-0 flex-1 overflow-y-auto pb-28">
+      <div className="flex min-w-0 flex-1 flex-col">
         <MobileHeader />
-        {children}
-      </main>
+        <main
+          id="main"
+          tabIndex={-1}
+          className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))] focus:outline-none lg:pb-12"
+        >
+          {children}
+        </main>
+      </div>
       <BottomTabs />
     </div>
   )
 }
 
-export function PageHeader({ eyebrow, title }: { eyebrow?: string; title: string }) {
-  return (
-    <div className="flex items-end justify-between gap-6">
-      <div>
-        {eyebrow && <div className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted">{eyebrow}</div>}
-
-        <h1 className="mt-1.5 text-[27px] font-bold tracking-[-0.02em] text-ink lg:text-[34px] lg:tracking-[-0.025em]">
-          {title}
-        </h1>
-      </div>
-    </div>
-  )
+export function PageHeader({ title }: { title: string }) {
+  return <h1 className="text-balance text-title font-bold text-ink lg:text-title-lg">{title}</h1>
 }

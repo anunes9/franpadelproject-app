@@ -1,10 +1,35 @@
 # Fran Padel Project - Product
 
+<!-- impeccable:product-schema 1 -->
+
 Terms in **bold capitals** are defined in [GLOSSARY.md](../GLOSSARY.md). Features marked _(not built yet)_ are agreed but not yet in the app.
 
 ## Overview
 
 Fran Padel Project is an online learning platform for padel. Clients work through structured **Courses** of theory (**Modules**) and on-court drills (**Exercises**), plan their week of training, and track how far they've got. The whole platform, interface and content alike, is available in Portuguese and English.
+
+## Platform
+
+web
+
+## Positioning
+
+The platform teaches **Fran's own methodology** for padel: one coach's structured method, delivered in a fixed order. Modules unlock in sequence, and theory, on-court Exercises and the Coach Module all follow that method. A generic padel course or a YouTube drill collection can't honestly claim to be the Fran Methodology.
+
+## Operating Context
+
+- **Desktop or laptop**: studying Modules, reading explanations and viewing Resources at a desk.
+- **Phone, off court**: reading Modules and planning the week at home or while commuting.
+- **Coach showing players**: a Coach opens an Exercise on a phone or tablet and shows it to a group, so Exercise content has to read at arm's length and to several people at once.
+
+On-court, mid-session use on the Client's own phone is not a confirmed primary scene.
+
+## Brand Commitments
+
+- **Fran Padel Project** is the brand.
+- **Fran Methodology** is the teaching method (`public/fran-methodology-logo.png`, shown in the app sidebar).
+- **Fran Padel Academy** is this learning platform (page title, `application-name`, Open Graph name).
+- Portuguese is the primary language (`og:locale pt_PT`), and English is secondary. Every interface string and every piece of content exists in both.
 
 ## Who it's for
 
@@ -109,6 +134,22 @@ _(not built yet)_: managing the Topic list and Quizzes.
 4. They pass the Module's Quiz _(not built yet)_, gaining Module Completion and unlocking the next Module.
 5. They use the Exercise library and Weekly Plan to organise their practice.
 6. Completing every Module in a Course gives Course Completion.
+
+## Evidence on Hand
+
+- Course content for Beginner and Intermediate: `docs/courses/*.json` and `docs/Courses.md`.
+- The Exercise library: `docs/Exercises_all.csv` (about 255 rows), `docs/Exercises.md` and `docs/exercise-images.json`.
+- Draft Quiz questions for Module 1 in PT and EN: `docs/questions/`.
+- Brand assets: `public/fran-padel-project-logo.svg`, `public/fran-methodology-logo.png`, `public/og-image.png`, and the teaser video used on the sign-in page (hosted on Contentful).
+- There are no testimonials, Client numbers, Club names, results data or press. Future work must not invent any of these.
+
+## Product Principles
+
+1. **The method sets the order.** Module sequence and locking express the Fran Methodology, so the interface never suggests a shortcut around it.
+2. **Show only what's true.** Progress, Module states and plans reflect the Client's real data. Sample or placeholder data is labelled as such, never presented as the Client's own.
+3. **Portuguese first, bilingual always.** Design and copy start from Portuguese and must hold up in both languages, including longer PT strings.
+4. **Teach for the court.** Every Module points toward practice: Exercises and the Weekly Plan are where theory turns into play.
+5. **Show the Exercise clearly.** Exercise content has to be clear when a Coach shows it on a phone or tablet to a group of players.
 
 ## Future ideas
 
