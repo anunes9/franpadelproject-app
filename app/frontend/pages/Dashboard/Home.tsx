@@ -3,9 +3,11 @@ import type { ReactNode } from 'react'
 import { ModuleCard } from '@/components/ui/ModuleCard'
 import type { TranslationKey } from '@/i18n/translations'
 import { useTranslation } from '@/i18n/useTranslation'
+import { entryDetail, exerciseNumber, shortTitle } from '@/lib/plan'
+import { DAY_KEYS, LONG_DAY_KEY, sameDay, titleCase, weekOf } from '@/lib/week'
 import { AppShell } from '../../components/shell'
-import { ArrowBadge, ProgressBar, Tile } from '../../components/ui'
-import type { DashboardUser, Module, ModuleStatus } from '../../types/dashboard-data'
+import { ArrowBadge, ProgressBar, Tile, TilePill } from '../../components/ui'
+import type { DashboardUser, Module, ModuleStatus, PlanWeek } from '../../types/dashboard-data'
 
 interface CourseStats {
   progress: number
@@ -20,9 +22,9 @@ interface Props {
   courseStats: CourseStats
   modules: Module[]
   dashboardUser: DashboardUser
+  days: string[]
+  plan: PlanWeek
 }
-
-const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 
 const STATUS_LABEL_KEY: Record<ModuleStatus, TranslationKey> = {
   locked: 'common.status.locked',
@@ -37,22 +39,6 @@ function greetingKey(hour: number): TranslationKey {
   return 'dashboard.home.greetingLine.evening'
 }
 
-/** Monday-to-Sunday dates of the week containing `now`. */
-function weekOf(now: Date): Date[] {
-  const monday = new Date(now)
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7))
-  return DAY_KEYS.map((_, i) => {
-    const d = new Date(monday)
-    d.setDate(monday.getDate() + i)
-    return d
-  })
-}
-
-const sameDay = (a: Date, b: Date) =>
-  a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
-
-const titleCase = (s: string) => s.charAt(0) + s.slice(1).toLowerCase()
-
 function SectionTitle({ children, href, linkLabel }: { children: ReactNode; href: string; linkLabel: string }) {
   return (
     <div className="flex items-center justify-between">
@@ -65,13 +51,15 @@ function SectionTitle({ children, href, linkLabel }: { children: ReactNode; href
 }
 
 function Home() {
-  const { courseStats, modules, dashboardUser } = usePage<Props>().props
+  const { courseStats, modules, dashboardUser, days, plan } = usePage<Props>().props
   const { t } = useTranslation()
   // The Module to continue: one already In Progress, else the next Available
   // one. None when every Module is completed, or there are no Modules at all.
   const current = modules.find((m) => m.status === 'in_progress') ?? modules.find((m) => m.status === 'available')
   const today = new Date()
   const week = weekOf(today)
+  const plannedDays = new Set<number>(days.flatMap((day, i) => ((plan[day] ?? []).length > 0 ? [i] : [])))
+  const upcoming = days.flatMap((day) => (plan[day] ?? []).map((entry) => ({ ...entry, day }))).slice(0, 4)
 
   return (
     <div className="px-5 pt-5 lg:px-10 lg:pt-9">
@@ -127,6 +115,7 @@ function Home() {
             <div className="flex gap-1.5">
               {week.map((date, i) => {
                 const isToday = sameDay(date, today)
+                const planned = plannedDays.has(i)
                 return (
                   <div
                     key={DAY_KEYS[i]}
@@ -140,6 +129,11 @@ function Home() {
                       {titleCase(t(`common.days.short.${DAY_KEYS[i]}`))}
                     </span>
                     <span className="text-[15px] font-bold">{date.getDate()}</span>
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        planned ? (isToday ? 'bg-teal' : 'bg-teal-deep') : 'bg-transparent'
+                      }`}
+                    />
                   </div>
                 )
               })}
@@ -149,15 +143,34 @@ function Home() {
               {t('dashboard.home.yourPlan')}
             </SectionTitle>
 
-            <Tile tone="clay" href="/dashboard/plan" className="flex items-end justify-between gap-3">
-              <span className="flex flex-col gap-1">
-                <span className="text-[15px] font-extrabold leading-tight tracking-[-0.01em]">
-                  {t('dashboard.home.weekPlan.title')}
-                </span>
-                <span className="text-xs text-muted-strong">{t('dashboard.home.weekPlan.detail')}</span>
-              </span>
-              <ArrowBadge size="sm" />
-            </Tile>
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 xl:grid-cols-1">
+              {upcoming.length === 0 ? (
+                <Link
+                  href="/dashboard/plan"
+                  className="flex flex-col items-center gap-1 rounded-[22px] border border-dashed border-line-strong px-4 py-6 text-center sm:col-span-3 xl:col-span-1"
+                >
+                  <span className="text-sm font-semibold text-ink">{t('dashboard.home.emptyPlan')}</span>
+                  <span className="text-xs font-semibold text-teal-deep">{t('dashboard.home.emptyPlanCta')}</span>
+                </Link>
+              ) : (
+                upcoming.map((entry) => (
+                  <Tile
+                    key={entry.id}
+                    tone={entry.kind === 'module' ? 'ink' : 'clay'}
+                    href={entry.href}
+                    className="flex flex-col gap-3"
+                  >
+                    <TilePill>
+                      {entry.kind === 'module' ? entry.title : (entryDetail(entry, t) ?? exerciseNumber(entry.key))}
+                    </TilePill>
+                    <span className="line-clamp-2 text-[15px] font-extrabold leading-tight tracking-[-0.01em]">
+                      {entry.kind === 'module' ? (entry.detail ?? entry.title) : shortTitle(entry.title)}
+                    </span>
+                    <span className="text-xs text-muted-strong">{t(LONG_DAY_KEY[entry.day])}</span>
+                  </Tile>
+                ))
+              )}
+            </div>
           </aside>
 
           {/* Stats bento */}

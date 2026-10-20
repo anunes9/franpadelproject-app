@@ -120,28 +120,34 @@ function Show() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5 lg:gap-3">
-          <Tile tone="clay" className="flex flex-col gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink">
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:gap-3">
+          <Tile tone="clay" className="flex items-center gap-3 p-3! lg:p-4!">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-ink">
               <HugeiconsIcon icon={File01Icon} size={18} strokeWidth={1.7} aria-hidden />
             </span>
-            <span className="text-meta font-semibold text-muted-strong">{t('courses.show.materialsLabel')}</span>
-            <span className="text-3xl font-extrabold leading-none tracking-[-0.02em]">{documents.length}</span>
+            <span className="flex flex-col">
+              <span className="text-xs font-semibold text-muted-strong">{t('courses.show.materialsLabel')}</span>
+              <span className="text-2xl font-extrabold leading-none tracking-[-0.02em]">{documents.length}</span>
+            </span>
           </Tile>
-          <Tile tone="ink" href={`/dashboard/exercises?module=${courseModule.id}`} className="flex flex-col gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink">
+          <Tile
+            tone="ink"
+            href={`/dashboard/exercises?module=${courseModule.id}`}
+            className="flex items-center gap-3 p-3! lg:p-4!"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-ink">
               <HugeiconsIcon icon={Dumbbell02Icon} size={18} strokeWidth={1.7} aria-hidden />
             </span>
-            <span className="text-meta font-semibold text-muted-strong">{t('courses.show.drillsLabel')}</span>
-            <div className="flex items-end justify-between gap-2">
-              <span className="flex flex-col gap-1">
-                <span className="text-3xl font-extrabold leading-none tracking-[-0.02em]">{exerciseStats.count}</span>
+            <span className="flex flex-1 flex-col">
+              <span className="text-xs font-semibold text-muted-strong">{t('courses.show.drillsLabel')}</span>
+              <span className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-extrabold leading-none tracking-[-0.02em]">{exerciseStats.count}</span>
                 <span className="text-[11px] text-muted-strong">
                   {t('courses.show.drillsDone', { done: exerciseStats.completed })}
                 </span>
               </span>
-              <ArrowBadge size="sm" />
-            </div>
+            </span>
+            <ArrowBadge size="sm" />
           </Tile>
         </div>
 

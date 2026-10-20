@@ -1,176 +1,361 @@
-import { Cancel01Icon } from '@hugeicons/core-free-icons'
+import { Add01Icon, Cancel01Icon, Search01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { usePage } from '@inertiajs/react'
-import type { ReactNode } from 'react'
-import { useState } from 'react'
-import type { TranslationKey } from '@/i18n/translations'
+import { Link, usePage } from '@inertiajs/react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import {
+  addPlanEntry,
+  entryDetail,
+  exerciseNumber,
+  isInDay,
+  type PlanItem,
+  removePlanEntry,
+  shortTitle,
+} from '@/lib/plan'
+import { DAY_KEYS, LONG_DAY_KEY, sameDay, titleCase, weekOf } from '@/lib/week'
 import { AppShell, PageHeader } from '../../components/shell'
-import { chipClass } from '../../components/ui'
-import type { Exercise } from '../../types/dashboard-data'
+import { buttonClass, ModuleFilter, Tile, TilePill } from '../../components/ui'
+import type { Exercise, Module, PlanEntry, PlanWeek } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
   days: string[]
-  defaultPlan: Record<string, string[]>
-  exercises: Pick<Exercise, 'ref' | 'title'>[]
+  plan: PlanWeek
+  exercises: Pick<Exercise, 'ref' | 'title' | 'moduleId'>[]
+  modules: Pick<Module, 'id' | 'title' | 'description' | 'topics'>[]
   preselectedExercise: string | null
 }
 
-const SHORT_DAY_KEY: Record<string, TranslationKey> = {
-  Monday: 'common.days.short.mon',
-  Tuesday: 'common.days.short.tue',
-  Wednesday: 'common.days.short.wed',
-  Thursday: 'common.days.short.thu',
-  Friday: 'common.days.short.fri',
-  Saturday: 'common.days.short.sat',
-  Sunday: 'common.days.short.sun',
+type Tab = 'exercises' | 'modules'
+
+/** One row of the library: a pill, one or two lines of text and an add button. Draggable on desktop. */
+function LibraryRow({
+  pill,
+  title,
+  detail,
+  inDay,
+  onAdd,
+  onDragStart,
+  onDragEnd,
+  addLabel,
+  addedLabel,
+}: {
+  pill: string
+  title: string
+  detail?: string
+  inDay: boolean
+  onAdd: () => void
+  onDragStart: () => void
+  onDragEnd: () => void
+  addLabel: string
+  addedLabel: string
+}) {
+  return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: desktop drag source; the add button inside is the accessible path
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      className={`flex items-center gap-3 rounded-2xl border px-3 py-2 lg:cursor-grab ${
+        inDay ? 'border-teal-deep/40 bg-tint-teal' : 'border-line bg-white'
+      }`}
+    >
+      <span className="w-fit shrink-0 rounded-full bg-tint-ink px-2 py-1 font-dash-mono text-[11px] font-medium text-ink">
+        {pill}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className="line-clamp-2 text-[13px] leading-snug text-ink">{title}</span>
+        {detail && <span className="line-clamp-1 text-[11px] text-muted-strong">{detail}</span>}
+      </span>
+      <button
+        type="button"
+        onClick={onAdd}
+        disabled={inDay}
+        aria-label={inDay ? addedLabel : addLabel}
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+          inDay ? 'bg-teal-deep text-paper' : 'border border-line bg-white text-ink hover:border-teal'
+        }`}
+      >
+        <HugeiconsIcon icon={inDay ? Tick02Icon : Add01Icon} size={16} strokeWidth={1.9} aria-hidden />
+      </button>
+    </div>
+  )
 }
 
-const LONG_DAY_KEY: Record<string, TranslationKey> = {
-  Monday: 'common.days.long.monday',
-  Tuesday: 'common.days.long.tuesday',
-  Wednesday: 'common.days.long.wednesday',
-  Thursday: 'common.days.long.thursday',
-  Friday: 'common.days.long.friday',
-  Saturday: 'common.days.long.saturday',
-  Sunday: 'common.days.long.sunday',
+function EntryTile({
+  entry,
+  moduleLabel,
+  removeLabel,
+  detail,
+}: {
+  entry: PlanEntry
+  moduleLabel: string
+  removeLabel: string
+  detail: string | null
+}) {
+  const isModule = entry.kind === 'module'
+  return (
+    <Tile tone={isModule ? 'ink' : 'teal'} className="flex items-start gap-3 p-3! lg:p-3!">
+      <TilePill className="font-dash-mono font-medium">{isModule ? moduleLabel : exerciseNumber(entry.key)}</TilePill>
+      <Link href={entry.href} className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className="line-clamp-2 text-[13px] font-semibold leading-snug">
+          {isModule ? entry.title : shortTitle(entry.title)}
+        </span>
+        {detail && <span className="line-clamp-1 text-[11px] text-muted-strong">{detail}</span>}
+      </Link>
+      <button
+        type="button"
+        onClick={() => removePlanEntry(entry.id)}
+        aria-label={removeLabel}
+        className="-m-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-strong hover:bg-white hover:text-ink"
+      >
+        <HugeiconsIcon icon={Cancel01Icon} size={16} strokeWidth={1.9} aria-hidden />
+      </button>
+    </Tile>
+  )
 }
 
 function Index() {
-  const { days, defaultPlan, exercises, preselectedExercise } = usePage<Props>().props
-  const { t } = useTranslation()
-  const [plan, setPlan] = useState<Record<string, string[]>>(defaultPlan)
-  const [dragging, setDragging] = useState<string | null>(null)
-  const [picked, setPicked] = useState<string | null>(() =>
-    preselectedExercise && exercises.some((e) => e.ref === preselectedExercise) ? preselectedExercise : null
-  )
+  const { days, plan, exercises, modules, preselectedExercise } = usePage<Props>().props
+  const { t, tn } = useTranslation()
 
-  const getExercise = (ref: string) => exercises.find((e) => e.ref === ref)
+  const today = new Date()
+  const week = weekOf(today)
+  const todayIndex = week.findIndex((d) => sameDay(d, today))
 
-  const add = (day: string, ref: string | null) => {
-    if (!ref || plan[day].includes(ref)) return
-    setPlan({ ...plan, [day]: [...plan[day], ref] })
-  }
+  const [selectedDay, setSelectedDay] = useState<string>(days[todayIndex >= 0 ? todayIndex : 0])
+  const [dragging, setDragging] = useState<PlanItem | null>(null)
+  const [tab, setTab] = useState<Tab>('exercises')
+  const [query, setQuery] = useState('')
+  const [moduleFilter, setModuleFilter] = useState('All')
 
-  const remove = (day: string, ref: string) => setPlan({ ...plan, [day]: plan[day].filter((r) => r !== ref) })
+  const preselected = preselectedExercise ? exercises.find((e) => e.ref === preselectedExercise) : undefined
+  const preselectedItem: PlanItem | null = preselected ? { kind: 'exercise', key: preselected.ref } : null
+
+  const visibleExercises = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return exercises.filter(
+      (e) =>
+        (moduleFilter === 'All' || e.moduleId === moduleFilter) &&
+        (q === '' || e.title.toLowerCase().includes(q) || exerciseNumber(e.ref).includes(q))
+    )
+  }, [exercises, moduleFilter, query])
+
+  const visibleModules = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return modules.filter(
+      (m) => q === '' || m.title.toLowerCase().includes(q) || m.description.toLowerCase().includes(q)
+    )
+  }, [modules, query])
+
+  const selectedDayLabel = t(LONG_DAY_KEY[selectedDay])
+  const addLabel = t('plan.index.addToDay', { day: selectedDayLabel })
+  const selectedEntries = plan[selectedDay] ?? []
 
   return (
-    <div className="px-5 pt-6 lg:px-10 lg:pt-9">
+    <div className="px-5 pt-5 lg:px-10 lg:pt-9">
       <div className="mx-auto flex max-w-[1120px] flex-col gap-5">
-        <PageHeader title={t('plan.index.title')} />
         <div className="flex flex-col gap-1">
-          <p className="text-meta text-muted-strong" aria-live="polite">
-            {picked ? t('plan.index.hintPicked') : t('plan.index.hintDefault')}
-          </p>
-          <p className="text-meta text-muted-strong">{t('plan.index.notSaved')}</p>
+          <PageHeader title={t('plan.index.title')} />
+          <p className="text-meta text-muted-strong">{t('plan.index.hint')}</p>
         </div>
 
-        {/* Mobile: tap-to-assign tray */}
-        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 lg:hidden">
-          {exercises.map((e) => (
-            <button
-              key={e.ref}
-              type="button"
-              onClick={() => setPicked(picked === e.ref ? null : e.ref)}
-              aria-pressed={picked === e.ref}
-              className={chipClass(picked === e.ref)}
-            >
-              {e.title}
-            </button>
-          ))}
-        </div>
+        <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+          {/* Week */}
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-1.5">
+              {days.map((day, i) => {
+                const selected = day === selectedDay
+                const hasItems = (plan[day] ?? []).length > 0
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => setSelectedDay(day)}
+                    aria-pressed={selected}
+                    aria-label={t(LONG_DAY_KEY[day])}
+                    className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl py-2 transition-colors ${
+                      selected ? 'bg-ink text-paper' : 'border border-line bg-white text-ink hover:border-teal'
+                    }`}
+                  >
+                    <span aria-hidden className={`text-[11px] ${selected ? 'text-ink-mute' : 'text-muted-strong'}`}>
+                      {titleCase(t(`common.days.short.${DAY_KEYS[i]}`))}
+                    </span>
+                    <span aria-hidden className="text-[15px] font-bold">
+                      {week[i].getDate()}
+                    </span>
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        hasItems ? (selected ? 'bg-teal' : 'bg-teal-deep') : 'bg-transparent'
+                      }`}
+                    />
+                  </button>
+                )
+              })}
+            </div>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
-          {/* Desktop: draggable library */}
-          <div className="hidden flex-col gap-2 rounded-2xl border border-line bg-white p-4 shadow-card lg:flex">
-            <span className="font-dash-mono text-label uppercase text-muted">{t('plan.index.exerciseLibrary')}</span>
-            {exercises.map((e) => (
-              <button
-                key={e.ref}
-                type="button"
-                draggable
-                onDragStart={() => setDragging(e.ref)}
-                onDragEnd={() => setDragging(null)}
-                onClick={() => setPicked(picked === e.ref ? null : e.ref)}
-                aria-pressed={picked === e.ref}
-                className={
-                  'cursor-grab rounded-[10px] border px-3 py-2.5 text-left text-meta ' +
-                  (picked === e.ref
-                    ? 'border-ink bg-ink text-paper'
-                    : 'border-line text-ink hover:border-teal hover:bg-paper')
-                }
-              >
-                {e.title}
-              </button>
-            ))}
+            {days.map((day, i) => {
+              const selected = day === selectedDay
+              const entries = plan[day] ?? []
+              return (
+                // biome-ignore lint/a11y/noStaticElementInteractions: drop target for desktop drag-and-drop; the add buttons in the library are the accessible path
+                <div
+                  key={day}
+                  onDragOver={(ev) => ev.preventDefault()}
+                  onDrop={(ev) => {
+                    ev.preventDefault()
+                    if (dragging) addPlanEntry(day, dragging)
+                    setDragging(null)
+                  }}
+                  className={`flex-col gap-3 rounded-[22px] border bg-white p-4 ${
+                    selected ? 'flex border-ink' : 'hidden border-line lg:flex'
+                  }`}
+                >
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="text-lg font-extrabold tracking-[-0.01em] text-ink">
+                      {t(LONG_DAY_KEY[day])}{' '}
+                      <span className="font-dash-mono text-xs font-normal text-muted-strong">{week[i].getDate()}</span>
+                    </h2>
+                    <span className="text-xs text-muted-strong">
+                      {t('plan.index.plannedCount', { count: entries.length })}
+                    </span>
+                  </div>
+
+                  {entries.length === 0 ? (
+                    <div className="flex flex-col items-center gap-1 rounded-2xl border border-dashed border-line-strong px-4 py-6 text-center">
+                      <span className="text-sm font-semibold text-ink">{t('plan.index.emptyDay')}</span>
+                      <span className="text-xs text-muted-strong">{t('plan.index.emptyDayHint')}</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {entries.map((entry) => (
+                        <EntryTile
+                          key={entry.id}
+                          entry={entry}
+                          moduleLabel={t('plan.index.moduleLabel')}
+                          removeLabel={t('plan.index.remove', { title: entry.title })}
+                          detail={entryDetail(entry, t)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
 
-          <div className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))]">
-            {days.map((day) => (
-              // The whole cell is a drop target. Placing a picked Exercise goes
-              // through a real <button> stretched under the cell's contents, a
-              // sibling of the remove buttons rather than their parent.
-              <section
-                key={day}
-                aria-labelledby={`day-${day}`}
-                onDragOver={(ev) => ev.preventDefault()}
-                onDrop={(ev) => {
-                  ev.preventDefault()
-                  add(day, dragging)
-                  setDragging(null)
-                }}
-                className={
-                  'relative flex min-w-0 flex-col gap-2 rounded-[14px] border bg-white p-3 shadow-card lg:min-h-40 ' +
-                  (picked ? 'border-teal' : 'border-line')
-                }
-              >
+          {/* Library */}
+          <aside className="flex flex-col gap-3">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-extrabold tracking-[-0.01em] text-ink">{t('plan.index.exerciseLibrary')}</h2>
+              <span className="text-xs text-muted-strong">
+                {tab === 'exercises'
+                  ? tn('plan.index.exercisesCount', visibleExercises.length)
+                  : tn('plan.index.modulesCount', visibleModules.length)}
+              </span>
+            </div>
+
+            {preselected && preselectedItem && (
+              <Tile tone="clay" className="flex flex-col gap-3">
+                <span className="font-dash-mono text-[11px] uppercase tracking-[0.12em] text-muted-strong">
+                  {t('plan.index.fromExercisePage')}
+                </span>
+                <div className="flex items-start gap-3">
+                  <TilePill className="font-dash-mono font-medium">{exerciseNumber(preselected.ref)}</TilePill>
+                  <span className="line-clamp-2 flex-1 text-[15px] font-extrabold leading-snug">
+                    {shortTitle(preselected.title)}
+                  </span>
+                </div>
                 <button
                   type="button"
-                  disabled={!picked}
-                  onClick={() => {
-                    add(day, picked)
-                    setPicked(null)
-                  }}
-                  aria-label={t('plan.index.addToDay', { day: t(LONG_DAY_KEY[day]) })}
-                  className="absolute inset-0 rounded-[14px] enabled:cursor-pointer enabled:hover:bg-paper disabled:cursor-default"
-                />
-                <h2 id={`day-${day}`} className="pointer-events-none relative font-dash-mono text-label text-muted">
-                  <span aria-hidden>{t(SHORT_DAY_KEY[day])}</span>
-                  <span className="sr-only">{t(LONG_DAY_KEY[day])}</span>
-                </h2>
-                {plan[day].map((ref) => {
-                  const e = getExercise(ref)
-                  return (
-                    <button
-                      key={ref}
-                      type="button"
-                      onClick={() => remove(day, ref)}
-                      aria-label={t('plan.index.removeFromDay', {
-                        exercise: e?.title ?? ref,
-                        day: t(LONG_DAY_KEY[day]),
-                      })}
-                      className="relative flex items-start justify-between gap-2 rounded-[10px] bg-mist p-2.5 pointer-coarse:min-h-11 pointer-coarse:items-center text-left text-xs leading-snug text-ink shadow-chip"
-                    >
-                      <span className="min-w-0 break-words">{e?.title ?? ref}</span>
-                      <HugeiconsIcon
-                        icon={Cancel01Icon}
-                        size={14}
-                        strokeWidth={1.75}
-                        className="shrink-0 text-muted-strong"
-                        aria-hidden
+                  onClick={() => addPlanEntry(selectedDay, preselectedItem)}
+                  disabled={isInDay(selectedEntries, preselectedItem)}
+                  className={buttonClass('primary')}
+                >
+                  <HugeiconsIcon
+                    icon={isInDay(selectedEntries, preselectedItem) ? Tick02Icon : Add01Icon}
+                    size={16}
+                    strokeWidth={1.9}
+                    aria-hidden
+                  />
+                  {isInDay(selectedEntries, preselectedItem) ? t('plan.index.added') : addLabel}
+                </button>
+              </Tile>
+            )}
+
+            <div className="flex rounded-full bg-mist p-1">
+              {(['exercises', 'modules'] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={tab === value}
+                  onClick={() => setTab(value)}
+                  className={`flex min-h-10 flex-1 items-center justify-center rounded-full text-meta font-semibold transition-colors ${
+                    tab === value ? 'bg-ink text-paper' : 'text-muted-strong'
+                  }`}
+                >
+                  {value === 'exercises' ? t('plan.index.tabExercises') : t('plan.index.tabModules')}
+                </button>
+              ))}
+            </div>
+
+            <label className="flex h-11 items-center gap-2 rounded-full border border-line bg-white px-4 text-ink focus-within:border-teal">
+              <HugeiconsIcon
+                icon={Search01Icon}
+                size={18}
+                strokeWidth={1.7}
+                className="shrink-0 text-muted-strong"
+                aria-hidden
+              />
+              <input
+                type="search"
+                aria-label={t('plan.index.searchPlaceholder')}
+                value={query}
+                onChange={(ev) => setQuery(ev.target.value)}
+                placeholder={t('plan.index.searchPlaceholder')}
+                className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-muted-strong"
+              />
+            </label>
+
+            {tab === 'exercises' && <ModuleFilter modules={modules} value={moduleFilter} onChange={setModuleFilter} />}
+
+            <div className="flex flex-col gap-2 lg:max-h-[640px] lg:overflow-y-auto lg:pr-1">
+              {tab === 'exercises'
+                ? visibleExercises.map((e) => {
+                    const item: PlanItem = { kind: 'exercise', key: e.ref }
+                    return (
+                      <LibraryRow
+                        key={e.ref}
+                        pill={exerciseNumber(e.ref)}
+                        title={shortTitle(e.title)}
+                        inDay={isInDay(selectedEntries, item)}
+                        onAdd={() => addPlanEntry(selectedDay, item)}
+                        onDragStart={() => setDragging(item)}
+                        onDragEnd={() => setDragging(null)}
+                        addLabel={addLabel}
+                        addedLabel={t('plan.index.added')}
                       />
-                    </button>
-                  )
-                })}
-                {plan[day].length === 0 ? (
-                  <p className="pointer-events-none relative rounded-[10px] border border-dashed border-line px-2 py-4 text-center text-xs text-muted">
-                    {t('plan.index.nothingPlanned')}
-                  </p>
-                ) : null}
-              </section>
-            ))}
-          </div>
+                    )
+                  })
+                : visibleModules.map((m) => {
+                    const item: PlanItem = { kind: 'module', key: m.id }
+                    return (
+                      <LibraryRow
+                        key={m.id}
+                        pill={m.title}
+                        title={m.description}
+                        detail={m.topics.join(' · ')}
+                        inDay={isInDay(selectedEntries, item)}
+                        onAdd={() => addPlanEntry(selectedDay, item)}
+                        onDragStart={() => setDragging(item)}
+                        onDragEnd={() => setDragging(null)}
+                        addLabel={addLabel}
+                        addedLabel={t('plan.index.added')}
+                      />
+                    )
+                  })}
+            </div>
+          </aside>
         </div>
       </div>
     </div>

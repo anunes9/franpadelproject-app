@@ -240,6 +240,18 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
+  describe ".plan_options" do
+    it "returns just each Module's slug, title, description and topics, in order" do
+      create(:course_module, slug: "second", position: 2, title: "M2", description: "Two", topics: ["B"])
+      create(:course_module, slug: "first", position: 1, title: "M1", description: "One", topics: ["A"])
+
+      expect(CourseModule.plan_options).to eq([
+        { id: "first", title: "M1", description: "One", topics: ["A"] },
+        { id: "second", title: "M2", description: "Two", topics: ["B"] }
+      ])
+    end
+  end
+
   describe ".dashboard_list_for" do
     it "returns every module with the given user's state merged in" do
       user = create(:user)
