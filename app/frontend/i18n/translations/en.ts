@@ -11,6 +11,7 @@ export const en = {
     signOut: 'Sign out',
     skipToContent: 'Skip to content',
     back: 'Back',
+    viewAll: 'View all',
     category: {
       all: 'All',
       technical: 'Technical',
@@ -61,11 +62,14 @@ export const en = {
   },
   dashboard: {
     home: {
-      greeting: {
-        morning: 'Good morning, {{name}}',
-        afternoon: 'Good afternoon, {{name}}',
-        evening: 'Good evening, {{name}}',
+      greetingLine: {
+        morning: 'Good morning,',
+        afternoon: 'Good afternoon,',
+        evening: 'Good evening,',
       },
+      heading: 'Your progress this week',
+      progressLabel: 'Progress',
+      yourPlan: 'Your plan',
       stats: {
         courseProgress: 'Course progress',
         modulesCompleteDetail: '{{done}} of {{total}} modules complete',
@@ -115,6 +119,15 @@ export const en = {
         other: '{{count}} exercises',
       },
       materialsEyebrow: 'Resources',
+      progressTitle: 'Module progress',
+      topicsCount: {
+        one: '1 topic',
+        other: '{{count}} topics',
+      },
+      materialsDrillsTitle: 'Resources & exercises',
+      materialsLabel: 'Resources',
+      drillsLabel: 'Exercises',
+      drillsDone: '{{done}} done',
       viewDocument: 'View',
       closeDocument: 'Close',
       moduleExercisesTitle: 'Module exercises',
@@ -201,6 +214,8 @@ export const en = {
       markingComplete: 'Marking as complete…',
       completed: 'Completed',
       addToPlan: 'Add to plan',
+      planShort: 'Plan',
+      imageCounter: 'Image {{index}} of {{total}}',
     },
   },
 }

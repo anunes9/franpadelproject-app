@@ -29,6 +29,12 @@
   --color-line-strong: #737875;
   --color-track: #e9ede9;
 
+  /* Soft tints of the three accents, used as tile fills. Each is the
+     accent mixed into white, so ink text keeps full contrast on top. */
+  --color-tint-teal: #dfeee8;
+  --color-tint-ink: #e7eaee;
+  --color-tint-clay: #f3e4de;
+
   /* Elevation. Tinted with the ink color rather than neutral black, and each
      pairs a tight "contact" shadow with a softer ambient one plus a 1px
      inner highlight that catches light along the top edge, so surfaces read

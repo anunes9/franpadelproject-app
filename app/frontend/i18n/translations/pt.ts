@@ -13,6 +13,7 @@ export const pt = {
     signOut: 'Terminar sessão',
     skipToContent: 'Saltar para o conteúdo',
     back: 'Voltar',
+    viewAll: 'Ver tudo',
     category: {
       all: 'Todos',
       technical: 'Técnico',
@@ -63,11 +64,14 @@ export const pt = {
   },
   dashboard: {
     home: {
-      greeting: {
-        morning: 'Bom dia, {{name}}',
-        afternoon: 'Boa tarde, {{name}}',
-        evening: 'Boa noite, {{name}}',
+      greetingLine: {
+        morning: 'Bom dia,',
+        afternoon: 'Boa tarde,',
+        evening: 'Boa noite,',
       },
+      heading: 'O seu progresso esta semana',
+      progressLabel: 'Progresso',
+      yourPlan: 'O seu plano',
       stats: {
         courseProgress: 'Progresso do curso',
         modulesCompleteDetail: '{{done}} de {{total}} mesociclos concluídos',
@@ -117,6 +121,15 @@ export const pt = {
         other: '{{count}} exercícios',
       },
       materialsEyebrow: 'Materiais',
+      progressTitle: 'Progresso do mesociclo',
+      topicsCount: {
+        one: '1 tópico',
+        other: '{{count}} tópicos',
+      },
+      materialsDrillsTitle: 'Materiais e exercícios',
+      materialsLabel: 'Materiais',
+      drillsLabel: 'Exercícios',
+      drillsDone: '{{done}} concluídos',
       viewDocument: 'Ver',
       closeDocument: 'Fechar',
       moduleExercisesTitle: 'Exercícios do mesociclo',
@@ -203,6 +216,8 @@ export const pt = {
       markingComplete: 'A marcar como concluído…',
       completed: 'Concluído',
       addToPlan: 'Adicionar ao plano',
+      planShort: 'Plano',
+      imageCounter: 'Imagem {{index}} de {{total}}',
     },
   },
 } satisfies typeof en

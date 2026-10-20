@@ -1,12 +1,25 @@
 import { useTranslation } from '@/i18n/useTranslation'
 
+const TRACK = {
+  light: 'h-1 bg-track',
+  dark: 'h-1 bg-paper/15',
+  // Thick bar for tinted tiles: white track, ink fill.
+  tile: 'h-2.5 bg-white',
+} as const
+
+const FILL = {
+  light: 'bg-teal-deep',
+  dark: 'bg-teal',
+  tile: 'rounded-full bg-ink',
+} as const
+
 export function ProgressBar({
   value,
   tone = 'light',
   label,
 }: {
   value: number
-  tone?: 'light' | 'dark'
+  tone?: 'light' | 'dark' | 'tile'
   label?: string
 }) {
   const { t } = useTranslation()
@@ -20,9 +33,9 @@ export function ProgressBar({
       aria-valuemax={100}
       aria-valuetext={t('common.progress', { percent })}
       aria-label={label}
-      className={`h-1 w-full overflow-hidden rounded-full ${tone === 'dark' ? 'bg-paper/15' : 'bg-track'}`}
+      className={`w-full overflow-hidden rounded-full ${TRACK[tone]}`}
     >
-      <div className={`h-full ${tone === 'dark' ? 'bg-teal' : 'bg-teal-deep'}`} style={{ width: `${percent}%` }} />
+      <div className={`h-full ${FILL[tone]}`} style={{ width: `${percent}%` }} />
     </div>
   )
 }

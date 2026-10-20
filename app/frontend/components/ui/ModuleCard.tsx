@@ -80,7 +80,7 @@ export function ModuleCard({
   return (
     <Link
       href={href}
-      className={`${CARD_BASE} border-line shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0 bg-white`}
+      className={`${CARD_BASE} border-line shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:transition-colors motion-reduce:hover:translate-y-0 ${status === 'completed' ? 'bg-tint-ink' : 'bg-white'}`}
     >
       {body}
     </Link>
