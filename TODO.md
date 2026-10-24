@@ -11,7 +11,7 @@ Module Completion is currently a manual "mark as done" (`CourseModule#complete_f
 - [ ] Adding an Exercise (or later a Quiz) to a Module removes Module Completion from Clients who no longer meet it
 - [ ] Derive Locked: a Module is Locked unless it is first in its Course or the previous Module has Module Completion; a Player's Level never locks anything
 - [ ] Derive Available / In Progress / Completed for a Client's Module (replaces `locked/current/done`)
-- [ ] Derive Course Completion: Module Completion of every Module in a non-Planned Course (including the Coach Module)
+- [ ] Derive Course Completion: Module Completion of every Module in a non-Planned Course
 - [ ] Show a Course with no Modules (Advanced) as Planned / coming soon
 - [ ] Replace the stored `UserModuleProgress` status/progress with derived values (or keep it strictly as a cache) and remove the manual "mark as done"
 - [ ] Wire `exercisesDone` in `CourseModule.dashboard_stats_for` to real Exercise Completions

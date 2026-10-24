@@ -14,7 +14,7 @@ web
 
 ## Positioning
 
-The platform teaches **Fran's own methodology** for padel: one coach's structured method, delivered in a fixed order. Modules unlock in sequence, Training Plans walk the Modules in that same order, and theory, on-court Exercises and the Coach Module all follow that method. A generic padel course or a YouTube drill collection can't honestly claim to be the Fran Methodology.
+The platform teaches **Fran's own methodology** for padel: one coach's structured method, delivered in a fixed order. Modules unlock in sequence, Training Plans walk the Modules in that same order, and theory and on-court Exercises all follow that method. A generic padel course or a YouTube drill collection can't honestly claim to be the Fran Methodology.
 
 ## Operating Context
 
@@ -72,11 +72,11 @@ A Coach creates **Class Groups**. A Class Group is up to eight Players, a Level,
 
 From that description the app generates the group's **Training Plan** for the whole Course up front, by rules, with no AI:
 
-- It walks the Course's seven teaching Modules in order. The Coach Module is not part of it.
+- It walks the Course's seven Modules in order.
 - A Module takes 6 weeks at once a week and 4 weeks at twice a week. The last week is the **Assessment Class**.
 - The first Class falls on the first chosen weekday on or after the start date. No Classes fall in the Club's Break Periods.
 - The plan ends after the last Module's Assessment Class. It has no season end date. At 44 teaching weeks in a year (52 weeks less 2 Christmas, 4 August and 2 Easter weeks) all seven Modules fit: 42 weeks at once a week and 28 at twice a week. Spare weeks stay unscheduled.
-- A group can't be created while its Course has no teaching Modules, so Advanced, and for now Intermediate, are unavailable.
+- A group can't be created while its Course has no Modules, so Advanced, and for now Intermediate, are unavailable.
 
 A **Class** is one dated day of the plan: its date, time, Module and the Exercises the Coach chooses from that Module. It is a reference so the Coach can see what is planned that day. Planning a Class never records progress.
 
@@ -99,7 +99,7 @@ There are three Courses, one per Level:
 - **Intermediate**: more advanced technique and tactics, building on Beginner.
 - **Advanced**: currently **Planned** (no Modules yet), shown as coming soon.
 
-Each Course is an ordered sequence of Modules (called _mesociclos_ in Portuguese). Each Course is meant to have seven teaching Modules, which Training Plans use. Every Course also includes one **Coach Module** about teaching padel, which every Client sees and completes like any other Module.
+Each Course is an ordered sequence of Modules (called _mesociclos_ in Portuguese). Each Course is meant to have seven Modules, which Training Plans use.
 
 A Module has:
 

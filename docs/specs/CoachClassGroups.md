@@ -37,11 +37,11 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 20. As a Coach, I want to choose the group's Level myself, so that it is not computed from its Players.
 21. As a Coach, I want a Class Group limited to eight Players, so that groups stay a workable size.
 22. As a Coach, I want the group's Level to select its Course, so that the plan uses the right Modules.
-23. As a Coach, I want group creation to be refused while the Course has no teaching Modules, so that the app never invents content.
+23. As a Coach, I want group creation to be refused while the Course has no Modules, so that the app never invents content.
 24. As a Coach, I want the Training Plan generated for the whole Course on creation, so that I see the full year at once.
 25. As a Coach, I want a Module to take 6 weeks at once a week and 4 weeks at twice a week, so that the plan follows the academy's methodology.
 26. As a Coach, I want the last week of each Module to be an Assessment Class, so that I know when to assess.
-27. As a Coach, I want Modules used in Course order and the Coach Module excluded, so that the plan is the teaching sequence.
+27. As a Coach, I want Modules used in Course order, so that the plan is the teaching sequence.
 28. As a Coach, I want no Classes generated in my Club's Break Periods, so that the plan fits the calendar.
 29. As a Coach, I want the first Class on the first chosen weekday on or after the start date, so that the plan starts when I expect.
 30. As a Coach, I want the plan to end after the last Module's assessment with no fixed season end, so that it fits any start date.
@@ -75,26 +75,26 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 - **Class Group.** Owned by one Coach, with its Club taken from that Coach. Holds Level (chosen by the Coach), start date, cadence (1 or 2 per week), chosen weekdays (one per weekly Class), a start time and a duration (60 or 90 minutes). It has one to eight Players, who can also be in other groups. A group is tied to one Course through its Level. It is never deleted when its Coach is removed; ownership is reassigned first.
 - **Break Period.** A set of date ranges per Club, defined by its Managers. Plans skip these dates.
 - **Class.** One dated entry of a Training Plan with a date, start time, duration, Module, optional Exercises chosen by the Coach, a type (regular or assessment), and a done flag. A Class has no per-Class duration; it inherits the group's.
-- **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's teaching Modules in order (the Coach Module excluded), the group's cadence, weekdays, time and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
+- **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's Modules in order, the group's cadence, weekdays, time and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
   - Once a week: 6 weeks per Module, the 6th being an Assessment Class. Twice a week: 4 weeks per Module, the 4th being the assessment week.
   - The Module's own `duration` text is ignored.
   - The first Class is on the first chosen weekday on or after the start date. Weeks that fall in a Break Period get no Classes and are not counted toward the Module's weeks.
   - The plan ends after the last Module's Assessment Class. There is no season end date.
   - The generator does not assign Exercises. The Coach picks them.
-  - It refuses a Course that has no teaching Modules, like a Planned Course.
+  - It refuses a Course that has no Modules, like a Planned Course.
 - **Clash rule.** A Coach cannot have two Classes that overlap in time, and neither can a Player, comparing the full time interval (start plus duration). It is checked on creating a group, adding a Player, changing the schedule, moving or adding a Class, and regenerating. Generating a group is all-or-nothing: if any generated Class clashes, nothing is created and the clashing dates are returned.
 - **Plan editing.** The Coach can move, skip, add and mark Classes done, and pick their Exercises. Regeneration happens only on request, keeps completed Classes, and replaces the rest.
 - **Visibility.** A Class Group and its plan are visible and editable only to its owning Coach and to the Managers of its Club. Other Coaches cannot see it.
 - **Manager powers.** Managers manage the Coaches, Class Groups and Players of their linked Clubs, including reassigning a group to another Coach in the same Club. Removing a Coach is blocked while they own groups.
 - **Screens.** The Coach home shows today's Classes and their Class Groups. The Manager home is a Club overview with a Club switcher. The Courses, Modules and Exercises library is shared by both roles. The Coach keeps their own progress, Quizzes and Certification.
 - **Removed.** The Player's per-user Weekly Plan is removed along with the Player-with-login role. The app is pre-launch, so existing Player data is dropped, not migrated.
-- **Content dependency.** The Intermediate Course currently has no teaching Modules, and the Beginner Module 7 has no Exercises. Generation for the Intermediate Course stays unavailable until its Modules exist. Exercises have no duration in the content source, so nothing depends on Exercise duration.
+- **Content dependency.** The Intermediate Course currently has no Modules, and the Beginner Module 7 has no Exercises. Generation for the Intermediate Course stays unavailable until its Modules exist. Exercises have no duration in the content source, so nothing depends on Exercise duration.
 
 ## Testing Decisions
 
 - A good test checks external behavior only: what a user sees or is refused, and the resulting plan, not how it is built.
 - **Seam 1, request specs (primary).** Covers invitations and role-based access, Class Group creation and the plan it returns, clash refusal on creation and on every later edit, plan editing and regeneration that keeps completed Classes, Break Periods, Club roster and Player management, Manager multi-Club access and reassignment, and Coach removal being blocked. Prior art: the existing request specs for the plan, the admin Clubs and Users screens, and the dashboard.
-- **Seam 2, Training Plan generator spec (new).** A model-level spec with plain inputs and outputs, with no HTTP. It covers 4 and 6 weeks per Module, the Assessment Class in the last week, Module order with the Coach Module excluded, skipping Break Periods, the first-Class date rule, a plan ending after the last Module, and refusal for a Course without teaching Modules. Prior art: the existing model specs. Request specs only check that the generator is wired up.
+- **Seam 2, Training Plan generator spec (new).** A model-level spec with plain inputs and outputs, with no HTTP. It covers 4 and 6 weeks per Module, the Assessment Class in the last week, Module order, skipping Break Periods, the first-Class date rule, a plan ending after the last Module, and refusal for a Course without Modules. Prior art: the existing model specs. Request specs only check that the generator is wired up.
 - No other seams. Assessment evaluation and Exercise suggestion are out of scope.
 
 ## Out of Scope
