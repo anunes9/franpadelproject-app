@@ -9,6 +9,10 @@
         "RAILS_ENV=development DATABASE_URL=${DATABASE_URL:-postgres://localhost/franpadelproject_development} PORT=$((PORT-100)) exec foreman start -f Procfile.dev -e /dev/null"
       ],
       "port": 3100
+    },
+    {
+      "name": "attach",
+      "url": "http://localhost:3000"
     }
   ]
 }

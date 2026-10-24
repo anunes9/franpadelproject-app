@@ -5,27 +5,27 @@ An online learning platform where padel players and coaches work through structu
 ## People
 
 **Client**:
-Anyone with an account on the platform other than an Admin: a Player, a Coach or a Club Manager.
+Anyone with an account on the platform other than an Admin: a Club Manager or a Coach.
 _Avoid_: User, customer, member
 
-**Player**:
-A Client learning to play padel through the Courses.
-_Avoid_: Student, learner
-
-**Coach**:
-A Client who teaches padel and uses the platform as a teaching resource.
-_Avoid_: Instructor, teacher, trainer
-
 **Club Manager**:
-A Client who represents a Club and follows the progress of its Players and Coaches.
+A Client who manages one or more Clubs, their Coaches, Class Groups and Players. A Club Manager is created by an Admin and cannot create Clubs.
 _Avoid_: Club (for the account), club admin, club owner
 
+**Coach**:
+A Client who belongs to exactly one Club, added by a Club Manager through an email invitation. A Coach owns Class Groups, runs their Classes, and also learns through the Courses.
+_Avoid_: Instructor, teacher, trainer
+
+**Player**:
+A person who plays padel at a Club, recorded with a name, position (left, right or both), dominant hand and Level. A Player has no account and cannot log in. A Player belongs to one Club and can be in several Class Groups.
+_Avoid_: Student, learner, member
+
 **Club**:
-A padel club that Players and Coaches can belong to.
+A padel club with its Coaches, Players and Break Periods. Created and linked to Club Managers by an Admin.
 _Avoid_: Academy, venue
 
 **Admin**:
-A person who manages the platform's content and Clients, rather than learning from it.
+A person who manages the platform's content, Clubs and Clients, rather than teaching or learning from it.
 _Avoid_: Staff, sales, superuser
 
 ## Content
@@ -106,6 +106,23 @@ _Avoid_: Certificate (for the achievement), diploma
 
 ## Planning
 
-**Weekly Plan**:
-A Client's schedule of Modules and Exercises across the days of one week. It is an intention only and never records progress or grants access.
-_Avoid_: Training planner, schedule, calendar
+**Class Group**:
+A group of one to eight Players taught by one Coach, tied to one Course through its Level. It has a start date, a cadence (once or twice a week), chosen weekdays, a start time and a Class duration (1 hour or 1h30). The Coach picks its Level; it is not computed from its Players. A finished Class Group stays as history; the next Course is a new Class Group.
+_Avoid_: Class (for the group), team, cohort
+
+**Training Plan**:
+The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the seven teaching Modules in Course order and has no season end date. Regenerating happens only when the Coach asks, and keeps completed Classes. It is an intention only.
+_Avoid_: Weekly Plan, schedule, calendar
+
+**Class**:
+One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time.
+_Avoid_: Session, lesson
+
+**Assessment Class**:
+The last Class of each Module in a Training Plan, in week 6 at once a week and in week 4 at twice a week. It is where each Player's qualitative evaluation of the Module's concepts will be recorded; that evaluation feature is still to be scoped, and is separate from Certification.
+_Avoid_: Test, exam, Practical Assessment
+
+**Break Period**:
+A span of weeks defined by a Club's Club Manager (Christmas, Easter, August) during which no Classes are generated for its Class Groups.
+_Avoid_: Holiday, vacation
+
