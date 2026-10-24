@@ -8,9 +8,7 @@ class DashboardController < ApplicationController
   def index
     render inertia: "Dashboard/Home", props: {
       courseStats: CourseModule.dashboard_stats_for(current_user),
-      modules: CourseModule.dashboard_list_for(current_user),
-      days: PlanEntry::DAYS,
-      plan: PlanEntry.week_json_for(current_user)
+      modules: CourseModule.dashboard_list_for(current_user)
     }
   end
 end

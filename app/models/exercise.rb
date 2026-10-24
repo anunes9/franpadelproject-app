@@ -60,13 +60,6 @@ class Exercise < ApplicationRecord
     exercises.map { |e| e.as_dashboard_json(user, completed: completed_ids.include?(e.id)) }
   end
 
-  # The Weekly Plan only needs to name each Exercise and filter by Module.
-  def self.plan_options
-    ordered.left_joins(:course_module).pluck(:ref, :title, "course_modules.slug").map do |ref, title, module_slug|
-      { ref: ref, title: title, moduleId: module_slug }
-    end
-  end
-
   def self.ransackable_attributes(_auth_object = nil)
     %w[ref title category duration content course_module_id created_at updated_at]
   end

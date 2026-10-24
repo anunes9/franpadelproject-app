@@ -3,7 +3,9 @@ class Club < ApplicationRecord
 
   has_one_attached :logo
   organizes_attachment :logo, folder: -> { "clubs/#{id}/logo" }
-  has_many :users, dependent: :nullify
+  has_many :coaches, -> { where(role: :coach) }, class_name: "User", inverse_of: :club, dependent: :restrict_with_error
+  has_many :club_memberships, dependent: :destroy
+  has_many :managers, through: :club_memberships, source: :user
 
   validates :name, presence: true, uniqueness: true
 

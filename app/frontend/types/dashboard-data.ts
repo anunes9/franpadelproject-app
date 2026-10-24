@@ -59,19 +59,6 @@ export interface QuizQuestion {
   correct: number
 }
 
-export interface PlanEntry {
-  id: string
-  kind: 'exercise' | 'module'
-  /** Exercise ref or module slug. */
-  key: string
-  title: string
-  detail: string | null
-  href: string
-}
-
-/** Day name ("Monday") → entries in position order. */
-export type PlanWeek = Record<string, PlanEntry[]>
-
 export interface DashboardUser {
   name: string
   initials: string

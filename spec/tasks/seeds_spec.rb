@@ -18,9 +18,9 @@ RSpec.describe "db/seeds.rb" do
   it "creates progress rows for every seed user matching today's hardcoded values" do
     expect(UserModuleProgress.count).to eq(User.count * 8)
 
-    client = User.find_by(email: "client@example.com")
+    coach = User.find_by(email: "coach@example.com")
     module_three = CourseModule.find_by(slug: "module-3")
-    progress = UserModuleProgress.find_by(user: client, course_module: module_three)
+    progress = UserModuleProgress.find_by(user: coach, course_module: module_three)
 
     expect(progress.status).to eq("current")
     expect(progress.progress).to eq(40)
@@ -31,13 +31,22 @@ RSpec.describe "db/seeds.rb" do
     expect(Club.first.name).to eq("Padel Clube Lisboa")
   end
 
-  it "gives the client user a real name, age, level, hand, and club" do
-    client = User.find_by(email: "client@example.com")
+  it "seeds an admin, a club manager linked to the club, and no Weekly Plan data" do
+    manager = User.find_by(email: "manager@example.com")
 
-    expect(client.name).to eq("Miguel Santos")
-    expect(client.age).to eq(34)
-    expect(client.level).to eq("beginner")
-    expect(client.hand).to eq("right")
-    expect(client.club.name).to eq("Padel Clube Lisboa")
+    expect(User.find_by(email: "admin@example.com")).to be_admin
+    expect(manager).to be_club_manager
+    expect(manager.managed_clubs).to eq([Club.first])
+    expect(ActiveRecord::Base.connection.table_exists?(:plan_entries)).to be false
+  end
+
+  it "gives the coach user a real name, age, level, hand, and club" do
+    coach = User.find_by(email: "coach@example.com")
+
+    expect(coach.name).to eq("Miguel Santos")
+    expect(coach.age).to eq(34)
+    expect(coach.level).to eq("beginner")
+    expect(coach.hand).to eq("right")
+    expect(coach.club.name).to eq("Padel Clube Lisboa")
   end
 end
