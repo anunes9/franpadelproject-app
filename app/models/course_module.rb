@@ -125,13 +125,6 @@ class CourseModule < ApplicationRecord
     end
   end
 
-  # The Weekly Plan only needs to name, describe and filter each Module.
-  def self.plan_options
-    ordered.pluck(:slug, :title, :description, :topics).map do |slug, title, description, topics|
-      { id: slug, title: title, description: description, topics: topics }
-    end
-  end
-
   def self.dashboard_list_for(user)
     modules = ordered.to_a
     states = states_for(user, modules)

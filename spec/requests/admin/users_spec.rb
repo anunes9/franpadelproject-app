@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin users management", type: :request do
-  let(:admin) { create(:user, role: :admin) }
+  let(:admin) { create(:user, :admin) }
 
   before { sign_in admin }
 
@@ -13,30 +13,72 @@ RSpec.describe "Admin users management", type: :request do
   end
 
   it "filters users by role" do
-    create(:user, email: "client-person@example.com", role: :client)
+    create(:user, email: "coach-person@example.com", role: :coach)
     # The rendered filter <select> submits the enum's integer value (see
     # app/admin/users.rb) -- not the string key, which Ransack's role_eq
     # would silently miscast via a naive #to_i.
-    get "/admin/users", params: { q: { role_eq: User.roles["client"] } }
+    get "/admin/users", params: { q: { role_eq: User.roles["coach"] } }
     expect(response).to have_http_status(200)
-    expect(response.body).to include("client-person@example.com")
+    expect(response.body).to include("coach-person@example.com")
   end
 
-  it "creates a user with a password" do
+  it "creates a Coach in a Club with a password" do
+    club = create(:club)
+
     expect {
       post "/admin/users", params: {
         user: {
-          email: "new@example.com", role: "client", name: "New User",
+          email: "new@example.com", role: "coach", name: "New Coach", club_id: club.id,
           password: "password123", password_confirmation: "password123"
         }
       }
     }.to change(User, :count).by(1)
 
-    expect(User.find_by(email: "new@example.com")).to be_present
+    expect(User.find_by(email: "new@example.com")).to have_attributes(role: "coach", club: club)
+  end
+
+  it "does not create a Coach without a Club" do
+    expect {
+      post "/admin/users", params: {
+        user: {
+          email: "new@example.com", role: "coach", name: "New Coach",
+          password: "password123", password_confirmation: "password123"
+        }
+      }
+    }.not_to change(User, :count)
+  end
+
+  it "creates a Club Manager linked to several Clubs" do
+    clubs = create_list(:club, 2)
+
+    post "/admin/users", params: {
+      user: {
+        email: "manager@example.com", role: "club_manager", name: "Manager",
+        password: "password123", password_confirmation: "password123",
+        managed_club_ids: ["", *clubs.map(&:id)]
+      }
+    }
+
+    expect(User.find_by(email: "manager@example.com").managed_clubs).to match_array(clubs)
+  end
+
+  it "links an existing Club Manager to another Club" do
+    manager = create(:user, :club_manager)
+    club = create(:club)
+
+    patch "/admin/users/#{manager.id}", params: {
+      user: { email: manager.email, role: "club_manager", managed_club_ids: [club.id], password: "", password_confirmation: "" }
+    }
+
+    expect(manager.reload.managed_clubs).to eq([club])
+  end
+
+  it "lets an Admin create a Club" do
+    expect { post "/admin/clubs", params: { club: { name: "New Club" } } }.to change(Club, :count).by(1)
   end
 
   it "updates a user's role without requiring a password" do
-    target = create(:user, role: :client)
+    target = create(:user, role: :coach)
 
     patch "/admin/users/#{target.id}", params: {
       user: { email: target.email, role: "admin", password: "", password_confirmation: "" }
@@ -49,7 +91,7 @@ RSpec.describe "Admin users management", type: :request do
     target = create(:user, email: "keep-pass@example.com", password: "originalpass1")
 
     patch "/admin/users/#{target.id}", params: {
-      user: { email: target.email, role: "client", password: "", password_confirmation: "" }
+      user: { email: target.email, role: "coach", password: "", password_confirmation: "" }
     }
 
     expect(target.reload.valid_password?("originalpass1")).to be true

@@ -30,7 +30,7 @@ RSpec.describe "admin:create rake task" do
   end
 
   it "promotes an existing user to admin instead of creating a duplicate" do
-    existing = create(:user, email: "promote@example.com", role: :client)
+    existing = create(:user, email: "promote@example.com", role: :coach)
     ENV["EMAIL"] = "promote@example.com"
     ENV["PASSWORD"] = "password123"
 

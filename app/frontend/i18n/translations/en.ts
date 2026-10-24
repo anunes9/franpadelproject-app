@@ -4,8 +4,6 @@ export const en = {
       dashboard: 'Dashboard',
       courses: 'Courses',
       exercises: 'Exercises',
-      weeklyPlan: 'Weekly plan',
-      plan: 'Plan',
       profile: 'Profile',
     },
     signOut: 'Sign out',
@@ -69,9 +67,6 @@ export const en = {
       },
       heading: 'Your progress this week',
       progressLabel: 'Progress',
-      yourPlan: 'Your plan',
-      emptyPlan: 'Nothing planned this week',
-      emptyPlanCta: 'Plan your week',
       stats: {
         courseProgress: 'Course progress',
         modulesCompleteDetail: '{{done}} of {{total}} modules complete',
@@ -157,32 +152,6 @@ export const en = {
       continue: 'Continue',
     },
   },
-  plan: {
-    index: {
-      title: 'Weekly plan',
-      hint: 'Pick a day, then add exercises or modules from the library',
-      exerciseLibrary: 'Library',
-      exercisesCount: {
-        one: '1 exercise',
-        other: '{{count}} exercises',
-      },
-      searchPlaceholder: 'Search',
-      emptyDay: 'Nothing planned yet',
-      emptyDayHint: 'Add exercises from the library, or drop one here',
-      addToDay: 'Add to {{day}}',
-      added: 'Added',
-      remove: 'Remove {{title}}',
-      fromExercisePage: 'From the exercise page',
-      tabExercises: 'Exercises',
-      tabModules: 'Modules',
-      modulesCount: {
-        one: '1 module',
-        other: '{{count}} modules',
-      },
-      plannedCount: '{{count}} planned',
-      moduleLabel: 'Module',
-    },
-  },
   profile: {
     show: {
       rowLabel: {
@@ -224,8 +193,6 @@ export const en = {
       markComplete: 'Mark complete',
       markingComplete: 'Marking as complete…',
       completed: 'Completed',
-      addToPlan: 'Add to plan',
-      planShort: 'Plan',
       imageCounter: 'Image {{index}} of {{total}}',
     },
   },

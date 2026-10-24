@@ -1,6 +1,5 @@
 import {
   Book02Icon,
-  Calendar03Icon,
   Dumbbell02Icon,
   Home01Icon,
   Logout03Icon,
@@ -23,7 +22,6 @@ function useNav() {
       tab: t('common.nav.exercises'),
       icon: Dumbbell02Icon,
     },
-    { href: '/dashboard/plan', label: t('common.nav.weeklyPlan'), tab: t('common.nav.plan'), icon: Calendar03Icon },
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]
 }

@@ -8,15 +8,22 @@ admin.role = :admin
 admin.name = "Admin User"
 admin.save!
 
-client = User.find_or_initialize_by(email: "client@example.com")
-client.password = "password123" if client.new_record?
-client.role = :client
-client.name = "Miguel Santos"
-client.age = 34
-client.level = :beginner
-client.hand = :right
-client.club = club
-client.save!
+manager = User.find_or_initialize_by(email: "manager@example.com")
+manager.password = "password123" if manager.new_record?
+manager.role = :club_manager
+manager.name = "Sofia Almeida"
+manager.save!
+manager.managed_clubs << club unless manager.managed_clubs.include?(club)
+
+coach = User.find_or_initialize_by(email: "coach@example.com")
+coach.password = "password123" if coach.new_record?
+coach.role = :coach
+coach.name = "Miguel Santos"
+coach.age = 34
+coach.level = :beginner
+coach.hand = :right
+coach.club = club
+coach.save!
 
 require "rake"
 Rails.application.load_tasks unless Rake::Task.task_defined?("course_modules:import")
