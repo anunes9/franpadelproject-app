@@ -19,6 +19,17 @@ RSpec.describe "Dashboard", type: :request do
     expect(response.body).to include("Ana Costa")
   end
 
+  it "exposes the user's weekly plan" do
+    user = create(:user)
+    create(:plan_entry, user: user, day: :thursday, plannable: create(:exercise, ref: "EX-9"))
+    sign_in user
+
+    get "/dashboard"
+
+    expect(response.body).to include('"Thursday":[{')
+    expect(response.body).to include('"key":"EX-9"')
+  end
+
   it "shares the signed-in user's locale" do
     user = create(:user, name: "Ana Costa", locale: :en)
     sign_in user

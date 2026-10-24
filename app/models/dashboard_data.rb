@@ -5,11 +5,4 @@ module DashboardData
     { q: "Dynamic balance means the body is launched…", options: ["Before the ball is struck", "After the ball is struck", "Only on the second serve"], correct: 1 },
     { q: "Placing the return near the \"T\" line…", options: ["Enhances mobility from the corner to the \"T\" line", "Camouflages the lack of mobility from the corner to the \"T\" line", "Is reserved for flat serves"], correct: 1 }
   ].freeze
-
-  DAYS = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday].freeze
-
-  DEFAULT_PLAN = {
-    "Monday" => ["exercise-1.0"], "Tuesday" => [], "Wednesday" => ["exercise-2.0"],
-    "Thursday" => ["exercise-5.0"], "Friday" => [], "Saturday" => [], "Sunday" => []
-  }.freeze
 end

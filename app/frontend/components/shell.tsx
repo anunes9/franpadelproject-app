@@ -86,12 +86,10 @@ function Sidebar() {
 }
 
 function MobileHeader() {
-  const { props } = usePage<{ dashboardUser: DashboardUser }>()
-  const { dashboardUser } = props
   const { t } = useTranslation()
 
   return (
-    <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between border-b border-line/80 bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
+    <header className="sticky top-0 z-30 flex min-h-14 items-center border-b border-line/80 bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
       <Link href="/dashboard" className="flex h-11 items-center">
         <img
           src="/fran-methodology-logo.png"
@@ -100,15 +98,6 @@ function MobileHeader() {
           height={286}
           className="-my-3 h-[4.25rem] w-auto"
         />
-      </Link>
-      <Link
-        href="/dashboard/profile"
-        aria-label={t('common.nav.profile')}
-        className="flex h-11 w-11 items-center justify-center"
-      >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper">
-          {dashboardUser.initials}
-        </span>
       </Link>
     </header>
   )
@@ -143,7 +132,10 @@ function BottomTabs() {
 // The document scrolls (not an inner container), so mobile browser chrome can
 // collapse, anchors and scroll restoration work, and body scroll-lock in modals
 // takes effect. The sidebar stays put by being sticky and viewport-tall.
-export function AppShell({ children }: { children: ReactNode }) {
+//
+// Detail pages (module, exercise) draw their own back / title row, so they
+// pass `mobileHeader={false}` to drop the logo bar on small screens.
+export function AppShell({ children, mobileHeader = true }: { children: ReactNode; mobileHeader?: boolean }) {
   const { t } = useTranslation()
 
   return (
@@ -156,7 +148,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </a>
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <MobileHeader />
+        {mobileHeader && <MobileHeader />}
         <main
           id="main"
           tabIndex={-1}

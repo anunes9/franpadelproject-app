@@ -13,6 +13,7 @@ export const pt = {
     signOut: 'Terminar sessão',
     skipToContent: 'Saltar para o conteúdo',
     back: 'Voltar',
+    viewAll: 'Ver tudo',
     category: {
       all: 'Todos',
       technical: 'Técnico',
@@ -63,11 +64,16 @@ export const pt = {
   },
   dashboard: {
     home: {
-      greeting: {
-        morning: 'Bom dia, {{name}}',
-        afternoon: 'Boa tarde, {{name}}',
-        evening: 'Boa noite, {{name}}',
+      greetingLine: {
+        morning: 'Bom dia,',
+        afternoon: 'Boa tarde,',
+        evening: 'Boa noite,',
       },
+      heading: 'O seu progresso esta semana',
+      progressLabel: 'Progresso',
+      yourPlan: 'O seu plano',
+      emptyPlan: 'Nada planeado esta semana',
+      emptyPlanCta: 'Planear a semana',
       stats: {
         courseProgress: 'Progresso do curso',
         modulesCompleteDetail: '{{done}} de {{total}} mesociclos concluídos',
@@ -80,11 +86,6 @@ export const pt = {
       noModules: 'Ainda não há mesociclos.',
       modulesEyebrow: 'Mesociclos',
       thisWeekEyebrow: 'Esta semana',
-      weekPlan: {
-        title: 'Planeie a sua semana',
-        detail: 'Escolha que exercícios praticar em cada dia.',
-        cta: 'Abrir plano semanal',
-      },
     },
   },
   courses: {
@@ -117,6 +118,15 @@ export const pt = {
         other: '{{count}} exercícios',
       },
       materialsEyebrow: 'Materiais',
+      progressTitle: 'Progresso do mesociclo',
+      topicsCount: {
+        one: '1 tópico',
+        other: '{{count}} tópicos',
+      },
+      materialsDrillsTitle: 'Materiais e exercícios',
+      materialsLabel: 'Materiais',
+      drillsLabel: 'Exercícios',
+      drillsDone: '{{done}} concluídos',
       viewDocument: 'Ver',
       closeDocument: 'Fechar',
       moduleExercisesTitle: 'Exercícios do mesociclo',
@@ -152,13 +162,27 @@ export const pt = {
   plan: {
     index: {
       title: 'Plano semanal',
-      hintPicked: 'Agora escolha um dia para adicionar',
-      hintDefault: 'Escolha um exercício e depois um dia',
-      notSaved: 'Os planos ainda não são guardados: as alterações perdem-se ao sair desta página.',
+      hint: 'Escolha um dia e adicione exercícios ou mesociclos da biblioteca',
+      exerciseLibrary: 'Biblioteca',
+      exercisesCount: {
+        one: '1 exercício',
+        other: '{{count}} exercícios',
+      },
+      searchPlaceholder: 'Pesquisar',
+      emptyDay: 'Nada planeado ainda',
+      emptyDayHint: 'Adicione exercícios da biblioteca ou largue um aqui',
       addToDay: 'Adicionar a {{day}}',
-      removeFromDay: 'Remover {{exercise}} de {{day}}',
-      exerciseLibrary: 'Biblioteca de exercícios',
-      nothingPlanned: 'Nada planeado',
+      added: 'Adicionado',
+      remove: 'Remover {{title}}',
+      fromExercisePage: 'Da página do exercício',
+      tabExercises: 'Exercícios',
+      tabModules: 'Mesociclos',
+      modulesCount: {
+        one: '1 mesociclo',
+        other: '{{count}} mesociclos',
+      },
+      plannedCount: '{{count}} planeados',
+      moduleLabel: 'Mesociclo',
     },
   },
   profile: {
@@ -203,6 +227,8 @@ export const pt = {
       markingComplete: 'A marcar como concluído…',
       completed: 'Concluído',
       addToPlan: 'Adicionar ao plano',
+      planShort: 'Plano',
+      imageCounter: 'Imagem {{index}} de {{total}}',
     },
   },
 } satisfies typeof en

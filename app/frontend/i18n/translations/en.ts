@@ -11,6 +11,7 @@ export const en = {
     signOut: 'Sign out',
     skipToContent: 'Skip to content',
     back: 'Back',
+    viewAll: 'View all',
     category: {
       all: 'All',
       technical: 'Technical',
@@ -61,11 +62,16 @@ export const en = {
   },
   dashboard: {
     home: {
-      greeting: {
-        morning: 'Good morning, {{name}}',
-        afternoon: 'Good afternoon, {{name}}',
-        evening: 'Good evening, {{name}}',
+      greetingLine: {
+        morning: 'Good morning,',
+        afternoon: 'Good afternoon,',
+        evening: 'Good evening,',
       },
+      heading: 'Your progress this week',
+      progressLabel: 'Progress',
+      yourPlan: 'Your plan',
+      emptyPlan: 'Nothing planned this week',
+      emptyPlanCta: 'Plan your week',
       stats: {
         courseProgress: 'Course progress',
         modulesCompleteDetail: '{{done}} of {{total}} modules complete',
@@ -78,11 +84,6 @@ export const en = {
       noModules: 'There are no modules yet.',
       modulesEyebrow: 'Modules',
       thisWeekEyebrow: 'This week',
-      weekPlan: {
-        title: 'Plan your week',
-        detail: 'Choose which exercises to practise on each day.',
-        cta: 'Open weekly plan',
-      },
     },
   },
   courses: {
@@ -115,6 +116,15 @@ export const en = {
         other: '{{count}} exercises',
       },
       materialsEyebrow: 'Resources',
+      progressTitle: 'Module progress',
+      topicsCount: {
+        one: '1 topic',
+        other: '{{count}} topics',
+      },
+      materialsDrillsTitle: 'Resources & exercises',
+      materialsLabel: 'Resources',
+      drillsLabel: 'Exercises',
+      drillsDone: '{{done}} done',
       viewDocument: 'View',
       closeDocument: 'Close',
       moduleExercisesTitle: 'Module exercises',
@@ -150,13 +160,27 @@ export const en = {
   plan: {
     index: {
       title: 'Weekly plan',
-      hintPicked: 'Now pick a day to add it',
-      hintDefault: 'Pick an exercise, then a day',
-      notSaved: "Plans aren't saved yet: changes are lost when you leave this page.",
+      hint: 'Pick a day, then add exercises or modules from the library',
+      exerciseLibrary: 'Library',
+      exercisesCount: {
+        one: '1 exercise',
+        other: '{{count}} exercises',
+      },
+      searchPlaceholder: 'Search',
+      emptyDay: 'Nothing planned yet',
+      emptyDayHint: 'Add exercises from the library, or drop one here',
       addToDay: 'Add to {{day}}',
-      removeFromDay: 'Remove {{exercise}} from {{day}}',
-      exerciseLibrary: 'Exercise library',
-      nothingPlanned: 'Nothing planned',
+      added: 'Added',
+      remove: 'Remove {{title}}',
+      fromExercisePage: 'From the exercise page',
+      tabExercises: 'Exercises',
+      tabModules: 'Modules',
+      modulesCount: {
+        one: '1 module',
+        other: '{{count}} modules',
+      },
+      plannedCount: '{{count}} planned',
+      moduleLabel: 'Module',
     },
   },
   profile: {
@@ -201,6 +225,8 @@ export const en = {
       markingComplete: 'Marking as complete…',
       completed: 'Completed',
       addToPlan: 'Add to plan',
+      planShort: 'Plan',
+      imageCounter: 'Image {{index}} of {{total}}',
     },
   },
 }

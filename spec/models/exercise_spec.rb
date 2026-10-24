@@ -164,11 +164,15 @@ RSpec.describe Exercise, type: :model do
   end
 
   describe ".plan_options" do
-    it "returns just each Exercise's ref and title, in order" do
-      create(:exercise, ref: "EX-2", title: "Second")
-      create(:exercise, ref: "EX-1", title: "First")
+    it "returns just each Exercise's ref, title and Module slug, in order" do
+      course_module = create(:course_module, slug: "module-a")
+      create(:exercise, ref: "EX-2", title: "Second", course_module: nil)
+      create(:exercise, ref: "EX-1", title: "First", course_module: course_module)
 
-      expect(Exercise.plan_options).to eq([{ ref: "EX-1", title: "First" }, { ref: "EX-2", title: "Second" }])
+      expect(Exercise.plan_options).to eq([
+        { ref: "EX-1", title: "First", moduleId: "module-a" },
+        { ref: "EX-2", title: "Second", moduleId: nil }
+      ])
     end
   end
 end
