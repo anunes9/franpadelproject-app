@@ -5,8 +5,8 @@ RSpec.describe "db/seeds.rb" do
     load Rails.root.join("db/seeds.rb")
   end
 
-  it "creates the 8 beginner course modules from the pt content export" do
-    expect(CourseModule.count).to eq(8)
+  it "creates the 7 beginner course modules from the pt content export" do
+    expect(CourseModule.count).to eq(7)
 
     module_one = CourseModule.find_by(slug: "module-1")
     expect(module_one.title).to eq("Mesociclo 1")
@@ -16,7 +16,7 @@ RSpec.describe "db/seeds.rb" do
   end
 
   it "creates progress rows for every seed user matching today's hardcoded values" do
-    expect(UserModuleProgress.count).to eq(User.count * 8)
+    expect(UserModuleProgress.count).to eq(User.count * 7)
 
     client = User.find_by(email: "client@example.com")
     module_three = CourseModule.find_by(slug: "module-3")
