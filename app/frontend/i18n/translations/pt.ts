@@ -376,6 +376,23 @@ export const pt = {
           'Nestas datas, uma aula sobrepõe-se no tempo a outra aula sua ou de um dos jogadores. Altere os dias da semana, a hora de início ou os jogadores.',
       },
     },
+    edit: {
+      link: 'Editar grupo',
+      title: 'Editar grupo de aulas',
+      backToGroup: 'Voltar ao grupo de aulas',
+      planNote:
+        'O plano de treino não muda até o regenerar: novos dias da semana, uma nova hora de início ou um novo número de aulas por semana só se aplicam nessa altura. Uma nova duração aplica-se logo a todas as aulas.',
+      save: 'Guardar alterações',
+      saving: 'A guardar…',
+      errors: {
+        crossesMidnight:
+          'Com esta duração uma aula do plano terminaria depois da meia-noite. Mude essa aula para mais cedo ou escolha uma duração mais curta.',
+        clashTitle: 'Estas alterações sobrepõem-se a outras aulas',
+        clash:
+          'Nestas datas uma aula do plano sobrepõe-se no tempo a outra aula do treinador ou de um dos jogadores. Mude os jogadores ou a duração.',
+        notSaved: 'Não foi possível guardar o grupo, por isso nada foi alterado. Tente novamente.',
+      },
+    },
     show: {
       eyebrow: 'Grupo de aulas',
       backToGroups: 'Voltar aos grupos de aulas',

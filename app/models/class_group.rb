@@ -22,6 +22,7 @@ class ClassGroup < ApplicationRecord
   validates :duration, inclusion: { in: DURATIONS }
   validate :weekdays_match_cadence
   validate :classes_end_by_midnight
+  validate :saved_classes_end_by_midnight, on: :update, if: :will_save_change_to_duration?
   validate :players_within_limit
   validate :players_of_the_coachs_club
   validate :owned_by_a_coach
@@ -112,6 +113,42 @@ class ClassGroup < ApplicationRecord
     not_saved(error)
   end
 
+  # Saves an edit of the group's Players and schedule, or nothing at all; see
+  # docs/adr/0004-editing-a-class-group.md. Its Classes keep their dates,
+  # start times and Modules: a new cadence, weekdays or start time only takes
+  # effect when the plan is regenerated. A new duration is the exception, as
+  # every Class lasts as long as its group's Classes. Refused when the group
+  # would be invalid, or when an added Player or a new duration would make one
+  # of its Classes that is not skipped overlap in time with another Class of
+  # the Coach or of a Player (the clashing dates are then in #clashing_dates).
+  def update_with_clash_check(attributes)
+    @clashing_dates = []
+    saved = false
+
+    transaction do
+      ClassClash.lock(coach: coach, players: players.to_a | Player.where(id: attributes[:player_ids]).to_a)
+      previous_player_ids = player_ids
+      assign_attributes(attributes)
+      raise ActiveRecord::Rollback unless valid?
+
+      if (player_ids - previous_player_ids).any? || duration_changed?
+        @clashing_dates = ClassClash.new(coach: coach, players: players)
+                                    .dates(training_classes.reject(&:skipped?))
+      end
+      if @clashing_dates.any?
+        errors.add(:base, :clash)
+        raise ActiveRecord::Rollback
+      end
+
+      saved = save!
+    end
+    saved
+  rescue ActiveRecord::ActiveRecordError => error
+    Rails.logger.error("Class Group not edited: #{error.class}: #{error.message}")
+    errors.add(:base, :not_saved)
+    false
+  end
+
   # "18:00"
   def start_time_text
     start_time&.strftime("%H:%M")
@@ -199,6 +236,13 @@ class ClassGroup < ApplicationRecord
     return unless start_time && DURATIONS.include?(duration)
 
     errors.add(:start_time, :crosses_midnight) if ClassInterval.of(start_time, duration).crosses_midnight?
+  end
+
+  # A new duration applies to the Classes already planned, moved ones included.
+  def saved_classes_end_by_midnight
+    return unless DURATIONS.include?(duration)
+
+    errors.add(:duration, :crosses_midnight) if training_classes.any? { |c| c.interval.crosses_midnight? }
   end
 
   def players_within_limit

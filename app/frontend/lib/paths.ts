@@ -31,6 +31,8 @@ export const editBreakPeriodPath = (breakPeriodId: string) => `${breakPeriodPath
 export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
+// Editing a group's Players and schedule; the edit is sent to classGroupPath.
+export const editClassGroupPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/edit`
 
 // A Class of a Training Plan: its page (no edit), moving it (no edit), and
 // skipping, unskipping or marking it done. Adding a Class goes to its group.
