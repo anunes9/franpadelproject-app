@@ -31,6 +31,8 @@ export const editBreakPeriodPath = (breakPeriodId: string) => `${breakPeriodPath
 export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
+// Editing a group's Players and schedule; the edit is sent to classGroupPath.
+export const editClassGroupPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/edit`
 
 // A Class of a Training Plan: its page (no edit), moving it (no edit), and
 // skipping, unskipping or marking it done. Adding a Class goes to its group.
@@ -38,6 +40,9 @@ export type ClassEdit = 'skip' | 'unskip' | 'done' | 'undone'
 export const classGroupClassesPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/classes`
 export const classPath = (classId: string, edit?: ClassEdit) =>
   edit ? `/dashboard/classes/${classId}/${edit}` : `/dashboard/classes/${classId}`
+
+// Regenerating a group's Training Plan, only on request.
+export const classGroupRegenerationPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/regeneration`
 
 // The Exercises a Coach picks for a Class.
 export const classExercisePath = (classId: string, exerciseRef: string) =>

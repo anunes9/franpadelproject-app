@@ -19,6 +19,12 @@ class DashboardController < ApplicationController
 
   private
 
+  # After a refused change, the dates on which it clashed, for the next page.
+  # They go next to the errors, which hold codes only; a page reads none as [].
+  def flash_clash_dates(dates)
+    flash[:clash_dates] = dates.map(&:iso8601) if dates.present?
+  end
+
   def club_manager_home
     club = current_user.accessible_clubs.order(:name).first
     return redirect_to club_path(club) if club

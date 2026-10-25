@@ -74,6 +74,15 @@ RSpec.describe ClassClash, type: :model do
 
       expect(clashing_dates([slot(tuesday, "18:00", 60)], players: [player], ignoring: group)).to eq([])
     end
+
+    it "can leave out only the Classes being replaced, so the group's other Classes still count" do
+      group = planned_group(coach: coach, players: [player], start_time: "18:00", duration: 60)
+      first, second = group.training_classes.first(2)
+      candidates = [slot(first.date, "18:00", 60), slot(second.date, "18:00", 60)]
+
+      expect(described_class.new(coach: coach, players: [player], replacing: [second.id]).dates(candidates))
+        .to eq([first.date])
+    end
   end
 
   describe "edited Classes" do
@@ -96,6 +105,22 @@ RSpec.describe ClassClash, type: :model do
       first_class.date = tuesday + 7
 
       expect(clashing_dates([first_class])).to eq([tuesday + 7])
+    end
+
+    # A group's new duration applies to all its Classes at once.
+    it "checks a group's Classes with its new duration, without clashing them with their old times" do
+      group.duration = 90
+
+      expect(clashing_dates(group.training_classes.to_a)).to eq([])
+    end
+
+    it "clashes the Classes being checked with each other" do
+      added = group.training_classes.create!(date: tuesday, start_time: "19:00", kind: :regular,
+                                             course_module: group.course_modules.first)
+      group.duration = 90
+
+      expect(clashing_dates(group.training_classes.to_a)).to eq([tuesday])
+      expect(clashing_dates([added])).to eq([])
     end
   end
 

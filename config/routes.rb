@@ -40,6 +40,10 @@ Rails.application.routes.draw do
   scope "/dashboard" do
     resources :class_groups, only: %i[index new create show]
   end
+  # Editing a Class Group's Players and schedule, at /dashboard/class_groups/:id/edit.
+  scope "/dashboard" do
+    resources :class_groups, controller: "class_group_edits", only: %i[edit update]
+  end
   # A Class's page, and editing a Training Plan: adding a Class to a group,
   # and moving, skipping or marking done one Class, at /dashboard/classes/:id.
   scope "/dashboard" do
@@ -53,6 +57,12 @@ Rails.application.routes.draw do
           patch :undone
         end
       end
+    end
+  end
+  # Regenerating a group's Training Plan, only on request.
+  scope "/dashboard" do
+    resources :class_groups, only: [] do
+      resource :regeneration, controller: "plan_regenerations", as: :plan_regeneration, only: :create
     end
   end
   # The Exercises a Coach picks for a Class from its Module.

@@ -6,7 +6,7 @@ The parent spec (#6) lets the Coach skip a Class of a Training Plan, but leaves 
 - **A skipped Class is never part of a clash, in either direction.** Another Class of the Coach or of a Player may take its time, and the skipped Class never refuses an edit or a new plan.
 - **Unskipping is checked against the clash rule; moving a skipped Class is not.** Unskipping takes the time back, so it is refused if that time is now taken. A skipped Class takes up no time, so moving it cannot clash; the check happens when it is unskipped.
 - **Done and skipped are mutually exclusive.** Marking a skipped Class done is refused, and so is skipping a done Class. A done Class can still be moved, so the Coach can correct its date.
-- **`coach_added` marks the Classes the Coach added.** Whether regenerating the plan keeps them is left to #18.
+- **`coach_added` marks the Classes the Coach added.** Regenerating the plan replaces them unless they are done, like any other Class (docs/adr/0005-regenerating-a-plan.md).
 
 ## Considered options
 

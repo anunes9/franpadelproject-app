@@ -13,6 +13,13 @@
 # Period at all gets no Classes and does not count toward a Module's weeks.
 # Only a Module's last Class is its Assessment Class, and a partial first
 # week counts as a full week (docs/adr/0002).
+#
+# Regenerating a plan continues the Course rather than restarting it
+# (docs/adr/0005): the caller passes only the Modules not yet complete, and
+# how many Classes of the first of them are already done. Those count toward
+# that Module, so only its remaining Classes are generated, counted in
+# Classes rather than weeks, still ending with its Assessment Class. Later
+# Modules start in the next open week and are generated in full.
 class TrainingPlanGenerator
   CADENCE_WEEKS_PER_MODULE = { 1 => 6, 2 => 4 }.freeze
   DURATIONS = [60, 90].freeze
@@ -43,7 +50,10 @@ class TrainingPlanGenerator
   # duration:      60 or 90 minutes
   # start_date:    the first Class is on the first chosen weekday on or after it
   # break_periods: date ranges (inclusive) in which no Classes are generated
-  def initialize(modules:, cadence:, weekdays:, start_time:, duration:, start_date:, break_periods: [])
+  # done_in_first_module: Classes of the first Module already done, when
+  #                       regenerating a plan
+  def initialize(modules:, cadence:, weekdays:, start_time:, duration:, start_date:, break_periods: [],
+                 done_in_first_module: 0)
     @modules = Array(modules)
     @cadence = cadence
     @weekdays = weekdays
@@ -51,13 +61,20 @@ class TrainingPlanGenerator
     @duration = duration
     @start_date = start_date
     @break_periods = break_periods
+    @done_in_first_module = done_in_first_module
 
     validate!
   end
 
   def call
     weeks = each_open_week
-    @modules.flat_map { |course_module| module_classes(course_module, weeks) }
+    first, *rest = @modules
+    first_classes = if @done_in_first_module.zero?
+                      module_classes(first, weeks)
+                    else
+                      remaining_module_classes(first, weeks)
+                    end
+    first_classes + rest.flat_map { |course_module| module_classes(course_module, weeks) }
   end
 
   private
@@ -67,6 +84,9 @@ class TrainingPlanGenerator
     raise ArgumentError, "cadence must be 1 or 2" unless CADENCE_WEEKS_PER_MODULE.key?(@cadence)
     raise ArgumentError, "duration must be 60 or 90" unless DURATIONS.include?(@duration)
     raise ArgumentError, "start_date is required" unless @start_date.respond_to?(:cwday)
+    unless @done_in_first_module.is_a?(Integer) && @done_in_first_module >= 0
+      raise ArgumentError, "done_in_first_module must be a count of Classes"
+    end
     unless @weekdays.size == @cadence && @weekdays.uniq.size == @cadence && (@weekdays - WEEKDAYS).empty?
       raise ArgumentError, "weekdays must be #{@cadence} distinct weekday(s) from #{WEEKDAYS.join(', ')}"
     end
@@ -93,14 +113,30 @@ class TrainingPlanGenerator
     @break_periods.any? { |period| period.first <= sunday && period.last >= monday }
   end
 
+  # The Classes of a Module already started: its full count of Classes less
+  # those done, and always at least its Assessment Class. A week left part
+  # used is not used by the next Module.
+  def remaining_module_classes(course_module, weeks)
+    total = CADENCE_WEEKS_PER_MODULE.fetch(@cadence) * @cadence
+    remaining = [total - @done_in_first_module, 1].max
+    dates = []
+    dates.concat(weeks.next) while dates.size < remaining
+    dates.first(remaining).each_with_index.map do |date, index|
+      planned(date, course_module, index == remaining - 1 ? :assessment : :regular)
+    end
+  end
+
+  def planned(date, course_module, type)
+    PlannedClass.new(date: date, start_time: @start_time, duration: @duration, course_module: course_module, type: type)
+  end
+
   def module_classes(course_module, weeks)
     week_count = CADENCE_WEEKS_PER_MODULE.fetch(@cadence)
     dates = Array.new(week_count) { weeks.next }
     dates.each_with_index.map do |week, index|
       week.each_with_index.map do |date, in_week|
         assessment = index == week_count - 1 && in_week == week.size - 1
-        PlannedClass.new(date: date, start_time: @start_time, duration: @duration,
-                         course_module: course_module, type: assessment ? :assessment : :regular)
+        planned(date, course_module, assessment ? :assessment : :regular)
       end
     end.flatten
   end

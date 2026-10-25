@@ -108,6 +108,43 @@ RSpec.describe TrainingPlanGenerator do
     end
   end
 
+  describe "continuing a Module already started" do
+    it "generates only the first Module's remaining Classes, ending with its Assessment Class" do
+      plan = generate(done_in_first_module: 4)
+
+      first_module = plan.select { |c| c.course_module == modules.first }
+      expect(first_module.map(&:date)).to eq([start_date, start_date + 7])
+      expect(first_module.map(&:type)).to eq(%i[regular assessment])
+      expect(plan.size).to eq(2 + 12)
+    end
+
+    it "counts in Classes at twice a week, and starts later Modules in the next week" do
+      # 8 Classes in the first Module, 5 done: Mon, Thu, Mon remain.
+      plan = generate(cadence: 2, weekdays: %i[monday thursday], done_in_first_module: 5)
+
+      first_module = plan.select { |c| c.course_module == modules.first }
+      expect(first_module.map(&:date)).to eq([start_date, start_date + 3, start_date + 7])
+      expect(first_module.map(&:type)).to eq(%i[regular regular assessment])
+      second_module = plan.select { |c| c.course_module == modules.second }
+      expect(second_module.first.date).to eq(start_date + 14)
+      expect(second_module.size).to eq(8)
+    end
+
+    it "still generates the Assessment Class when the Module's Classes are all done" do
+      plan = generate(modules: modules.first(1), done_in_first_module: 9)
+
+      expect(plan.map(&:type)).to eq(%i[assessment])
+      expect(plan.first.date).to eq(start_date)
+    end
+
+    it "skips Break Periods without counting them" do
+      plan = generate(modules: modules.first(1), done_in_first_module: 3,
+                      break_periods: [Date.new(2026, 9, 14)..Date.new(2026, 9, 20)])
+
+      expect(plan.map(&:date)).to eq([start_date, start_date + 14, start_date + 21])
+    end
+  end
+
   it "ignores the Module's duration text and assigns no Exercises" do
     mod = build_stubbed(:course_module, duration: "10 - 12 weeks")
     plan = generate(modules: [mod])
@@ -127,6 +164,10 @@ RSpec.describe TrainingPlanGenerator do
     it "refuses unsupported cadence and duration" do
       expect { generate(cadence: 3, weekdays: %i[monday tuesday wednesday]) }.to raise_error(ArgumentError)
       expect { generate(duration: 75) }.to raise_error(ArgumentError)
+    end
+
+    it "refuses a negative count of Classes already done" do
+      expect { generate(done_in_first_module: -1) }.to raise_error(ArgumentError)
     end
   end
 end

@@ -107,7 +107,7 @@ A group of one to eight Players taught by one Coach, tied to one Course through 
 _Avoid_: Class (for the group), team, cohort
 
 **Training Plan**:
-The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Regenerating happens only when the Coach asks, and keeps completed Classes. It is an intention only.
+The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Regenerating happens only on request, and keeps completed Classes. It is an intention only.
 _Avoid_: Weekly Plan, schedule, calendar
 
 **Class**:
