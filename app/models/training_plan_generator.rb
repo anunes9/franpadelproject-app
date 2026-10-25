@@ -11,6 +11,8 @@
 #
 # Weeks are calendar weeks (Monday to Sunday). A week that overlaps a Break
 # Period at all gets no Classes and does not count toward a Module's weeks.
+# Only a Module's last Class is its Assessment Class, and a partial first
+# week counts as a full week (docs/adr/0002).
 class TrainingPlanGenerator
   CADENCE_WEEKS_PER_MODULE = { 1 => 6, 2 => 4 }.freeze
   DURATIONS = [60, 90].freeze
