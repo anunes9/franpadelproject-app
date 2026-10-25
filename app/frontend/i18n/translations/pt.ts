@@ -7,6 +7,7 @@ export const pt = {
       courses: 'Cursos',
       exercises: 'Exercícios',
       profile: 'Perfil',
+      players: 'Jogadores',
     },
     signOut: 'Terminar sessão',
     skipToContent: 'Saltar para o conteúdo',
@@ -196,6 +197,50 @@ export const pt = {
       markingComplete: 'A marcar como concluído…',
       completed: 'Concluído',
       imageCounter: 'Imagem {{index}} de {{total}}',
+    },
+  },
+  players: {
+    index: {
+      title: 'Jogadores',
+      add: 'Adicionar jogador',
+      edit: 'Editar',
+      empty: 'Ainda não há jogadores neste clube.',
+      columns: {
+        name: 'Nome',
+        position: 'Posição',
+        hand: 'Mão',
+        level: 'Nível',
+      },
+    },
+    form: {
+      newTitle: 'Novo jogador',
+      editTitle: 'Editar jogador',
+      backToRoster: 'Voltar aos jogadores',
+      name: 'Nome',
+      position: 'Posição',
+      hand: 'Mão dominante',
+      level: 'Nível',
+      save: 'Guardar jogador',
+      saving: 'A guardar…',
+      noLogin: 'Os jogadores não têm conta e não podem iniciar sessão.',
+      errors: {
+        name: 'Indique um nome.',
+        choose: 'Escolha uma opção.',
+      },
+    },
+    positionOption: {
+      left: 'Esquerda',
+      right: 'Direita',
+      both: 'Ambas',
+    },
+    handOption: {
+      left: 'Esquerda',
+      right: 'Direita',
+    },
+    levelOption: {
+      beginner: 'Iniciante',
+      intermediate: 'Intermédio',
+      advanced: 'Avançado',
     },
   },
 } satisfies typeof en

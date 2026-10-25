@@ -4,6 +4,7 @@ import {
   Home01Icon,
   Logout03Icon,
   User03Icon,
+  UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
@@ -13,6 +14,21 @@ import type { DashboardUser } from '../types/dashboard-data'
 
 function useNav() {
   const { t } = useTranslation()
+  const { dashboardUser } = usePage<{ dashboardUser: DashboardUser }>().props
+  // The roster opens on the user's first Club; a Club switcher comes with the
+  // Manager home.
+  const rosterClub = dashboardUser.clubs[0]
+  const roster = rosterClub
+    ? [
+        {
+          href: `/dashboard/clubs/${rosterClub.id}/players`,
+          label: t('common.nav.players'),
+          tab: t('common.nav.players'),
+          icon: UserGroupIcon,
+          matches: ['/dashboard/clubs/', '/dashboard/players'],
+        },
+      ]
+    : []
   return [
     { href: '/dashboard', label: t('common.nav.dashboard'), tab: t('common.nav.dashboard'), icon: Home01Icon },
     { href: '/dashboard/courses', label: t('common.nav.courses'), tab: t('common.nav.courses'), icon: Book02Icon },
@@ -22,12 +38,15 @@ function useNav() {
       tab: t('common.nav.exercises'),
       icon: Dumbbell02Icon,
     },
+    ...roster,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]
 }
 
-const isActive = (pathname: string, href: string) =>
-  href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
+const isActive = (pathname: string, item: { href: string; matches?: string[] }) =>
+  item.href === '/dashboard'
+    ? pathname === '/dashboard'
+    : (item.matches ?? [item.href]).some((prefix) => pathname.startsWith(prefix))
 
 function handleSignOut() {
   router.delete('/users/sign_out')
@@ -51,10 +70,10 @@ function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
-            aria-current={isActive(url, item.href) ? 'page' : undefined}
+            aria-current={isActive(url, item) ? 'page' : undefined}
             className={
               'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
-              (isActive(url, item.href) ? 'bg-teal/15 text-paper shadow-lit-dark' : 'text-ink-mute hover:text-paper')
+              (isActive(url, item) ? 'bg-teal/15 text-paper shadow-lit-dark' : 'text-ink-mute hover:text-paper')
             }
           >
             <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} className="shrink-0" />
@@ -108,7 +127,7 @@ function BottomTabs() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-dock lg:hidden">
       {nav.map((item) => {
-        const on = isActive(url, item.href)
+        const on = isActive(url, item)
         return (
           <Link
             key={item.href}

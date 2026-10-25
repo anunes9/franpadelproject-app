@@ -118,11 +118,16 @@ RSpec.describe User, type: :model do
   end
 
   describe "#dashboard_profile_json" do
-    it "returns name, initials, and the club's name" do
+    it "returns name, initials, the club's name and the Clubs whose roster they manage" do
       club = create(:club, name: "Padel Clube Lisboa")
       user = build(:user, name: "Miguel Santos", club: club)
 
-      expect(user.dashboard_profile_json).to eq(name: "Miguel Santos", initials: "MS", club: "Padel Clube Lisboa")
+      expect(user.dashboard_profile_json).to eq(
+        name: "Miguel Santos",
+        initials: "MS",
+        club: "Padel Clube Lisboa",
+        clubs: [{ id: club.id, name: "Padel Clube Lisboa" }]
+      )
     end
 
     it "returns a nil club when the user has none" do

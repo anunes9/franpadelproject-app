@@ -5,6 +5,7 @@ export const en = {
       courses: 'Courses',
       exercises: 'Exercises',
       profile: 'Profile',
+      players: 'Players',
     },
     signOut: 'Sign out',
     skipToContent: 'Skip to content',
@@ -194,6 +195,50 @@ export const en = {
       markingComplete: 'Marking as complete…',
       completed: 'Completed',
       imageCounter: 'Image {{index}} of {{total}}',
+    },
+  },
+  players: {
+    index: {
+      title: 'Players',
+      add: 'Add player',
+      edit: 'Edit',
+      empty: 'No players in this club yet.',
+      columns: {
+        name: 'Name',
+        position: 'Position',
+        hand: 'Hand',
+        level: 'Level',
+      },
+    },
+    form: {
+      newTitle: 'New player',
+      editTitle: 'Edit player',
+      backToRoster: 'Back to players',
+      name: 'Name',
+      position: 'Position',
+      hand: 'Dominant hand',
+      level: 'Level',
+      save: 'Save player',
+      saving: 'Saving…',
+      noLogin: 'Players have no account and cannot sign in.',
+      errors: {
+        name: 'Enter a name.',
+        choose: 'Choose an option.',
+      },
+    },
+    positionOption: {
+      left: 'Left',
+      right: 'Right',
+      both: 'Both',
+    },
+    handOption: {
+      left: 'Left',
+      right: 'Right',
+    },
+    levelOption: {
+      beginner: 'Beginner',
+      intermediate: 'Intermediate',
+      advanced: 'Advanced',
     },
   },
 }

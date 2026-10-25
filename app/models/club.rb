@@ -6,6 +6,7 @@ class Club < ApplicationRecord
   has_many :coaches, -> { where(role: :coach) }, class_name: "User", inverse_of: :club, dependent: :restrict_with_error
   has_many :club_memberships, dependent: :destroy
   has_many :managers, through: :club_memberships, source: :user
+  has_many :players, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 
