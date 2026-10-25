@@ -199,6 +199,21 @@ export const pt = {
       imageCounter: 'Imagem {{index}} de {{total}}',
     },
   },
+  clubs: {
+    overview: {
+      eyebrow: 'Visão geral do clube',
+      switcherLabel: 'Clube',
+      noClubsTitle: 'Ainda sem clubes',
+      noClubs: 'Ainda não está associado a nenhum clube. Um administrador associa os gestores aos seus clubes.',
+      coaches: 'Treinadores',
+      coachesEmpty: 'Ainda não há treinadores neste clube.',
+      classGroups: 'Grupos de aulas',
+      classGroupsEmpty: 'Ainda não há grupos de aulas neste clube.',
+      players: 'Jogadores',
+      playersEmpty: 'Ainda não há jogadores neste clube.',
+      manageRoster: 'Gerir jogadores',
+    },
+  },
   players: {
     index: {
       title: 'Jogadores',

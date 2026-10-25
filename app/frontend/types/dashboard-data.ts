@@ -73,6 +73,19 @@ export interface ClubSummary {
   name: string
 }
 
+export interface ClubCoach {
+  id: string
+  name: string
+  email: string
+}
+
+// A Class Group as listed on the Manager's Club overview. Class Groups do not
+// exist yet, so the overview always receives an empty list for now.
+export interface ClassGroupSummary {
+  id: string
+  name: string
+}
+
 export type PlayerPosition = 'left' | 'right' | 'both'
 export type PlayerHand = 'left' | 'right'
 export type PlayerLevel = 'beginner' | 'intermediate' | 'advanced'

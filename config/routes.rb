@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get "/dashboard/exercises/:ref", to: "exercises#show", format: false, constraints: { ref: /[^\/]+/ }
   patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }
   scope "/dashboard" do
-    resources :clubs, only: [] do
+    resources :clubs, only: %i[show] do
       resources :players, only: %i[index new create edit update], shallow: true
     end
   end

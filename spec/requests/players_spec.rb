@@ -172,7 +172,7 @@ RSpec.describe "Players", type: :request do
       create(:club_membership, user: manager, club: create(:club, name: "Academia Porto"))
       sign_in manager
 
-      get "/dashboard"
+      get "/dashboard/clubs/#{club.id}/players"
 
       expect(page_props["dashboardUser"]["clubs"].map { |c| c["name"] }).to eq(["Academia Porto", "Padel Clube Lisboa"])
     end

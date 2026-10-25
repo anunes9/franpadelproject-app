@@ -197,6 +197,21 @@ export const en = {
       imageCounter: 'Image {{index}} of {{total}}',
     },
   },
+  clubs: {
+    overview: {
+      eyebrow: 'Club overview',
+      switcherLabel: 'Club',
+      noClubsTitle: 'No clubs yet',
+      noClubs: 'You are not linked to any club yet. An admin links managers to their clubs.',
+      coaches: 'Coaches',
+      coachesEmpty: 'No coaches in this club yet.',
+      classGroups: 'Class groups',
+      classGroupsEmpty: 'No class groups in this club yet.',
+      players: 'Players',
+      playersEmpty: 'No players in this club yet.',
+      manageRoster: 'Manage players',
+    },
+  },
   players: {
     index: {
       title: 'Players',

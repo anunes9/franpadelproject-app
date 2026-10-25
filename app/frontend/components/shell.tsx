@@ -12,12 +12,22 @@ import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import type { DashboardUser } from '../types/dashboard-data'
 
+// The Club selected in the URL (/dashboard/clubs/:id...), if any.
+const selectedClubId = (pathname: string) => pathname.match(/^\/dashboard\/clubs\/([^/?#]+)/)?.[1]
+
+// The Manager home: a Club overview, /dashboard/clubs/:id.
+const isClubOverview = (pathname: string) => /^\/dashboard\/clubs\/[^/?#]+\/?(?:[?#]|$)/.test(pathname)
+
+const isRoster = (pathname: string) => /^\/dashboard\/(?:clubs\/[^/?#]+\/)?players/.test(pathname)
+
 function useNav() {
   const { t } = useTranslation()
-  const { dashboardUser } = usePage<{ dashboardUser: DashboardUser }>().props
-  // The roster opens on the user's first Club; a Club switcher comes with the
-  // Manager home.
-  const rosterClub = dashboardUser.clubs[0]
+  const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { dashboardUser } = props
+  // The roster follows the Club selected on the Manager home, and otherwise
+  // opens on the user's first Club.
+  const selectedId = selectedClubId(url)
+  const rosterClub = dashboardUser.clubs.find((club) => club.id === selectedId) ?? dashboardUser.clubs[0]
   const roster = rosterClub
     ? [
         {
@@ -25,7 +35,6 @@ function useNav() {
           label: t('common.nav.players'),
           tab: t('common.nav.players'),
           icon: UserGroupIcon,
-          matches: ['/dashboard/clubs/', '/dashboard/players'],
         },
       ]
     : []
@@ -43,10 +52,14 @@ function useNav() {
   ]
 }
 
-const isActive = (pathname: string, item: { href: string; matches?: string[] }) =>
-  item.href === '/dashboard'
-    ? pathname === '/dashboard'
-    : (item.matches ?? [item.href]).some((prefix) => pathname.startsWith(prefix))
+// A Club Manager's home is their Club overview, so Dashboard stays active on
+// it; the roster's URL also starts with /dashboard/clubs/, so it is matched by
+// shape rather than prefix.
+const isActive = (pathname: string, item: { href: string }) => {
+  if (item.href === '/dashboard') return pathname === '/dashboard' || isClubOverview(pathname)
+  if (isRoster(item.href)) return isRoster(pathname)
+  return pathname.startsWith(item.href)
+}
 
 function handleSignOut() {
   router.delete('/users/sign_out')
