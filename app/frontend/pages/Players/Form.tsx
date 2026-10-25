@@ -3,7 +3,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { clubPlayersPath, playerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, buttonClass, Eyebrow } from '../../components/ui'
+import { BackLink, buttonClass, Eyebrow, FieldError, INPUT_CLASS } from '../../components/ui'
 import type { ClubSummary, Player, PlayerHand, PlayerLevel, PlayerPosition } from '../../types/dashboard-data'
 
 interface Props {
@@ -16,16 +16,6 @@ interface Props {
 }
 
 type Field = 'name' | 'position' | 'hand' | 'level'
-
-// The server's messages (in English) that the form shows in the Client's
-// language instead.
-const KNOWN_ERRORS: Record<string, 'blank' | 'inclusion'> = {
-  "can't be blank": 'blank',
-  'is not included in the list': 'inclusion',
-}
-
-const INPUT_CLASS =
-  'rounded-lg border border-line bg-white px-3 py-2.5 text-base text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30'
 
 function Form() {
   const { club, player, positionOptions, handOptions, levelOptions } = usePage<Props>().props
@@ -49,24 +39,11 @@ function Form() {
     }
   }
 
-  // The server's messages are in English; show our own, in the Client's
-  // language, for the ones we know, and the server's for any other.
-  function errorMessage(field: Field, message: string) {
-    const known = KNOWN_ERRORS[message]
-    if (field === 'name' && known === 'blank') return t('players.form.errors.name')
-    if (field !== 'name' && known) return t('players.form.errors.choose')
-    return message
-  }
-
+  // Our copy, in the Client's language, for the error codes each field knows.
   function errorFor(field: Field) {
-    // Rails sends each field's messages as a list.
-    const messages: string[] = ([] as string[]).concat(errors[field] ?? [])
-    if (messages.length === 0) return null
-    return (
-      <span role="alert" className="text-meta font-normal text-danger">
-        {[...new Set(messages.map((message) => errorMessage(field, message)))].join(' ')}
-      </span>
-    )
+    const choose = t('players.form.errors.choose')
+    const copy = field === 'name' ? { blank: t('players.form.errors.name') } : { blank: choose, inclusion: choose }
+    return <FieldError errors={errors} field={field} copy={copy} />
   }
 
   const selects: Array<{ field: Exclude<Field, 'name'>; label: string; options: Array<[string, string]> }> = [

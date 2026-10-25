@@ -12,4 +12,8 @@ module ClubScoped
   def accessible_players
     Player.where(club: current_user.accessible_clubs)
   end
+
+  def accessible_break_periods
+    BreakPeriod.where(club: current_user.accessible_clubs)
+  end
 end

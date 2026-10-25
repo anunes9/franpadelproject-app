@@ -1,10 +1,10 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { clubPath, clubPlayersPath } from '@/lib/paths'
+import { clubBreakPeriodsPath, clubPath, clubPlayersPath, newClubCoachInvitationPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { buttonClass, chipClass, Eyebrow, ListCard, ListRow } from '../../components/ui'
-import type { ClubCoach, ClubSummary, DashboardUser, Player } from '../../types/dashboard-data'
+import { buttonClass, chipClass, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
+import type { ClubCoach, ClubSummary, DashboardUser, PendingCoachInvitation, Player } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -13,6 +13,8 @@ interface Props {
   club: ClubSummary | null
   coaches: ClubCoach[]
   players: Player[]
+  // Absent on the empty Club Manager home.
+  pendingInvitations?: PendingCoachInvitation[]
 }
 
 function Section({
@@ -62,7 +64,7 @@ function ClubSwitcher({ clubs, current }: { clubs: ClubSummary[]; current: ClubS
 }
 
 function Show() {
-  const { dashboardUser, club, coaches, players } = usePage<Props>().props
+  const { dashboardUser, club, coaches, players, pendingInvitations = [] } = usePage<Props>().props
   const { t } = useTranslation()
 
   if (!club) {
@@ -86,13 +88,31 @@ function Show() {
 
         <ClubSwitcher clubs={dashboardUser.clubs} current={club} />
 
-        <Section title={t('clubs.overview.coaches')} count={coaches.length} empty={t('clubs.overview.coachesEmpty')}>
+        <Section
+          title={t('clubs.overview.coaches')}
+          count={coaches.length + pendingInvitations.length}
+          empty={t('clubs.overview.coachesEmpty')}
+          action={
+            <Link href={newClubCoachInvitationPath(club.id)} className={buttonClass('secondary')}>
+              {t('coachInvitations.overview.invite')}
+            </Link>
+          }
+        >
           {coaches.map((coach) => (
             <ListRow key={coach.id}>
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-ink">{coach.name}</div>
                 <div className="truncate text-meta text-muted">{coach.email}</div>
               </div>
+            </ListRow>
+          ))}
+          {pendingInvitations.map((invitation) => (
+            <ListRow key={invitation.id}>
+              <div className="min-w-0">
+                <div className="truncate text-sm font-semibold text-ink">{invitation.name}</div>
+                <div className="truncate text-meta text-muted">{invitation.email}</div>
+              </div>
+              <Pill text={t('coachInvitations.overview.pending')} variant="muted" />
             </ListRow>
           ))}
         </Section>
@@ -119,6 +139,16 @@ function Show() {
             </ListRow>
           ))}
         </Section>
+
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-sm font-bold text-ink">{t('breakPeriods.overview.title')}</h2>
+            <Link href={clubBreakPeriodsPath(club.id)} className={buttonClass('secondary')}>
+              {t('breakPeriods.overview.manage')}
+            </Link>
+          </div>
+          <p className="text-sm text-muted">{t('breakPeriods.overview.description')}</p>
+        </section>
       </div>
     </div>
   )

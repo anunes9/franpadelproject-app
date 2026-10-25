@@ -25,7 +25,7 @@ class PlayersController < DashboardController
     if player.save
       redirect_to club_players_path(club)
     else
-      redirect_to new_club_player_path(club), inertia: { errors: player.errors }
+      redirect_to new_club_player_path(club), inertia: { errors: form_errors(player) }
     end
   end
 
@@ -41,7 +41,7 @@ class PlayersController < DashboardController
     if player.update(player_params)
       redirect_to club_players_path(player.club)
     else
-      redirect_to edit_player_path(player), inertia: { errors: player.errors }
+      redirect_to edit_player_path(player), inertia: { errors: form_errors(player) }
     end
   end
 

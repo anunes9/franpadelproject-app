@@ -45,6 +45,35 @@ RSpec.describe Club, type: :model do
     expect(club.destroy).to be_truthy
   end
 
+  it "gives its own Break Periods as inclusive date ranges, in date order, for the Training Plan generator" do
+    club = create(:club)
+    create(:break_period, club: club, starts_on: Date.new(2027, 8, 1), ends_on: Date.new(2027, 8, 31))
+    create(:break_period, club: club, starts_on: Date.new(2026, 12, 21), ends_on: Date.new(2027, 1, 3))
+    create(:break_period, starts_on: Date.new(2027, 4, 1), ends_on: Date.new(2027, 4, 5))
+
+    expect(club.break_period_ranges).to eq([
+      Date.new(2026, 12, 21)..Date.new(2027, 1, 3),
+      Date.new(2027, 8, 1)..Date.new(2027, 8, 31)
+    ])
+  end
+
+  it "removes its Break Periods when it is destroyed" do
+    club = create(:club)
+    create(:break_period, club: club)
+
+    expect { club.destroy }.to change(BreakPeriod, :count).by(-1)
+  end
+
+  it "removes its Coach invitations when it is destroyed" do
+    club = create(:club)
+    invitation, = CoachInvitation.issue(
+      name: "Carla Coach", email: "carla@example.com", club: club, invited_by: create(:user, :club_manager)
+    )
+
+    expect(club.coach_invitations).to eq([invitation])
+    expect { club.destroy }.to change(CoachInvitation, :count).by(-1)
+  end
+
   describe "organized logo storage" do
     it "stores the logo under clubs/{id}/logo/{filename}" do
       club = create(:club)
