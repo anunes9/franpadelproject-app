@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
 import { classGroupsPath, classPath, clubPath, editClassGroupPath } from '@/lib/paths'
+import { ReassignClassGroup } from '../../components/ClassGroupReassignment'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { RegeneratePlan } from '../../components/PlanRegeneration'
 import { AppShell, PageHeader } from '../../components/shell'
@@ -126,6 +127,8 @@ function Show() {
         <AddClassForm classGroupId={classGroup.id} moduleOptions={moduleOptions} />
 
         <RegeneratePlan classGroupId={classGroup.id} />
+
+        <ReassignClassGroup classGroupId={classGroup.id} />
       </div>
     </div>
   )

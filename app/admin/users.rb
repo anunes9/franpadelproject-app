@@ -45,5 +45,12 @@ ActiveAdmin.register User do
       params = params.except(:password, :password_confirmation) if params[:password].blank?
       object.update(params)
     end
+
+    # A refused delete (a Coach who still owns Class Groups) says why.
+    def destroy
+      destroy! do |_success, failure|
+        failure.html { redirect_to collection_path, alert: resource.errors.full_messages.to_sentence }
+      end
+    end
   end
 end

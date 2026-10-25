@@ -152,6 +152,12 @@ export interface ClassExercise {
 }
 
 // A Module a Class can be added for: one of the group's Course.
+// A Coach a Club Manager can reassign a Class Group to.
+export interface CoachOption {
+  id: string
+  name: string
+}
+
 export interface ModuleOption {
   id: string
   number: number

@@ -19,6 +19,7 @@ pt:
               crosses_midnight: "tem de permitir que todas as aulas terminem até à meia-noite"
             coach:
               not_a_coach: "tem de ser um treinador"
+              other_club: "tem de ser um treinador do clube do grupo"
             level:
               no_modules: "ainda não tem mesociclos no seu curso"
             start_time:
@@ -50,5 +51,7 @@ pt:
               other_module: "tem de ser um exercício do mesociclo da aula"
         user:
           attributes:
+            base:
+              has_class_groups: "tem grupos de aulas, por isso reatribua-os primeiro a outro treinador"
             email:
               account_exists: "já tem uma conta"

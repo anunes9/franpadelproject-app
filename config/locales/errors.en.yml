@@ -19,6 +19,7 @@ en:
               crosses_midnight: "must let every Class end by midnight"
             coach:
               not_a_coach: "must be a Coach"
+              other_club: "must be a Coach of the group's Club"
             level:
               no_modules: "has no Modules in its Course yet"
             start_time:
@@ -50,5 +51,7 @@ en:
               other_module: "must be an Exercise of the Class's Module"
         user:
           attributes:
+            base:
+              has_class_groups: "owns Class Groups, so reassign them to another Coach first"
             email:
               account_exists: "already has an account"

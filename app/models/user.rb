@@ -10,6 +10,13 @@ class User < ApplicationRecord
   enum :locale, { pt: 0, en: 1 }
 
   belongs_to :club, optional: true
+  # A Coach who owns Class Groups cannot be deleted (base: has_class_groups):
+  # their groups are reassigned first, never deleted or left without an owner
+  # (docs/adr/0006-manager-oversight.md). Like dependent: :restrict_with_error,
+  # with our own error code; declared before the other dependents so a refused
+  # delete touches nothing.
+  has_many :class_groups, foreign_key: :coach_id, inverse_of: :coach
+  before_destroy :keep_while_owning_class_groups
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercise_completions, dependent: :destroy
   has_many :club_memberships, dependent: :destroy
@@ -72,5 +79,14 @@ class User < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     []
+  end
+
+  private
+
+  def keep_while_owning_class_groups
+    return unless class_groups.exists?
+
+    errors.add(:base, :has_class_groups)
+    throw :abort
   end
 end

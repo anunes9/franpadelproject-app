@@ -99,6 +99,44 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "removing a Coach" do
+    let(:coach) { create(:user, :coach) }
+
+    def class_group_of(coach)
+      ClassGroup.create!(coach: coach, players: [create(:player, club: coach.club)], level: "beginner",
+                         starts_on: Date.new(2026, 9, 7), cadence: 1, weekdays: ["tuesday"],
+                         start_time: "18:00", duration: 60)
+    end
+
+    it "is refused while the Coach owns a Class Group, which is kept" do
+      group = class_group_of(coach)
+
+      expect(coach.destroy).to be false
+      expect(coach.errors.of_kind?(:base, :has_class_groups)).to be true
+      expect(User.exists?(coach.id)).to be true
+      expect(ClassGroup.exists?(group.id)).to be true
+    end
+
+    it "deletes a Coach with no Class Groups, with their course progress and Exercise Completions" do
+      progress = create(:user_module_progress, user: coach)
+      completion = create(:exercise_completion, user: coach)
+
+      expect(coach.destroy).to be_truthy
+      expect(User.exists?(coach.id)).to be false
+      expect(UserModuleProgress.exists?(progress.id)).to be false
+      expect(ExerciseCompletion.exists?(completion.id)).to be false
+    end
+
+    it "keeps the Club and its Players" do
+      player = create(:player, club: coach.club)
+
+      coach.destroy
+
+      expect(Club.exists?(coach.club_id)).to be true
+      expect(Player.exists?(player.id)).to be true
+    end
+  end
+
   describe "#initials" do
     it "returns the first letter of the first two words" do
       expect(build(:user, name: "Miguel Santos").initials).to eq("MS")

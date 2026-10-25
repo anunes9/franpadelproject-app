@@ -213,6 +213,14 @@ export const en = {
       playersEmpty: 'No players in this club yet.',
       managePlayers: 'Manage players',
     },
+    coachRemoval: {
+      remove: 'Remove',
+      confirm: 'Remove {{name}}? Their account is deleted and they can no longer sign in.',
+      cancel: 'Cancel',
+      confirmButton: 'Remove coach',
+      removing: 'Removing…',
+      hasClassGroups: '{{name}} still owns class groups. Reassign them to another coach first.',
+    },
   },
   players: {
     index: {
@@ -436,6 +444,21 @@ export const en = {
         crossesMidnight: 'The group’s classes would end after midnight.',
         time: 'The group has no start time.',
         notACoach: 'The group’s coach is no longer a coach.',
+      },
+    },
+    reassignment: {
+      title: 'Reassign the group',
+      hint: 'Hand this group and its plan to another coach of the club. The plan stays as it is.',
+      label: 'New coach',
+      choose: 'Choose a coach',
+      button: 'Reassign',
+      reassigning: 'Reassigning…',
+      errors: {
+        clash: 'The new coach already has a class at the same time on {{dates}}. Nothing was changed.',
+        blank: 'Choose a coach of this club.',
+        notACoach: 'Only a coach can own a class group.',
+        otherClub: 'The new coach must belong to this group’s club.',
+        notSaved: 'The group could not be reassigned, so nothing was changed. Please try again.',
       },
     },
     planEditing: {

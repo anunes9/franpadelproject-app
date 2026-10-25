@@ -44,6 +44,12 @@ export const classPath = (classId: string, edit?: ClassEdit) =>
 // Regenerating a group's Training Plan, only on request.
 export const classGroupRegenerationPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/regeneration`
 
+// Reassigning a group to another Coach of its Club, by its Club Managers.
+export const classGroupReassignmentPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/reassignment`
+
+// Removing a Coach from a Club, by its Club Managers.
+export const clubCoachPath = (clubId: string, coachId: string) => `${clubPath(clubId)}/coaches/${coachId}`
+
 // The Exercises a Coach picks for a Class.
 export const classExercisePath = (classId: string, exerciseRef: string) =>
   `${classPath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`

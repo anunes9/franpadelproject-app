@@ -216,6 +216,14 @@ export const pt = {
       playersEmpty: 'Ainda não há jogadores neste clube.',
       managePlayers: 'Gerir jogadores',
     },
+    coachRemoval: {
+      remove: 'Remover',
+      confirm: 'Remover {{name}}? A conta é apagada e deixa de poder entrar.',
+      cancel: 'Cancelar',
+      confirmButton: 'Remover treinador',
+      removing: 'A remover…',
+      hasClassGroups: '{{name}} ainda tem grupos de aulas. Reatribua-os primeiro a outro treinador.',
+    },
   },
   players: {
     index: {
@@ -441,6 +449,21 @@ export const pt = {
         crossesMidnight: 'As aulas do grupo terminariam depois da meia-noite.',
         time: 'O grupo não tem hora de início.',
         notACoach: 'O treinador do grupo já não é treinador.',
+      },
+    },
+    reassignment: {
+      title: 'Reatribuir o grupo',
+      hint: 'Entregue este grupo e o seu plano a outro treinador do clube. O plano fica como está.',
+      label: 'Novo treinador',
+      choose: 'Escolha um treinador',
+      button: 'Reatribuir',
+      reassigning: 'A reatribuir…',
+      errors: {
+        clash: 'O novo treinador já tem uma aula à mesma hora em {{dates}}. Nada foi alterado.',
+        blank: 'Escolha um treinador deste clube.',
+        notACoach: 'Só um treinador pode ter um grupo de aulas.',
+        otherClub: 'O novo treinador tem de pertencer ao clube deste grupo.',
+        notSaved: 'Não foi possível reatribuir o grupo, por isso nada foi alterado. Tente novamente.',
       },
     },
     planEditing: {

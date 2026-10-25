@@ -22,7 +22,11 @@ class ClubsController < DashboardController
 
   def show
     club = find_accessible_club(params[:id])
-    render inertia: "Clubs/Show", props: self.class.overview_props(club).merge(pending_invitations_props(club))
+    render inertia: "Clubs/Show", props: self.class.overview_props(club).merge(
+      pending_invitations_props(club),
+      # The Coach whose removal was just refused, for the page to show why.
+      refusedCoachId: flash[:refused_coach_id]
+    )
   end
 
   private

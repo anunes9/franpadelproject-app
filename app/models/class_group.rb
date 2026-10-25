@@ -142,6 +142,40 @@ class ClassGroup < ApplicationRecord
     false
   end
 
+  # Hands the group to `new_coach`, another Coach of its Club, on a Club
+  # Manager's request (docs/adr/0006-manager-oversight.md). The Training Plan
+  # is kept as it is. Refused, changing nothing, when there is no such user
+  # (coach: blank), when they are not a Coach (coach: not_a_coach), when they
+  # belong to another Club (coach: other_club), or when one of the group's
+  # upcoming Classes (dated `today` or later, neither done nor skipped) would
+  # overlap in time with another Class of the new Coach (the clashing dates
+  # are then in #clashing_dates).
+  def reassign_to(new_coach, today:)
+    @clashing_dates = []
+    reason = reassignment_refusal(new_coach)
+    return refused(:coach, reason) if reason
+
+    saved = false
+    transaction do
+      ClassClash.lock(coach: new_coach, players: players)
+      @clashing_dates = ClassClash.new(coach: new_coach, players: []).dates(upcoming_classes(today))
+      if @clashing_dates.any?
+        errors.add(:base, :clash)
+        raise ActiveRecord::Rollback
+      end
+
+      self.coach = new_coach
+      raise ActiveRecord::Rollback unless save
+
+      saved = true
+    end
+    restore_attributes unless saved
+    saved
+  rescue ActiveRecord::ActiveRecordError => error
+    restore_attributes
+    not_saved(error)
+  end
+
   # "18:00"
   def start_time_text
     start_time&.strftime("%H:%M")
@@ -192,6 +226,19 @@ class ClassGroup < ApplicationRecord
   # skipped.
   def upcoming_classes(today)
     training_classes.select { |c| c.date >= today && !c.done? && !c.skipped? }
+  end
+
+  # Why #reassign_to refuses `new_coach`, or nil when it does not.
+  def reassignment_refusal(new_coach)
+    if new_coach.nil? then :blank
+    elsif !new_coach.coach? then :not_a_coach
+    elsif new_coach.club_id != coach.club_id then :other_club
+    end
+  end
+
+  def refused(attribute, reason)
+    errors.add(attribute, reason)
+    false
   end
 
   # The new plan of #regenerate_plan, and the ids of the Classes it replaces,

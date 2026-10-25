@@ -39,7 +39,8 @@ class ClassGroupsController < DashboardController
     render inertia: "ClassGroups/Show", props: {
       classGroup: group.summary_json,
       classes: group.training_classes.includes(:course_module, :exercises).map(&:plan_json),
-      **plan_editing_props(group)
+      **plan_editing_props(group),
+      **reassignment_props(group)
     }
   end
 
@@ -55,6 +56,15 @@ class ClassGroupsController < DashboardController
       regenerationEdit: PlanRegenerationsController::REFUSED_EDIT,
       clashDates: flash[:clash_dates] || [],
       refusedEdit: flash[:refused_edit]
+    }
+  end
+
+  # Reassigning the group: the Coaches it can go to (none unless the user is a
+  # Club Manager), and which refused edit is a reassignment.
+  def reassignment_props(group)
+    {
+      coachOptions: ClassGroupReassignmentsController.coach_options(group, current_user),
+      reassignmentEdit: ClassGroupReassignmentsController::REFUSED_EDIT
     }
   end
 

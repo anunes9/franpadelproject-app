@@ -29,6 +29,13 @@ Rails.application.routes.draw do
   get "/invitations/:token", to: "coach_invitation_acceptances#show", as: :accept_coach_invitation
   patch "/invitations/:token", to: "coach_invitation_acceptances#update"
 
+  # Removing a Coach from a Club, by its Club Managers.
+  scope "/dashboard" do
+    resources :clubs, only: [] do
+      resources :coaches, controller: "club_coaches", as: :club_coaches, only: :destroy
+    end
+  end
+
   # Break Periods: a Club's date ranges with no Classes, managed by its Club Managers.
   scope "/dashboard" do
     resources :clubs, only: [] do
@@ -63,6 +70,13 @@ Rails.application.routes.draw do
   scope "/dashboard" do
     resources :class_groups, only: [] do
       resource :regeneration, controller: "plan_regenerations", as: :plan_regeneration, only: :create
+    end
+  end
+  # Reassigning a group to another Coach of its Club, by its Club Managers.
+  scope "/dashboard" do
+    resources :class_groups, only: [] do
+      resource :reassignment, controller: "class_group_reassignments", as: :class_group_reassignment,
+                              only: :update
     end
   end
   # The Exercises a Coach picks for a Class from its Module.
