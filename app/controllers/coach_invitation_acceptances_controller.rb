@@ -12,15 +12,16 @@ class CoachInvitationAcceptancesController < ApplicationController
   end
 
   def update
-    return redirect_to accept_coach_invitation_path(params[:token]) unless state == "pending"
-
     coach = @invitation.accept(**acceptance_params.to_h.symbolize_keys)
 
-    if coach.persisted?
+    if coach.nil?
+      # Used or expired by now: the page says so.
+      redirect_to accept_coach_invitation_path(params[:token])
+    elsif coach.persisted?
       sign_in(coach)
       redirect_to dashboard_path
     else
-      redirect_to accept_coach_invitation_path(params[:token]), inertia: { errors: coach.errors }
+      redirect_to accept_coach_invitation_path(params[:token]), inertia: { errors: form_errors(coach) }
     end
   end
 

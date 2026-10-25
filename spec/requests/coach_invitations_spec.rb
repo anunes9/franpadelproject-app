@@ -100,7 +100,9 @@ RSpec.describe "Coach invitations", type: :request do
 
       expect(response).to redirect_to("/dashboard/clubs/#{club.id}/coach_invitations/new")
       follow_redirect!
-      expect(props["errors"]).to eq("email" => ["has already been taken"])
+      expect(props["errors"]).to eq(
+        "email" => [{ "code" => "account_exists", "message" => "already has an account" }]
+      )
     end
 
     it "refuses an invitation without a name or a valid email" do
@@ -110,7 +112,10 @@ RSpec.describe "Coach invitations", type: :request do
         .not_to change(ActionMailer::Base.deliveries, :count)
 
       follow_redirect!
-      expect(props["errors"]).to eq("name" => ["can't be blank"], "email" => ["is invalid"])
+      expect(props["errors"]).to eq(
+        "name" => [{ "code" => "blank", "message" => "can't be blank" }],
+        "email" => [{ "code" => "invalid", "message" => "is invalid" }]
+      )
     end
 
     it "lists pending invitations on the Club overview, replacing an earlier one to the same email" do
@@ -193,7 +198,10 @@ RSpec.describe "Coach invitations", type: :request do
       expect(response).to redirect_to(path)
       follow_redirect!
       expect(props["state"]).to eq("pending")
-      expect(props["errors"].keys).to contain_exactly("password", "password_confirmation")
+      expect(props["errors"]).to eq(
+        "password" => [{ "code" => "too_short", "message" => "is too short (minimum is 6 characters)" }],
+        "password_confirmation" => [{ "code" => "confirmation", "message" => "doesn't match Password" }]
+      )
     end
 
     it "works only once" do
@@ -236,7 +244,9 @@ RSpec.describe "Coach invitations", type: :request do
       expect { patch path, params: password_params }.not_to change(User, :count)
 
       follow_redirect!
-      expect(props["errors"]).to eq("email" => ["has already been taken"])
+      expect(props["errors"]).to eq(
+        "email" => [{ "code" => "account_exists", "message" => "already has an account" }]
+      )
     end
 
     it "404s for a link that was never sent" do

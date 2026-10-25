@@ -48,9 +48,11 @@ RSpec.describe "Break Periods", type: :request do
       expect(club.break_periods.count).to eq(0)
       follow_redirect!
       expect(response.body).to include(%q("component":"BreakPeriods/Form"))
+      # Each error comes with a stable code the form maps to its own copy,
+      # and the server's message for codes the form does not know.
       expect(page_props["errors"]).to eq(
-        "name" => ["can't be blank"],
-        "ends_on" => ["must be on or after the start date"]
+        "name" => [{ "code" => "blank", "message" => "can't be blank" }],
+        "ends_on" => [{ "code" => "on_or_after_start", "message" => "must be on or after the start date" }]
       )
     end
 
@@ -177,7 +179,9 @@ RSpec.describe "Break Periods", type: :request do
       expect(response).to redirect_to("/dashboard/break_periods/#{break_period.id}/edit")
       expect(break_period.reload.ends_on).to eq(Date.new(2027, 1, 3))
       follow_redirect!
-      expect(page_props["errors"]).to eq("ends_on" => ["must be on or after the start date"])
+      expect(page_props["errors"]).to eq(
+        "ends_on" => [{ "code" => "on_or_after_start", "message" => "must be on or after the start date" }]
+      )
     end
 
     it "never moves a Break Period to another Club" do

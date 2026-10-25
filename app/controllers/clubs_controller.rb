@@ -4,8 +4,7 @@
 # is not a Club Manager.
 class ClubsController < DashboardController
   include ClubScoped
-
-  before_action :require_club_manager
+  include ClubManagerOnly
 
   # The "Clubs/Show" props for a Club, or for no Club while the Club Manager
   # is not linked to any, which the page shows as an empty Club Manager home.
@@ -28,10 +27,6 @@ class ClubsController < DashboardController
 
   # The Coach invitations of the Club still waiting to be accepted.
   def pending_invitations_props(club)
-    { pendingInvitations: CoachInvitation.pending.where(club: club).order(:name).map(&:pending_json) }
-  end
-
-  def require_club_manager
-    raise ActiveRecord::RecordNotFound unless current_user.club_manager?
+    { pendingInvitations: club.coach_invitations.pending.order(:name).map(&:summary_json) }
   end
 end

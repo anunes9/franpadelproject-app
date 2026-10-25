@@ -2,15 +2,14 @@
 # Admins and Club Managers of other Clubs get 404s.
 class BreakPeriodsController < DashboardController
   include ClubScoped
-
-  before_action :require_club_manager
+  include ClubManagerOnly
 
   def index
     club = find_accessible_club(params[:club_id])
 
     render inertia: "BreakPeriods/Index", props: {
       club: club.summary_json,
-      breakPeriods: club.break_periods.chronological.map(&:break_period_json)
+      breakPeriods: club.break_periods.chronological.map(&:summary_json)
     }
   end
 
@@ -27,7 +26,7 @@ class BreakPeriodsController < DashboardController
     if break_period.save
       redirect_to club_break_periods_path(club)
     else
-      redirect_to new_club_break_period_path(club), inertia: { errors: break_period.errors }
+      redirect_to new_club_break_period_path(club), inertia: { errors: form_errors(break_period) }
     end
   end
 
@@ -36,7 +35,7 @@ class BreakPeriodsController < DashboardController
 
     render inertia: "BreakPeriods/Form", props: {
       club: break_period.club.summary_json,
-      breakPeriod: break_period.break_period_json
+      breakPeriod: break_period.summary_json
     }
   end
 
@@ -46,7 +45,7 @@ class BreakPeriodsController < DashboardController
     if break_period.update(break_period_params)
       redirect_to club_break_periods_path(break_period.club)
     else
-      redirect_to edit_break_period_path(break_period), inertia: { errors: break_period.errors }
+      redirect_to edit_break_period_path(break_period), inertia: { errors: form_errors(break_period) }
     end
   end
 
@@ -59,15 +58,7 @@ class BreakPeriodsController < DashboardController
 
   private
 
-  def accessible_break_periods
-    BreakPeriod.where(club: current_user.accessible_clubs)
-  end
-
   def break_period_params
     params.require(:break_period).permit(:name, :starts_on, :ends_on)
-  end
-
-  def require_club_manager
-    raise ActiveRecord::RecordNotFound unless current_user.club_manager?
   end
 end

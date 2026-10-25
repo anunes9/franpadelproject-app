@@ -8,6 +8,7 @@ class Club < ApplicationRecord
   has_many :managers, through: :club_memberships, source: :user
   has_many :players, dependent: :restrict_with_error
   has_many :break_periods, dependent: :destroy
+  has_many :coach_invitations, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 

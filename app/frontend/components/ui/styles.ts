@@ -27,3 +27,7 @@ export function chipClass(active: boolean, className = '') {
     : 'border-line bg-white text-muted-strong shadow-card hover:-translate-y-0.5 hover:border-teal hover:shadow-card-hover motion-reduce:hover:translate-y-0'
   return `shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-meta font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-150 pointer-coarse:min-h-11 ${state} ${className}`
 }
+
+// A text input, select or date field in the dashboard's forms.
+export const INPUT_CLASS =
+  'rounded-lg border border-line bg-white px-3 py-2.5 text-base text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30'

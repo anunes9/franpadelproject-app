@@ -1,0 +1,19 @@
+# Messages for the app's own validation error codes. The forms show their own
+# copy, in the Client's language, for the codes they know; these messages are
+# the server's fallback.
+en:
+  activerecord:
+    errors:
+      models:
+        break_period:
+          attributes:
+            ends_on:
+              on_or_after_start: "must be on or after the start date"
+        coach_invitation:
+          attributes:
+            email:
+              account_exists: "already has an account"
+        user:
+          attributes:
+            email:
+              account_exists: "already has an account"

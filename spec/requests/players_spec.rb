@@ -62,11 +62,11 @@ RSpec.describe "Players", type: :request do
       expect(response).to redirect_to("/dashboard/clubs/#{club.id}/players/new")
 
       follow_redirect!
-      # Players/Form shows its own copy for these known messages, and the
+      # Players/Form shows its own copy for these known codes, and the
       # server's message for any other.
       expect(page_props["errors"]).to eq(
-        "name" => ["can't be blank"],
-        "position" => ["is not included in the list"]
+        "name" => [{ "code" => "blank", "message" => "can't be blank" }],
+        "position" => [{ "code" => "inclusion", "message" => "is not included in the list" }]
       )
     end
 

@@ -15,7 +15,7 @@ class BreakPeriod < ApplicationRecord
   end
 
   # The Break Period as the Break Periods screens list it.
-  def break_period_json
+  def summary_json
     { id: id, name: name, startsOn: starts_on.iso8601, endsOn: ends_on.iso8601 }
   end
 
@@ -24,6 +24,6 @@ class BreakPeriod < ApplicationRecord
   def ends_on_or_after_start
     return unless starts_on && ends_on && ends_on < starts_on
 
-    errors.add(:ends_on, "must be on or after the start date")
+    errors.add(:ends_on, :on_or_after_start)
   end
 end

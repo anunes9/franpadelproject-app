@@ -2,7 +2,7 @@ import { Link, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { AUTH_CARD_CLASS, AUTH_INPUT_CLASS, AuthBackdrop } from '../../components/AuthBackdrop'
-import { buttonClass } from '../../components/ui'
+import { buttonClass, type ErrorCopy, FieldError, fieldErrorText } from '../../components/ui'
 
 interface Props {
   [key: string]: unknown
@@ -53,21 +53,19 @@ export default function AcceptInvitation() {
     patch(url)
   }
 
-  const ERROR_KEYS = {
-    name: 'coachInvitations.accept.errors.name',
-    password: 'coachInvitations.accept.errors.password',
-    password_confirmation: 'coachInvitations.accept.errors.passwordConfirmation',
-    email: 'coachInvitations.accept.errors.emailTaken',
-  } as const
+  // Our copy, in the Client's language, for the error codes each field knows.
+  const password = t('coachInvitations.accept.errors.password')
+  const ERROR_COPY: Record<Field, ErrorCopy> = {
+    name: { blank: t('coachInvitations.accept.errors.name') },
+    password: { blank: password, too_short: password },
+    password_confirmation: { confirmation: t('coachInvitations.accept.errors.passwordConfirmation') },
+    email: { account_exists: t('coachInvitations.accept.errors.emailTaken') },
+  }
 
   function errorFor(field: Field) {
-    if (!errors[field]) return null
-    return (
-      <span role="alert" className="text-meta font-normal text-danger">
-        {t(ERROR_KEYS[field])}
-      </span>
-    )
+    return <FieldError errors={errors} field={field} copy={ERROR_COPY[field]} />
   }
+  const emailError = fieldErrorText(errors, 'email', ERROR_COPY.email)
 
   if (state === 'expired') {
     return (
@@ -95,9 +93,9 @@ export default function AcceptInvitation() {
           <p className="text-sm text-muted">{t('coachInvitations.accept.intro')}</p>
         </div>
 
-        {errors.email ? (
+        {emailError ? (
           <p role="alert" className="rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-sm text-danger">
-            {t(ERROR_KEYS.email)}
+            {emailError}
           </p>
         ) : null}
 

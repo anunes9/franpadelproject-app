@@ -8,9 +8,6 @@ class CoachInvitation < ApplicationRecord
   belongs_to :club
   belongs_to :invited_by, class_name: "User"
 
-  # The raw token for the acceptance link, only known right after #issue.
-  attr_reader :token
-
   normalizes :email, with: ->(email) { email.strip.downcase }
 
   validates :name, presence: true
@@ -19,19 +16,22 @@ class CoachInvitation < ApplicationRecord
 
   scope :pending, -> { where(accepted_at: nil).where("expires_at > ?", Time.current) }
 
-  # Builds and saves an invitation with a fresh token and expiry. A newer
-  # invitation to the same email for the same Club expires any pending one.
+  # Saves a new invitation with a fresh token and expiry; a newer invitation
+  # to the same email for the same Club expires any pending one. Returns the
+  # invitation (carrying its errors when it could not be saved) and the raw
+  # token for the acceptance link. Only the token's digest is stored, so the
+  # caller hands the raw token to the mailer.
   def self.issue(attributes)
-    invitation = new(attributes)
     raw, digest = Devise.token_generator.generate(self, :token_digest)
-    invitation.assign_attributes(token_digest: digest, expires_at: VALID_FOR.from_now)
-    invitation.instance_variable_set(:@token, raw)
+    invitation = new(attributes.merge(token_digest: digest, expires_at: VALID_FOR.from_now))
 
     transaction do
-      pending.where(club: invitation.club, email: invitation.email).update_all(expires_at: Time.current) if invitation.valid?
-      invitation.save
+      if invitation.save
+        pending.where(club: invitation.club, email: invitation.email).where.not(id: invitation.id)
+          .update_all(expires_at: Time.current)
+      end
     end
-    invitation
+    [invitation, raw]
   end
 
   def self.find_by_token(token)
@@ -40,29 +40,40 @@ class CoachInvitation < ApplicationRecord
 
   def accepted? = accepted_at.present?
   def expired? = expires_at <= Time.current
+  def pending? = !accepted? && !expired?
 
   # Creates the Coach of this invitation's Club with the chosen name and
   # password and uses up the invitation. Returns the Coach, which carries the
-  # validation errors when it could not be saved.
+  # validation errors when it could not be saved, or nil when the invitation
+  # is no longer pending. The invitation row stays locked from the pending
+  # check to the accept, so two accepts at once cannot both go through.
   def accept(name:, password:, password_confirmation:)
-    coach = User.new(
-      role: :coach, club: club, email: email, name: name,
-      password: password, password_confirmation: password_confirmation,
-      locale: invited_by.locale
-    )
-    transaction do
-      coach.save && update!(accepted_at: Time.current)
+    with_lock do
+      next unless pending?
+
+      coach = User.new(
+        role: :coach, club: club, email: email, name: name,
+        password: password, password_confirmation: password_confirmation,
+        locale: invited_by.locale
+      )
+      if coach.save
+        update!(accepted_at: Time.current)
+      elsif coach.errors.of_kind?(:email, :taken)
+        coach.errors.delete(:email, :taken)
+        coach.errors.add(:email, :account_exists)
+      end
+      coach
     end
-    coach
   end
 
-  def pending_json
+  # The invitation as the Club overview lists it while it is pending.
+  def summary_json
     { id: id, name: name, email: email }
   end
 
   private
 
   def email_has_no_account
-    errors.add(:email, :taken) if email.present? && User.exists?(email: email)
+    errors.add(:email, :account_exists) if email.present? && User.exists?(email: email)
   end
 end

@@ -3,8 +3,7 @@
 # anyone who is not a Club Manager.
 class CoachInvitationsController < DashboardController
   include ClubScoped
-
-  before_action :require_club_manager
+  include ClubManagerOnly
 
   def new
     render inertia: "CoachInvitations/New", props: { club: find_accessible_club(params[:club_id]).summary_json }
@@ -12,13 +11,13 @@ class CoachInvitationsController < DashboardController
 
   def create
     club = find_accessible_club(params[:club_id])
-    invitation = CoachInvitation.issue(invitation_params.merge(club: club, invited_by: current_user))
+    invitation, token = CoachInvitation.issue(invitation_params.merge(club: club, invited_by: current_user))
 
     if invitation.persisted?
-      CoachInvitationMailer.invite(invitation, invitation.token).deliver_later
+      CoachInvitationMailer.invite(invitation, token).deliver_later
       redirect_to club_path(club)
     else
-      redirect_to new_club_coach_invitation_path(club), inertia: { errors: invitation.errors }
+      redirect_to new_club_coach_invitation_path(club), inertia: { errors: form_errors(invitation) }
     end
   end
 
@@ -26,9 +25,5 @@ class CoachInvitationsController < DashboardController
 
   def invitation_params
     params.require(:coach_invitation).permit(:name, :email)
-  end
-
-  def require_club_manager
-    raise ActiveRecord::RecordNotFound unless current_user.club_manager?
   end
 end

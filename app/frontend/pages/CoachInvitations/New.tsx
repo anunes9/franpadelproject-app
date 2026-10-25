@@ -3,7 +3,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { clubCoachInvitationsPath, clubPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, buttonClass, Eyebrow } from '../../components/ui'
+import { BackLink, buttonClass, Eyebrow, FieldError, INPUT_CLASS } from '../../components/ui'
 import type { ClubSummary } from '../../types/dashboard-data'
 
 interface Props {
@@ -12,9 +12,6 @@ interface Props {
 }
 
 type Field = 'name' | 'email'
-
-const INPUT_CLASS =
-  'rounded-lg border border-line bg-white px-3 py-2.5 text-base text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30'
 
 function New() {
   const { club } = usePage<Props>().props
@@ -28,23 +25,17 @@ function New() {
     post(clubCoachInvitationsPath(club.id))
   }
 
-  // The server's messages are in English; show our own, in the Client's
-  // language.
+  // Our copy, in the Client's language, for the error codes each field knows.
   function errorFor(field: Field) {
-    // Rails sends each field's messages as a list.
-    const messages: string[] = ([] as string[]).concat(errors[field] ?? [])
-    if (messages.length === 0) return null
-    let message = t('coachInvitations.new.errors.name')
-    if (field === 'email') {
-      message = messages.includes('has already been taken')
-        ? t('coachInvitations.new.errors.emailTaken')
-        : t('coachInvitations.new.errors.email')
-    }
-    return (
-      <span role="alert" className="text-meta font-normal text-danger">
-        {message}
-      </span>
-    )
+    const copy =
+      field === 'name'
+        ? { blank: t('coachInvitations.new.errors.name') }
+        : {
+            blank: t('coachInvitations.new.errors.email'),
+            invalid: t('coachInvitations.new.errors.email'),
+            account_exists: t('coachInvitations.new.errors.emailTaken'),
+          }
+    return <FieldError errors={errors} field={field} copy={copy} />
   }
 
   return (

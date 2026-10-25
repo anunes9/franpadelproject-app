@@ -64,6 +64,16 @@ RSpec.describe Club, type: :model do
     expect { club.destroy }.to change(BreakPeriod, :count).by(-1)
   end
 
+  it "removes its Coach invitations when it is destroyed" do
+    club = create(:club)
+    invitation, = CoachInvitation.issue(
+      name: "Carla Coach", email: "carla@example.com", club: club, invited_by: create(:user, :club_manager)
+    )
+
+    expect(club.coach_invitations).to eq([invitation])
+    expect { club.destroy }.to change(CoachInvitation, :count).by(-1)
+  end
+
   describe "organized logo storage" do
     it "stores the logo under clubs/{id}/logo/{filename}" do
       club = create(:club)
