@@ -48,6 +48,11 @@ function Form() {
   } = usePage<Props>().props
   const { t, tn, locale } = useTranslation()
   const editing = classGroup !== undefined
+  // Creating and editing word the same parts of the form differently.
+  const scope = editing ? 'classGroups.edit' : 'classGroups.form'
+  const own = (
+    key: 'title' | 'planNote' | 'save' | 'saving' | 'errors.clashTitle' | 'errors.clash' | 'errors.notSaved'
+  ) => t(`${scope}.${key}` as const)
 
   const { data, setData, post, patch, transform, processing, errors } = useForm({
     level: classGroup?.level ?? '',
@@ -103,7 +108,7 @@ function Form() {
               ? `${club.name} · ${t(`players.levelOption.${classGroup.level}`)} · ${formatDate(classGroup.startsOn, locale, false)}`
               : club.name}
           </Eyebrow>
-          <PageHeader title={t(editing ? 'classGroups.edit.title' : 'classGroups.form.title')} />
+          <PageHeader title={own('title')} />
         </div>
 
         {clashDates.length > 0 && (
@@ -111,12 +116,8 @@ function Form() {
             role="alert"
             className="flex flex-col gap-2 rounded-[18px] border border-danger/40 bg-white p-5 shadow-card"
           >
-            <h2 className="text-sm font-bold text-danger">
-              {t(editing ? 'classGroups.edit.errors.clashTitle' : 'classGroups.form.errors.clashTitle')}
-            </h2>
-            <p className="text-meta text-muted-strong">
-              {t(editing ? 'classGroups.edit.errors.clash' : 'classGroups.form.errors.clash')}
-            </p>
+            <h2 className="text-sm font-bold text-danger">{own('errors.clashTitle')}</h2>
+            <p className="text-meta text-muted-strong">{own('errors.clash')}</p>
             <ul className="flex flex-wrap gap-1.5">
               {clashDates.map((date) => (
                 <li key={date} className="rounded-full border border-line px-2.5 py-1 text-meta text-ink">
@@ -307,9 +308,7 @@ function Form() {
             />
           </fieldset>
 
-          <p className="text-meta text-muted">
-            {t(editing ? 'classGroups.edit.planNote' : 'classGroups.form.planNote')}
-          </p>
+          <p className="text-meta text-muted">{own('planNote')}</p>
 
           {/* A clash is shown with its dates above the form. */}
           {clashDates.length === 0 && (
@@ -317,15 +316,13 @@ function Form() {
               errors={errors}
               field="base"
               copy={{
-                not_saved: t(editing ? 'classGroups.edit.errors.notSaved' : 'classGroups.form.errors.notSaved'),
+                not_saved: own('errors.notSaved'),
               }}
             />
           )}
 
           <button type="submit" disabled={processing} className={buttonClass('primary', 'mt-1')}>
-            {editing
-              ? t(processing ? 'classGroups.edit.saving' : 'classGroups.edit.save')
-              : t(processing ? 'classGroups.form.saving' : 'classGroups.form.save')}
+            {own(processing ? 'saving' : 'save')}
           </button>
         </form>
       </div>

@@ -4,6 +4,7 @@
 # 404.
 class ClassGroupsController < DashboardController
   include CoachOnly
+  include ClassGroupForm
 
   skip_before_action :require_coach, only: :show
   before_action :require_club, only: %i[new create]
@@ -15,17 +16,19 @@ class ClassGroupsController < DashboardController
   end
 
   def new
-    render inertia: "ClassGroups/Form", props: form_props.merge(clashDates: flash[:clash_dates] || [])
+    render inertia: "ClassGroups/Form", props: class_group_form_props(current_user.club).merge(
+      levelOptions: ClassGroup.levels.keys,
+      clashDates: flash[:clash_dates] || []
+    )
   end
 
   def create
-    group = ClassGroup.new(class_group_params.merge(coach: current_user))
+    group = ClassGroup.new(class_group_params(:level, :starts_on).merge(coach: current_user))
 
     if group.create_with_plan
       redirect_to class_group_path(group)
     else
-      # The clashing dates go next to the errors, which hold codes only.
-      flash[:clash_dates] = group.clashing_dates.map(&:iso8601) if group.clashing_dates.present?
+      flash_clash_dates(group.clashing_dates)
       redirect_to new_class_group_path, inertia: { errors: form_errors(group) }
     end
   end
@@ -42,12 +45,14 @@ class ClassGroupsController < DashboardController
 
   private
 
-  # What editing the plan needs: the Modules a Class can be added for, and
-  # after a refused edit (see TrainingClassesController), its clashing dates
-  # and which edit it was.
+  # What editing the plan needs: the Modules a Class can be added for, which
+  # refused edit is a regeneration, and after a refused edit (see
+  # TrainingClassesController and PlanRegenerationsController), its clashing
+  # dates and which edit it was.
   def plan_editing_props(group)
     {
       moduleOptions: group.course_modules.map(&:option_json),
+      regenerationEdit: PlanRegenerationsController::REFUSED_EDIT,
       clashDates: flash[:clash_dates] || [],
       refusedEdit: flash[:refused_edit]
     }
@@ -59,22 +64,5 @@ class ClassGroupsController < DashboardController
 
   def current_user_groups
     ClassGroup.where(coach: current_user).includes(:coach, :players).order(:created_at)
-  end
-
-  def class_group_params
-    params.require(:class_group).permit(:level, :starts_on, :cadence, :start_time, :duration,
-                                        weekdays: [], player_ids: [])
-  end
-
-  def form_props
-    {
-      club: current_user.club.summary_json,
-      players: current_user.club.players.alphabetical.map(&:players_json),
-      levelOptions: ClassGroup.levels.keys,
-      cadenceOptions: ClassGroup::CADENCES,
-      weekdayOptions: ClassGroup::WEEKDAYS,
-      durationOptions: ClassGroup::DURATIONS,
-      maxPlayers: ClassGroup::MAX_PLAYERS
-    }
   end
 end

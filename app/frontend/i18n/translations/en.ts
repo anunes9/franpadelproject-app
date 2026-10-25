@@ -426,6 +426,16 @@ export const en = {
           'The new plan would overlap in time with another class of the coach or of a player on {{dates}}. Nothing was changed.',
         planComplete: 'Every module of the course is complete, so there is nothing to regenerate.',
         noModules: 'This level’s course has no modules yet, so no training plan can be generated.',
+        notSaved: 'The plan could not be regenerated, so nothing was changed. Please try again.',
+        invalidGroup:
+          'This group’s settings must be fixed before its plan can be regenerated. Edit the group, then try again. Nothing was changed.',
+        playersOtherClub: 'A player of this group is no longer in the coach’s club.',
+        playersBlank: 'The group has no players.',
+        playersTooMany: 'The group has too many players.',
+        weekdays: 'The group’s weekdays do not match its number of classes a week.',
+        crossesMidnight: 'The group’s classes would end after midnight.',
+        time: 'The group has no start time.',
+        notACoach: 'The group’s coach is no longer a coach.',
       },
     },
     planEditing: {

@@ -90,8 +90,7 @@ class TrainingClassesController < DashboardController
   end
 
   def refuse(training_class, refused_edit:, clashing_dates: [])
-    # The clashing dates go next to the errors, which hold codes only.
-    flash[:clash_dates] = clashing_dates.map(&:iso8601)
+    flash_clash_dates(clashing_dates)
     flash[:refused_edit] = refused_edit
     redirect_to class_group_path(training_class.class_group), inertia: { errors: form_errors(training_class) }
   end

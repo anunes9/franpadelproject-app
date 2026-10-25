@@ -431,6 +431,16 @@ export const pt = {
           'O novo plano sobrepõe-se no tempo a outra aula do treinador ou de um jogador em {{dates}}. Nada foi alterado.',
         planComplete: 'Todos os mesociclos do curso estão concluídos, por isso não há nada a regenerar.',
         noModules: 'O curso deste nível ainda não tem mesociclos, por isso não é possível gerar o plano de treino.',
+        notSaved: 'Não foi possível regenerar o plano, por isso nada foi alterado. Tente novamente.',
+        invalidGroup:
+          'É preciso corrigir as definições deste grupo antes de regenerar o plano. Edite o grupo e tente novamente. Nada foi alterado.',
+        playersOtherClub: 'Um jogador deste grupo já não está no clube do treinador.',
+        playersBlank: 'O grupo não tem jogadores.',
+        playersTooMany: 'O grupo tem demasiados jogadores.',
+        weekdays: 'Os dias da semana do grupo não correspondem ao número de aulas por semana.',
+        crossesMidnight: 'As aulas do grupo terminariam depois da meia-noite.',
+        time: 'O grupo não tem hora de início.',
+        notACoach: 'O treinador do grupo já não é treinador.',
       },
     },
     planEditing: {

@@ -71,7 +71,7 @@ class ClassGroup < ApplicationRecord
     planned = generate_plan(modules: course_modules, start_date: starts_on)
     return false unless planned
 
-    save_plan(planned) { save! }
+    with_plan_lock { save_plan(planned) { save! } }
   rescue ActiveRecord::ActiveRecordError => error
     not_saved(error)
   end
@@ -87,27 +87,19 @@ class ClassGroup < ApplicationRecord
     @clashing_dates = []
     return false unless valid?
 
-    done = training_classes.where(done: true).to_a
-    modules = course_modules.to_a
-    # A Module whose Assessment Class is done is complete.
-    complete = done.select(&:assessment?).map(&:course_module_id)
-    remaining = modules.reject { |course_module| complete.include?(course_module.id) }
-    if modules.any? && remaining.empty?
-      errors.add(:base, :plan_complete)
-      return false
-    end
+    # Everything that decides the new plan is read under the lock, so the
+    # plan, the Classes it replaces and the delete agree with each other.
+    with_plan_lock do
+      planned, replaced = plan_regeneration(today)
+      next false unless planned
 
-    start_date = [today, done.map(&:date).max&.next_day].compact.max
-    done_in_first = done.count { |done_class| done_class.course_module_id == remaining.first&.id }
-    planned = generate_plan(modules: remaining, start_date: start_date, done_in_first_module: done_in_first)
-    return false unless planned
-
-    replaced = training_classes.where(done: false).pluck(:id)
-    save_plan(planned, replacing: replaced) do
-      # Still not done: a Class marked done meanwhile is kept.
-      replaced_classes = TrainingClass.where(id: replaced, done: false)
-      TrainingClassExercise.where(training_class: replaced_classes).delete_all
-      replaced_classes.delete_all
+      save_plan(planned, replacing: replaced) do
+        # Still not done: marking a Class done takes no lock, and a Class
+        # marked done meanwhile is kept.
+        replaced_classes = TrainingClass.where(id: replaced, done: false)
+        TrainingClassExercise.where(training_class: replaced_classes).delete_all
+        replaced_classes.delete_all
+      end
     end
   rescue ActiveRecord::ActiveRecordError => error
     not_saved(error)
@@ -119,9 +111,11 @@ class ClassGroup < ApplicationRecord
   # effect when the plan is regenerated. A new duration is the exception, as
   # every Class lasts as long as its group's Classes. Refused when the group
   # would be invalid, or when an added Player or a new duration would make one
-  # of its Classes that is not skipped overlap in time with another Class of
-  # the Coach or of a Player (the clashing dates are then in #clashing_dates).
-  def update_with_clash_check(attributes)
+  # of its upcoming Classes (dated `today` or later, neither done nor skipped)
+  # overlap in time with another Class of the Coach or of a Player (the
+  # clashing dates are then in #clashing_dates). Past and done Classes are
+  # history, so they never refuse an edit, though they take the new duration.
+  def update_with_clash_check(attributes, today:)
     @clashing_dates = []
     saved = false
 
@@ -132,8 +126,7 @@ class ClassGroup < ApplicationRecord
       raise ActiveRecord::Rollback unless valid?
 
       if (player_ids - previous_player_ids).any? || duration_changed?
-        @clashing_dates = ClassClash.new(coach: coach, players: players)
-                                    .dates(training_classes.reject(&:skipped?))
+        @clashing_dates = ClassClash.new(coach: coach, players: players).dates(upcoming_classes(today))
       end
       if @clashing_dates.any?
         errors.add(:base, :clash)
@@ -195,28 +188,60 @@ class ClassGroup < ApplicationRecord
     nil
   end
 
-  # Saves the planned Classes, after the block, in one transaction, unless
-  # any would clash with another Class of the Coach or of a Player. The
-  # Classes in `replacing` (ids) are being replaced, so they do not count.
-  def save_plan(planned, replacing: [])
+  # The Classes still to be taught: dated `today` or later, neither done nor
+  # skipped.
+  def upcoming_classes(today)
+    training_classes.select { |c| c.date >= today && !c.done? && !c.skipped? }
+  end
+
+  # The new plan of #regenerate_plan, and the ids of the Classes it replaces,
+  # or nil when refused.
+  def plan_regeneration(today)
+    done = training_classes.where(done: true).to_a
+    modules = course_modules.to_a
+    # A Module whose Assessment Class is done is complete.
+    complete = done.select(&:assessment?).map(&:course_module_id)
+    remaining = modules.reject { |course_module| complete.include?(course_module.id) }
+    if modules.any? && remaining.empty?
+      errors.add(:base, :plan_complete)
+      return
+    end
+
+    start_date = [today, done.map(&:date).max&.next_day].compact.max
+    done_in_first = done.count { |done_class| done_class.course_module_id == remaining.first&.id }
+    planned = generate_plan(modules: remaining, start_date: start_date, done_in_first_module: done_in_first)
+    [planned, training_classes.where(done: false).pluck(:id)] if planned
+  end
+
+  # Runs the block in one transaction holding ClassClash.lock on the Coach
+  # and the Players, and rolls it back unless the block returns true.
+  def with_plan_lock
     saved = false
     transaction do
       ClassClash.lock(coach: coach, players: players)
-      @clashing_dates = ClassClash.new(coach: coach, players: players, replacing: replacing).dates(planned)
-      if @clashing_dates.any?
-        errors.add(:base, :clash)
-        raise ActiveRecord::Rollback
-      end
-
-      yield
-      planned.each do |planned_class|
-        training_classes.create!(date: planned_class.date, start_time: start_time,
-                                 course_module: planned_class.course_module, kind: planned_class.type)
-      end
-      saved = true
+      saved = yield
+      raise ActiveRecord::Rollback unless saved
     end
     training_classes.reset
     saved
+  end
+
+  # Within #with_plan_lock: saves the planned Classes, after the block, unless
+  # any would clash with another Class of the Coach or of a Player. The
+  # Classes in `replacing` (ids) are being replaced, so they do not count.
+  def save_plan(planned, replacing: [])
+    @clashing_dates = ClassClash.new(coach: coach, players: players, replacing: replacing).dates(planned)
+    if @clashing_dates.any?
+      errors.add(:base, :clash)
+      return false
+    end
+
+    yield
+    planned.each do |planned_class|
+      training_classes.create!(date: planned_class.date, start_time: start_time,
+                               course_module: planned_class.course_module, kind: planned_class.type)
+    end
+    true
   end
 
   def not_saved(error)

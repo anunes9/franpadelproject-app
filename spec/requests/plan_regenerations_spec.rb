@@ -119,6 +119,16 @@ RSpec.describe "Regenerating a Training Plan", type: :request do
       expect(plan.map { |c| c["kind"] }.count("assessment")).to eq(2)
     end
 
+    it "decides today in Lisbon, not in UTC" do
+      sign_in coach
+
+      # 23:30 UTC on Tuesday 29 September is already Wednesday 30 September in
+      # Lisbon (summer time), so no Class falls on the 29th.
+      travel_to(Time.utc(2026, 9, 29, 23, 30)) { regenerate(group) }
+
+      expect(plan_of(group).first["date"]).to eq("2026-10-06")
+    end
+
     it "uses the group's current schedule and the Club's current Break Periods" do
       mark_done(*classes_of(group).first(2)) # 8 and 15 Sep
       group.update!(weekdays: ["thursday"], start_time: "19:00")
@@ -152,6 +162,7 @@ RSpec.describe "Regenerating a Training Plan", type: :request do
       follow_redirect!
       expect(refusal_codes("base")).to eq(["plan_complete"])
       expect(page_props["refusedEdit"]).to eq("regeneration")
+      expect(page_props["regenerationEdit"]).to eq("regeneration")
     end
 
     it "refuses a Course with no Modules" do
@@ -165,6 +176,20 @@ RSpec.describe "Regenerating a Training Plan", type: :request do
       follow_redirect!
       expect(refusal_codes("level")).to eq(["no_modules"])
       expect(unplanned.training_classes.reload).to be_empty
+    end
+
+    it "refuses a group that is no longer valid, such as one with a Player who has left the Club" do
+      before = classes_of(group).map(&:attributes)
+      players.first.update!(club: create(:club))
+      sign_in coach
+
+      travel_to(Date.new(2026, 9, 20)) { regenerate(group) }
+
+      expect(classes_of(group).map(&:attributes)).to eq(before)
+      follow_redirect!
+      expect(refusal_codes("players")).to eq(["other_club"])
+      expect(page_props["clashDates"]).to eq([])
+      expect(page_props["refusedEdit"]).to eq("regeneration")
     end
 
     it "refuses a plan that would clash with another group, lists the dates and changes nothing" do

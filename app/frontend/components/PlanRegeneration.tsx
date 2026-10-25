@@ -3,30 +3,57 @@ import { useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
 import { classGroupRegenerationPath } from '@/lib/paths'
-import { buttonClass, FieldError } from './ui'
+import { buttonClass, type ErrorCopy, FieldError } from './ui'
 
 // Regenerating a group's Training Plan, only when asked and only after
 // confirming (docs/adr/0005-regenerating-a-plan.md). Done Classes are kept;
 // every other Class is replaced, with its picked Exercises.
 
 // What the group's page holds after a refused regeneration (see
-// PlanRegenerationsController): its errors and clashing dates.
+// PlanRegenerationsController): its errors and clashing dates, and the
+// marker that says the refused edit was a regeneration.
 interface RefusalProps {
   [key: string]: unknown
   errors: Record<string, unknown>
   clashDates: string[]
   refusedEdit: string | null
+  regenerationEdit: string
 }
 
-const REGENERATION = 'regeneration'
+// Fields whose refusal is about the plan rather than the group's settings.
+const PLAN_FIELDS = ['base', 'level']
 
 export function RegeneratePlan({ classGroupId }: { classGroupId: string }) {
   const { t, locale } = useTranslation()
-  const { errors, clashDates, refusedEdit } = usePage<RefusalProps>().props
+  const { errors, clashDates, refusedEdit, regenerationEdit } = usePage<RefusalProps>().props
   const [confirming, setConfirming] = useState(false)
   const [regenerating, setRegenerating] = useState(false)
-  const refused = refusedEdit === REGENERATION
+  const refused = refusedEdit === regenerationEdit
   const dates = (clashDates ?? []).map((date) => formatDate(date, locale)).join(', ')
+
+  // Regeneration validates the whole group first, so a refusal can name any
+  // of its fields: our copy for the codes we know, the server's otherwise.
+  const refusalFields = Object.keys(errors ?? {})
+  const invalidGroup = refusalFields.some((field) => !PLAN_FIELDS.includes(field))
+  const copy: Record<string, ErrorCopy> = {
+    base: {
+      clash: t('classGroups.planRegeneration.errors.clash', { dates }),
+      plan_complete: t('classGroups.planRegeneration.errors.planComplete'),
+      not_saved: t('classGroups.planRegeneration.errors.notSaved'),
+    },
+    level: { no_modules: t('classGroups.planRegeneration.errors.noModules') },
+    players: {
+      other_club: t('classGroups.planRegeneration.errors.playersOtherClub'),
+      blank: t('classGroups.planRegeneration.errors.playersBlank'),
+      too_many: t('classGroups.planRegeneration.errors.playersTooMany'),
+    },
+    weekdays: { cadence_mismatch: t('classGroups.planRegeneration.errors.weekdays') },
+    start_time: {
+      blank: t('classGroups.planRegeneration.errors.time'),
+      crosses_midnight: t('classGroups.planRegeneration.errors.crossesMidnight'),
+    },
+    coach: { not_a_coach: t('classGroups.planRegeneration.errors.notACoach') },
+  }
 
   function regenerate() {
     setRegenerating(true)
@@ -83,19 +110,14 @@ export function RegeneratePlan({ classGroupId }: { classGroupId: string }) {
 
       {refused && (
         <div className="flex flex-col gap-1">
-          <FieldError
-            errors={errors ?? {}}
-            field="base"
-            copy={{
-              clash: t('classGroups.planRegeneration.errors.clash', { dates }),
-              plan_complete: t('classGroups.planRegeneration.errors.planComplete'),
-            }}
-          />
-          <FieldError
-            errors={errors ?? {}}
-            field="level"
-            copy={{ no_modules: t('classGroups.planRegeneration.errors.noModules') }}
-          />
+          {invalidGroup && (
+            <p role="alert" className="text-meta font-normal text-danger">
+              {t('classGroups.planRegeneration.errors.invalidGroup')}
+            </p>
+          )}
+          {refusalFields.map((field) => (
+            <FieldError key={field} errors={errors ?? {}} field={field} copy={copy[field] ?? {}} />
+          ))}
         </div>
       )}
     </section>

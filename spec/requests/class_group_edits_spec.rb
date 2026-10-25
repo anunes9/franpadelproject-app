@@ -1,9 +1,14 @@
 require "rails_helper"
 
 RSpec.describe "Editing a Class Group", type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:club) { create(:club, name: "Padel Clube Lisboa") }
   let(:coach) { create(:user, :coach, club: club, name: "Fran") }
   let(:players) { create_list(:player, 2, club: club) }
+
+  # Before the group's first Class, unless a test says otherwise.
+  before { travel_to(Time.utc(2026, 9, 1, 12)) }
 
   before do
     create(:course_module, level: :beginner, position: 1, title: "Serve")
@@ -87,6 +92,34 @@ RSpec.describe "Editing a Class Group", type: :request do
       follow_redirect!
       expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["clash"])
       expect(page_props["clashDates"]).to eq(%w[2026-09-08 2026-09-15])
+    end
+
+    it "checks an added Player only against the Classes from today on" do
+      busy = create(:player, club: club)
+      planned_group(coach: create(:user, :coach, club: club), players: [busy], start_time: "18:30")
+        .training_classes.drop(2).each { |c| c.update!(skipped: true) } # 8 and 15 Sep only
+      sign_in coach
+
+      travel_to(Time.utc(2026, 9, 10, 12))
+      edit_group(player_ids: players.map(&:id) + [busy.id])
+
+      expect(group.players.reload).not_to include(busy)
+      follow_redirect!
+      expect(page_props["clashDates"]).to eq(%w[2026-09-15])
+    end
+
+    it "lets a Player join whose only clashes are with past or done Classes" do
+      busy = create(:player, club: club)
+      planned_group(coach: create(:user, :coach, club: club), players: [busy], start_time: "18:30")
+        .training_classes.drop(2).each { |c| c.update!(skipped: true) } # 8 and 15 Sep only
+      group.training_classes.second.update!(done: true) # 15 Sep
+      sign_in coach
+
+      travel_to(Time.utc(2026, 9, 10, 12))
+      edit_group(player_ids: players.map(&:id) + [busy.id])
+
+      expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+      expect(group.players.reload).to include(busy)
     end
 
     it "lets a Player join whose other Classes do not overlap" do
@@ -243,6 +276,18 @@ RSpec.describe "Editing a Class Group", type: :request do
       follow_redirect!
       expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["clash"])
       expect(page_props["clashDates"]).to eq(["2026-09-08"])
+    end
+
+    it "ignores the group's past Classes, though they take the new duration too" do
+      other = planned_group(players: [create(:player, club: club)], start_time: "19:00")
+      other.training_classes.drop(1).each { |c| c.update!(skipped: true) } # 8 Sep only
+      sign_in coach
+
+      travel_to(Time.utc(2026, 9, 9, 12))
+      edit_group(duration: 90)
+
+      expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+      expect(group.reload.training_classes.map(&:interval).uniq).to eq([ClassInterval.new(1080, 1170)])
     end
 
     it "ignores the group's skipped Classes" do
