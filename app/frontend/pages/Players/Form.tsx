@@ -89,7 +89,7 @@ function Form() {
 
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
-      <div className="mx-auto flex max-w-[640px] flex-col gap-6">
+      <div className="flex max-w-[640px] flex-col gap-6 lg:mx-auto">
         <BackLink label={t('players.form.backToPlayers')} href={playersHref} />
         <div className="flex flex-col gap-1">
           <Eyebrow>{club.name}</Eyebrow>

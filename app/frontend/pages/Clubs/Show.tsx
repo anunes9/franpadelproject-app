@@ -68,7 +68,7 @@ function Show() {
   if (!club) {
     return (
       <div className="px-5 pt-6 lg:px-10 lg:pt-9">
-        <div className="mx-auto flex max-w-[760px] flex-col gap-3">
+        <div className="flex max-w-[760px] flex-col gap-3 lg:mx-auto">
           <PageHeader title={t('clubs.overview.noClubsTitle')} />
           <p className="text-sm text-muted">{t('clubs.overview.noClubs')}</p>
         </div>
@@ -78,7 +78,7 @@ function Show() {
 
   return (
     <div className="px-5 pt-6 lg:px-10 lg:pt-9">
-      <div className="mx-auto flex max-w-[760px] flex-col gap-6">
+      <div className="flex max-w-[760px] flex-col gap-6 lg:mx-auto">
         <div className="flex flex-col gap-1">
           <Eyebrow>{t('clubs.overview.eyebrow')}</Eyebrow>
           <PageHeader title={club.name} />
