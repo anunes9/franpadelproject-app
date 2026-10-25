@@ -418,6 +418,17 @@ export const en = {
       },
       noExercises: 'No exercises picked',
     },
+    finishedGroups: {
+      pill: 'Finished',
+      title: 'Finished groups',
+      hint: 'Every class of these groups is done. They stay here as history.',
+      continuesFrom: 'Continues from the {{level}} group',
+      nextLevelTitle: 'Next level',
+      nextLevelHint: 'Start a {{level}} group with this group’s players. You choose its start date and schedule.',
+      nextLevelButton: 'Start next level group',
+      copyNote:
+        'Continues the {{level}} group: its players still in your club are already chosen and the level is the next one.',
+    },
     planRegeneration: {
       title: 'Regenerate the plan',
       hint: 'Builds the rest of the plan again from the group’s current schedule and the club’s break periods, continuing the course where it stands.',

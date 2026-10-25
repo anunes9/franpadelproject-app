@@ -14,7 +14,7 @@ class ClubsController < DashboardController
     {
       club: club.summary_json,
       coaches: club.coaches.order(:name).map { |coach| { id: coach.id, name: coach.name, email: coach.email } },
-      classGroups: ClassGroup.of_clubs(club).includes(:coach, :players)
+      classGroups: ClassGroup.of_clubs(club).with_finished.includes(:coach, :players)
                              .order("users.name", :created_at).map(&:list_json),
       players: club.players.alphabetical.map(&:players_json)
     }

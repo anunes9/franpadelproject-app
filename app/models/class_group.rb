@@ -11,6 +11,9 @@ class ClassGroup < ApplicationRecord
   has_many :class_group_players, dependent: :destroy
   has_many :players, through: :class_group_players
   has_many :training_classes, -> { order(:date, :start_time) }, dependent: :destroy, inverse_of: :class_group
+  # The finished group this one continues at the next Level, when the Coach
+  # started it from one. A link for history only.
+  belongs_to :previous_class_group, class_name: "ClassGroup", optional: true
 
   enum :level, Level::VALUES, validate: true
 
@@ -34,6 +37,22 @@ class ClassGroup < ApplicationRecord
   # #regenerate_plan.
   attr_reader :clashing_dates
 
+  # A group is finished when at least one of its Classes is done and every
+  # Class is done or skipped; see docs/adr/0007-finished-class-groups.md.
+  # Derived, never stored, so marking a Class undone makes it unfinished.
+  FINISHED_SQL = <<~SQL.squish.freeze
+    EXISTS (SELECT 1 FROM training_classes done_classes
+            WHERE done_classes.class_group_id = class_groups.id AND done_classes.done)
+    AND NOT EXISTS (SELECT 1 FROM training_classes open_classes
+                    WHERE open_classes.class_group_id = class_groups.id
+                      AND NOT open_classes.done AND NOT open_classes.skipped)
+  SQL
+
+  scope :finished, -> { where(FINISHED_SQL) }
+  scope :unfinished, -> { where.not(FINISHED_SQL) }
+  # Loads whether each group is finished with the groups, for lists.
+  scope :with_finished, -> { select(arel_table[Arel.star], Arel.sql("(#{FINISHED_SQL}) AS finished_flag")) }
+
   # The groups of a Club: those whose Coach belongs to it.
   scope :of_clubs, ->(clubs) { joins(:coach).where(users: { club_id: clubs }) }
 
@@ -53,6 +72,19 @@ class ClassGroup < ApplicationRecord
   # generated from and its Classes can be for.
   def course_modules
     CourseModule.teaching_for(level)
+  end
+
+  # See FINISHED_SQL.
+  def finished?
+    return finished_flag if has_attribute?(:finished_flag)
+
+    training_classes.any?(&:done?) && training_classes.all? { |c| c.done? || c.skipped? }
+  end
+
+  # The Level of the Course after this group's, which a finished group's
+  # Players can continue at; nil for Advanced.
+  def next_level
+    Level.next(level)
   end
 
   def weekdays=(value)
@@ -191,9 +223,15 @@ class ClassGroup < ApplicationRecord
     )
   end
 
-  # The group as the Class Group lists show it.
+  # The group as the Class Group lists show it. Load the groups
+  # .with_finished to read whether each is finished with them.
   def list_json
     common_json.merge(playerCount: players.size)
+  end
+
+  # The group as a link to it: "Continues from <group>".
+  def link_json
+    { id: id, level: level }
   end
 
   private
@@ -206,7 +244,8 @@ class ClassGroup < ApplicationRecord
       weekdays: weekdays,
       startTime: start_time_text,
       duration: duration,
-      coach: coach.name
+      coach: coach.name,
+      finished: finished?
     }
   end
 

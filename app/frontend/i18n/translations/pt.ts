@@ -423,6 +423,18 @@ export const pt = {
       },
       noExercises: 'Sem exercícios escolhidos',
     },
+    finishedGroups: {
+      pill: 'Terminado',
+      title: 'Grupos terminados',
+      hint: 'Todas as aulas destes grupos estão feitas. Ficam aqui como histórico.',
+      continuesFrom: 'Continua o grupo de nível {{level}}',
+      nextLevelTitle: 'Nível seguinte',
+      nextLevelHint:
+        'Crie um grupo de nível {{level}} com os jogadores deste grupo. A data de início e o horário são escolhidos por si.',
+      nextLevelButton: 'Criar grupo do nível seguinte',
+      copyNote:
+        'Continua o grupo de nível {{level}}: os seus jogadores que ainda estão no seu clube já vêm escolhidos e o nível é o seguinte.',
+    },
     planRegeneration: {
       title: 'Regenerar o plano',
       hint: 'Volta a gerar o resto do plano com o horário atual do grupo e as pausas do clube, continuando o curso onde está.',

@@ -5,7 +5,7 @@ import { formatDate, formatDuration } from '@/lib/classGroups'
 import { classGroupPath, classGroupsPath, newClubPlayerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, chipClass, Eyebrow, FieldError, INPUT_CLASS, LABEL_CLASS } from '../../components/ui'
-import type { ClassGroup, ClubSummary, Player, PlayerLevel, Weekday } from '../../types/dashboard-data'
+import type { ClassGroup, ClassGroupCopy, ClubSummary, Player, PlayerLevel, Weekday } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -22,6 +22,9 @@ interface Props {
   maxPlayers: number
   // The dates on which the last refused plan clashed, if it clashed.
   clashDates: string[]
+  // Only when creating the group that continues a finished one at the next
+  // Level: what the form starts from.
+  copy?: ClassGroupCopy | null
 }
 
 const CADENCE_KEY = { 1: 'once', 2: 'twice' } as const
@@ -45,6 +48,7 @@ function Form() {
     durationOptions,
     maxPlayers,
     clashDates,
+    copy,
   } = usePage<Props>().props
   const { t, tn, locale } = useTranslation()
   const editing = classGroup !== undefined
@@ -55,16 +59,18 @@ function Form() {
   ) => t(`${scope}.${key}` as const)
 
   const { data, setData, post, patch, transform, processing, errors } = useForm({
-    level: classGroup?.level ?? '',
+    level: classGroup?.level ?? copy?.level ?? '',
     starts_on: classGroup?.startsOn ?? '',
     cadence: classGroup?.cadence ?? cadenceOptions[0],
     weekdays: classGroup?.weekdays ?? ([] as Weekday[]),
     start_time: classGroup?.startTime ?? '',
     duration: classGroup?.duration ?? durationOptions[0],
-    player_ids: classGroup?.players.map((player) => player.id) ?? ([] as string[]),
+    player_ids: classGroup?.players.map((player) => player.id) ?? copy?.playerIds ?? ([] as string[]),
   })
   transform(({ level, starts_on, ...schedule }) => ({
-    class_group: editing ? schedule : { level, starts_on, ...schedule },
+    class_group: editing
+      ? schedule
+      : { level, starts_on, ...schedule, ...(copy && { previous_class_group_id: copy.from.id }) },
   }))
 
   function handleSubmit(event: FormEvent) {
@@ -109,6 +115,11 @@ function Form() {
               : club.name}
           </Eyebrow>
           <PageHeader title={own('title')} />
+          {copy && (
+            <p className="text-meta text-muted-strong">
+              {t('classGroups.finishedGroups.copyNote', { level: t(`players.levelOption.${copy.from.level}`) })}
+            </p>
+          )}
         </div>
 
         {clashDates.length > 0 && (
