@@ -110,17 +110,30 @@ function Sidebar() {
 
 function MobileHeader() {
   const { t } = useTranslation()
+  const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { dashboardUser } = props
+  const onProfile = url.startsWith('/dashboard/profile')
 
   return (
-    <header className="sticky top-0 z-30 flex min-h-14 items-center border-b border-line/80 bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
+    <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
       <Link href="/dashboard" className="flex h-11 items-center">
         <img
-          src="/fran-methodology-logo.png"
+          src="/fran-methodology-logo-cropped.png"
           alt={t('common.logoAlt.franMethodology')}
-          width={506}
-          height={286}
-          className="-my-3 h-[4.25rem] w-auto"
+          width={444}
+          height={117}
+          className="h-7 w-auto"
         />
+      </Link>
+      <Link
+        href="/dashboard/profile"
+        aria-label={t('common.nav.profile')}
+        aria-current={onProfile ? 'page' : undefined}
+        className="-mr-1 flex h-11 w-11 items-center justify-center"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white text-xs font-extrabold text-ink">
+          {dashboardUser.initials}
+        </span>
       </Link>
     </header>
   )
