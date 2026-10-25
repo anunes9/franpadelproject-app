@@ -1,7 +1,7 @@
 import { usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { formatDate, formatSchedule, formatTimeRange } from '@/lib/classGroups'
+import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
 import { classGroupsPath, clubPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
@@ -19,7 +19,7 @@ function byModule(classes: TrainingClass[]) {
   const runs: Array<{ module: TrainingClass['module']; classes: TrainingClass[] }> = []
   for (const trainingClass of classes) {
     const last = runs[runs.length - 1]
-    if (last && last.module.id === trainingClass.module.id) last.classes.push(trainingClass)
+    if (last && last.module.slug === trainingClass.module.slug) last.classes.push(trainingClass)
     else runs.push({ module: trainingClass.module, classes: [trainingClass] })
   }
   return runs
@@ -57,7 +57,7 @@ function Show() {
         </div>
 
         <dl className="grid grid-cols-2 gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card sm:grid-cols-3">
-          <Detail label={t('classGroups.show.schedule')}>{formatSchedule(t, classGroup)}</Detail>
+          <Detail label={t('classGroups.show.when')}>{formatWeeklyTime(t, classGroup)}</Detail>
           <Detail label={t('classGroups.show.startsOn')}>{formatDate(classGroup.startsOn, locale, false)}</Detail>
           <Detail label={t('classGroups.show.coach')}>{classGroup.coach}</Detail>
         </dl>
@@ -88,9 +88,9 @@ function Show() {
           </h2>
 
           {byModule(classes).map((run) => (
-            <section key={run.module.id} className="flex flex-col gap-2" aria-label={run.module.title}>
+            <section key={run.module.slug} className="flex flex-col gap-2" aria-label={run.module.title}>
               <div className="flex flex-col">
-                <Eyebrow>{t('classGroups.show.module', { n: run.module.n })}</Eyebrow>
+                <Eyebrow>{t('classGroups.show.module', { n: run.module.number })}</Eyebrow>
                 <h3 className="text-base font-bold text-ink">{run.module.title}</h3>
               </div>
               <ListCard count={run.classes.length} empty="">

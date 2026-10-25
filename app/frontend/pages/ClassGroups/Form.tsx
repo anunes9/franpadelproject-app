@@ -17,6 +17,8 @@ interface Props {
   weekdayOptions: Weekday[]
   durationOptions: number[]
   maxPlayers: number
+  // The dates on which the last refused plan clashed, if it clashed.
+  clashDates: string[]
 }
 
 const CADENCE_KEY = { 1: 'once', 2: 'twice' } as const
@@ -27,7 +29,7 @@ const LEGEND = 'mb-1.5 text-sm font-medium text-ink'
 // A Coach creates a Class Group for themselves; its whole Training Plan is
 // generated on creation, or nothing is created and the form says why.
 function Form() {
-  const { club, players, levelOptions, cadenceOptions, weekdayOptions, durationOptions, maxPlayers } =
+  const { club, players, levelOptions, cadenceOptions, weekdayOptions, durationOptions, maxPlayers, clashDates } =
     usePage<Props>().props
   const { t, tn, locale } = useTranslation()
 
@@ -41,9 +43,6 @@ function Form() {
     player_ids: [] as string[],
   })
   transform((fields) => ({ class_group: fields }))
-
-  // The dates on which the refused plan clashed, sent with the errors.
-  const clashDates = ((errors as Record<string, unknown>).clashDates ?? []) as string[]
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -190,7 +189,14 @@ function Form() {
                 aria-invalid={errors.start_time ? true : undefined}
                 className={`${INPUT_CLASS} min-h-11`}
               />
-              <FieldError errors={errors} field="start_time" copy={{ blank: t('classGroups.form.errors.time') }} />
+              <FieldError
+                errors={errors}
+                field="start_time"
+                copy={{
+                  blank: t('classGroups.form.errors.time'),
+                  crosses_midnight: t('classGroups.form.errors.crossesMidnight'),
+                }}
+              />
             </label>
 
             <fieldset>
@@ -262,6 +268,11 @@ function Form() {
           </fieldset>
 
           <p className="text-meta text-muted">{t('classGroups.form.planNote')}</p>
+
+          {/* A clash is shown with its dates above the form. */}
+          {clashDates.length === 0 && (
+            <FieldError errors={errors} field="base" copy={{ not_saved: t('classGroups.form.errors.notSaved') }} />
+          )}
 
           <button type="submit" disabled={processing} className={buttonClass('primary', 'mt-1')}>
             {processing ? t('classGroups.form.saving') : t('classGroups.form.save')}

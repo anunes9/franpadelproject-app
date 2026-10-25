@@ -363,12 +363,15 @@ export const pt = {
         choose: 'Escolha uma opção.',
         date: 'Escolha uma data.',
         time: 'Escolha uma hora.',
+        crossesMidnight:
+          'Uma aula tem de terminar até à meia-noite. Escolha uma hora de início mais cedo ou uma duração mais curta.',
         weekdays: 'Escolha um dia da semana diferente para cada aula semanal.',
         playersBlank: 'Escolha pelo menos um jogador.',
         playersTooMany: 'Um grupo de aulas tem no máximo {{max}} jogadores.',
         playersOtherClub: 'Escolha jogadores do seu clube.',
         noModules: 'O curso deste nível ainda não tem mesociclos, por isso não é possível gerar o plano de treino.',
         clashTitle: 'Este grupo sobrepõe-se a outras aulas',
+        notSaved: 'Não foi possível guardar o grupo, por isso nada foi criado. Tente novamente.',
         clash:
           'Nestas datas, uma aula sobrepõe-se no tempo a outra aula sua ou de um dos jogadores. Altere os dias da semana, a hora de início ou os jogadores.',
       },
@@ -379,7 +382,7 @@ export const pt = {
       backToClub: 'Voltar à visão geral do clube',
       coach: 'Treinador',
       startsOn: 'Início',
-      schedule: 'Horário',
+      when: 'Quando',
       players: 'Jogadores',
       plan: 'Plano de treino',
       classesCount: {

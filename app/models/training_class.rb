@@ -9,9 +9,17 @@ class TrainingClass < ApplicationRecord
   # An Assessment Class is the last Class of each Module.
   enum :kind, { regular: 0, assessment: 1 }, validate: true
 
+  # A start time is a wall-clock time at the Club, never shifted by time zone.
+  self.skip_time_zone_conversion_for_attributes = [:start_time]
+
   validates :date, :start_time, presence: true
 
   delegate :duration, to: :class_group
+
+  # The minutes of its day the Class runs.
+  def interval
+    ClassInterval.of(start_time, duration)
+  end
 
   # The Class as the group's plan lists it.
   def plan_json
@@ -21,7 +29,7 @@ class TrainingClass < ApplicationRecord
       startTime: start_time.strftime("%H:%M"),
       kind: kind,
       done: done,
-      module: { id: course_module.slug, n: course_module.position, title: course_module.title }
+      module: { slug: course_module.slug, number: course_module.position, title: course_module.title }
     }
   end
 end

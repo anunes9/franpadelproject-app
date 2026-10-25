@@ -1,15 +1,15 @@
 import { Link } from '@inertiajs/react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { formatSchedule } from '@/lib/classGroups'
+import { formatWeeklyTime } from '@/lib/classGroups'
 import { classGroupPath } from '@/lib/paths'
 import type { ClassGroupListItem } from '../types/dashboard-data'
 import { ListRow } from './ui'
 
-// A Class Group in a ListCard: its Level, schedule and Players, linking to
+// A Class Group in a ListCard: its Level, weekly time and Players, linking to
 // its Training Plan. `withCoach` adds the Coach, for the Club overview.
 export function ClassGroupRow({ group, withCoach = false }: { group: ClassGroupListItem; withCoach?: boolean }) {
   const { t, tn } = useTranslation()
-  const details = [formatSchedule(t, group), tn('classGroups.playersCount', group.playerCount)]
+  const details = [formatWeeklyTime(t, group), tn('classGroups.playersCount', group.playerCount)]
   if (withCoach) details.unshift(group.coach)
 
   return (

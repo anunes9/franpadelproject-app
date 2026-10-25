@@ -16,10 +16,4 @@ module ClubScoped
   def accessible_break_periods
     BreakPeriod.where(club: current_user.accessible_clubs)
   end
-
-  # Unlike the Club's roster, a Class Group is private to its Coach: other
-  # Coaches of the Club cannot see it, though its Club Managers can.
-  def accessible_class_groups
-    ClassGroup.visible_to(current_user)
-  end
 end

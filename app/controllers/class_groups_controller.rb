@@ -1,11 +1,12 @@
 # Class Groups and their Training Plans. A Coach lists and creates their own
 # groups; a group's page is visible to its Coach and to the Club Managers of
-# its Club. Anyone else, Admins included, gets a 404.
+# its Club. Anyone else, Admins and Coaches without a Club included, gets a
+# 404.
 class ClassGroupsController < DashboardController
-  include ClubScoped
   include CoachOnly
 
-  coach_only only: %i[index new create]
+  skip_before_action :require_coach, only: :show
+  before_action :require_club, only: %i[new create]
 
   def index
     render inertia: "ClassGroups/Index", props: {
@@ -14,7 +15,7 @@ class ClassGroupsController < DashboardController
   end
 
   def new
-    render inertia: "ClassGroups/Form", props: form_props
+    render inertia: "ClassGroups/Form", props: form_props.merge(clashDates: flash[:clash_dates] || [])
   end
 
   def create
@@ -23,14 +24,14 @@ class ClassGroupsController < DashboardController
     if group.create_with_plan
       redirect_to class_group_path(group)
     else
-      errors = form_errors(group)
-      errors[:clashDates] = group.clashing_dates.map(&:iso8601) if group.clashing_dates.present?
-      redirect_to new_class_group_path, inertia: { errors: errors }
+      # The clashing dates go next to the errors, which hold codes only.
+      flash[:clash_dates] = group.clashing_dates.map(&:iso8601) if group.clashing_dates.present?
+      redirect_to new_class_group_path, inertia: { errors: form_errors(group) }
     end
   end
 
   def show
-    group = accessible_class_groups.find(params[:id])
+    group = ClassGroup.visible_to(current_user).find(params[:id])
 
     render inertia: "ClassGroups/Show", props: {
       classGroup: group.summary_json,
@@ -39,6 +40,10 @@ class ClassGroupsController < DashboardController
   end
 
   private
+
+  def require_club
+    raise ActiveRecord::RecordNotFound unless current_user.club
+  end
 
   def current_user_groups
     ClassGroup.where(coach: current_user).includes(:coach, :players).order(:created_at)

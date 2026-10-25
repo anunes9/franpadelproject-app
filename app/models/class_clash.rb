@@ -7,7 +7,7 @@
 #   ClassClash.new(coach: coach, players: players, ignoring: group)
 #     .dates(classes) # => the dates of `classes` that clash, in order
 #
-# `classes` are anything with #date, #start_time and #duration: generated
+# `classes` are anything with #date and #interval (a ClassInterval): generated
 # PlannedClasses, or TrainingClasses being moved or added. They are checked
 # against the Classes already planned for the Coach, and for each Player in
 # any group (other Coaches' groups included). `ignoring` leaves out one
@@ -32,7 +32,7 @@ class ClassClash
 
     planned = existing_classes(classes.map(&:date).uniq).group_by(&:date)
     classes.select do |candidate|
-      planned.fetch(candidate.date, []).any? { |other| overlap?(candidate, other) }
+      planned.fetch(candidate.date, []).any? { |other| candidate.interval.overlaps?(other.interval) }
     end.map(&:date).uniq.sort
   end
 
@@ -44,16 +44,5 @@ class ClassClash
     groups = groups.where.not(id: @ignoring) if @ignoring
 
     TrainingClass.where(date: dates, class_group: groups).includes(:class_group)
-  end
-
-  def overlap?(one, other)
-    one_start = minutes(one.start_time)
-    other_start = minutes(other.start_time)
-    one_start < other_start + other.duration && other_start < one_start + one.duration
-  end
-
-  def minutes(time)
-    time = ActiveModel::Type::Time.new.cast(time)
-    (time.hour * 60) + time.min
   end
 end

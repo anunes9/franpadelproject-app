@@ -12,12 +12,16 @@ class ClassGroup < ApplicationRecord
   has_many :players, through: :class_group_players
   has_many :training_classes, -> { order(:date, :start_time) }, dependent: :destroy, inverse_of: :class_group
 
-  enum :level, { beginner: 0, intermediate: 1, advanced: 2 }, validate: true
+  enum :level, Level::VALUES, validate: true
+
+  # A start time is a wall-clock time at the Club, never shifted by time zone.
+  self.skip_time_zone_conversion_for_attributes = [:start_time]
 
   validates :starts_on, :start_time, presence: true
   validates :cadence, inclusion: { in: CADENCES }
   validates :duration, inclusion: { in: DURATIONS }
   validate :weekdays_match_cadence
+  validate :classes_end_by_midnight
   validate :players_within_limit
   validate :players_of_the_coachs_club
   validate :owned_by_a_coach
@@ -50,7 +54,8 @@ class ClassGroup < ApplicationRecord
   # Saves the group with its whole Training Plan, or nothing at all. Refused
   # when the group is invalid, when its Course has no Modules, or when any
   # generated Class would overlap in time with another Class of the Coach or
-  # of one of the Players (the clashing dates are then in #clashing_dates).
+  # of one of the Players (the clashing dates are then in #clashing_dates), or
+  # when saving fails.
   def create_with_plan
     @clashing_dates = []
     return false unless valid?
@@ -74,6 +79,10 @@ class ClassGroup < ApplicationRecord
     end
 
     persisted?
+  rescue ActiveRecord::ActiveRecordError => error
+    Rails.logger.error("Class Group not saved: #{error.class}: #{error.message}")
+    errors.add(:base, :not_saved)
+    false
   end
 
   # "18:00"
@@ -81,36 +90,34 @@ class ClassGroup < ApplicationRecord
     start_time&.strftime("%H:%M")
   end
 
-  # The group as its page and the create form's refusal show it.
+  # The group as its page shows it.
   def summary_json
-    {
-      id: id,
-      level: level,
+    common_json.merge(
       startsOn: starts_on.iso8601,
       cadence: cadence,
-      weekdays: weekdays,
-      startTime: start_time_text,
-      duration: duration,
-      coach: coach.name,
       club: club.summary_json,
       players: players.sort_by(&:name).map(&:players_json)
-    }
+    )
   end
 
   # The group as the Class Group lists show it.
   def list_json
+    common_json.merge(playerCount: players.size)
+  end
+
+  private
+
+  # What every view of the group shows: its Level, its weekly time and Coach.
+  def common_json
     {
       id: id,
       level: level,
       weekdays: weekdays,
       startTime: start_time_text,
       duration: duration,
-      coach: coach.name,
-      playerCount: players.size
+      coach: coach.name
     }
   end
-
-  private
 
   def generate_plan
     TrainingPlanGenerator.call(
@@ -127,6 +134,13 @@ class ClassGroup < ApplicationRecord
     return if weekdays.size == cadence && weekdays.uniq.size == weekdays.size && (weekdays - WEEKDAYS).empty?
 
     errors.add(:weekdays, :cadence_mismatch)
+  end
+
+  # A Class ends on its own day, so the clash rule compares same-date Classes.
+  def classes_end_by_midnight
+    return unless start_time && DURATIONS.include?(duration)
+
+    errors.add(:start_time, :crosses_midnight) if ClassInterval.of(start_time, duration).crosses_midnight?
   end
 
   def players_within_limit

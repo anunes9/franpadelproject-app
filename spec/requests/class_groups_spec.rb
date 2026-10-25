@@ -41,7 +41,7 @@ RSpec.describe "Class Groups", type: :request do
       # Once a week: six weeks per Module, the sixth an Assessment Class.
       expect(plan.size).to eq(12)
       expect(plan.first).to include("date" => "2026-09-08", "startTime" => "18:00", "kind" => "regular")
-      expect(plan.first["module"]).to include("title" => "Serve", "n" => 1)
+      expect(plan.first["module"]).to eq("slug" => serve.slug, "number" => 1, "title" => "Serve")
       expect(plan[5]).to include("date" => "2026-10-13", "kind" => "assessment")
       expect(plan[6]["module"]).to include("title" => "Volley")
       expect(plan.last).to include("date" => "2026-11-24", "kind" => "assessment")
@@ -120,6 +120,49 @@ RSpec.describe "Class Groups", type: :request do
       expect(page_props["errors"]["level"].map { |e| e["code"] }).to eq(["no_modules"])
     end
 
+    it "refuses a group whose Classes would cross midnight" do
+      sign_in coach
+
+      expect { create_group(group_params.merge(start_time: "23:30")) }.not_to change(ClassGroup, :count)
+
+      follow_redirect!
+      expect(page_props["errors"]["start_time"]).to eq(
+        [{ "code" => "crosses_midnight", "message" => "must let the Class end by midnight" }]
+      )
+    end
+
+    it "accepts a group whose Classes end exactly at midnight" do
+      sign_in coach
+
+      expect { create_group(group_params.merge(start_time: "22:30", duration: 90)) }
+        .to change(ClassGroup, :count).by(1)
+    end
+
+    it "refuses, and creates nothing, when saving the Training Plan fails" do
+      sign_in coach
+      allow_any_instance_of(TrainingClass).to receive(:save!).and_raise(ActiveRecord::RecordNotSaved)
+
+      expect { create_group }.not_to(change { [ClassGroup.count, TrainingClass.count, ClassGroupPlayer.count] })
+      expect(response).to redirect_to("/dashboard/class_groups/new")
+
+      follow_redirect!
+      expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["not_saved"])
+    end
+
+    it "404s for a Coach without a Club" do
+      clubless = create(:user, :coach)
+      clubless.update_column(:club_id, nil)
+      sign_in clubless
+
+      get "/dashboard/class_groups/new"
+      expect(response).to have_http_status(:not_found)
+
+      # A 404 response does not keep the test sign-in, so sign in again.
+      sign_in clubless
+      expect { create_group(group_params.merge(player_ids: [])) }.not_to change(ClassGroup, :count)
+      expect(response).to have_http_status(:not_found)
+    end
+
     it "404s for a Club Manager, who cannot create groups here" do
       manager = create(:user, :club_manager)
       create(:club_membership, user: manager, club: club)
@@ -153,10 +196,13 @@ RSpec.describe "Class Groups", type: :request do
       expect(response).to redirect_to("/dashboard/class_groups/new")
 
       follow_redirect!
-      expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["clash"])
+      expect(page_props["errors"]).to eq(
+        "base" => [{ "code" => "clash",
+                     "message" => "would overlap in time with another Class of the Coach or of a Player" }]
+      )
       # Both plans fall on the same twelve Tuesdays.
-      expect(page_props["errors"]["clashDates"].size).to eq(12)
-      expect(page_props["errors"]["clashDates"].first(2)).to eq(%w[2026-09-08 2026-09-15])
+      expect(page_props["clashDates"].size).to eq(12)
+      expect(page_props["clashDates"].first(2)).to eq(%w[2026-09-08 2026-09-15])
     end
 
     it "refuses a group that would double-book a Player in another Coach's group" do
@@ -164,10 +210,26 @@ RSpec.describe "Class Groups", type: :request do
       existing_group(coach: other_coach, players: [players.first], weekdays: ["thursday"])
       sign_in coach
 
-      expect { create_group(group_params.merge(weekdays: ["thursday"])) }.not_to change(ClassGroup, :count)
+      expect { create_group(group_params.merge(weekdays: ["thursday"])) }
+        .not_to(change { [ClassGroup.count, TrainingClass.count, ClassGroupPlayer.count] })
+      expect(response).to redirect_to("/dashboard/class_groups/new")
 
       follow_redirect!
-      expect(page_props["errors"]["clashDates"].first).to eq("2026-09-10")
+      expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["clash"])
+      # Both plans fall on the same twelve Thursdays.
+      thursdays = (0...12).map { |week| (Date.new(2026, 9, 10) + (7 * week)).iso8601 }
+      expect(page_props["clashDates"]).to eq(thursdays)
+    end
+
+    it "forgets the clashing dates once the form is shown again" do
+      existing_group(coach: coach, players: create_list(:player, 1, club: club))
+      sign_in coach
+      create_group
+      follow_redirect!
+
+      get "/dashboard/class_groups/new"
+
+      expect(page_props["clashDates"]).to eq([])
     end
 
     it "detects an overlap in time, not only an identical start" do

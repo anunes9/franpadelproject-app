@@ -12,16 +12,17 @@ export function formatDuration(minutes: number) {
   return rest === 0 ? `${hours}h` : `${hours}h${String(rest).padStart(2, '0')}`
 }
 
-// "18:00" plus a duration, as "18:00–19:30".
+// "18:00" plus a duration, as "18:00–19:30". A Class always ends by midnight,
+// on its own day.
 export function formatTimeRange(startTime: string, minutes: number) {
   const [hours, mins] = startTime.split(':').map(Number)
   const end = hours * 60 + mins + minutes
   const pad = (n: number) => String(n).padStart(2, '0')
-  return `${startTime}–${pad(Math.floor(end / 60) % 24)}:${pad(end % 60)}`
+  return `${startTime}–${pad(Math.floor(end / 60))}:${pad(end % 60)}`
 }
 
-// "Tue, Thu · 18:00 · 1h30"
-export function formatSchedule(t: Translate, group: { weekdays: Weekday[]; startTime: string; duration: number }) {
+// When a group's Classes are each week: "Tue, Thu · 18:00 · 1h30"
+export function formatWeeklyTime(t: Translate, group: { weekdays: Weekday[]; startTime: string; duration: number }) {
   const days = [...group.weekdays]
     .sort((a, b) => WEEKDAY_ORDER.indexOf(a) - WEEKDAY_ORDER.indexOf(b))
     .map((day) => t(`classGroups.weekdayShort.${day}`))

@@ -359,12 +359,14 @@ export const en = {
         choose: 'Choose an option.',
         date: 'Choose a date.',
         time: 'Choose a time.',
+        crossesMidnight: 'A class must end by midnight. Choose an earlier start time or a shorter duration.',
         weekdays: 'Choose one different weekday for each weekly class.',
         playersBlank: 'Choose at least one player.',
         playersTooMany: 'A class group has at most {{max}} players.',
         playersOtherClub: 'Choose players of your own club.',
         noModules: 'This level’s course has no modules yet, so no training plan can be generated.',
         clashTitle: 'This group would overlap with other classes',
+        notSaved: 'The group could not be saved, so nothing was created. Please try again.',
         clash:
           'On these dates a class would overlap in time with another class of yours or of one of the players. Change the weekdays, start time or players.',
       },
@@ -375,7 +377,7 @@ export const en = {
       backToClub: 'Back to club overview',
       coach: 'Coach',
       startsOn: 'Starts',
-      schedule: 'Schedule',
+      when: 'When',
       players: 'Players',
       plan: 'Training plan',
       classesCount: {

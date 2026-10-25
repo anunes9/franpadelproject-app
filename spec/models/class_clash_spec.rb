@@ -8,9 +8,10 @@ RSpec.describe ClassClash, type: :model do
 
   before { create(:course_module, level: :beginner, position: 1) }
 
-  # A Class someone wants to plan: anything with a date, start time and duration.
+  # A Class someone wants to plan, as the Training Plan generator plans it.
   def slot(date, start_time, duration)
-    Struct.new(:date, :start_time, :duration).new(date, start_time, duration)
+    TrainingPlanGenerator::PlannedClass.new(date: date, start_time: start_time, duration: duration,
+                                            course_module: nil, type: :regular)
   end
 
   # A group whose plan has a Class on Tuesday 8 September 2026.
@@ -80,5 +81,26 @@ RSpec.describe ClassClash, type: :model do
     later = slot(tuesday + 7, "18:00", 60)
 
     expect(clashing_dates([later, slot(tuesday, "18:00", 60), later])).to eq([tuesday, tuesday + 7])
+  end
+
+  # Class times are wall-clock times at the Club: the app's time zone, which
+  # is unset (UTC), must not shift them.
+  describe "time zones" do
+    %w[Europe/Lisbon Asia/Tokyo America/New_York].each do |zone|
+      it "keeps a group's start time and clashes as planned under #{zone}" do
+        group = Time.use_zone(zone) do
+          planned_group(coach: coach, players: [player], start_time: "18:00", duration: 60)
+        end
+
+        Time.use_zone(zone) do
+          expect(ClassGroup.find(group.id).start_time_text).to eq("18:00")
+          expect(group.training_classes.reload.first.plan_json[:startTime]).to eq("18:00")
+          expect(clashing_dates([slot(tuesday, "18:30", 60)])).to eq([tuesday])
+          expect(clashing_dates([slot(tuesday, "19:00", 60)])).to eq([])
+        end
+        expect(clashing_dates([slot(tuesday, "17:30", 60)])).to eq([tuesday])
+        expect(clashing_dates([slot(tuesday, "17:00", 60)])).to eq([])
+      end
+    end
   end
 end

@@ -134,7 +134,7 @@ export interface TrainingClass {
   startTime: string
   kind: 'regular' | 'assessment'
   done: boolean
-  module: { id: string; n: number; title: string }
+  module: { slug: string; number: number; title: string }
 }
 
 // A Club's date range with no Classes. Dates are ISO (YYYY-MM-DD), both included.

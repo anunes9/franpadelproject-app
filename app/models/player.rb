@@ -10,7 +10,7 @@ class Player < ApplicationRecord
   # prefixed (position_left?, hand_left?) to keep them apart.
   enum :position, { left: 0, right: 1, both: 2 }, prefix: true, validate: true
   enum :hand, { left: 0, right: 1 }, prefix: true, validate: true
-  enum :level, { beginner: 0, intermediate: 1, advanced: 2 }, validate: true
+  enum :level, Level::VALUES, validate: true
 
   validates :name, presence: true
 

@@ -23,7 +23,12 @@ class TrainingPlanGenerator
   end
 
   # type is :regular or :assessment. Exercises are not part of generation.
-  PlannedClass = Data.define(:date, :start_time, :duration, :course_module, :type)
+  PlannedClass = Data.define(:date, :start_time, :duration, :course_module, :type) do
+    # The minutes of its day the Class runs, as TrainingClass#interval.
+    def interval
+      ClassInterval.of(start_time, duration)
+    end
+  end
 
   def self.call(...)
     new(...).call

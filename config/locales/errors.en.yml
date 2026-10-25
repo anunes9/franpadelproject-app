@@ -13,10 +13,13 @@ en:
           attributes:
             base:
               clash: "would overlap in time with another Class of the Coach or of a Player"
+              not_saved: "could not be saved, so nothing was created"
             coach:
               not_a_coach: "must be a Coach"
             level:
               no_modules: "has no Modules in its Course yet"
+            start_time:
+              crosses_midnight: "must let the Class end by midnight"
             players:
               too_many: "is too many (maximum is %{count})"
               other_club: "must all belong to the Coach's Club"
