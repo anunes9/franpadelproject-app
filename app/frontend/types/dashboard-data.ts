@@ -90,3 +90,11 @@ export interface Player {
   hand: PlayerHand
   level: PlayerLevel
 }
+
+// A Club's date range with no Classes. Dates are ISO (YYYY-MM-DD), both included.
+export interface BreakPeriod {
+  id: string
+  name: string
+  startsOn: string
+  endsOn: string
+}

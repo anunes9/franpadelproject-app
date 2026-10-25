@@ -10,7 +10,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { clubPlayersPath, isClubOverviewPath, isPlayersPath, selectedClubId } from '@/lib/paths'
+import { clubPlayersPath, isBreakPeriodsPath, isClubOverviewPath, isPlayersPath, selectedClubId } from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
 
 function useNav() {
@@ -49,7 +49,8 @@ function useNav() {
 // it; the Players URL also starts with /dashboard/clubs/, so it is matched by
 // shape rather than prefix.
 const isActive = (pathname: string, item: { href: string }) => {
-  if (item.href === '/dashboard') return pathname === '/dashboard' || isClubOverviewPath(pathname)
+  if (item.href === '/dashboard')
+    return pathname === '/dashboard' || isClubOverviewPath(pathname) || isBreakPeriodsPath(pathname)
   if (isPlayersPath(item.href)) return isPlayersPath(pathname)
   return pathname.startsWith(item.href)
 }

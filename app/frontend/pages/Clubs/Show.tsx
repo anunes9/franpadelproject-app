@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { clubPath, clubPlayersPath } from '@/lib/paths'
+import { clubBreakPeriodsPath, clubPath, clubPlayersPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, ListCard, ListRow } from '../../components/ui'
 import type { ClubCoach, ClubSummary, DashboardUser, Player } from '../../types/dashboard-data'
@@ -119,6 +119,16 @@ function Show() {
             </ListRow>
           ))}
         </Section>
+
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-sm font-bold text-ink">{t('breakPeriods.overview.title')}</h2>
+            <Link href={clubBreakPeriodsPath(club.id)} className={buttonClass('secondary')}>
+              {t('breakPeriods.overview.manage')}
+            </Link>
+          </div>
+          <p className="text-sm text-muted">{t('breakPeriods.overview.description')}</p>
+        </section>
       </div>
     </div>
   )

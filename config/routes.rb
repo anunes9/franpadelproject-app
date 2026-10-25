@@ -19,6 +19,12 @@ Rails.application.routes.draw do
       resources :players, only: %i[index new create edit update], shallow: true
     end
   end
+  # Break Periods: a Club's date ranges with no Classes, managed by its Club Managers.
+  scope "/dashboard" do
+    resources :clubs, only: [] do
+      resources :break_periods, only: %i[index new create edit update destroy], shallow: true
+    end
+  end
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"
