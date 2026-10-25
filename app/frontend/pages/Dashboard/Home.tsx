@@ -35,6 +35,10 @@ function greetingKey(hour: number): TranslationKey {
   return 'dashboard.home.greetingLine.evening'
 }
 
+function firstName(name: string): string {
+  return name.trim().split(/\s+/)[0] ?? name
+}
+
 function SectionTitle({ children, href, linkLabel }: { children: ReactNode; href: string; linkLabel: string }) {
   return (
     <div className="flex items-center justify-between">
@@ -57,19 +61,14 @@ function Home() {
   return (
     <div className="px-5 pt-5 lg:px-10 lg:pt-9">
       <div className="mx-auto flex max-w-5xl flex-col gap-5 lg:gap-7">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-paper">
-            {dashboardUser.initials}
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-strong">{t(greetingKey(today.getHours()))}</span>
-            <span className="text-[15px] font-bold text-ink">{dashboardUser.name}</span>
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <p className="text-sm text-muted-strong">
+            {t(greetingKey(today.getHours()))} {firstName(dashboardUser.name)}
+          </p>
+          <h1 className="text-balance text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink lg:text-[38px]">
+            {t('dashboard.home.heading')}
+          </h1>
         </div>
-
-        <h1 className="text-balance text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink lg:text-[38px]">
-          {t('dashboard.home.heading')}
-        </h1>
 
         <div className="flex flex-col gap-5">
           {/* Continue tile */}

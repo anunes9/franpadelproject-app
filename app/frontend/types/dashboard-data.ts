@@ -63,4 +63,30 @@ export interface DashboardUser {
   name: string
   initials: string
   club: string | null
+  // The Clubs whose Players this user manages: a Coach's one Club, or a Club
+  // Manager's linked Clubs.
+  clubs: ClubSummary[]
+}
+
+export interface ClubSummary {
+  id: string
+  name: string
+}
+
+export interface ClubCoach {
+  id: string
+  name: string
+  email: string
+}
+
+export type PlayerPosition = 'left' | 'right' | 'both'
+export type PlayerHand = 'left' | 'right'
+export type PlayerLevel = 'beginner' | 'intermediate' | 'advanced'
+
+export interface Player {
+  id: string
+  name: string
+  position: PlayerPosition
+  hand: PlayerHand
+  level: PlayerLevel
 }

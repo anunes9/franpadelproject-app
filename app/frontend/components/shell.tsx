@@ -4,15 +4,33 @@ import {
   Home01Icon,
   Logout03Icon,
   User03Icon,
+  UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import { clubPlayersPath, isClubOverviewPath, isPlayersPath, selectedClubId } from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
 
 function useNav() {
   const { t } = useTranslation()
+  const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { dashboardUser } = props
+  // Players follows the Club selected on the Club Manager home, and
+  // otherwise opens on the user's first Club.
+  const selectedId = selectedClubId(url)
+  const playersClub = dashboardUser.clubs.find((club) => club.id === selectedId) ?? dashboardUser.clubs[0]
+  const players = playersClub
+    ? [
+        {
+          href: clubPlayersPath(playersClub.id),
+          label: t('common.nav.players'),
+          tab: t('common.nav.players'),
+          icon: UserGroupIcon,
+        },
+      ]
+    : []
   return [
     { href: '/dashboard', label: t('common.nav.dashboard'), tab: t('common.nav.dashboard'), icon: Home01Icon },
     { href: '/dashboard/courses', label: t('common.nav.courses'), tab: t('common.nav.courses'), icon: Book02Icon },
@@ -22,12 +40,19 @@ function useNav() {
       tab: t('common.nav.exercises'),
       icon: Dumbbell02Icon,
     },
+    ...players,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]
 }
 
-const isActive = (pathname: string, href: string) =>
-  href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
+// A Club Manager's home is their Club overview, so Dashboard stays active on
+// it; the Players URL also starts with /dashboard/clubs/, so it is matched by
+// shape rather than prefix.
+const isActive = (pathname: string, item: { href: string }) => {
+  if (item.href === '/dashboard') return pathname === '/dashboard' || isClubOverviewPath(pathname)
+  if (isPlayersPath(item.href)) return isPlayersPath(pathname)
+  return pathname.startsWith(item.href)
+}
 
 function handleSignOut() {
   router.delete('/users/sign_out')
@@ -51,10 +76,10 @@ function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
-            aria-current={isActive(url, item.href) ? 'page' : undefined}
+            aria-current={isActive(url, item) ? 'page' : undefined}
             className={
               'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ' +
-              (isActive(url, item.href) ? 'bg-teal/15 text-paper shadow-lit-dark' : 'text-ink-mute hover:text-paper')
+              (isActive(url, item) ? 'bg-teal/15 text-paper shadow-lit-dark' : 'text-ink-mute hover:text-paper')
             }
           >
             <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} className="shrink-0" />
@@ -85,17 +110,30 @@ function Sidebar() {
 
 function MobileHeader() {
   const { t } = useTranslation()
+  const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { dashboardUser } = props
+  const onProfile = url.startsWith('/dashboard/profile')
 
   return (
-    <header className="sticky top-0 z-30 flex min-h-14 items-center border-b border-line/80 bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
+    <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between bg-paper px-5 pt-[env(safe-area-inset-top)] lg:hidden">
       <Link href="/dashboard" className="flex h-11 items-center">
         <img
-          src="/fran-methodology-logo.png"
+          src="/fran-methodology-logo-cropped.png"
           alt={t('common.logoAlt.franMethodology')}
-          width={506}
-          height={286}
-          className="-my-3 h-[4.25rem] w-auto"
+          width={444}
+          height={117}
+          className="h-7 w-auto"
         />
+      </Link>
+      <Link
+        href="/dashboard/profile"
+        aria-label={t('common.nav.profile')}
+        aria-current={onProfile ? 'page' : undefined}
+        className="-mr-1 flex h-11 w-11 items-center justify-center"
+      >
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white text-xs font-extrabold text-ink">
+          {dashboardUser.initials}
+        </span>
       </Link>
     </header>
   )
@@ -108,7 +146,7 @@ function BottomTabs() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-white px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-dock lg:hidden">
       {nav.map((item) => {
-        const on = isActive(url, item.href)
+        const on = isActive(url, item)
         return (
           <Link
             key={item.href}

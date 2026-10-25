@@ -21,6 +21,19 @@ class User < ApplicationRecord
   validates :club, presence: true, if: :coach?
   validates :club, absence: true, if: :club_manager?
 
+  # The Clubs whose Coaches, Class Groups and Players this user may see and
+  # manage: a Coach's one Club, or a Club Manager's linked Clubs. Admins work
+  # through the admin screens instead, so they get none here.
+  def accessible_clubs
+    if coach?
+      Club.where(id: club_id)
+    elsif club_manager?
+      managed_clubs
+    else
+      Club.none
+    end
+  end
+
   def initials
     name.to_s.split.first(2).map { |word| word[0] }.join.upcase
   end
@@ -31,7 +44,12 @@ class User < ApplicationRecord
   end
 
   def dashboard_profile_json
-    { name: name, initials: initials, club: club&.name }
+    {
+      name: name,
+      initials: initials,
+      club: club&.name,
+      clubs: accessible_clubs.order(:name).map(&:summary_json)
+    }
   end
 
   def profile_json

@@ -24,6 +24,27 @@ RSpec.describe Club, type: :model do
     expect(build(:club, name: "Padel Clube Lisboa").to_s).to eq("Padel Clube Lisboa")
   end
 
+  it "summarizes itself as its id and name" do
+    club = create(:club, name: "Padel Clube Lisboa")
+
+    expect(club.summary_json).to eq(id: club.id, name: "Padel Clube Lisboa")
+  end
+
+  it "refuses to be destroyed while it has Players" do
+    club = create(:club)
+    player = create(:player, club: club)
+
+    expect(club.destroy).to be(false)
+    expect(club.errors[:base]).not_to be_empty
+    expect(Player.exists?(player.id)).to be(true)
+  end
+
+  it "can be destroyed once it has no Players" do
+    club = create(:club)
+
+    expect(club.destroy).to be_truthy
+  end
+
   describe "organized logo storage" do
     it "stores the logo under clubs/{id}/logo/{filename}" do
       club = create(:club)

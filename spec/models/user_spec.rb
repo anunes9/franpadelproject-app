@@ -75,13 +75,13 @@ RSpec.describe User, type: :model do
       expect(build(:club_membership, user: coach)).not_to be_valid
     end
 
-    it "refuses linking the same Manager to the same Club twice" do
+    it "refuses linking the same Club Manager to the same Club twice" do
       membership = create(:club_membership)
 
       expect(build(:club_membership, user: membership.user, club: membership.club)).not_to be_valid
     end
 
-    it "lists a Club's Coaches and Managers separately" do
+    it "lists a Club's Coaches and Club Managers separately" do
       club = create(:club)
       coach = create(:user, :coach, club: club)
       manager = create(:club_membership, club: club).user
@@ -118,11 +118,16 @@ RSpec.describe User, type: :model do
   end
 
   describe "#dashboard_profile_json" do
-    it "returns name, initials, and the club's name" do
+    it "returns name, initials, the club's name and the Clubs whose Players they manage" do
       club = create(:club, name: "Padel Clube Lisboa")
       user = build(:user, name: "Miguel Santos", club: club)
 
-      expect(user.dashboard_profile_json).to eq(name: "Miguel Santos", initials: "MS", club: "Padel Clube Lisboa")
+      expect(user.dashboard_profile_json).to eq(
+        name: "Miguel Santos",
+        initials: "MS",
+        club: "Padel Clube Lisboa",
+        clubs: [{ id: club.id, name: "Padel Clube Lisboa" }]
+      )
     end
 
     it "returns a nil club when the user has none" do
