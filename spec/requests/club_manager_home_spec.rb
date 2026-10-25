@@ -45,9 +45,7 @@ RSpec.describe "Club Manager home", type: :request do
       expect(props["club"]).to eq("id" => alpha.id, "name" => "Alpha Padel")
       expect(props["coaches"].map { |c| c["name"] }).to eq(["Carla Coach"])
       expect(props["players"].map { |p| p["name"] }).to eq(["Rita Sousa"])
-      # Class Groups do not exist yet, so the overview shows them as a static
-      # empty state rather than receiving them.
-      expect(props).not_to have_key("classGroups")
+      expect(props["classGroups"]).to eq([])
     end
 
     it "offers a switcher with only the Club Manager's linked Clubs" do
@@ -121,7 +119,7 @@ RSpec.describe "Club Manager home", type: :request do
     expect(props["club"]).to be_nil
     expect(props["coaches"]).to eq([])
     expect(props["players"]).to eq([])
-    expect(props).not_to have_key("classGroups")
+    expect(props["classGroups"]).to eq([])
     expect(props["dashboardUser"]["clubs"]).to eq([])
   end
 end

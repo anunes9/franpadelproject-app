@@ -1,5 +1,6 @@
 import {
   Book02Icon,
+  Calendar03Icon,
   Dumbbell02Icon,
   Home01Icon,
   Logout03Icon,
@@ -10,13 +11,33 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { clubPlayersPath, isBreakPeriodsPath, isClubOverviewPath, isPlayersPath, selectedClubId } from '@/lib/paths'
+import {
+  classGroupsPath,
+  clubPlayersPath,
+  isBreakPeriodsPath,
+  isClubOverviewPath,
+  isPlayersPath,
+  selectedClubId,
+} from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
 
 function useNav() {
   const { t } = useTranslation()
-  const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
+  const { url, props } = usePage<{ dashboardUser: DashboardUser; current_user: { role: string } | null }>()
   const { dashboardUser } = props
+  // A Coach reaches their own Class Groups; Club Managers see a Club's
+  // groups on its overview.
+  const classGroups =
+    props.current_user?.role === 'coach'
+      ? [
+          {
+            href: classGroupsPath,
+            label: t('common.nav.classGroups'),
+            tab: t('common.nav.classGroupsTab'),
+            icon: Calendar03Icon,
+          },
+        ]
+      : []
   // Players follows the Club selected on the Club Manager home, and
   // otherwise opens on the user's first Club.
   const selectedId = selectedClubId(url)
@@ -40,6 +61,7 @@ function useNav() {
       tab: t('common.nav.exercises'),
       icon: Dumbbell02Icon,
     },
+    ...classGroups,
     ...players,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]

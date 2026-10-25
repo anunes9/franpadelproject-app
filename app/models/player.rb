@@ -3,6 +3,8 @@
 # is informational only.
 class Player < ApplicationRecord
   belongs_to :club
+  has_many :class_group_players, dependent: :restrict_with_error
+  has_many :class_groups, through: :class_group_players
 
   # Position and hand share the values left/right, so their predicates are
   # prefixed (position_left?, hand_left?) to keep them apart.

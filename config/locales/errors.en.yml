@@ -9,6 +9,19 @@ en:
           attributes:
             ends_on:
               on_or_after_start: "must be on or after the start date"
+        class_group:
+          attributes:
+            base:
+              clash: "would overlap in time with another Class of the Coach or of a Player"
+            coach:
+              not_a_coach: "must be a Coach"
+            level:
+              no_modules: "has no Modules in its Course yet"
+            players:
+              too_many: "is too many (maximum is %{count})"
+              other_club: "must all belong to the Coach's Club"
+            weekdays:
+              cadence_mismatch: "must be one distinct weekday per weekly Class"
         coach_invitation:
           attributes:
             email:
