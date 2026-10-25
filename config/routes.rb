@@ -40,6 +40,12 @@ Rails.application.routes.draw do
   scope "/dashboard" do
     resources :class_groups, only: %i[index new create show]
   end
+  # A Class's page and the Exercises its Coach picks for it from its Module.
+  get "/dashboard/classes/:id", to: "class_exercises#show", as: :class_page
+  post "/dashboard/classes/:class_id/exercises/:ref", to: "class_exercises#create", as: :class_exercise,
+                                                      format: false, constraints: { ref: /[^\/]+/ }
+  delete "/dashboard/classes/:class_id/exercises/:ref", to: "class_exercises#destroy",
+                                                        format: false, constraints: { ref: /[^\/]+/ }
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"

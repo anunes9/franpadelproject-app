@@ -29,6 +29,10 @@ en:
           attributes:
             email:
               account_exists: "already has an account"
+        training_class_exercise:
+          attributes:
+            exercise:
+              other_module: "must be an Exercise of the Class's Module"
         user:
           attributes:
             email:

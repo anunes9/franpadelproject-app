@@ -387,6 +387,31 @@ export const en = {
       module: 'Module {{n}}',
       assessment: 'Assessment',
       assessmentNote: 'Assessment class: the last class of this module, to assess each player on its concepts.',
+      exercisesCount: {
+        one: '1 exercise',
+        other: '{{count}} exercises',
+      },
+      noExercises: 'No exercises picked',
+    },
+  },
+  trainingClasses: {
+    show: {
+      eyebrow: 'Class',
+      backToGroup: 'Back to class group',
+      when: 'When',
+      moduleNumber: 'Module {{n}}',
+      exercises: 'Exercises',
+      exercisesIntro: 'Pick the exercises for this class from its module.',
+      noneChosen: 'No exercises picked for this class yet.',
+      remove: 'Remove',
+      pick: 'Pick exercises',
+      add: 'Add',
+      allChosen: 'Every exercise of this module is already picked.',
+      moduleEmpty: 'This module has no exercises yet, so there is nothing to pick.',
+      errors: {
+        otherModule: 'Only exercises of this class’s module can be picked.',
+        taken: 'This exercise is already picked.',
+      },
     },
   },
   breakPeriods: {

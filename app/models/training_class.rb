@@ -5,6 +5,10 @@
 class TrainingClass < ApplicationRecord
   belongs_to :class_group
   belongs_to :course_module
+  # The Exercises the Coach picked, in the order picked. Never assigned
+  # automatically.
+  has_many :training_class_exercises, -> { order(:position) }, dependent: :delete_all, inverse_of: :training_class
+  has_many :exercises, through: :training_class_exercises
 
   # An Assessment Class is the last Class of each Module.
   enum :kind, { regular: 0, assessment: 1 }, validate: true
@@ -21,6 +25,16 @@ class TrainingClass < ApplicationRecord
     ClassInterval.of(start_time, duration)
   end
 
+  # Picks an Exercise for the Class, after those already picked. Returns the
+  # pick, which is refused (unsaved, with errors) for an Exercise of another
+  # Module or one already picked.
+  def pick_exercise(exercise)
+    pick = training_class_exercises.build(exercise: exercise,
+                                          position: training_class_exercises.maximum(:position).to_i + 1)
+    training_class_exercises.delete(pick) unless pick.save
+    pick
+  end
+
   # The Class as the group's plan lists it.
   def plan_json
     {
@@ -29,7 +43,8 @@ class TrainingClass < ApplicationRecord
       startTime: start_time.strftime("%H:%M"),
       kind: kind,
       done: done,
-      module: { slug: course_module.slug, number: course_module.position, title: course_module.title }
+      module: { slug: course_module.slug, number: course_module.position, title: course_module.title },
+      exercises: exercises.map { |exercise| { ref: exercise.ref, title: exercise.title } }
     }
   end
 end

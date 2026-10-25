@@ -32,6 +32,14 @@ export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
 
+// A Class of a Training Plan, and the Exercises its Coach picks for it.
+export const classPagePath = (classId: string) => `/dashboard/classes/${classId}`
+export const classExercisePath = (classId: string, exerciseRef: string) =>
+  `${classPagePath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`
+
+// An Exercise of the library.
+export const exercisePath = (exerciseRef: string) => `/dashboard/exercises/${encodeURIComponent(exerciseRef)}`
+
 // A Break Periods screen: a Club's Break Periods, or adding or editing one.
 // They sit under the Club Manager home in the navigation.
 export const isBreakPeriodsPath = (pathname: string) =>
