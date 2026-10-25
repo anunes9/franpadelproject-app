@@ -392,6 +392,11 @@ export const pt = {
       module: 'Mesociclo {{n}}',
       assessment: 'Avaliação',
       assessmentNote: 'Aula de avaliação: a última aula deste mesociclo, para avaliar cada jogador nos seus conceitos.',
+      exercisesCount: {
+        one: '1 exercício',
+        other: '{{count}} exercícios',
+      },
+      noExercises: 'Sem exercícios escolhidos',
     },
     planEditing: {
       done: 'Feita',
@@ -418,6 +423,26 @@ export const pt = {
         module: 'Escolha um mesociclo do curso deste grupo.',
         crossesMidnight: 'Uma aula tem de terminar até à meia-noite. Escolha uma hora de início mais cedo.',
         clash: 'Sobrepõe-se no tempo a outra aula do treinador ou de um jogador em {{dates}}.',
+      },
+    },
+  },
+  trainingClasses: {
+    show: {
+      eyebrow: 'Aula',
+      backToGroup: 'Voltar ao grupo de aulas',
+      when: 'Quando',
+      moduleNumber: 'Mesociclo {{n}}',
+      exercises: 'Exercícios',
+      exercisesIntro: 'Escolha os exercícios desta aula a partir do seu mesociclo.',
+      noneChosen: 'Ainda não escolheu exercícios para esta aula.',
+      remove: 'Remover',
+      pick: 'Escolher exercícios',
+      add: 'Adicionar',
+      allChosen: 'Todos os exercícios deste mesociclo já foram escolhidos.',
+      moduleEmpty: 'Este mesociclo ainda não tem exercícios, por isso não há nada para escolher.',
+      errors: {
+        otherModule: 'Só pode escolher exercícios do mesociclo desta aula.',
+        taken: 'Este exercício já foi escolhido.',
       },
     },
   },

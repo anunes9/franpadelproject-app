@@ -139,6 +139,16 @@ export interface TrainingClass {
   // Added by hand by the Coach, rather than generated.
   coachAdded: boolean
   module: { slug: string; number: number; title: string }
+  // The Exercises the Coach picked, in the order picked.
+  exercises: Array<{ ref: string; title: string }>
+}
+
+// An Exercise of a Class's Module, picked for the Class or left to pick.
+export interface ClassExercise {
+  ref: string
+  title: string
+  duration: string | null
+  category: 'Technical' | 'Tactical' | null
 }
 
 // A Module a Class can be added for: one of the group's Course.

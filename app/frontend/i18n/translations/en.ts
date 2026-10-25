@@ -387,6 +387,11 @@ export const en = {
       module: 'Module {{n}}',
       assessment: 'Assessment',
       assessmentNote: 'Assessment class: the last class of this module, to assess each player on its concepts.',
+      exercisesCount: {
+        one: '1 exercise',
+        other: '{{count}} exercises',
+      },
+      noExercises: 'No exercises picked',
     },
     planEditing: {
       done: 'Done',
@@ -413,6 +418,26 @@ export const en = {
         module: 'Choose a module of this group’s course.',
         crossesMidnight: 'A class must end by midnight. Choose an earlier start time.',
         clash: 'It would overlap in time with another class of the coach or of a player on {{dates}}.',
+      },
+    },
+  },
+  trainingClasses: {
+    show: {
+      eyebrow: 'Class',
+      backToGroup: 'Back to class group',
+      when: 'When',
+      moduleNumber: 'Module {{n}}',
+      exercises: 'Exercises',
+      exercisesIntro: 'Pick the exercises for this class from its module.',
+      noneChosen: 'No exercises picked for this class yet.',
+      remove: 'Remove',
+      pick: 'Pick exercises',
+      add: 'Add',
+      allChosen: 'Every exercise of this module is already picked.',
+      moduleEmpty: 'This module has no exercises yet, so there is nothing to pick.',
+      errors: {
+        otherModule: 'Only exercises of this class’s module can be picked.',
+        taken: 'This exercise is already picked.',
       },
     },
   },

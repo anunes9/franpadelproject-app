@@ -35,7 +35,7 @@ class ClassGroupsController < DashboardController
 
     render inertia: "ClassGroups/Show", props: {
       classGroup: group.summary_json,
-      classes: group.training_classes.includes(:course_module).map(&:plan_json),
+      classes: group.training_classes.includes(:course_module, :exercises).map(&:plan_json),
       **plan_editing_props(group)
     }
   end

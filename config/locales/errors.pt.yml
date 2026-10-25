@@ -37,6 +37,10 @@ pt:
               other_course: "tem de ser um mesociclo do curso do grupo"
             start_time:
               crosses_midnight: "tem de permitir que a aula termine até à meia-noite"
+        training_class_exercise:
+          attributes:
+            exercise:
+              other_module: "tem de ser um exercício do módulo da aula"
         user:
           attributes:
             email:

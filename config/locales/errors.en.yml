@@ -37,6 +37,10 @@ en:
               other_course: "must be a Module of the group's Course"
             start_time:
               crosses_midnight: "must let the Class end by midnight"
+        training_class_exercise:
+          attributes:
+            exercise:
+              other_module: "must be an Exercise of the Class's Module"
         user:
           attributes:
             email:

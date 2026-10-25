@@ -1,8 +1,8 @@
-import { usePage } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
-import { classGroupsPath, clubPath } from '@/lib/paths'
+import { classGroupsPath, classPagePath, clubPath } from '@/lib/paths'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
@@ -100,17 +100,23 @@ function Show() {
                 {run.classes.map((trainingClass) => (
                   <ListRow key={trainingClass.id}>
                     <div className="flex min-w-0 flex-col gap-0.5">
-                      <span
-                        className={`text-sm font-semibold ${trainingClass.skipped ? 'text-muted line-through' : 'text-ink'}`}
+                      <Link
+                        href={classPagePath(trainingClass.id)}
+                        className={`text-sm font-semibold underline-offset-2 hover:underline ${trainingClass.skipped ? 'text-muted line-through' : 'text-ink'}`}
                       >
                         {formatDate(trainingClass.date, locale)}
-                      </span>
+                      </Link>
                       <span className="font-dash-mono text-meta text-muted">
                         {formatTimeRange(trainingClass.startTime, classGroup.duration)} · {run.module.title}
                       </span>
                       {trainingClass.kind === 'assessment' && (
                         <span className="text-meta text-muted-strong">{t('classGroups.show.assessmentNote')}</span>
                       )}
+                      <span className="truncate text-meta text-muted">
+                        {trainingClass.exercises.length === 0
+                          ? t('classGroups.show.noExercises')
+                          : `${tn('classGroups.show.exercisesCount', trainingClass.exercises.length)}: ${trainingClass.exercises.map((exercise) => exercise.title).join(', ')}`}
+                      </span>
                     </div>
                     {trainingClass.kind === 'assessment' && <Pill text={t('classGroups.show.assessment')} />}
                     <ClassActions trainingClass={trainingClass} />
