@@ -29,6 +29,22 @@ pt:
           attributes:
             email:
               account_exists: "já tem uma conta"
+        training_class:
+          attributes:
+            base:
+              clash: "sobrepõe-se no tempo a outra aula do treinador ou de um jogador"
+            course_module:
+              other_course: "tem de ser um mesociclo do curso do grupo"
+            done:
+              skipped: "não pode ser marcado numa aula saltada"
+            skipped:
+              done: "não pode ser marcado numa aula feita"
+            start_time:
+              crosses_midnight: "tem de permitir que a aula termine até à meia-noite"
+        training_class_exercise:
+          attributes:
+            exercise:
+              other_module: "tem de ser um exercício do mesociclo da aula"
         user:
           attributes:
             email:

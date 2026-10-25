@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -159,13 +159,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_140000) do
     t.index ["club_id"], name: "index_players_on_club_id"
   end
 
+  create_table "training_class_exercises", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "exercise_id", null: false
+    t.integer "position", null: false
+    t.uuid "training_class_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_training_class_exercises_on_exercise_id"
+    t.index ["training_class_id", "exercise_id"], name: "index_training_class_exercises_uniqueness", unique: true
+  end
+
   create_table "training_classes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "class_group_id", null: false
+    t.boolean "coach_added", default: false, null: false
     t.uuid "course_module_id", null: false
     t.datetime "created_at", null: false
     t.date "date", null: false
     t.boolean "done", default: false, null: false
     t.integer "kind", default: 0, null: false
+    t.boolean "skipped", default: false, null: false
     t.time "start_time", null: false
     t.datetime "updated_at", null: false
     t.index ["class_group_id", "date"], name: "index_training_classes_on_class_group_id_and_date"
@@ -216,6 +228,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_140000) do
   add_foreign_key "exercise_completions", "users"
   add_foreign_key "exercises", "course_modules"
   add_foreign_key "players", "clubs"
+  add_foreign_key "training_class_exercises", "exercises", on_delete: :cascade
+  add_foreign_key "training_class_exercises", "training_classes", on_delete: :cascade
   add_foreign_key "training_classes", "class_groups", on_delete: :cascade
   add_foreign_key "training_classes", "course_modules"
   add_foreign_key "user_module_progresses", "course_modules"

@@ -8,10 +8,12 @@
 #     .dates(classes) # => the dates of `classes` that clash, in order
 #
 # `classes` are anything with #date and #interval (a ClassInterval): generated
-# PlannedClasses, or TrainingClasses being moved or added. They are checked
-# against the Classes already planned for the Coach, and for each Player in
-# any group (other Coaches' groups included). `ignoring` leaves out one
-# group's own Classes, for edits that replace them.
+# PlannedClasses, or TrainingClasses being moved, added or unskipped. They are
+# checked against the Classes already planned for the Coach, and for each
+# Player in any group (other Coaches' groups included). A skipped Class no
+# longer takes up its time, so it is never clashed with, and a saved Class
+# being moved never clashes with itself. `ignoring` leaves out one group's
+# own Classes, for edits that replace them.
 class ClassClash
   def initialize(coach:, players:, ignoring: nil)
     @coach = coach
@@ -30,7 +32,7 @@ class ClassClash
     classes = Array(classes)
     return [] if classes.empty?
 
-    planned = existing_classes(classes.map(&:date).uniq).group_by(&:date)
+    planned = existing_classes(classes.map(&:date).uniq, except: saved_ids(classes)).group_by(&:date)
     classes.select do |candidate|
       planned.fetch(candidate.date, []).any? { |other| candidate.interval.overlaps?(other.interval) }
     end.map(&:date).uniq.sort
@@ -38,11 +40,17 @@ class ClassClash
 
   private
 
-  def existing_classes(dates)
+  # The saved TrainingClasses among `classes`, whose old times do not count.
+  def saved_ids(classes)
+    classes.select { |candidate| candidate.is_a?(TrainingClass) && candidate.persisted? }.map(&:id)
+  end
+
+  def existing_classes(dates, except:)
     groups = ClassGroup.where(coach: @coach)
                        .or(ClassGroup.where(id: ClassGroupPlayer.where(player: @players).select(:class_group_id)))
     groups = groups.where.not(id: @ignoring) if @ignoring
 
-    TrainingClass.where(date: dates, class_group: groups).includes(:class_group)
+    TrainingClass.where(date: dates, class_group: groups, skipped: false).where.not(id: except)
+                 .includes(:class_group)
   end
 end

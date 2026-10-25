@@ -47,6 +47,12 @@ class ClassGroup < ApplicationRecord
     end
   end
 
+  # The Modules of the group's Course, in order: those its Training Plan is
+  # generated from and its Classes can be for.
+  def course_modules
+    CourseModule.teaching_for(level)
+  end
+
   def weekdays=(value)
     super(Array(value).compact_blank.map(&:to_s))
   end
@@ -121,7 +127,7 @@ class ClassGroup < ApplicationRecord
 
   def generate_plan
     TrainingPlanGenerator.call(
-      modules: CourseModule.teaching_for(level),
+      modules: course_modules,
       cadence: cadence, weekdays: weekdays.map(&:to_sym), start_time: start_time,
       duration: duration, start_date: starts_on, break_periods: club.break_period_ranges
     )

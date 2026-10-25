@@ -32,6 +32,20 @@ export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
 
+// A Class of a Training Plan: its page (no edit), moving it (no edit), and
+// skipping, unskipping or marking it done. Adding a Class goes to its group.
+export type ClassEdit = 'skip' | 'unskip' | 'done' | 'undone'
+export const classGroupClassesPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/classes`
+export const classPath = (classId: string, edit?: ClassEdit) =>
+  edit ? `/dashboard/classes/${classId}/${edit}` : `/dashboard/classes/${classId}`
+
+// The Exercises a Coach picks for a Class.
+export const classExercisePath = (classId: string, exerciseRef: string) =>
+  `${classPath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`
+
+// An Exercise of the library.
+export const exercisePath = (exerciseRef: string) => `/dashboard/exercises/${encodeURIComponent(exerciseRef)}`
+
 // A Break Periods screen: a Club's Break Periods, or adding or editing one.
 // They sit under the Club Manager home in the navigation.
 export const isBreakPeriodsPath = (pathname: string) =>
