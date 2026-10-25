@@ -115,6 +115,16 @@ RSpec.describe "Admin users management", type: :request do
     expect(response.body).to include("owns Class Groups, so reassign them to another Coach first")
   end
 
+  it "refuses the delete the same way when the database finds a Class Group the check missed" do
+    coach = create(:user, :coach)
+    allow_any_instance_of(User).to receive(:destroy).and_raise(ActiveRecord::InvalidForeignKey)
+
+    expect { delete "/admin/users/#{coach.id}" }.not_to change(User, :count)
+
+    follow_redirect!
+    expect(response.body).to include("owns Class Groups, so reassign them to another Coach first")
+  end
+
   it "assigns a user to a club" do
     club = create(:club, name: "Padel Clube Lisboa")
     target = create(:user)

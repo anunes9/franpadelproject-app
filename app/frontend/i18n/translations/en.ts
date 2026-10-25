@@ -373,6 +373,7 @@ export const en = {
         playersTooMany: 'A class group has at most {{max}} players.',
         playersOtherClub: 'Choose players of your own club.',
         noModules: 'This level’s course has no modules yet, so no training plan can be generated.',
+        notNextLevel: 'A group continuing a finished one starts at the level after it. Choose that level.',
         clashTitle: 'This group would overlap with other classes',
         notSaved: 'The group could not be saved, so nothing was created. Please try again.',
         clash:
@@ -426,7 +427,7 @@ export const en = {
       nextLevelTitle: 'Next level',
       nextLevelHint: 'Start a {{level}} group with this group’s players. You choose its start date and schedule.',
       nextLevelButton: 'Start next level group',
-      copyNote:
+      continuationNote:
         'Continues the {{level}} group: its players still in your club are already chosen and the level is the next one.',
     },
     planRegeneration: {

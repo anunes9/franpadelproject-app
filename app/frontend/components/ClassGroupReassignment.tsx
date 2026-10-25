@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
 import { classGroupReassignmentPath } from '@/lib/paths'
 import type { CoachOption } from '../types/dashboard-data'
-import { buttonClass, type ErrorCopy, FieldError, INPUT_CLASS, LABEL_CLASS } from './ui'
+import { buttonClass, type ErrorCopy, FieldError, INPUT_CLASS, LABEL_CLASS, SectionHeading } from './ui'
 
 // Reassigning a Class Group to another Coach of its Club, for its Club
 // Managers only (docs/adr/0006-manager-oversight.md). The plan is kept; the
@@ -60,12 +60,11 @@ export function ReassignClassGroup({ classGroupId }: { classGroupId: string }) {
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="reassign-group-title">
-      <div className="flex flex-col gap-0.5">
-        <h2 id="reassign-group-title" className="text-sm font-bold text-ink">
-          {t('classGroups.reassignment.title')}
-        </h2>
-        <p className="text-meta text-muted">{t('classGroups.reassignment.hint')}</p>
-      </div>
+      <SectionHeading
+        id="reassign-group-title"
+        title={t('classGroups.reassignment.title')}
+        hint={t('classGroups.reassignment.hint')}
+      />
 
       <form onSubmit={submit} className="flex flex-wrap items-end gap-3">
         <label className={`${LABEL_CLASS} min-w-[220px] flex-1`}>

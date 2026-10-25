@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
 import { type ClassEdit, classGroupClassesPath, classPath } from '@/lib/paths'
 import type { ModuleOption, TrainingClass } from '../types/dashboard-data'
-import { buttonClass, chipClass, FieldError, INPUT_CLASS, LABEL_CLASS, Pill } from './ui'
+import { buttonClass, chipClass, FieldError, INPUT_CLASS, LABEL_CLASS, Pill, SectionHeading } from './ui'
 
 // Editing a Training Plan on the group's page: each Class's row actions, and
 // the form that adds a Class. The owning Coach and the Club Managers of the
@@ -170,12 +170,11 @@ export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: st
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="add-class-title">
-      <div className="flex flex-col gap-0.5">
-        <h2 id="add-class-title" className="text-sm font-bold text-ink">
-          {t('classGroups.planEditing.addTitle')}
-        </h2>
-        <p className="text-meta text-muted">{t('classGroups.planEditing.addHint')}</p>
-      </div>
+      <SectionHeading
+        id="add-class-title"
+        title={t('classGroups.planEditing.addTitle')}
+        hint={t('classGroups.planEditing.addHint')}
+      />
       <form
         onSubmit={add}
         noValidate

@@ -378,6 +378,7 @@ export const pt = {
         playersTooMany: 'Um grupo de aulas tem no máximo {{max}} jogadores.',
         playersOtherClub: 'Escolha jogadores do seu clube.',
         noModules: 'O curso deste nível ainda não tem mesociclos, por isso não é possível gerar o plano de treino.',
+        notNextLevel: 'Um grupo que continua um grupo terminado começa no nível seguinte. Escolha esse nível.',
         clashTitle: 'Este grupo sobrepõe-se a outras aulas',
         notSaved: 'Não foi possível guardar o grupo, por isso nada foi criado. Tente novamente.',
         clash:
@@ -432,7 +433,7 @@ export const pt = {
       nextLevelHint:
         'Crie um grupo de nível {{level}} com os jogadores deste grupo. A data de início e o horário são escolhidos por si.',
       nextLevelButton: 'Criar grupo do nível seguinte',
-      copyNote:
+      continuationNote:
         'Continua o grupo de nível {{level}}: os seus jogadores que ainda estão no seu clube já vêm escolhidos e o nível é o seguinte.',
     },
     planRegeneration: {

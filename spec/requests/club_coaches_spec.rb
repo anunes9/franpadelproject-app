@@ -48,7 +48,22 @@ RSpec.describe "Removing a Coach", type: :request do
     expect(response).to redirect_to("/dashboard/clubs/#{club.id}")
     follow_redirect!
     expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["has_class_groups"])
-    expect(page_props["refusedCoachId"]).to eq(coach.id)
+    expect(page_props["refusedEdit"]).to eq(coach.id)
+  end
+
+  # A group reassigned to the Coach while they are being removed: the foreign
+  # key from class_groups.coach_id refuses the delete, as the model would.
+  it "refuses the removal the same way when the database finds a Class Group the check missed" do
+    coach
+    allow_any_instance_of(User).to receive(:destroy).and_raise(ActiveRecord::InvalidForeignKey)
+    sign_in manager
+
+    expect { remove(coach) }.not_to change(User, :count)
+
+    expect(response).to redirect_to("/dashboard/clubs/#{club.id}")
+    follow_redirect!
+    expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["has_class_groups"])
+    expect(page_props["refusedEdit"]).to eq(coach.id)
   end
 
   it "lets a Manager of two Clubs remove a Coach of either" do

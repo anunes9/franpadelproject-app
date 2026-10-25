@@ -52,5 +52,13 @@ ActiveAdmin.register User do
         failure.html { redirect_to collection_path, alert: resource.errors.full_messages.to_sentence }
       end
     end
+
+    # A group reassigned to the Coach during the delete makes the foreign key
+    # refuse it, which is the same refusal as the model's.
+    def destroy_resource(object)
+      object.destroy
+    rescue ActiveRecord::InvalidForeignKey
+      object.refuse_destroy_owning_class_groups
+    end
   end
 end

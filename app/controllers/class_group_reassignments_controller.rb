@@ -8,14 +8,6 @@ class ClassGroupReassignmentsController < DashboardController
 
   REFUSED_EDIT = "reassignment".freeze
 
-  # The Coaches a Club Manager can hand `group` to: the other Coaches of its
-  # Club. None for anyone else, who cannot reassign.
-  def self.coach_options(group, user)
-    return [] unless user.club_manager?
-
-    group.club.coaches.where.not(id: group.coach_id).order(:name).map { |coach| { id: coach.id, name: coach.name } }
-  end
-
   def update
     group = ClassGroup.visible_to(current_user).find(params[:class_group_id])
     return redirect_to class_group_path(group) if group.reassign_to(new_coach, today: Academy.today)

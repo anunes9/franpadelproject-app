@@ -29,6 +29,7 @@ class ClassGroup < ApplicationRecord
   validate :players_within_limit
   validate :players_of_the_coachs_club
   validate :owned_by_a_coach
+  validate :continues_at_the_next_level, on: :create
 
   delegate :club, to: :coach
 
@@ -74,11 +75,12 @@ class ClassGroup < ApplicationRecord
     CourseModule.teaching_for(level)
   end
 
-  # See FINISHED_SQL.
+  # See FINISHED_SQL: read with the group when it was loaded .with_finished,
+  # else asked of the database.
   def finished?
     return finished_flag if has_attribute?(:finished_flag)
 
-    training_classes.any?(&:done?) && training_classes.all? { |c| c.done? || c.skipped? }
+    persisted? && self.class.finished.exists?(id)
   end
 
   # The Level of the Course after this group's, which a finished group's
@@ -185,10 +187,16 @@ class ClassGroup < ApplicationRecord
   def reassign_to(new_coach, today:)
     @clashing_dates = []
     reason = reassignment_refusal(new_coach)
-    return refused(:coach, reason) if reason
+    if reason
+      errors.add(:coach, reason)
+      return false
+    end
 
     saved = false
     transaction do
+      # The group too, so two reassignments of it run one after the other and
+      # the one that wins is the one that was clash-checked.
+      lock!
       ClassClash.lock(coach: new_coach, players: players)
       @clashing_dates = ClassClash.new(coach: new_coach, players: []).dates(upcoming_classes(today))
       if @clashing_dates.any?
@@ -273,11 +281,6 @@ class ClassGroup < ApplicationRecord
     elsif !new_coach.coach? then :not_a_coach
     elsif new_coach.club_id != coach.club_id then :other_club
     end
-  end
-
-  def refused(attribute, reason)
-    errors.add(attribute, reason)
-    false
   end
 
   # The new plan of #regenerate_plan, and the ids of the Classes it replaces,
@@ -373,5 +376,14 @@ class ClassGroup < ApplicationRecord
 
   def owned_by_a_coach
     errors.add(:coach, :not_a_coach) if coach && !coach.coach?
+  end
+
+  # A group continuing a finished one is at the Level after it
+  # (docs/adr/0007-finished-class-groups.md).
+  def continues_at_the_next_level
+    return unless previous_class_group
+    return if level == previous_class_group.next_level
+
+    errors.add(:level, :not_next_level)
   end
 end

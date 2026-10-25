@@ -141,7 +141,7 @@ export interface ClassGroup {
 
 // What the create form starts from when continuing a finished group at the
 // next Level: that Level and the group's Players still in the Coach's Club.
-export interface ClassGroupCopy {
+export interface ClassGroupContinuation {
   from: ClassGroupLink
   level: PlayerLevel
   playerIds: string[]
@@ -172,13 +172,13 @@ export interface ClassExercise {
   category: 'Technical' | 'Tactical' | null
 }
 
-// A Module a Class can be added for: one of the group's Course.
 // A Coach a Club Manager can reassign a Class Group to.
 export interface CoachOption {
   id: string
   name: string
 }
 
+// A Module a Class can be added for: one of the group's Course.
 export interface ModuleOption {
   id: string
   number: number

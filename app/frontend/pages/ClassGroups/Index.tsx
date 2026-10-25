@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { newClassGroupPath } from '@/lib/paths'
 import { ClassGroupRow } from '../../components/ClassGroupRow'
 import { AppShell, PageHeader } from '../../components/shell'
-import { buttonClass, Eyebrow, ListCard } from '../../components/ui'
+import { buttonClass, Eyebrow, ListCard, SectionHeading } from '../../components/ui'
 import type { ClassGroupListItem, DashboardUser } from '../../types/dashboard-data'
 
 interface Props {
@@ -36,24 +36,24 @@ function Index() {
         </div>
 
         {/* "No groups yet" only when there are no finished groups either. */}
-        {(classGroups.length > 0 || finishedGroups.length === 0) && (
-          <ListCard count={classGroups.length} empty={t('classGroups.index.empty')}>
-            {classGroups.map((group) => (
-              <ClassGroupRow key={group.id} group={group} />
-            ))}
-          </ListCard>
-        )}
+        <ListCard
+          count={classGroups.length}
+          empty={finishedGroups.length === 0 ? t('classGroups.index.empty') : undefined}
+        >
+          {classGroups.map((group) => (
+            <ClassGroupRow key={group.id} group={group} />
+          ))}
+        </ListCard>
 
         {finishedGroups.length > 0 && (
           <section className="flex flex-col gap-3" aria-labelledby="finished-groups-title">
-            <div className="flex flex-col gap-0.5">
-              <h2 id="finished-groups-title" className="text-sm font-bold text-ink">
-                {t('classGroups.finishedGroups.title')}{' '}
-                <span className="font-dash-mono text-meta font-semibold text-muted">{finishedGroups.length}</span>
-              </h2>
-              <p className="text-meta text-muted">{t('classGroups.finishedGroups.hint')}</p>
-            </div>
-            <ListCard count={finishedGroups.length} empty="">
+            <SectionHeading
+              id="finished-groups-title"
+              title={t('classGroups.finishedGroups.title')}
+              count={finishedGroups.length}
+              hint={t('classGroups.finishedGroups.hint')}
+            />
+            <ListCard count={finishedGroups.length}>
               {finishedGroups.map((group) => (
                 <ClassGroupRow key={group.id} group={group} />
               ))}

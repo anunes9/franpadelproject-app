@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { classGroupPath, newClassGroupFromPath } from '@/lib/paths'
 import type { ClassGroupLink, PlayerLevel } from '../types/dashboard-data'
-import { buttonClass, Pill } from './ui'
+import { buttonClass, Pill, SectionHeading } from './ui'
 
 // Finished Class Groups, kept as history, and the group that continues one at
 // the next Level (docs/adr/0007-finished-class-groups.md).
@@ -20,14 +20,11 @@ export function StartNextLevelGroup({ classGroupId, nextLevel }: { classGroupId:
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="next-level-title">
-      <div className="flex flex-col gap-0.5">
-        <h2 id="next-level-title" className="text-sm font-bold text-ink">
-          {t('classGroups.finishedGroups.nextLevelTitle')}
-        </h2>
-        <p className="text-meta text-muted">
-          {t('classGroups.finishedGroups.nextLevelHint', { level: t(`players.levelOption.${nextLevel}`) })}
-        </p>
-      </div>
+      <SectionHeading
+        id="next-level-title"
+        title={t('classGroups.finishedGroups.nextLevelTitle')}
+        hint={t('classGroups.finishedGroups.nextLevelHint', { level: t(`players.levelOption.${nextLevel}`) })}
+      />
       <Link href={newClassGroupFromPath(classGroupId)} className={buttonClass('primary', 'self-start')}>
         {t('classGroups.finishedGroups.nextLevelButton')}
       </Link>

@@ -22,6 +22,7 @@ pt:
               other_club: "tem de ser um treinador do clube do grupo"
             level:
               no_modules: "ainda não tem mesociclos no seu curso"
+              not_next_level: "não é o nível seguinte ao do grupo que continua"
             start_time:
               crosses_midnight: "tem de permitir que a aula termine até à meia-noite"
             players:

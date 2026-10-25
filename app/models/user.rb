@@ -81,12 +81,29 @@ class User < ApplicationRecord
     []
   end
 
+  # The user as a choice of Coach, when reassigning a Class Group.
+  def option_json
+    { id: id, name: name }
+  end
+
+  # Marks a refused delete of a Coach who owns Class Groups and returns
+  # false. The screens call it too when the database's foreign key refuses the
+  # delete: a backstop for a group reassigned to the Coach during the delete.
+  def refuse_destroy_owning_class_groups
+    errors.add(:base, :has_class_groups)
+    false
+  end
+
   private
 
+  # Runs inside the delete's transaction. The row lock makes a reassignment
+  # to this Coach, which locks them too (ClassClash.lock), wait for the delete
+  # or finish before the check, so the check sees its group.
   def keep_while_owning_class_groups
+    lock!
     return unless class_groups.exists?
 
-    errors.add(:base, :has_class_groups)
+    refuse_destroy_owning_class_groups
     throw :abort
   end
 end

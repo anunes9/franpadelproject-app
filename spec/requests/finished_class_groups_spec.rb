@@ -100,7 +100,7 @@ RSpec.describe "Finished Class Groups", type: :request do
     end
   end
 
-  describe "the copy action on a finished group's page" do
+  describe "the continuation action on a finished group's page" do
     it "offers its owning Coach the next Level" do
       sign_in coach
 
@@ -129,18 +129,18 @@ RSpec.describe "Finished Class Groups", type: :request do
   end
 
   describe "starting the next Level's group" do
-    def start_copy(group)
+    def start_continuation(group)
       get "/dashboard/class_groups/new", params: { from: group.id }
     end
 
     it "opens the create form pre-filled with the next Level and the finished group's Players" do
       sign_in coach
 
-      start_copy(finished_group)
+      start_continuation(finished_group)
 
       expect(response).to have_http_status(200)
       expect(response.body).to include(%q("component":"ClassGroups/Form"))
-      expect(page_props["copy"]).to eq(
+      expect(page_props["continuation"]).to eq(
         "from" => { "id" => finished_group.id, "level" => "beginner" },
         "level" => "intermediate",
         "playerIds" => players.sort_by(&:name).map(&:id)
@@ -152,15 +152,15 @@ RSpec.describe "Finished Class Groups", type: :request do
       players.first.update!(club: create(:club))
       sign_in coach
 
-      start_copy(finished_group)
+      start_continuation(finished_group)
 
-      expect(page_props["copy"]["playerIds"]).to eq([players.last.id])
+      expect(page_props["continuation"]["playerIds"]).to eq([players.last.id])
     end
 
     it "404s for a group that is not finished" do
       sign_in coach
 
-      start_copy(planned_group)
+      start_continuation(planned_group)
 
       expect(response).to have_http_status(:not_found)
     end
@@ -170,7 +170,7 @@ RSpec.describe "Finished Class Groups", type: :request do
       advanced = finish(planned_group(level: "advanced", weekdays: ["thursday"]))
       sign_in coach
 
-      start_copy(advanced)
+      start_continuation(advanced)
 
       expect(response).to have_http_status(:not_found)
     end
@@ -178,7 +178,7 @@ RSpec.describe "Finished Class Groups", type: :request do
     it "404s for another Coach's group, even in the same Club" do
       sign_in create(:user, :coach, club: club)
 
-      start_copy(finished_group)
+      start_continuation(finished_group)
 
       expect(response).to have_http_status(:not_found)
     end
@@ -186,7 +186,7 @@ RSpec.describe "Finished Class Groups", type: :request do
     it "404s for a Club Manager of the Club" do
       sign_in manager
 
-      start_copy(finished_group)
+      start_continuation(finished_group)
 
       expect(response).to have_http_status(:not_found)
     end
@@ -194,7 +194,7 @@ RSpec.describe "Finished Class Groups", type: :request do
     it "404s for an Admin" do
       sign_in create(:user, :admin)
 
-      start_copy(finished_group)
+      start_continuation(finished_group)
 
       expect(response).to have_http_status(:not_found)
     end
@@ -202,7 +202,7 @@ RSpec.describe "Finished Class Groups", type: :request do
 
   describe "creating the next Level's group" do
     # Starts on Monday 7 June 2027, with Classes on Tuesdays.
-    let(:copy_params) do
+    let(:continuation_params) do
       {
         level: "intermediate", starts_on: "2027-06-07", cadence: 1, weekdays: ["tuesday"],
         start_time: "18:00", duration: 60, player_ids: players.map(&:id),
@@ -212,7 +212,7 @@ RSpec.describe "Finished Class Groups", type: :request do
 
     before { finished_group }
 
-    def create_group(params = copy_params)
+    def create_group(params = continuation_params)
       post "/dashboard/class_groups", params: { class_group: params }
     end
 
@@ -238,7 +238,28 @@ RSpec.describe "Finished Class Groups", type: :request do
       expect(response).to redirect_to("/dashboard/class_groups/new?from=#{finished_group.id}")
       follow_redirect!
       expect(page_props["errors"]["level"].map { |e| e["code"] }).to eq(["no_modules"])
-      expect(page_props["copy"]["from"]["id"]).to eq(finished_group.id)
+      expect(page_props["continuation"]["from"]["id"]).to eq(finished_group.id)
+    end
+
+    it "is refused, keeping the form's pre-fill, when its Level is not the next one" do
+      create(:course_module, level: :advanced, position: 1)
+      sign_in coach
+
+      expect { create_group(continuation_params.merge(level: "advanced")) }.not_to change(ClassGroup, :count)
+
+      expect(response).to redirect_to("/dashboard/class_groups/new?from=#{finished_group.id}")
+      follow_redirect!
+      expect(page_props["errors"]["level"].map { |e| e["code"] }).to eq(["not_next_level"])
+      expect(page_props["continuation"]).to include("level" => "intermediate")
+    end
+
+    it "is refused at the same Level as the group it continues" do
+      sign_in coach
+
+      expect { create_group(continuation_params.merge(level: "beginner")) }.not_to change(ClassGroup, :count)
+
+      follow_redirect!
+      expect(page_props["errors"]["level"].map { |e| e["code"] }).to eq(["not_next_level"])
     end
 
     it "is refused when its Classes would clash, listing the clashing dates" do
@@ -259,7 +280,7 @@ RSpec.describe "Finished Class Groups", type: :request do
       create(:course_module, level: :intermediate, position: 1)
       sign_in create(:user, :coach, club: club)
 
-      expect { create_group(copy_params.merge(player_ids: [create(:player, club: club).id])) }
+      expect { create_group(continuation_params.merge(player_ids: [create(:player, club: club).id])) }
         .not_to change(ClassGroup, :count)
       expect(response).to have_http_status(:not_found)
     end

@@ -22,6 +22,7 @@ en:
               other_club: "must be a Coach of the group's Club"
             level:
               no_modules: "has no Modules in its Course yet"
+              not_next_level: "is not the Level after the group it continues"
             start_time:
               crosses_midnight: "must let the Class end by midnight"
             players:

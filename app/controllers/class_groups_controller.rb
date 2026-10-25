@@ -25,7 +25,7 @@ class ClassGroupsController < DashboardController
     render inertia: "ClassGroups/Form", props: class_group_form_props(current_user.club).merge(
       levelOptions: ClassGroup.levels.keys,
       clashDates: flash[:clash_dates] || [],
-      copy: continued && copy_props(continued)
+      continuation: continued && continuation_props(continued)
     )
   end
 
@@ -43,12 +43,12 @@ class ClassGroupsController < DashboardController
   end
 
   def show
-    group = ClassGroup.visible_to(current_user).find(params[:id])
+    group = ClassGroup.visible_to(current_user).with_finished.find(params[:id])
 
     render inertia: "ClassGroups/Show", props: {
       classGroup: group.summary_json.merge(previousGroup: previous_group_json(group)),
       classes: group.training_classes.includes(:course_module, :exercises).map(&:plan_json),
-      nextLevel: next_level_for_copy(group),
+      nextLevel: next_level_for_continuation(group),
       **plan_editing_props(group),
       **reassignment_props(group)
     }
@@ -70,7 +70,7 @@ class ClassGroupsController < DashboardController
 
   # What the create form starts from when continuing `group`: the next Level
   # and the group's Players still in the Coach's Club. Nothing else.
-  def copy_props(group)
+  def continuation_props(group)
     {
       from: group.link_json,
       level: group.next_level,
@@ -80,7 +80,7 @@ class ClassGroupsController < DashboardController
 
   # The next Level, for starting the group that continues a finished one:
   # offered to its owning Coach only, as only Coaches create groups.
-  def next_level_for_copy(group)
+  def next_level_for_continuation(group)
     group.next_level if group.coach == current_user && group.finished?
   end
 
@@ -107,9 +107,17 @@ class ClassGroupsController < DashboardController
   # Club Manager), and which refused edit is a reassignment.
   def reassignment_props(group)
     {
-      coachOptions: ClassGroupReassignmentsController.coach_options(group, current_user),
+      coachOptions: reassignment_coaches(group).map(&:option_json),
       reassignmentEdit: ClassGroupReassignmentsController::REFUSED_EDIT
     }
+  end
+
+  # The Coaches a Club Manager can hand `group` to: the other Coaches of its
+  # Club. None for anyone else, who cannot reassign.
+  def reassignment_coaches(group)
+    return User.none unless current_user.club_manager?
+
+    group.club.coaches.where.not(id: group.coach_id).order(:name)
   end
 
   def require_club

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
 import { classGroupRegenerationPath } from '@/lib/paths'
-import { buttonClass, type ErrorCopy, FieldError } from './ui'
+import { buttonClass, type ErrorCopy, FieldError, SectionHeading } from './ui'
 
 // Regenerating a group's Training Plan, only when asked and only after
 // confirming (docs/adr/0005-regenerating-a-plan.md). Done Classes are kept;
@@ -71,12 +71,11 @@ export function RegeneratePlan({ classGroupId }: { classGroupId: string }) {
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="regenerate-plan-title">
-      <div className="flex flex-col gap-0.5">
-        <h2 id="regenerate-plan-title" className="text-sm font-bold text-ink">
-          {t('classGroups.planRegeneration.title')}
-        </h2>
-        <p className="text-meta text-muted">{t('classGroups.planRegeneration.hint')}</p>
-      </div>
+      <SectionHeading
+        id="regenerate-plan-title"
+        title={t('classGroups.planRegeneration.title')}
+        hint={t('classGroups.planRegeneration.hint')}
+      />
 
       {confirming ? (
         <div

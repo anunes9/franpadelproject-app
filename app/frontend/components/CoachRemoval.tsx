@@ -10,19 +10,19 @@ import { buttonClass, FieldError } from './ui'
 // Club Manager reassigns first (docs/adr/0006-manager-oversight.md).
 
 // What the overview holds after a refused removal (see ClubCoachesController):
-// its errors, and which Coach it was.
+// its errors, and as the refused edit, the id of the Coach it was.
 interface RefusalProps {
   [key: string]: unknown
   errors: Record<string, unknown>
-  refusedCoachId: string | null
+  refusedEdit: string | null
 }
 
 export function RemoveCoach({ clubId, coach }: { clubId: string; coach: ClubCoach }) {
   const { t } = useTranslation()
-  const { errors, refusedCoachId } = usePage<RefusalProps>().props
+  const { errors, refusedEdit } = usePage<RefusalProps>().props
   const [confirming, setConfirming] = useState(false)
   const [removing, setRemoving] = useState(false)
-  const refused = refusedCoachId === coach.id
+  const refused = refusedEdit === coach.id
 
   function remove() {
     setRemoving(true)
