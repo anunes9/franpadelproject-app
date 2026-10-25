@@ -1,6 +1,6 @@
-import { Add01Icon, ArrowLeft01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
+import { ArrowLeft01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Link, router, usePage } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { Fragment, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
@@ -152,15 +152,6 @@ function Show() {
               {completing ? t('exercises.show.markingComplete') : t('exercises.show.markComplete')}
             </button>
           )}
-
-          <Link
-            href={`/dashboard/plan?exercise=${exercise.ref}`}
-            aria-label={t('exercises.show.addToPlan')}
-            className={buttonClass('secondary', 'min-h-14')}
-          >
-            <HugeiconsIcon icon={Add01Icon} size={18} strokeWidth={1.8} aria-hidden />
-            {t('exercises.show.planShort')}
-          </Link>
         </div>
       </div>
 

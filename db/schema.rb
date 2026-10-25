@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120000) do
     t.uuid "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "club_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "club_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["club_id"], name: "index_club_memberships_on_club_id"
+    t.index ["user_id", "club_id"], name: "index_club_memberships_on_user_id_and_club_id", unique: true
+    t.index ["user_id"], name: "index_club_memberships_on_user_id"
   end
 
   create_table "clubs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,19 +100,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120000) do
     t.index ["ref"], name: "index_exercises_on_ref", unique: true
   end
 
-  create_table "plan_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "day", null: false
-    t.uuid "plannable_id", null: false
-    t.string "plannable_type", null: false
-    t.integer "position", default: 0, null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["plannable_type", "plannable_id"], name: "index_plan_entries_on_plannable"
-    t.index ["user_id", "day", "plannable_type", "plannable_id"], name: "index_plan_entries_on_user_day_and_plannable", unique: true
-    t.index ["user_id"], name: "index_plan_entries_on_user_id"
-  end
-
   create_table "user_module_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_module_id", null: false
     t.datetime "created_at", null: false
@@ -133,10 +130,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "club_memberships", "clubs"
+  add_foreign_key "club_memberships", "users"
   add_foreign_key "exercise_completions", "exercises"
   add_foreign_key "exercise_completions", "users"
   add_foreign_key "exercises", "course_modules"
-  add_foreign_key "plan_entries", "users"
   add_foreign_key "user_module_progresses", "course_modules"
   add_foreign_key "user_module_progresses", "users"
   add_foreign_key "users", "clubs"

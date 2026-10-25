@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # :registerable, :recoverable, :rememberable are deferred to a future spec.
   devise :database_authenticatable, :validatable
 
-  enum :role, { admin: 0, client: 2 }
+  enum :role, { admin: 0, club_manager: 1, coach: 2 }
   enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
   enum :hand, { left: 0, right: 1 }
   enum :locale, { pt: 0, en: 1 }
@@ -12,9 +12,14 @@ class User < ApplicationRecord
   belongs_to :club, optional: true
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercise_completions, dependent: :destroy
-  has_many :plan_entries, dependent: :destroy
+  has_many :club_memberships, dependent: :destroy
+  has_many :managed_clubs, through: :club_memberships, source: :club
 
   validates :name, presence: true
+  # A Coach belongs to exactly one Club; a Club Manager is linked to Clubs
+  # through memberships instead, and an Admin has none.
+  validates :club, presence: true, if: :coach?
+  validates :club, absence: true, if: :club_manager?
 
   def initials
     name.to_s.split.first(2).map { |word| word[0] }.join.upcase

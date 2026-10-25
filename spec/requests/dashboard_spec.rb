@@ -19,15 +19,37 @@ RSpec.describe "Dashboard", type: :request do
     expect(response.body).to include("Ana Costa")
   end
 
-  it "exposes the user's weekly plan" do
-    user = create(:user)
-    create(:plan_entry, user: user, day: :thursday, plannable: create(:exercise, ref: "EX-9"))
-    sign_in user
+  %i[coach club_manager].each do |role|
+    it "renders the dashboard for a #{role} without any Weekly Plan data" do
+      sign_in create(:user, role)
 
-    get "/dashboard"
+      get "/dashboard"
 
-    expect(response.body).to include('"Thursday":[{')
-    expect(response.body).to include('"key":"EX-9"')
+      expect(response).to have_http_status(200)
+      expect(response.body).to include('"component":"Dashboard/Home"')
+      expect(response.body).not_to include("&quot;plan&quot;")
+    end
+
+    it "lets a #{role} browse Courses and Exercises and keep their own progress" do
+      user = create(:user, role)
+      create(:course_module, slug: "module-1", position: 1)
+      create(:exercise, ref: "EX-1")
+      sign_in user
+
+      get "/dashboard/courses"
+      expect(response).to have_http_status(200)
+      get "/dashboard/exercises"
+      expect(response).to have_http_status(200)
+      expect { patch "/dashboard/exercises/EX-1/complete" }.to change { user.exercise_completions.count }.by(1)
+    end
+  end
+
+  it "no longer routes the Weekly Plan" do
+    sign_in create(:user)
+
+    get "/dashboard/plan"
+
+    expect(response).to have_http_status(404)
   end
 
   it "shares the signed-in user's locale" do

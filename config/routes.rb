@@ -14,9 +14,6 @@ Rails.application.routes.draw do
   get "/dashboard/exercises", to: "exercises#index"
   get "/dashboard/exercises/:ref", to: "exercises#show", format: false, constraints: { ref: /[^\/]+/ }
   patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }
-  get "/dashboard/plan", to: "plan#index"
-  post "/dashboard/plan/entries", to: "plan#create"
-  delete "/dashboard/plan/entries/:id", to: "plan#destroy"
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"

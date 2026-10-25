@@ -6,8 +6,6 @@ export const pt = {
       dashboard: 'Painel',
       courses: 'Cursos',
       exercises: 'Exercícios',
-      weeklyPlan: 'Plano semanal',
-      plan: 'Plano',
       profile: 'Perfil',
     },
     signOut: 'Terminar sessão',
@@ -71,9 +69,6 @@ export const pt = {
       },
       heading: 'O seu progresso esta semana',
       progressLabel: 'Progresso',
-      yourPlan: 'O seu plano',
-      emptyPlan: 'Nada planeado esta semana',
-      emptyPlanCta: 'Planear a semana',
       stats: {
         courseProgress: 'Progresso do curso',
         modulesCompleteDetail: '{{done}} de {{total}} mesociclos concluídos',
@@ -159,32 +154,6 @@ export const pt = {
       continue: 'Continuar',
     },
   },
-  plan: {
-    index: {
-      title: 'Plano semanal',
-      hint: 'Escolha um dia e adicione exercícios ou mesociclos da biblioteca',
-      exerciseLibrary: 'Biblioteca',
-      exercisesCount: {
-        one: '1 exercício',
-        other: '{{count}} exercícios',
-      },
-      searchPlaceholder: 'Pesquisar',
-      emptyDay: 'Nada planeado ainda',
-      emptyDayHint: 'Adicione exercícios da biblioteca ou largue um aqui',
-      addToDay: 'Adicionar a {{day}}',
-      added: 'Adicionado',
-      remove: 'Remover {{title}}',
-      fromExercisePage: 'Da página do exercício',
-      tabExercises: 'Exercícios',
-      tabModules: 'Mesociclos',
-      modulesCount: {
-        one: '1 mesociclo',
-        other: '{{count}} mesociclos',
-      },
-      plannedCount: '{{count}} planeados',
-      moduleLabel: 'Mesociclo',
-    },
-  },
   profile: {
     show: {
       rowLabel: {
@@ -226,8 +195,6 @@ export const pt = {
       markComplete: 'Marcar como concluído',
       markingComplete: 'A marcar como concluído…',
       completed: 'Concluído',
-      addToPlan: 'Adicionar ao plano',
-      planShort: 'Plano',
       imageCounter: 'Imagem {{index}} de {{total}}',
     },
   },

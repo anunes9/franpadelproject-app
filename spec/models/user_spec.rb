@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
   end
 
   it "defines the expected role values" do
-    expect(User.roles.keys).to match_array(%w[admin client])
+    expect(User.roles.keys).to match_array(%w[admin club_manager coach])
   end
 
   it "defines the expected level values" do
@@ -43,17 +43,60 @@ RSpec.describe User, type: :model do
     expect(user.valid_password?("password123")).to be true
   end
 
-  it "does not require a club" do
-    expect(build(:user, club: nil)).to be_valid
+  it "has no Player-with-login role" do
+    expect(User.roles).not_to have_key("client")
   end
 
-  it "nullifies club_id when its club is destroyed" do
-    club = create(:club)
-    user = create(:user, club: club)
+  describe "Club rules" do
+    it "requires a Coach to belong to a Club" do
+      expect(build(:user, :coach, club: nil)).not_to be_valid
+    end
 
-    club.destroy
+    it "does not require an Admin to have a Club" do
+      expect(build(:user, :admin, club: nil)).to be_valid
+    end
 
-    expect(user.reload.club_id).to be_nil
+    it "does not give a Club Manager a single home Club" do
+      expect(build(:user, :club_manager, club: create(:club))).not_to be_valid
+    end
+
+    it "links a Club Manager to several Clubs" do
+      manager = create(:user, :club_manager)
+      clubs = create_list(:club, 2)
+
+      manager.managed_clubs << clubs
+
+      expect(manager.reload.managed_clubs).to match_array(clubs)
+    end
+
+    it "refuses to link a Coach as a Club Manager" do
+      coach = create(:user, :coach)
+
+      expect(build(:club_membership, user: coach)).not_to be_valid
+    end
+
+    it "refuses linking the same Manager to the same Club twice" do
+      membership = create(:club_membership)
+
+      expect(build(:club_membership, user: membership.user, club: membership.club)).not_to be_valid
+    end
+
+    it "lists a Club's Coaches and Managers separately" do
+      club = create(:club)
+      coach = create(:user, :coach, club: club)
+      manager = create(:club_membership, club: club).user
+
+      expect(club.coaches).to eq([coach])
+      expect(club.managers).to eq([manager])
+    end
+
+    it "refuses to destroy a Club that still has Coaches" do
+      club = create(:club)
+      create(:user, :coach, club: club)
+
+      expect(club.destroy).to be false
+      expect(Club.exists?(club.id)).to be true
+    end
   end
 
   describe "#initials" do
