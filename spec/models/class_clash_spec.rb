@@ -74,6 +74,15 @@ RSpec.describe ClassClash, type: :model do
 
       expect(clashing_dates([slot(tuesday, "18:00", 60)], players: [player], ignoring: group)).to eq([])
     end
+
+    it "can leave out only the Classes being replaced, so the group's other Classes still count" do
+      group = planned_group(coach: coach, players: [player], start_time: "18:00", duration: 60)
+      first, second = group.training_classes.first(2)
+      candidates = [slot(first.date, "18:00", 60), slot(second.date, "18:00", 60)]
+
+      expect(described_class.new(coach: coach, players: [player], replacing: [second.id]).dates(candidates))
+        .to eq([first.date])
+    end
   end
 
   describe "edited Classes" do

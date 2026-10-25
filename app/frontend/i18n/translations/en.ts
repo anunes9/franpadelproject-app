@@ -393,6 +393,24 @@ export const en = {
       },
       noExercises: 'No exercises picked',
     },
+    planRegeneration: {
+      title: 'Regenerate the plan',
+      hint: 'Builds the rest of the plan again from the group’s current schedule and the club’s break periods, continuing the course where it stands.',
+      button: 'Regenerate plan',
+      confirmTitle: 'Regenerate this group’s plan?',
+      confirmReplaced:
+        'Every class not marked done will be deleted and replaced, including classes you moved, skipped or added, and the exercises picked for them.',
+      confirmKept: 'Classes marked done are kept, with their exercises.',
+      cancel: 'Cancel',
+      confirm: 'Replace and regenerate',
+      regenerating: 'Regenerating…',
+      errors: {
+        clash:
+          'The new plan would overlap in time with another class of the coach or of a player on {{dates}}. Nothing was changed.',
+        planComplete: 'Every module of the course is complete, so there is nothing to regenerate.',
+        noModules: 'This level’s course has no modules yet, so no training plan can be generated.',
+      },
+    },
     planEditing: {
       done: 'Done',
       markDone: 'Mark done',

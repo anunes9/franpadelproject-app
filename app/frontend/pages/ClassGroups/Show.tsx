@@ -4,6 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
 import { classGroupsPath, classPath, clubPath } from '@/lib/paths'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
+import { RegeneratePlan } from '../../components/PlanRegeneration'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
 import type { ClassGroup, ModuleOption, TrainingClass } from '../../types/dashboard-data'
@@ -119,6 +120,8 @@ function Show() {
         </section>
 
         <AddClassForm classGroupId={classGroup.id} moduleOptions={moduleOptions} />
+
+        <RegeneratePlan classGroupId={classGroup.id} />
       </div>
     </div>
   )

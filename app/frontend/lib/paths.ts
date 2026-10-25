@@ -39,6 +39,9 @@ export const classGroupClassesPath = (classGroupId: string) => `${classGroupPath
 export const classPath = (classId: string, edit?: ClassEdit) =>
   edit ? `/dashboard/classes/${classId}/${edit}` : `/dashboard/classes/${classId}`
 
+// Regenerating a group's Training Plan, only on request.
+export const classGroupRegenerationPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/regeneration`
+
 // The Exercises a Coach picks for a Class.
 export const classExercisePath = (classId: string, exerciseRef: string) =>
   `${classPath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`

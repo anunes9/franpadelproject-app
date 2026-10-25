@@ -398,6 +398,24 @@ export const pt = {
       },
       noExercises: 'Sem exercícios escolhidos',
     },
+    planRegeneration: {
+      title: 'Regenerar o plano',
+      hint: 'Volta a gerar o resto do plano com o horário atual do grupo e as pausas do clube, continuando o curso onde está.',
+      button: 'Regenerar plano',
+      confirmTitle: 'Regenerar o plano deste grupo?',
+      confirmReplaced:
+        'Todas as aulas não marcadas como feitas serão apagadas e substituídas, incluindo as que moveu, saltou ou adicionou, e os exercícios escolhidos para elas.',
+      confirmKept: 'As aulas marcadas como feitas mantêm-se, com os seus exercícios.',
+      cancel: 'Cancelar',
+      confirm: 'Substituir e regenerar',
+      regenerating: 'A regenerar…',
+      errors: {
+        clash:
+          'O novo plano sobrepõe-se no tempo a outra aula do treinador ou de um jogador em {{dates}}. Nada foi alterado.',
+        planComplete: 'Todos os mesociclos do curso estão concluídos, por isso não há nada a regenerar.',
+        noModules: 'O curso deste nível ainda não tem mesociclos, por isso não é possível gerar o plano de treino.',
+      },
+    },
     planEditing: {
       done: 'Feita',
       markDone: 'Marcar como feita',

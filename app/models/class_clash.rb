@@ -13,12 +13,14 @@
 # Player in any group (other Coaches' groups included). A skipped Class no
 # longer takes up its time, so it is never clashed with, and a saved Class
 # being moved never clashes with itself. `ignoring` leaves out one group's
-# own Classes, for edits that replace them.
+# own Classes, for edits that replace them; `replacing` leaves out only the
+# Classes (ids) being replaced, so the group's other Classes still count.
 class ClassClash
-  def initialize(coach:, players:, ignoring: nil)
+  def initialize(coach:, players:, ignoring: nil, replacing: [])
     @coach = coach
     @players = Array(players)
     @ignoring = ignoring
+    @replacing = Array(replacing)
   end
 
   # Locks the Coach and the Players for the rest of the transaction, so two
@@ -32,7 +34,7 @@ class ClassClash
     classes = Array(classes)
     return [] if classes.empty?
 
-    planned = existing_classes(classes.map(&:date).uniq, except: saved_ids(classes)).group_by(&:date)
+    planned = existing_classes(classes.map(&:date).uniq, except: saved_ids(classes) + @replacing).group_by(&:date)
     classes.select do |candidate|
       planned.fetch(candidate.date, []).any? { |other| candidate.interval.overlaps?(other.interval) }
     end.map(&:date).uniq.sort

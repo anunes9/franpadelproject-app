@@ -55,6 +55,12 @@ Rails.application.routes.draw do
       end
     end
   end
+  # Regenerating a group's Training Plan, only on request.
+  scope "/dashboard" do
+    resources :class_groups, only: [] do
+      resource :regeneration, controller: "plan_regenerations", as: :plan_regeneration, only: :create
+    end
+  end
   # The Exercises a Coach picks for a Class from its Module.
   post "/dashboard/classes/:class_id/exercises/:ref", to: "class_exercises#create", as: :class_exercise,
                                                       format: false, constraints: { ref: /[^\/]+/ }

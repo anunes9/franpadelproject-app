@@ -29,7 +29,8 @@ class ClassGroup < ApplicationRecord
   delegate :club, to: :coach
 
   # The dates of the generated Classes that would have overlapped another
-  # Class of the Coach or of a Player, after a refused #create_with_plan.
+  # Class of the Coach or of a Player, after a refused #create_with_plan or
+  # #regenerate_plan.
   attr_reader :clashing_dates
 
   # The groups of a Club: those whose Coach belongs to it.
@@ -66,29 +67,49 @@ class ClassGroup < ApplicationRecord
     @clashing_dates = []
     return false unless valid?
 
-    planned = generate_plan
+    planned = generate_plan(modules: course_modules, start_date: starts_on)
     return false unless planned
 
-    transaction do
-      ClassClash.lock(coach: coach, players: players)
-      @clashing_dates = ClassClash.new(coach: coach, players: players).dates(planned)
-      if @clashing_dates.any?
-        errors.add(:base, :clash)
-        raise ActiveRecord::Rollback
-      end
+    save_plan(planned) { save! }
+  rescue ActiveRecord::ActiveRecordError => error
+    not_saved(error)
+  end
 
-      save!
-      planned.each do |planned_class|
-        training_classes.create!(date: planned_class.date, start_time: start_time,
-                                 course_module: planned_class.course_module, kind: planned_class.type)
-      end
+  # Regenerates the Training Plan on the Coach's request (docs/adr/0005):
+  # keeps the done Classes with their Exercises and replaces every other Class,
+  # continuing the Course from its first incomplete Module, on the group's
+  # current schedule, from the later of `today` and the day after the last
+  # done Class. Refused, changing nothing, when the group is invalid, when its
+  # Course has no Modules, when every Module is complete (base: plan_complete),
+  # or when a new Class would clash (the dates are then in #clashing_dates).
+  def regenerate_plan(today:)
+    @clashing_dates = []
+    return false unless valid?
+
+    done = training_classes.where(done: true).to_a
+    modules = course_modules.to_a
+    # A Module whose Assessment Class is done is complete.
+    complete = done.select(&:assessment?).map(&:course_module_id)
+    remaining = modules.reject { |course_module| complete.include?(course_module.id) }
+    if modules.any? && remaining.empty?
+      errors.add(:base, :plan_complete)
+      return false
     end
 
-    persisted?
+    start_date = [today, done.map(&:date).max&.next_day].compact.max
+    done_in_first = done.count { |done_class| done_class.course_module_id == remaining.first&.id }
+    planned = generate_plan(modules: remaining, start_date: start_date, done_in_first_module: done_in_first)
+    return false unless planned
+
+    replaced = training_classes.where(done: false).pluck(:id)
+    save_plan(planned, replacing: replaced) do
+      # Still not done: a Class marked done meanwhile is kept.
+      replaced_classes = TrainingClass.where(id: replaced, done: false)
+      TrainingClassExercise.where(training_class: replaced_classes).delete_all
+      replaced_classes.delete_all
+    end
   rescue ActiveRecord::ActiveRecordError => error
-    Rails.logger.error("Class Group not saved: #{error.class}: #{error.message}")
-    errors.add(:base, :not_saved)
-    false
+    not_saved(error)
   end
 
   # "18:00"
@@ -125,15 +146,46 @@ class ClassGroup < ApplicationRecord
     }
   end
 
-  def generate_plan
+  def generate_plan(modules:, start_date:, done_in_first_module: 0)
     TrainingPlanGenerator.call(
-      modules: course_modules,
+      modules: modules,
       cadence: cadence, weekdays: weekdays.map(&:to_sym), start_time: start_time,
-      duration: duration, start_date: starts_on, break_periods: club.break_period_ranges
+      duration: duration, start_date: start_date, break_periods: club.break_period_ranges,
+      done_in_first_module: done_in_first_module
     )
   rescue TrainingPlanGenerator::NoTeachingModules
     errors.add(:level, :no_modules)
     nil
+  end
+
+  # Saves the planned Classes, after the block, in one transaction, unless
+  # any would clash with another Class of the Coach or of a Player. The
+  # Classes in `replacing` (ids) are being replaced, so they do not count.
+  def save_plan(planned, replacing: [])
+    saved = false
+    transaction do
+      ClassClash.lock(coach: coach, players: players)
+      @clashing_dates = ClassClash.new(coach: coach, players: players, replacing: replacing).dates(planned)
+      if @clashing_dates.any?
+        errors.add(:base, :clash)
+        raise ActiveRecord::Rollback
+      end
+
+      yield
+      planned.each do |planned_class|
+        training_classes.create!(date: planned_class.date, start_time: start_time,
+                                 course_module: planned_class.course_module, kind: planned_class.type)
+      end
+      saved = true
+    end
+    training_classes.reset
+    saved
+  end
+
+  def not_saved(error)
+    Rails.logger.error("Class Group plan not saved: #{error.class}: #{error.message}")
+    errors.add(:base, :not_saved)
+    false
   end
 
   def weekdays_match_cadence
