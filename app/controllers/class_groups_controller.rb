@@ -35,11 +35,25 @@ class ClassGroupsController < DashboardController
 
     render inertia: "ClassGroups/Show", props: {
       classGroup: group.summary_json,
-      classes: group.training_classes.includes(:course_module).map(&:plan_json)
+      classes: group.training_classes.includes(:course_module).map(&:plan_json),
+      **plan_editing_props(group)
     }
   end
 
   private
+
+  # What editing the plan needs: the Modules a Class can be added for, and
+  # after a refused edit (see TrainingClassesController), its clashing dates
+  # and which edit it was.
+  def plan_editing_props(group)
+    {
+      moduleOptions: CourseModule.teaching_for(group.level).map do |course_module|
+        { id: course_module.id, number: course_module.position, title: course_module.title }
+      end,
+      clashDates: flash[:clash_dates] || [],
+      refusedEdit: flash[:refused_edit]
+    }
+  end
 
   def require_club
     raise ActiveRecord::RecordNotFound unless current_user.club

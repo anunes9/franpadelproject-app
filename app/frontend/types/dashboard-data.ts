@@ -134,7 +134,18 @@ export interface TrainingClass {
   startTime: string
   kind: 'regular' | 'assessment'
   done: boolean
+  // A skipped Class stays in the plan but no longer takes up its time.
+  skipped: boolean
+  // Added by hand by the Coach, rather than generated.
+  coachAdded: boolean
   module: { slug: string; number: number; title: string }
+}
+
+// A Module a Class can be added for: one of the group's Course.
+export interface ModuleOption {
+  id: string
+  number: number
+  title: string
 }
 
 // A Club's date range with no Classes. Dates are ISO (YYYY-MM-DD), both included.

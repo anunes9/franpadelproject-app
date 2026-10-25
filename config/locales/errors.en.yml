@@ -29,6 +29,14 @@ en:
           attributes:
             email:
               account_exists: "already has an account"
+        training_class:
+          attributes:
+            base:
+              clash: "would overlap in time with another Class of the Coach or of a Player"
+            course_module:
+              other_course: "must be a Module of the group's Course"
+            start_time:
+              crosses_midnight: "must let the Class end by midnight"
         user:
           attributes:
             email:

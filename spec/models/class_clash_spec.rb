@@ -76,6 +76,29 @@ RSpec.describe ClassClash, type: :model do
     end
   end
 
+  describe "edited Classes" do
+    let!(:group) { planned_group(coach: coach, players: [player], start_time: "18:00", duration: 60) }
+    let(:first_class) { group.training_classes.first }
+
+    it "ignores a skipped Class, which no longer takes up its time" do
+      first_class.update!(skipped: true)
+
+      expect(clashing_dates([slot(tuesday, "18:00", 60)])).to eq([])
+    end
+
+    it "does not clash a Class being moved with itself" do
+      first_class.start_time = "18:30"
+
+      expect(clashing_dates([first_class])).to eq([])
+    end
+
+    it "clashes a moved Class with another Class of its own group" do
+      first_class.date = tuesday + 7
+
+      expect(clashing_dates([first_class])).to eq([tuesday + 7])
+    end
+  end
+
   it "lists each clashing date once, in order" do
     planned_group(coach: coach, players: [player], start_time: "18:00", duration: 60)
     later = slot(tuesday + 7, "18:00", 60)

@@ -40,6 +40,21 @@ Rails.application.routes.draw do
   scope "/dashboard" do
     resources :class_groups, only: %i[index new create show]
   end
+  # Editing a Training Plan: adding a Class to a group, and moving, skipping
+  # or marking done one Class, at /dashboard/classes/:id.
+  scope "/dashboard" do
+    resources :class_groups, only: [] do
+      resources :classes, controller: "training_classes", as: :training_classes, only: %i[create update],
+                          shallow: true do
+        member do
+          patch :skip
+          patch :unskip
+          patch :done
+          patch :undone
+        end
+      end
+    end
+  end
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"
