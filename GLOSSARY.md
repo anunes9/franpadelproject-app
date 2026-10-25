@@ -42,10 +42,6 @@ _Avoid_: Empty, upcoming, draft
 An ordered unit within a Course that presents a set of topics and explanations.
 _Avoid_: Mesociclo (the Portuguese translation, used only in PT copy), CourseModule, lesson, chapter
 
-**Coach Module**:
-The one Module in each Course about teaching padel. It is seen, Locked and completed like any other Module, by every Client.
-_Avoid_: Coaching module, instructor module
-
 **Exercise**:
 A practical drill, optionally part of one Module.
 _Avoid_: Drill, task
@@ -111,7 +107,7 @@ A group of one to eight Players taught by one Coach, tied to one Course through 
 _Avoid_: Class (for the group), team, cohort
 
 **Training Plan**:
-The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the seven teaching Modules in Course order and has no season end date. Regenerating happens only when the Coach asks, and keeps completed Classes. It is an intention only.
+The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Regenerating happens only when the Coach asks, and keeps completed Classes. It is an intention only.
 _Avoid_: Weekly Plan, schedule, calendar
 
 **Class**:

@@ -37,8 +37,7 @@ progress_by_slug = {
   "module-4" => { status: :locked, progress: 0 },
   "module-5" => { status: :locked, progress: 0 },
   "module-6" => { status: :locked, progress: 0 },
-  "module-7" => { status: :locked, progress: 0 },
-  "module-8" => { status: :locked, progress: 0 }
+  "module-7" => { status: :locked, progress: 0 }
 }.freeze
 
 User.find_each do |user|

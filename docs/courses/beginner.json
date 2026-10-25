@@ -224,39 +224,5 @@
       "pt": "2 - 4 semanas",
       "en-US": "2 - 4 weeks"
     }
-  },
-  {
-    "externalId": "module-8",
-    "title": {
-      "pt": "Mesociclo 8",
-      "en-US": "Module 8"
-    },
-    "topics": {
-      "pt": [
-        "Método de Observação",
-        "Tipos de Feedback",
-        "\"Aluno\" Modelo",
-        "Tipos de Lançamento de bola"
-      ],
-      "en-US": [
-        "Observation Method",
-        "Types of Feedback",
-        "\"Student\" Model",
-        "Types of Ball Throws"
-      ]
-    },
-    "description": {
-      "pt": "Ferramentas do Treinador",
-      "en-US": "Coaching Tools"
-    },
-    "content": {
-      "pt": "",
-      "en-US": ""
-    },
-    "level": "Beginner",
-    "duration": {
-      "pt": "2 - 4 semanas",
-      "en-US": "2 - 4 weeks"
-    }
   }
 ]

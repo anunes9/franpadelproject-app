@@ -13,6 +13,11 @@ class CourseModule < ApplicationRecord
 
   scope :ordered, -> { order(:level, :position) }
 
+  # A Course's Modules in order. Empty for a Planned Course.
+  def self.teaching_for(level)
+    where(level: level).order(:position).to_a
+  end
+
   def topics_text
     topics.join(", ")
   end
