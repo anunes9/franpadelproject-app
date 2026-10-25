@@ -28,6 +28,13 @@ Rails.application.routes.draw do
   end
   get "/invitations/:token", to: "coach_invitation_acceptances#show", as: :accept_coach_invitation
   patch "/invitations/:token", to: "coach_invitation_acceptances#update"
+
+  # Break Periods: a Club's date ranges with no Classes, managed by its Club Managers.
+  scope "/dashboard" do
+    resources :clubs, only: [] do
+      resources :break_periods, only: %i[index new create edit update destroy], shallow: true
+    end
+  end
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"

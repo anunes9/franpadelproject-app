@@ -302,4 +302,37 @@ export const pt = {
       },
     },
   },
+  breakPeriods: {
+    overview: {
+      title: 'Períodos de pausa',
+      description: 'Datas como o Natal, a Páscoa ou agosto, em que os planos de treino não têm aulas.',
+      manage: 'Gerir períodos de pausa',
+    },
+    index: {
+      title: 'Períodos de pausa',
+      intro: 'Os planos de treino não têm aulas nestas datas. O primeiro e o último dia estão incluídos.',
+      add: 'Adicionar período de pausa',
+      edit: 'Editar',
+      remove: 'Remover',
+      confirmRemove: 'Remover o período de pausa “{{name}}”?',
+      empty: 'Ainda não há períodos de pausa neste clube.',
+      backToClub: 'Voltar à visão geral do clube',
+    },
+    form: {
+      newTitle: 'Novo período de pausa',
+      editTitle: 'Editar período de pausa',
+      backToBreakPeriods: 'Voltar aos períodos de pausa',
+      name: 'Nome',
+      namePlaceholder: 'Natal',
+      startsOn: 'Primeiro dia',
+      endsOn: 'Último dia',
+      save: 'Guardar período de pausa',
+      saving: 'A guardar…',
+      errors: {
+        name: 'Indique um nome.',
+        date: 'Escolha uma data.',
+        endsBeforeStart: 'O último dia tem de ser igual ou posterior ao primeiro dia.',
+      },
+    },
+  },
 } satisfies typeof en

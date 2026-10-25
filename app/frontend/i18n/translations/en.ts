@@ -298,4 +298,37 @@ export const en = {
       },
     },
   },
+  breakPeriods: {
+    overview: {
+      title: 'Break periods',
+      description: 'Dates such as Christmas, Easter or August, when training plans have no classes.',
+      manage: 'Manage break periods',
+    },
+    index: {
+      title: 'Break periods',
+      intro: 'Training plans have no classes on these dates. Both the start and end dates are included.',
+      add: 'Add break period',
+      edit: 'Edit',
+      remove: 'Remove',
+      confirmRemove: 'Remove the break period “{{name}}”?',
+      empty: 'No break periods in this club yet.',
+      backToClub: 'Back to club overview',
+    },
+    form: {
+      newTitle: 'New break period',
+      editTitle: 'Edit break period',
+      backToBreakPeriods: 'Back to break periods',
+      name: 'Name',
+      namePlaceholder: 'Christmas',
+      startsOn: 'First day',
+      endsOn: 'Last day',
+      save: 'Save break period',
+      saving: 'Saving…',
+      errors: {
+        name: 'Enter a name.',
+        date: 'Choose a date.',
+        endsBeforeStart: 'The last day must be on or after the first day.',
+      },
+    },
+  },
 }

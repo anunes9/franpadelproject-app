@@ -7,6 +7,7 @@ class Club < ApplicationRecord
   has_many :club_memberships, dependent: :destroy
   has_many :managers, through: :club_memberships, source: :user
   has_many :players, dependent: :restrict_with_error
+  has_many :break_periods, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 
@@ -18,6 +19,12 @@ class Club < ApplicationRecord
   # Players screens and the Club overview.
   def summary_json
     { id: id, name: name }
+  end
+
+  # The Club's Break Periods as inclusive date ranges, in date order: the
+  # break_periods: input of the TrainingPlanGenerator.
+  def break_period_ranges
+    break_periods.chronological.map(&:date_range)
   end
 
   def self.ransackable_attributes(_auth_object = nil)
