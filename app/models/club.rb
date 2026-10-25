@@ -6,12 +6,18 @@ class Club < ApplicationRecord
   has_many :coaches, -> { where(role: :coach) }, class_name: "User", inverse_of: :club, dependent: :restrict_with_error
   has_many :club_memberships, dependent: :destroy
   has_many :managers, through: :club_memberships, source: :user
-  has_many :players, dependent: :destroy
+  has_many :players, dependent: :restrict_with_error
 
   validates :name, presence: true, uniqueness: true
 
   def to_s
     name
+  end
+
+  # The Club as the dashboard names and links it: in the Club switcher, the
+  # Players screens and the Club overview.
+  def summary_json
+    { id: id, name: name }
   end
 
   def self.ransackable_attributes(_auth_object = nil)

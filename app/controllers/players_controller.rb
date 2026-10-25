@@ -1,4 +1,4 @@
-# A Club's roster of Players, managed by its Coaches and Club Managers.
+# A Club's Players, managed by its Coaches and Club Managers.
 # Players of Clubs the user cannot access are 404s.
 class PlayersController < DashboardController
   include ClubScoped
@@ -7,8 +7,8 @@ class PlayersController < DashboardController
     club = find_accessible_club(params[:club_id])
 
     render inertia: "Players/Index", props: {
-      club: club_json(club),
-      players: club.players.alphabetical.map(&:roster_json)
+      club: club.summary_json,
+      players: club.players.alphabetical.map(&:players_json)
     }
   end
 
@@ -51,14 +51,10 @@ class PlayersController < DashboardController
     params.require(:player).permit(:name, :position, :hand, :level)
   end
 
-  def club_json(club)
-    { id: club.id, name: club.name }
-  end
-
   def form_props(club, player)
     {
-      club: club_json(club),
-      player: player&.roster_json,
+      club: club.summary_json,
+      player: player&.players_json,
       positionOptions: Player.positions.keys,
       handOptions: Player.hands.keys,
       levelOptions: Player.levels.keys

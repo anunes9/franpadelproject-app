@@ -14,7 +14,8 @@ class Player < ApplicationRecord
 
   scope :alphabetical, -> { order(:name) }
 
-  def roster_json
+  # The Player as the Players screens and the Club overview list it.
+  def players_json
     { id: id, name: name, position: position, hand: hand, level: level }
   end
 end

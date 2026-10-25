@@ -63,7 +63,7 @@ export interface DashboardUser {
   name: string
   initials: string
   club: string | null
-  // The Clubs whose roster this user manages: a Coach's one Club, or a Club
+  // The Clubs whose Players this user manages: a Coach's one Club, or a Club
   // Manager's linked Clubs.
   clubs: ClubSummary[]
 }
@@ -77,13 +77,6 @@ export interface ClubCoach {
   id: string
   name: string
   email: string
-}
-
-// A Class Group as listed on the Manager's Club overview. Class Groups do not
-// exist yet, so the overview always receives an empty list for now.
-export interface ClassGroupSummary {
-  id: string
-  name: string
 }
 
 export type PlayerPosition = 'left' | 'right' | 'both'

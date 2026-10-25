@@ -1,21 +1,19 @@
 import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import { clubPath, clubPlayersPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { buttonClass, chipClass, Eyebrow } from '../../components/ui'
-import type { ClassGroupSummary, ClubCoach, ClubSummary, DashboardUser, Player } from '../../types/dashboard-data'
+import { buttonClass, chipClass, Eyebrow, ListCard, ListRow } from '../../components/ui'
+import type { ClubCoach, ClubSummary, DashboardUser, Player } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
   dashboardUser: DashboardUser
-  // Null while the Manager is not linked to any Club.
+  // Null while the Club Manager is not linked to any Club.
   club: ClubSummary | null
   coaches: ClubCoach[]
-  classGroups: ClassGroupSummary[]
   players: Player[]
 }
-
-const cardClass = 'rounded-[18px] border border-line bg-white px-5 py-2 shadow-card'
 
 function Section({
   title,
@@ -28,7 +26,7 @@ function Section({
   count: number
   empty: string
   action?: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }) {
   return (
     <section className="flex flex-col gap-3">
@@ -38,13 +36,9 @@ function Section({
         </h2>
         {action}
       </div>
-      {count === 0 ? (
-        <p className="rounded-[18px] border border-line bg-white px-5 py-6 text-center text-sm text-muted shadow-card">
-          {empty}
-        </p>
-      ) : (
-        <ul className={cardClass}>{children}</ul>
-      )}
+      <ListCard count={count} empty={empty}>
+        {children}
+      </ListCard>
     </section>
   )
 }
@@ -58,12 +52,7 @@ function ClubSwitcher({ clubs, current }: { clubs: ClubSummary[]; current: ClubS
       {clubs.map((club) => {
         const on = club.id === current.id
         return (
-          <Link
-            key={club.id}
-            href={`/dashboard/clubs/${club.id}`}
-            aria-current={on ? 'page' : undefined}
-            className={chipClass(on)}
-          >
+          <Link key={club.id} href={clubPath(club.id)} aria-current={on ? 'page' : undefined} className={chipClass(on)}>
             {club.name}
           </Link>
         )
@@ -72,10 +61,8 @@ function ClubSwitcher({ clubs, current }: { clubs: ClubSummary[]; current: ClubS
   )
 }
 
-const rowClass = 'flex items-center justify-between gap-4 border-b border-track py-3.5 last:border-0'
-
 function Show() {
-  const { dashboardUser, club, coaches, classGroups, players } = usePage<Props>().props
+  const { dashboardUser, club, coaches, players } = usePage<Props>().props
   const { t } = useTranslation()
 
   if (!club) {
@@ -101,44 +88,35 @@ function Show() {
 
         <Section title={t('clubs.overview.coaches')} count={coaches.length} empty={t('clubs.overview.coachesEmpty')}>
           {coaches.map((coach) => (
-            <li key={coach.id} className={rowClass}>
+            <ListRow key={coach.id}>
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-ink">{coach.name}</div>
                 <div className="truncate text-meta text-muted">{coach.email}</div>
               </div>
-            </li>
+            </ListRow>
           ))}
         </Section>
 
-        <Section
-          title={t('clubs.overview.classGroups')}
-          count={classGroups.length}
-          empty={t('clubs.overview.classGroupsEmpty')}
-        >
-          {classGroups.map((group) => (
-            <li key={group.id} className={rowClass}>
-              <div className="truncate text-sm font-semibold text-ink">{group.name}</div>
-            </li>
-          ))}
-        </Section>
+        {/* Class Groups do not exist yet, so the section is always empty. */}
+        <Section title={t('clubs.overview.classGroups')} count={0} empty={t('clubs.overview.classGroupsEmpty')} />
 
         <Section
           title={t('clubs.overview.players')}
           count={players.length}
           empty={t('clubs.overview.playersEmpty')}
           action={
-            <Link href={`/dashboard/clubs/${club.id}/players`} className={buttonClass('secondary')}>
-              {t('clubs.overview.manageRoster')}
+            <Link href={clubPlayersPath(club.id)} className={buttonClass('secondary')}>
+              {t('clubs.overview.managePlayers')}
             </Link>
           }
         >
           {players.map((player) => (
-            <li key={player.id} className={rowClass}>
+            <ListRow key={player.id}>
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-ink">{player.name}</div>
                 <div className="text-meta text-muted">{t(`players.levelOption.${player.level}`)}</div>
               </div>
-            </li>
+            </ListRow>
           ))}
         </Section>
       </div>

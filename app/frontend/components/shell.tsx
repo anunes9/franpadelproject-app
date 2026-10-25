@@ -10,28 +10,21 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import { clubPlayersPath, isClubOverviewPath, isPlayersPath, selectedClubId } from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
-
-// The Club selected in the URL (/dashboard/clubs/:id...), if any.
-const selectedClubId = (pathname: string) => pathname.match(/^\/dashboard\/clubs\/([^/?#]+)/)?.[1]
-
-// The Manager home: a Club overview, /dashboard/clubs/:id.
-const isClubOverview = (pathname: string) => /^\/dashboard\/clubs\/[^/?#]+\/?(?:[?#]|$)/.test(pathname)
-
-const isRoster = (pathname: string) => /^\/dashboard\/(?:clubs\/[^/?#]+\/)?players/.test(pathname)
 
 function useNav() {
   const { t } = useTranslation()
   const { url, props } = usePage<{ dashboardUser: DashboardUser }>()
   const { dashboardUser } = props
-  // The roster follows the Club selected on the Manager home, and otherwise
-  // opens on the user's first Club.
+  // Players follows the Club selected on the Club Manager home, and
+  // otherwise opens on the user's first Club.
   const selectedId = selectedClubId(url)
-  const rosterClub = dashboardUser.clubs.find((club) => club.id === selectedId) ?? dashboardUser.clubs[0]
-  const roster = rosterClub
+  const playersClub = dashboardUser.clubs.find((club) => club.id === selectedId) ?? dashboardUser.clubs[0]
+  const players = playersClub
     ? [
         {
-          href: `/dashboard/clubs/${rosterClub.id}/players`,
+          href: clubPlayersPath(playersClub.id),
           label: t('common.nav.players'),
           tab: t('common.nav.players'),
           icon: UserGroupIcon,
@@ -47,17 +40,17 @@ function useNav() {
       tab: t('common.nav.exercises'),
       icon: Dumbbell02Icon,
     },
-    ...roster,
+    ...players,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]
 }
 
 // A Club Manager's home is their Club overview, so Dashboard stays active on
-// it; the roster's URL also starts with /dashboard/clubs/, so it is matched by
+// it; the Players URL also starts with /dashboard/clubs/, so it is matched by
 // shape rather than prefix.
 const isActive = (pathname: string, item: { href: string }) => {
-  if (item.href === '/dashboard') return pathname === '/dashboard' || isClubOverview(pathname)
-  if (isRoster(item.href)) return isRoster(pathname)
+  if (item.href === '/dashboard') return pathname === '/dashboard' || isClubOverviewPath(pathname)
+  if (isPlayersPath(item.href)) return isPlayersPath(pathname)
   return pathname.startsWith(item.href)
 }
 

@@ -75,13 +75,13 @@ RSpec.describe User, type: :model do
       expect(build(:club_membership, user: coach)).not_to be_valid
     end
 
-    it "refuses linking the same Manager to the same Club twice" do
+    it "refuses linking the same Club Manager to the same Club twice" do
       membership = create(:club_membership)
 
       expect(build(:club_membership, user: membership.user, club: membership.club)).not_to be_valid
     end
 
-    it "lists a Club's Coaches and Managers separately" do
+    it "lists a Club's Coaches and Club Managers separately" do
       club = create(:club)
       coach = create(:user, :coach, club: club)
       manager = create(:club_membership, club: club).user
@@ -118,7 +118,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "#dashboard_profile_json" do
-    it "returns name, initials, the club's name and the Clubs whose roster they manage" do
+    it "returns name, initials, the club's name and the Clubs whose Players they manage" do
       club = create(:club, name: "Padel Clube Lisboa")
       user = build(:user, name: "Miguel Santos", club: club)
 

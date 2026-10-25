@@ -204,14 +204,15 @@ export const pt = {
       eyebrow: 'Visão geral do clube',
       switcherLabel: 'Clube',
       noClubsTitle: 'Ainda sem clubes',
-      noClubs: 'Ainda não está associado a nenhum clube. Um administrador associa os gestores aos seus clubes.',
+      noClubs:
+        'Ainda não está associado a nenhum clube. Um administrador associa os gestores de clube aos seus clubes.',
       coaches: 'Treinadores',
       coachesEmpty: 'Ainda não há treinadores neste clube.',
       classGroups: 'Grupos de aulas',
       classGroupsEmpty: 'Ainda não há grupos de aulas neste clube.',
       players: 'Jogadores',
       playersEmpty: 'Ainda não há jogadores neste clube.',
-      manageRoster: 'Gerir jogadores',
+      managePlayers: 'Gerir jogadores',
     },
   },
   players: {
@@ -230,7 +231,7 @@ export const pt = {
     form: {
       newTitle: 'Novo jogador',
       editTitle: 'Editar jogador',
-      backToRoster: 'Voltar aos jogadores',
+      backToPlayers: 'Voltar aos jogadores',
       name: 'Nome',
       position: 'Posição',
       hand: 'Mão dominante',

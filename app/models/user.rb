@@ -48,7 +48,7 @@ class User < ApplicationRecord
       name: name,
       initials: initials,
       club: club&.name,
-      clubs: accessible_clubs.order(:name).map { |c| { id: c.id, name: c.name } }
+      clubs: accessible_clubs.order(:name).map(&:summary_json)
     }
   end
 

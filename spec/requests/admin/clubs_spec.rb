@@ -29,6 +29,14 @@ RSpec.describe "Admin clubs management", type: :request do
     expect { delete "/admin/clubs/#{target.id}" }.to change(Club, :count).by(-1)
   end
 
+  it "keeps a club that still has Players" do
+    target = create(:club)
+    create(:player, club: target)
+
+    expect { delete "/admin/clubs/#{target.id}" }.not_to change(Club, :count)
+    expect(Player.where(club: target).count).to eq(1)
+  end
+
   it "uploads a logo" do
     target = create(:club)
     file = fixture_file_upload(Rails.root.join("spec/fixtures/files/logo.png"), "image/png")

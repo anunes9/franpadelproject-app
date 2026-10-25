@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Manager home", type: :request do
+RSpec.describe "Club Manager home", type: :request do
   let(:manager) { create(:user, :club_manager) }
   let(:alpha) { create(:club, name: "Alpha Padel") }
   let(:bravo) { create(:club, name: "Bravo Padel") }
@@ -19,7 +19,7 @@ RSpec.describe "Manager home", type: :request do
 
   def props = page["props"]
 
-  it "lands a Manager on the overview of their first Club" do
+  it "lands a Club Manager on the overview of their first Club" do
     sign_in manager
 
     get "/dashboard"
@@ -35,7 +35,7 @@ RSpec.describe "Manager home", type: :request do
       create(:player, club: bravo, name: "Pedro Lima")
     end
 
-    it "shows the selected Club's Coaches, Players and Class Groups" do
+    it "shows the selected Club's Coaches and Players" do
       sign_in manager
 
       get "/dashboard/clubs/#{alpha.id}"
@@ -45,10 +45,12 @@ RSpec.describe "Manager home", type: :request do
       expect(props["club"]).to eq("id" => alpha.id, "name" => "Alpha Padel")
       expect(props["coaches"].map { |c| c["name"] }).to eq(["Carla Coach"])
       expect(props["players"].map { |p| p["name"] }).to eq(["Rita Sousa"])
-      expect(props["classGroups"]).to eq([])
+      # Class Groups do not exist yet, so the overview shows them as a static
+      # empty state rather than receiving them.
+      expect(props).not_to have_key("classGroups")
     end
 
-    it "offers a switcher with only the Manager's linked Clubs" do
+    it "offers a switcher with only the Club Manager's linked Clubs" do
       other_club
       sign_in manager
 
@@ -69,7 +71,7 @@ RSpec.describe "Manager home", type: :request do
       expect(response.body).not_to include("Carla Coach", "Rita Sousa")
     end
 
-    it "404s for a Club the Manager is not linked to" do
+    it "404s for a Club the Club Manager is not linked to" do
       sign_in manager
 
       get "/dashboard/clubs/#{other_club.id}"
@@ -109,7 +111,7 @@ RSpec.describe "Manager home", type: :request do
     expect(page["component"]).to eq("Dashboard/Home")
   end
 
-  it "shows a Manager with no linked Clubs an empty Manager home" do
+  it "shows a Club Manager with no linked Clubs an empty Club Manager home" do
     sign_in create(:user, :club_manager)
 
     get "/dashboard"
@@ -117,6 +119,9 @@ RSpec.describe "Manager home", type: :request do
     expect(response).to have_http_status(200)
     expect(page["component"]).to eq("Clubs/Show")
     expect(props["club"]).to be_nil
+    expect(props["coaches"]).to eq([])
+    expect(props["players"]).to eq([])
+    expect(props).not_to have_key("classGroups")
     expect(props["dashboardUser"]["clubs"]).to eq([])
   end
 end

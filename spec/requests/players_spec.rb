@@ -44,7 +44,7 @@ RSpec.describe "Players", type: :request do
       expect(response).to have_http_status(:not_found)
     end
 
-    it "404s for a Club the Manager is not linked to" do
+    it "404s for a Club the Club Manager is not linked to" do
       sign_in create(:user, :club_manager)
 
       expect { post "/dashboard/clubs/#{club.id}/players", params: player_params }
@@ -62,7 +62,12 @@ RSpec.describe "Players", type: :request do
       expect(response).to redirect_to("/dashboard/clubs/#{club.id}/players/new")
 
       follow_redirect!
-      expect(page_props["errors"].keys).to contain_exactly("name", "position")
+      # Players/Form shows its own copy for these known messages, and the
+      # server's message for any other.
+      expect(page_props["errors"]).to eq(
+        "name" => ["can't be blank"],
+        "position" => ["is not included in the list"]
+      )
     end
 
     it "never gives the Player an email or password" do
@@ -82,7 +87,7 @@ RSpec.describe "Players", type: :request do
     end
   end
 
-  describe "the roster" do
+  describe "the Players list" do
     it "shows a Coach the Players of their Club only" do
       create(:player, club: club, name: "Rita Sousa")
       create(:player, name: "Someone Elsewhere")
@@ -117,7 +122,7 @@ RSpec.describe "Players", type: :request do
       expect(response.body).to include("Rita Sousa")
     end
 
-    it "404s for another Club's roster" do
+    it "404s for another Club's Players" do
       create(:player, club: club, name: "Rita Sousa")
       sign_in create(:user, :coach)
 
@@ -158,7 +163,7 @@ RSpec.describe "Players", type: :request do
   end
 
   describe "navigation" do
-    it "gives a Coach their Club for the roster link" do
+    it "gives a Coach their Club for the Players link" do
       sign_in coach
 
       get "/dashboard"
@@ -239,7 +244,7 @@ RSpec.describe "Players", type: :request do
       expect(player.reload.name).to eq("Rita Sousa")
     end
 
-    it "404s another Club's Player for a Manager not linked to it" do
+    it "404s another Club's Player for a Club Manager not linked to it" do
       manager = create(:user, :club_manager)
       create(:club_membership, user: manager, club: create(:club))
       sign_in manager
