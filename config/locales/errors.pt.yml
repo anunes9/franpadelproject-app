@@ -20,6 +20,7 @@ pt:
             coach:
               not_a_coach: "tem de ser um treinador"
               other_club: "tem de ser um treinador do clube do grupo"
+              removed: "foi removido do clube"
             level:
               no_modules: "ainda não tem mesociclos no seu curso"
               not_next_level: "não é o nível seguinte ao do grupo que continua"

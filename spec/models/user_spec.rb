@@ -111,29 +111,47 @@ RSpec.describe User, type: :model do
     it "is refused while the Coach owns a Class Group, which is kept" do
       group = class_group_of(coach)
 
-      expect(coach.destroy).to be false
+      expect(coach.remove!).to be false
       expect(coach.errors.of_kind?(:base, :has_class_groups)).to be true
-      expect(User.exists?(coach.id)).to be true
-      expect(ClassGroup.exists?(group.id)).to be true
+      expect(coach.reload).not_to be_removed
+      expect(ClassGroup.find(group.id).coach).to eq(coach)
     end
 
-    it "deletes a Coach with no Class Groups, with their course progress and Exercise Completions" do
+    it "keeps the Coach's account, course progress and Exercise Completions, but not their access" do
       progress = create(:user_module_progress, user: coach)
       completion = create(:exercise_completion, user: coach)
 
-      expect(coach.destroy).to be_truthy
-      expect(User.exists?(coach.id)).to be false
-      expect(UserModuleProgress.exists?(progress.id)).to be false
-      expect(ExerciseCompletion.exists?(completion.id)).to be false
+      expect(coach.remove!).to be true
+      expect(coach.reload).to be_removed
+      expect(coach.active_for_authentication?).to be false
+      expect(coach.inactive_message).to eq(:removed)
+      expect(UserModuleProgress.exists?(progress.id)).to be true
+      expect(ExerciseCompletion.exists?(completion.id)).to be true
     end
 
-    it "keeps the Club and its Players" do
+    it "drops the Coach from their Club's Coaches, while the Club and its Players stay" do
       player = create(:player, club: coach.club)
 
-      coach.destroy
+      coach.remove!
 
-      expect(Club.exists?(coach.club_id)).to be true
+      expect(coach.club.coaches).to eq([])
+      expect(User.active).not_to include(coach)
       expect(Player.exists?(player.id)).to be true
+    end
+
+    it "still keeps the Club from being deleted" do
+      coach.remove!
+
+      expect(coach.club.destroy).to be false
+      expect(Club.exists?(coach.club_id)).to be true
+    end
+
+    it "refuses a delete too while the Coach owns a Class Group" do
+      class_group_of(coach)
+
+      expect(coach.destroy).to be false
+      expect(coach.errors.of_kind?(:base, :has_class_groups)).to be true
+      expect(User.exists?(coach.id)).to be true
     end
   end
 

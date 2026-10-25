@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_172100) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_190000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -210,10 +210,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_172100) do
     t.integer "level"
     t.integer "locale", default: 0, null: false
     t.string "name", null: false
+    t.datetime "removed_at"
     t.integer "role", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["club_id"], name: "index_users_on_club_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["removed_at"], name: "index_users_on_removed_at"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

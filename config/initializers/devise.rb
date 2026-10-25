@@ -284,6 +284,12 @@ Devise.setup do |config|
   #   warden_config.intercept_401 = false
   #   warden_config.default_strategies(scope: :user).unshift :some_external_strategy
   # end
+  #
+  # AuthFailureApp tells the sign-in page why a removed user was turned away.
+  # Called through a lambda so the reloadable class is looked up per request.
+  config.warden do |warden_config|
+    warden_config.failure_app = ->(env) { AuthFailureApp.call(env) }
+  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine

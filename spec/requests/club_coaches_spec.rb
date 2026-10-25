@@ -1,8 +1,8 @@
 require "rails_helper"
 
-# A Club Manager removes a Coach from one of their Clubs, deleting the Coach's
-# account, unless the Coach still owns Class Groups
-# (docs/adr/0006-manager-oversight.md).
+# A Club Manager removes a Coach from one of their Clubs: the Coach loses
+# access but their account and history are kept, unless the Coach still owns
+# Class Groups (docs/adr/0006-manager-oversight.md).
 RSpec.describe "Removing a Coach", type: :request do
   let(:club) { create(:club, name: "Padel Clube Lisboa") }
   let(:coach) { create(:user, :coach, club: club, name: "Fran") }
@@ -24,15 +24,14 @@ RSpec.describe "Removing a Coach", type: :request do
                        start_time: "18:00", duration: 60)
   end
 
-  it "removes a Coach with no Class Groups, with their course progress and Exercise Completions" do
+  it "removes a Coach with no Class Groups from the Club, keeping their course progress and Exercise Completions" do
     create(:user_module_progress, user: coach)
     create(:exercise_completion, user: coach)
     sign_in manager
 
-    expect { remove(coach) }.to change(User, :count).by(-1)
-      .and change(UserModuleProgress, :count).by(-1)
-      .and change(ExerciseCompletion, :count).by(-1)
+    expect { remove(coach) }.not_to(change { [User.count, UserModuleProgress.count, ExerciseCompletion.count] })
 
+    expect(coach.reload).to be_removed
     expect(response).to redirect_to("/dashboard/clubs/#{club.id}")
     follow_redirect!
     expect(page_props["coaches"]).to eq([])
@@ -42,24 +41,10 @@ RSpec.describe "Removing a Coach", type: :request do
     group = class_group_of(coach)
     sign_in manager
 
-    expect { remove(coach) }.not_to change(User, :count)
+    remove(coach)
 
+    expect(coach.reload).not_to be_removed
     expect(ClassGroup.find(group.id).coach).to eq(coach)
-    expect(response).to redirect_to("/dashboard/clubs/#{club.id}")
-    follow_redirect!
-    expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["has_class_groups"])
-    expect(page_props["refusedEdit"]).to eq(coach.id)
-  end
-
-  # A group reassigned to the Coach while they are being removed: the foreign
-  # key from class_groups.coach_id refuses the delete, as the model would.
-  it "refuses the removal the same way when the database finds a Class Group the check missed" do
-    coach
-    allow_any_instance_of(User).to receive(:destroy).and_raise(ActiveRecord::InvalidForeignKey)
-    sign_in manager
-
-    expect { remove(coach) }.not_to change(User, :count)
-
     expect(response).to redirect_to("/dashboard/clubs/#{club.id}")
     follow_redirect!
     expect(page_props["errors"]["base"].map { |e| e["code"] }).to eq(["has_class_groups"])
@@ -72,11 +57,17 @@ RSpec.describe "Removing a Coach", type: :request do
     other_coach = create(:user, :coach, club: other_club)
     sign_in manager
 
-    expect { remove(other_coach, club: other_club) }.to change(User, :count).by(-1)
+    remove(other_coach, club: other_club)
+
+    expect(other_coach.reload).to be_removed
   end
 
   describe "refusals, as if the Coach did not exist" do
     {
+      "a Coach already removed" => lambda {
+        target = create(:user, :coach, club: club, removed_at: 1.day.ago)
+        [target, club]
+      },
       "a Coach of a Club the Manager is not linked to" => lambda {
         target = create(:user, :coach)
         [target, target.club]
@@ -90,7 +81,7 @@ RSpec.describe "Removing a Coach", type: :request do
         user, through = instance_exec(&target)
         sign_in manager
 
-        expect { remove(user, club: through) }.not_to change(User, :count)
+        expect { remove(user, club: through) }.not_to(change { user.reload.removed_at })
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -104,15 +95,19 @@ RSpec.describe "Removing a Coach", type: :request do
       target = coach
       sign_in instance_exec(&user)
 
-      expect { remove(target) }.not_to change(User, :count)
+      remove(target)
+
       expect(response).to have_http_status(:not_found)
+      expect(target.reload).not_to be_removed
     end
   end
 
   it "requires authentication" do
     target = coach
 
-    expect { remove(target) }.not_to change(User, :count)
+    remove(target)
+
     expect(response).to redirect_to(new_user_session_path)
+    expect(target.reload).not_to be_removed
   end
 end

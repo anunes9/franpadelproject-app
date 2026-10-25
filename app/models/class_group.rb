@@ -180,7 +180,8 @@ class ClassGroup < ApplicationRecord
   # Manager's request (docs/adr/0006-manager-oversight.md). The Training Plan
   # is kept as it is. Refused, changing nothing, when there is no such user
   # (coach: blank), when they are not a Coach (coach: not_a_coach), when they
-  # belong to another Club (coach: other_club), or when one of the group's
+  # belong to another Club (coach: other_club), when they were removed
+  # (coach: removed), or when one of the group's
   # upcoming Classes (dated `today` or later, neither done nor skipped) would
   # overlap in time with another Class of the new Coach (the clashing dates
   # are then in #clashing_dates).
@@ -198,6 +199,12 @@ class ClassGroup < ApplicationRecord
       # the one that wins is the one that was clash-checked.
       lock!
       ClassClash.lock(coach: new_coach, players: players)
+      # Again under the lock, which a removal of the Coach takes too
+      # (User#remove!), so a Coach removed meanwhile is not handed the group.
+      if new_coach.class.where(id: new_coach.id).where.not(removed_at: nil).exists?
+        errors.add(:coach, :removed)
+        raise ActiveRecord::Rollback
+      end
       @clashing_dates = ClassClash.new(coach: new_coach, players: []).dates(upcoming_classes(today))
       if @clashing_dates.any?
         errors.add(:base, :clash)
@@ -280,6 +287,7 @@ class ClassGroup < ApplicationRecord
     if new_coach.nil? then :blank
     elsif !new_coach.coach? then :not_a_coach
     elsif new_coach.club_id != coach.club_id then :other_club
+    elsif new_coach.removed? then :removed
     end
   end
 

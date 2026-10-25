@@ -41,6 +41,7 @@ export function ReassignClassGroup({ classGroupId }: { classGroupId: string }) {
       blank: t('classGroups.reassignment.errors.blank'),
       not_a_coach: t('classGroups.reassignment.errors.notACoach'),
       other_club: t('classGroups.reassignment.errors.otherClub'),
+      removed: t('classGroups.reassignment.errors.removed'),
     },
   }
   function submit(event: FormEvent) {

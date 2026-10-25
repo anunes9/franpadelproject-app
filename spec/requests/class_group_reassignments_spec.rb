@@ -60,6 +60,7 @@ RSpec.describe "Reassigning a Class Group", type: :request do
     new_coach
     other = create(:user, :coach, club: club, name: "Ana")
     create(:user, :coach) # of another Club
+    create(:user, :coach, club: club, name: "Bea", removed_at: 1.day.ago)
     sign_in manager
 
     get "/dashboard/class_groups/#{group.id}"
@@ -87,6 +88,31 @@ RSpec.describe "Reassigning a Class Group", type: :request do
       follow_redirect!
       expect(error_codes("coach")).to eq(["other_club"])
       expect(page_props["refusedEdit"]).to eq("reassignment")
+    end
+
+    it "refuses a removed Coach of the Club" do
+      new_coach.remove!
+
+      reassign(new_coach.id)
+
+      expect(group.reload.coach).to eq(coach)
+      follow_redirect!
+      expect(error_codes("coach")).to eq(["removed"])
+    end
+
+    # A Coach removed between the first check and the lock: the check under
+    # the lock sees it.
+    it "refuses a Coach removed while the reassignment waits for its lock" do
+      allow(ClassClash).to receive(:lock).and_wrap_original do |original, **args|
+        args[:coach].class.where(id: args[:coach].id).update_all(removed_at: Time.current)
+        original.call(**args)
+      end
+
+      reassign(new_coach.id)
+
+      expect(group.reload.coach).to eq(coach)
+      follow_redirect!
+      expect(error_codes("coach")).to eq(["removed"])
     end
 
     it "refuses someone who is not a Coach" do

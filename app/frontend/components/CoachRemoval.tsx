@@ -5,9 +5,10 @@ import { clubCoachPath } from '@/lib/paths'
 import type { ClubCoach } from '../types/dashboard-data'
 import { buttonClass, FieldError } from './ui'
 
-// Removing a Coach from the Club overview, after confirming. Removing deletes
-// the Coach's account; it is refused while they own Class Groups, which the
-// Club Manager reassigns first (docs/adr/0006-manager-oversight.md).
+// Removing a Coach from the Club overview, after confirming. The Coach loses
+// access but their account and history are kept; it is refused while they own
+// Class Groups, which the Club Manager reassigns first
+// (docs/adr/0006-manager-oversight.md).
 
 // What the overview holds after a refused removal (see ClubCoachesController):
 // its errors, and as the refused edit, the id of the Coach it was.

@@ -17,6 +17,45 @@ RSpec.describe "Sessions", type: :request do
     expect(response.body).to include('"base":"invalid_credentials"')
   end
 
+  describe "a removed user (docs/adr/0006-manager-oversight.md)" do
+    let!(:coach) { create(:user, :coach, email: "removed@example.com", password: "password123") }
+
+    it "cannot sign in, and is told the account no longer has access" do
+      coach.remove!
+
+      post user_session_path, params: { user: { email: coach.email, password: "password123" } }
+
+      expect(response).to redirect_to(new_user_session_path)
+      follow_redirect!
+      expect(response.body).to include('"base":"removed"')
+      get dashboard_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it "is told only that the credentials are wrong when the password is wrong" do
+      coach.remove!
+
+      post user_session_path, params: { user: { email: coach.email, password: "wrongpassword" } }
+
+      expect(response.body).to include('"base":"invalid_credentials"')
+    end
+
+    it "is signed out on their next request when removed mid-session" do
+      post user_session_path, params: { user: { email: coach.email, password: "password123" } }
+      get dashboard_path
+      expect(response).to have_http_status(:ok)
+
+      coach.remove!
+      get dashboard_path
+
+      expect(response).to redirect_to(new_user_session_path)
+      follow_redirect!
+      expect(response.body).to include('"base":"removed"')
+      get dashboard_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
   it "logs out and redirects to login" do
     post user_session_path, params: { user: { email: user.email, password: "password123" } }
     delete destroy_user_session_path

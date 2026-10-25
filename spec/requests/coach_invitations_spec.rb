@@ -105,6 +105,20 @@ RSpec.describe "Coach invitations", type: :request do
       )
     end
 
+    it "(for a removed Coach too, who is not reactivated) refuses an email that already has an account" do
+      create(:user, :coach, email: "carla@example.com", removed_at: 1.day.ago)
+      sign_in manager
+
+      expect { invite(params: { coach_invitation: { name: "Carla", email: "Carla@Example.com " } }) }
+        .not_to change(ActionMailer::Base.deliveries, :count)
+
+      expect(response).to redirect_to("/dashboard/clubs/#{club.id}/coach_invitations/new")
+      follow_redirect!
+      expect(props["errors"]).to eq(
+        "email" => [{ "code" => "account_exists", "message" => "already has an account" }]
+      )
+    end
+
     it "refuses an invitation without a name or a valid email" do
       sign_in manager
 

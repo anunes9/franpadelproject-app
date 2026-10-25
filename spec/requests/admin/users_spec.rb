@@ -97,32 +97,55 @@ RSpec.describe "Admin users management", type: :request do
     expect(target.reload.valid_password?("originalpass1")).to be true
   end
 
-  it "deletes a user" do
-    target = create(:user)
-    expect { delete "/admin/users/#{target.id}" }.to change(User, :count).by(-1)
+  it "removes a user instead of deleting them, keeping their history" do
+    target = create(:user, :coach)
+    progress = create(:user_module_progress, user: target)
+
+    expect { delete "/admin/users/#{target.id}" }.not_to change(User, :count)
+
+    expect(target.reload).to be_removed
+    expect(UserModuleProgress.exists?(progress.id)).to be true
+    follow_redirect!
+    expect(response.body).to include("removed")
   end
 
-  it "refuses to delete a Coach who owns a Class Group, keeping the Coach and the group" do
+  it "removes selected users the same way" do
+    target = create(:user, :coach)
+
+    expect {
+      post "/admin/users/batch_action", params: { batch_action: "remove", collection_selection: [target.id] }
+    }.not_to change(User, :count)
+
+    expect(target.reload).to be_removed
+  end
+
+  it "refuses to remove a Coach who owns a Class Group, keeping the Coach and the group" do
     coach = create(:user, :coach)
     group = ClassGroup.create!(coach: coach, players: [create(:player, club: coach.club)], level: "beginner",
                                starts_on: Date.new(2026, 9, 7), cadence: 1, weekdays: ["tuesday"],
                                start_time: "18:00", duration: 60)
 
-    expect { delete "/admin/users/#{coach.id}" }.not_to change(User, :count)
+    delete "/admin/users/#{coach.id}"
 
+    expect(coach.reload).not_to be_removed
     expect(ClassGroup.exists?(group.id)).to be true
     follow_redirect!
     expect(response.body).to include("owns Class Groups, so reassign them to another Coach first")
   end
 
-  it "refuses the delete the same way when the database finds a Class Group the check missed" do
-    coach = create(:user, :coach)
-    allow_any_instance_of(User).to receive(:destroy).and_raise(ActiveRecord::InvalidForeignKey)
+  it "shows which users are removed, and filters by it" do
+    create(:user, email: "active-person@example.com")
+    create(:user, email: "removed-person@example.com", removed_at: Time.current)
 
-    expect { delete "/admin/users/#{coach.id}" }.not_to change(User, :count)
+    get "/admin/users", params: { q: { removed_at_null: "false" } }
 
-    follow_redirect!
-    expect(response.body).to include("owns Class Groups, so reassign them to another Coach first")
+    expect(response.body).to include("removed-person@example.com")
+    expect(response.body).not_to include("active-person@example.com")
+
+    get "/admin/users", params: { q: { removed_at_null: "true" } }
+
+    expect(response.body).to include("active-person@example.com")
+    expect(response.body).not_to include("removed-person@example.com")
   end
 
   it "assigns a user to a club" do
