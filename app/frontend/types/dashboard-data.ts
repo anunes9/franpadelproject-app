@@ -79,6 +79,13 @@ export interface ClubCoach {
   email: string
 }
 
+// A Coach invitation of a Club that is still waiting to be accepted.
+export interface PendingCoachInvitation {
+  id: string
+  name: string
+  email: string
+}
+
 export type PlayerPosition = 'left' | 'right' | 'both'
 export type PlayerHand = 'left' | 'right'
 export type PlayerLevel = 'beginner' | 'intermediate' | 'advanced'

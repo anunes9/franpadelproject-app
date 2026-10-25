@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,6 +59,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_100000) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_clubs_on_name", unique: true
+  end
+
+  create_table "coach_invitations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.uuid "club_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.datetime "expires_at", null: false
+    t.uuid "invited_by_id", null: false
+    t.string "name", null: false
+    t.string "token_digest", null: false
+    t.datetime "updated_at", null: false
+    t.index ["club_id"], name: "index_coach_invitations_on_club_id"
+    t.index ["invited_by_id"], name: "index_coach_invitations_on_invited_by_id"
+    t.index ["token_digest"], name: "index_coach_invitations_on_token_digest", unique: true
   end
 
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -143,6 +158,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_100000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "club_memberships", "clubs"
   add_foreign_key "club_memberships", "users"
+  add_foreign_key "coach_invitations", "clubs", on_delete: :cascade
+  add_foreign_key "coach_invitations", "users", column: "invited_by_id", on_delete: :cascade
   add_foreign_key "exercise_completions", "exercises"
   add_foreign_key "exercise_completions", "users"
   add_foreign_key "exercises", "course_modules"

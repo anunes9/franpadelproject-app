@@ -1,0 +1,8 @@
+pt:
+  coach_invitation_mailer:
+    invite:
+      subject: "Convite para treinar no %{club}"
+      greeting: "Olá %{name},"
+      intro: "%{manager} convidou-o para se juntar ao %{club} como treinador na Fran Padel Academy."
+      action: "Aceitar o convite e definir a palavra-passe"
+      expiry: "Este link só pode ser usado uma vez e expira dentro de %{days} dias. Se não estava à espera deste email, pode ignorá-lo."

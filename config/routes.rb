@@ -19,6 +19,15 @@ Rails.application.routes.draw do
       resources :players, only: %i[index new create edit update], shallow: true
     end
   end
+  # Coach invitations: a Club Manager invites from a Club; the Coach accepts
+  # through the emailed link, signed out.
+  scope "/dashboard" do
+    resources :clubs, only: [] do
+      resources :coach_invitations, only: %i[new create]
+    end
+  end
+  get "/invitations/:token", to: "coach_invitation_acceptances#show", as: :accept_coach_invitation
+  patch "/invitations/:token", to: "coach_invitation_acceptances#update"
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"

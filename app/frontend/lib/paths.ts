@@ -15,3 +15,8 @@ export const isClubOverviewPath = (pathname: string) => /^\/dashboard\/clubs\/[^
 
 // A Players screen: a Club's Players, or adding or editing one of them.
 export const isPlayersPath = (pathname: string) => /^\/dashboard\/(?:clubs\/[^/?#]+\/)?players/.test(pathname)
+
+// Inviting a Coach to a Club, and the emailed link that accepts it.
+export const clubCoachInvitationsPath = (clubId: string) => `${clubPath(clubId)}/coach_invitations`
+export const newClubCoachInvitationPath = (clubId: string) => `${clubCoachInvitationsPath(clubId)}/new`
+export const acceptCoachInvitationPath = (token: string) => `/invitations/${token}`

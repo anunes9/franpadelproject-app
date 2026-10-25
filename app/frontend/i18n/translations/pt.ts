@@ -259,4 +259,47 @@ export const pt = {
       advanced: 'Avançado',
     },
   },
+  coachInvitations: {
+    overview: {
+      invite: 'Convidar treinador',
+      pending: 'Convidado',
+    },
+    new: {
+      title: 'Convidar treinador',
+      backToClub: 'Voltar ao clube',
+      intro:
+        'Vamos enviar-lhe um email com um link para definir a palavra-passe e juntar-se ao {{club}} como treinador.',
+      name: 'Nome',
+      email: 'Email',
+      submit: 'Enviar convite',
+      submitting: 'A enviar…',
+      errors: {
+        name: 'Indique um nome.',
+        email: 'Indique um endereço de email válido.',
+        emailTaken: 'Este email já tem uma conta.',
+      },
+    },
+    accept: {
+      title: 'Juntar-se ao {{club}}',
+      intro: 'Foi convidado como treinador. Escolha a sua palavra-passe para concluir a criação da conta.',
+      name: 'Nome',
+      email: 'Email',
+      password: 'Palavra-passe',
+      passwordConfirmation: 'Confirmar palavra-passe',
+      passwordHint: 'Pelo menos 6 caracteres.',
+      submit: 'Aceitar e iniciar sessão',
+      submitting: 'A aceitar…',
+      expiredTitle: 'Este convite expirou',
+      expired: 'Peça ao gestor do clube que lhe envie um novo convite.',
+      acceptedTitle: 'Este convite já foi usado',
+      accepted: 'Inicie sessão com o email e a palavra-passe que escolheu.',
+      goToSignIn: 'Ir para o início de sessão',
+      errors: {
+        name: 'Indique o seu nome.',
+        password: 'Escolha uma palavra-passe com pelo menos 6 caracteres.',
+        passwordConfirmation: 'As palavras-passe não coincidem.',
+        emailTaken: 'Este email já tem uma conta. Inicie sessão.',
+      },
+    },
+  },
 } satisfies typeof en

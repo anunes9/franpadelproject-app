@@ -20,10 +20,16 @@ class ClubsController < DashboardController
   end
 
   def show
-    render inertia: "Clubs/Show", props: self.class.overview_props(find_accessible_club(params[:id]))
+    club = find_accessible_club(params[:id])
+    render inertia: "Clubs/Show", props: self.class.overview_props(club).merge(pending_invitations_props(club))
   end
 
   private
+
+  # The Coach invitations of the Club still waiting to be accepted.
+  def pending_invitations_props(club)
+    { pendingInvitations: CoachInvitation.pending.where(club: club).order(:name).map(&:pending_json) }
+  end
 
   def require_club_manager
     raise ActiveRecord::RecordNotFound unless current_user.club_manager?

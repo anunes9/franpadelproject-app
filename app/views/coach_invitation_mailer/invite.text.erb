@@ -1,0 +1,8 @@
+<%= t(".greeting", name: @invitation.name) %>
+
+<%= t(".intro", manager: @manager.name, club: @club.name) %>
+
+<%= t(".action") %>
+<%= @accept_url %>
+
+<%= t(".expiry", days: CoachInvitation::VALID_FOR.in_days.to_i) %>
