@@ -12,8 +12,10 @@
 # checked against the Classes already planned for the Coach, and for each
 # Player in any group (other Coaches' groups included). A skipped Class no
 # longer takes up its time, so it is never clashed with, and a saved Class
-# being moved never clashes with itself. `ignoring` leaves out one group's
-# own Classes, for edits that replace them.
+# being moved never clashes with itself. `classes` are also checked against
+# each other, for a group's Classes all taking its new duration at once
+# (their group then holds the new duration). `ignoring` leaves out one
+# group's own Classes, for edits that replace them.
 class ClassClash
   def initialize(coach:, players:, ignoring: nil)
     @coach = coach
@@ -34,7 +36,8 @@ class ClassClash
 
     planned = existing_classes(classes.map(&:date).uniq, except: saved_ids(classes)).group_by(&:date)
     classes.select do |candidate|
-      planned.fetch(candidate.date, []).any? { |other| candidate.interval.overlaps?(other.interval) }
+      others = planned.fetch(candidate.date, []) + classes.select { |other| other.date == candidate.date }
+      others.any? { |other| !other.equal?(candidate) && candidate.interval.overlaps?(other.interval) }
     end.map(&:date).uniq.sort
   end
 

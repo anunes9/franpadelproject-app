@@ -14,6 +14,8 @@ pt:
             base:
               clash: "sobrepõe-se no tempo a outra aula do treinador ou de um jogador"
               not_saved: "não foi possível guardar, por isso nada foi criado"
+            duration:
+              crosses_midnight: "tem de permitir que todas as aulas terminem até à meia-noite"
             coach:
               not_a_coach: "tem de ser um treinador"
             level:

@@ -371,6 +371,23 @@ export const en = {
           'On these dates a class would overlap in time with another class of yours or of one of the players. Change the weekdays, start time or players.',
       },
     },
+    edit: {
+      link: 'Edit group',
+      title: 'Edit class group',
+      backToGroup: 'Back to class group',
+      planNote:
+        'The training plan does not change until you regenerate it: new weekdays, a new start time or a new number of classes a week only apply then. A new duration applies to every class straight away.',
+      save: 'Save changes',
+      saving: 'Saving…',
+      errors: {
+        crossesMidnight:
+          'With this duration a class of the plan would end after midnight. Move that class earlier or choose a shorter duration.',
+        clashTitle: 'These changes would overlap with other classes',
+        clash:
+          'On these dates a class of the plan would overlap in time with another class of the coach or of one of the players. Change the players or the duration.',
+        notSaved: 'The group could not be saved, so nothing was changed. Please try again.',
+      },
+    },
     show: {
       eyebrow: 'Class group',
       backToGroups: 'Back to class groups',

@@ -2,10 +2,10 @@ import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
-import { classGroupsPath, classPath, clubPath } from '@/lib/paths'
+import { classGroupsPath, classPath, clubPath, editClassGroupPath } from '@/lib/paths'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
+import { BackLink, buttonClass, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
 import type { ClassGroup, ModuleOption, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
@@ -55,6 +55,10 @@ function Show() {
           <Detail label={t('classGroups.show.startsOn')}>{formatDate(classGroup.startsOn, locale, false)}</Detail>
           <Detail label={t('classGroups.show.coach')}>{classGroup.coach}</Detail>
         </dl>
+
+        <Link href={editClassGroupPath(classGroup.id)} className={buttonClass('secondary', 'self-start')}>
+          {t('classGroups.edit.link')}
+        </Link>
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-bold text-ink">

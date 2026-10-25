@@ -97,6 +97,22 @@ RSpec.describe ClassClash, type: :model do
 
       expect(clashing_dates([first_class])).to eq([tuesday + 7])
     end
+
+    # A group's new duration applies to all its Classes at once.
+    it "checks a group's Classes with its new duration, without clashing them with their old times" do
+      group.duration = 90
+
+      expect(clashing_dates(group.training_classes.to_a)).to eq([])
+    end
+
+    it "clashes the Classes being checked with each other" do
+      added = group.training_classes.create!(date: tuesday, start_time: "19:00", kind: :regular,
+                                             course_module: group.course_modules.first)
+      group.duration = 90
+
+      expect(clashing_dates(group.training_classes.to_a)).to eq([tuesday])
+      expect(clashing_dates([added])).to eq([])
+    end
   end
 
   it "lists each clashing date once, in order" do
