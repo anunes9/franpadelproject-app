@@ -3,11 +3,12 @@ import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
 import { classGroupsPath, classPath, clubPath, editClassGroupPath } from '@/lib/paths'
+import { ContinuesFrom, FinishedPill, StartNextLevelGroup } from '../../components/FinishedGroups'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { RegeneratePlan } from '../../components/PlanRegeneration'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
-import type { ClassGroup, ModuleOption, TrainingClass } from '../../types/dashboard-data'
+import type { ClassGroup, ModuleOption, PlayerLevel, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -16,6 +17,9 @@ interface Props {
   classes: TrainingClass[]
   // The Modules a Class can be added for: those of the group's Course.
   moduleOptions: ModuleOption[]
+  // For the owning Coach of a finished group: the Level a group continuing it
+  // starts at; null otherwise, or after Advanced.
+  nextLevel: PlayerLevel | null
 }
 
 // The Classes of a Training Plan, one run per Module, in plan order.
@@ -32,7 +36,7 @@ function byModule(classes: TrainingClass[]) {
 // A Class Group and its whole Training Plan, for its Coach and the Club
 // Managers of its Club.
 function Show() {
-  const { current_user, classGroup, classes, moduleOptions } = usePage<Props>().props
+  const { current_user, classGroup, classes, moduleOptions, nextLevel } = usePage<Props>().props
   const { t, tn, locale } = useTranslation()
   const isManager = current_user?.role === 'club_manager'
 
@@ -48,7 +52,11 @@ function Show() {
           <Eyebrow>
             {t('classGroups.show.eyebrow')} · {classGroup.club.name}
           </Eyebrow>
-          <PageHeader title={t(`players.levelOption.${classGroup.level}`)} />
+          <div className="flex flex-wrap items-center gap-3">
+            <PageHeader title={t(`players.levelOption.${classGroup.level}`)} />
+            {classGroup.finished && <FinishedPill />}
+          </div>
+          {classGroup.previousGroup && <ContinuesFrom group={classGroup.previousGroup} />}
         </div>
 
         <dl className="grid grid-cols-2 gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card sm:grid-cols-3">
@@ -60,6 +68,8 @@ function Show() {
         <Link href={editClassGroupPath(classGroup.id)} className={buttonClass('secondary', 'self-start')}>
           {t('classGroups.edit.link')}
         </Link>
+
+        {nextLevel && <StartNextLevelGroup classGroupId={classGroup.id} nextLevel={nextLevel} />}
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-bold text-ink">

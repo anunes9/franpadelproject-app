@@ -110,6 +110,14 @@ export interface ClassGroupListItem {
   duration: number
   coach: string
   playerCount: number
+  // Every Class done or skipped, at least one done: kept as history.
+  finished: boolean
+}
+
+// A Class Group as a link to it.
+export interface ClassGroupLink {
+  id: string
+  level: PlayerLevel
 }
 
 export interface ClassGroup {
@@ -124,6 +132,19 @@ export interface ClassGroup {
   coach: string
   club: ClubSummary
   players: Player[]
+  // Every Class done or skipped, at least one done: kept as history.
+  finished: boolean
+  // On the group's page: the finished group it continues at the next Level,
+  // while the user can see it.
+  previousGroup?: ClassGroupLink | null
+}
+
+// What the create form starts from when continuing a finished group at the
+// next Level: that Level and the group's Players still in the Coach's Club.
+export interface ClassGroupCopy {
+  from: ClassGroupLink
+  level: PlayerLevel
+  playerIds: string[]
 }
 
 // One Class of a Training Plan. An Assessment Class is the last of its Module.

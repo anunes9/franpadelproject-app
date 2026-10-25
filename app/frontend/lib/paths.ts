@@ -31,6 +31,9 @@ export const editBreakPeriodPath = (breakPeriodId: string) => `${breakPeriodPath
 export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
+// Creating the group that continues a finished group at the next Level.
+export const newClassGroupFromPath = (classGroupId: string) =>
+  `${newClassGroupPath}?from=${encodeURIComponent(classGroupId)}`
 // Editing a group's Players and schedule; the edit is sent to classGroupPath.
 export const editClassGroupPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/edit`
 
