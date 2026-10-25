@@ -2,9 +2,17 @@ import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { clubBreakPeriodsPath, clubPath, clubPlayersPath, newClubCoachInvitationPath } from '@/lib/paths'
+import { ClassGroupRow } from '../../components/ClassGroupRow'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
-import type { ClubCoach, ClubSummary, DashboardUser, PendingCoachInvitation, Player } from '../../types/dashboard-data'
+import type {
+  ClassGroupListItem,
+  ClubCoach,
+  ClubSummary,
+  DashboardUser,
+  PendingCoachInvitation,
+  Player,
+} from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -12,6 +20,7 @@ interface Props {
   // Null while the Club Manager is not linked to any Club.
   club: ClubSummary | null
   coaches: ClubCoach[]
+  classGroups: ClassGroupListItem[]
   players: Player[]
   // Absent on the empty Club Manager home.
   pendingInvitations?: PendingCoachInvitation[]
@@ -64,7 +73,7 @@ function ClubSwitcher({ clubs, current }: { clubs: ClubSummary[]; current: ClubS
 }
 
 function Show() {
-  const { dashboardUser, club, coaches, players, pendingInvitations = [] } = usePage<Props>().props
+  const { dashboardUser, club, coaches, classGroups, players, pendingInvitations = [] } = usePage<Props>().props
   const { t } = useTranslation()
 
   if (!club) {
@@ -117,8 +126,15 @@ function Show() {
           ))}
         </Section>
 
-        {/* Class Groups do not exist yet, so the section is always empty. */}
-        <Section title={t('clubs.overview.classGroups')} count={0} empty={t('clubs.overview.classGroupsEmpty')} />
+        <Section
+          title={t('clubs.overview.classGroups')}
+          count={classGroups.length}
+          empty={t('clubs.overview.classGroupsEmpty')}
+        >
+          {classGroups.map((group) => (
+            <ClassGroupRow key={group.id} group={group} withCoach />
+          ))}
+        </Section>
 
         <Section
           title={t('clubs.overview.players')}

@@ -11,6 +11,8 @@
 #
 # Weeks are calendar weeks (Monday to Sunday). A week that overlaps a Break
 # Period at all gets no Classes and does not count toward a Module's weeks.
+# Only a Module's last Class is its Assessment Class, and a partial first
+# week counts as a full week (docs/adr/0002).
 class TrainingPlanGenerator
   CADENCE_WEEKS_PER_MODULE = { 1 => 6, 2 => 4 }.freeze
   DURATIONS = [60, 90].freeze
@@ -23,7 +25,12 @@ class TrainingPlanGenerator
   end
 
   # type is :regular or :assessment. Exercises are not part of generation.
-  PlannedClass = Data.define(:date, :start_time, :duration, :course_module, :type)
+  PlannedClass = Data.define(:date, :start_time, :duration, :course_module, :type) do
+    # The minutes of its day the Class runs, as TrainingClass#interval.
+    def interval
+      ClassInterval.of(start_time, duration)
+    end
+  end
 
   def self.call(...)
     new(...).call

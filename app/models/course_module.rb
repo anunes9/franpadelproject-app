@@ -1,7 +1,7 @@
 class CourseModule < ApplicationRecord
   include OrganizesAttachments
 
-  enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
+  enum :level, Level::VALUES
 
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercises, -> { order(:ref) }, dependent: :destroy

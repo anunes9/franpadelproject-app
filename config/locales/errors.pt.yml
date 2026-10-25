@@ -1,0 +1,35 @@
+# Mensagens para os códigos de erro de validação da própria app. Os
+# formulários mostram o seu próprio texto, na língua do Cliente, para os
+# códigos que conhecem; estas mensagens são o recurso do servidor.
+pt:
+  activerecord:
+    errors:
+      models:
+        break_period:
+          attributes:
+            ends_on:
+              on_or_after_start: "tem de ser igual ou posterior à data de início"
+        class_group:
+          attributes:
+            base:
+              clash: "sobrepõe-se no tempo a outra aula do treinador ou de um jogador"
+              not_saved: "não foi possível guardar, por isso nada foi criado"
+            coach:
+              not_a_coach: "tem de ser um treinador"
+            level:
+              no_modules: "ainda não tem mesociclos no seu curso"
+            start_time:
+              crosses_midnight: "tem de permitir que a aula termine até à meia-noite"
+            players:
+              too_many: "são demasiados (o máximo é %{count})"
+              other_club: "têm de pertencer todos ao clube do treinador"
+            weekdays:
+              cadence_mismatch: "tem de ter um dia da semana diferente por cada aula semanal"
+        coach_invitation:
+          attributes:
+            email:
+              account_exists: "já tem uma conta"
+        user:
+          attributes:
+            email:
+              account_exists: "já tem uma conta"

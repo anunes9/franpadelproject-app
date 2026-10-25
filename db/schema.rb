@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
     t.date "starts_on", null: false
     t.datetime "updated_at", null: false
     t.index ["club_id"], name: "index_break_periods_on_club_id"
+  end
+
+  create_table "class_group_players", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "class_group_id", null: false
+    t.datetime "created_at", null: false
+    t.uuid "player_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_group_id", "player_id"], name: "index_class_group_players_on_class_group_id_and_player_id", unique: true
+    t.index ["class_group_id"], name: "index_class_group_players_on_class_group_id"
+    t.index ["player_id"], name: "index_class_group_players_on_player_id"
+  end
+
+  create_table "class_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "cadence", null: false
+    t.uuid "coach_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "duration", null: false
+    t.integer "level", null: false
+    t.time "start_time", null: false
+    t.date "starts_on", null: false
+    t.datetime "updated_at", null: false
+    t.string "weekdays", default: [], null: false, array: true
+    t.index ["coach_id"], name: "index_class_groups_on_coach_id"
   end
 
   create_table "club_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -136,6 +159,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
     t.index ["club_id"], name: "index_players_on_club_id"
   end
 
+  create_table "training_classes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "class_group_id", null: false
+    t.uuid "course_module_id", null: false
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.boolean "done", default: false, null: false
+    t.integer "kind", default: 0, null: false
+    t.time "start_time", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_group_id", "date"], name: "index_training_classes_on_class_group_id_and_date"
+    t.index ["class_group_id"], name: "index_training_classes_on_class_group_id"
+    t.index ["course_module_id"], name: "index_training_classes_on_course_module_id"
+    t.index ["date"], name: "index_training_classes_on_date"
+  end
+
   create_table "user_module_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_module_id", null: false
     t.datetime "created_at", null: false
@@ -167,6 +205,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "break_periods", "clubs"
+  add_foreign_key "class_group_players", "class_groups", on_delete: :cascade
+  add_foreign_key "class_group_players", "players"
+  add_foreign_key "class_groups", "users", column: "coach_id"
   add_foreign_key "club_memberships", "clubs"
   add_foreign_key "club_memberships", "users"
   add_foreign_key "coach_invitations", "clubs", on_delete: :cascade
@@ -175,6 +216,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_130500) do
   add_foreign_key "exercise_completions", "users"
   add_foreign_key "exercises", "course_modules"
   add_foreign_key "players", "clubs"
+  add_foreign_key "training_classes", "class_groups", on_delete: :cascade
+  add_foreign_key "training_classes", "course_modules"
   add_foreign_key "user_module_progresses", "course_modules"
   add_foreign_key "user_module_progresses", "users"
   add_foreign_key "users", "clubs"

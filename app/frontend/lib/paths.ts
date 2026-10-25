@@ -27,6 +27,11 @@ export const newClubBreakPeriodPath = (clubId: string) => `${clubBreakPeriodsPat
 export const breakPeriodPath = (breakPeriodId: string) => `/dashboard/break_periods/${breakPeriodId}`
 export const editBreakPeriodPath = (breakPeriodId: string) => `${breakPeriodPath(breakPeriodId)}/edit`
 
+// A Coach's Class Groups and their Training Plans.
+export const classGroupsPath = '/dashboard/class_groups'
+export const newClassGroupPath = `${classGroupsPath}/new`
+export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
+
 // A Break Periods screen: a Club's Break Periods, or adding or editing one.
 // They sit under the Club Manager home in the navigation.
 export const isBreakPeriodsPath = (pathname: string) =>

@@ -5,7 +5,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :validatable
 
   enum :role, { admin: 0, club_manager: 1, coach: 2 }
-  enum :level, { beginner: 0, intermediate: 1, advanced: 2 }
+  enum :level, Level::VALUES
   enum :hand, { left: 0, right: 1 }
   enum :locale, { pt: 0, en: 1 }
 

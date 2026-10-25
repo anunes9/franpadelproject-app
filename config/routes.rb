@@ -35,6 +35,11 @@ Rails.application.routes.draw do
       resources :break_periods, only: %i[index new create edit update destroy], shallow: true
     end
   end
+  # Class Groups and their Training Plans: a Coach's own groups, also visible
+  # to the Club Managers of the Coach's Club.
+  scope "/dashboard" do
+    resources :class_groups, only: %i[index new create show]
+  end
   get "/dashboard/profile", to: "profile#index"
   patch "/dashboard/profile", to: "profile#update"
   patch "/locale", to: "locales#update"

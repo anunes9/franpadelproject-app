@@ -9,11 +9,13 @@ class ClubsController < DashboardController
   # The "Clubs/Show" props for a Club, or for no Club while the Club Manager
   # is not linked to any, which the page shows as an empty Club Manager home.
   def self.overview_props(club)
-    return { club: nil, coaches: [], players: [] } unless club
+    return { club: nil, coaches: [], classGroups: [], players: [] } unless club
 
     {
       club: club.summary_json,
       coaches: club.coaches.order(:name).map { |coach| { id: coach.id, name: coach.name, email: coach.email } },
+      classGroups: ClassGroup.of_clubs(club).includes(:coach, :players)
+                             .order("users.name", :created_at).map(&:list_json),
       players: club.players.alphabetical.map(&:players_json)
     }
   end
