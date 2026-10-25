@@ -35,20 +35,21 @@ class Exercise < ApplicationRecord
     exercise_completions.exists?(user: user)
   end
 
+  # The Exercise as a Class's page lists it, picked or available to pick.
+  def as_class_json
+    { ref: ref, title: title, category: category&.capitalize, duration: duration }
+  end
+
   # `completed` lets a caller that already knows the answer (see
   # .dashboard_list) skip the per-Exercise query.
   def as_dashboard_json(user = nil, completed: nil)
-    {
-      ref: ref,
-      title: title,
-      category: category&.capitalize,
-      duration: duration,
+    as_class_json.merge(
       description: description,
       content: content,
       media: media_json,
       moduleId: course_module&.slug,
       completed: completed.nil? ? (user ? completed_for?(user) : false) : completed
-    }
+    )
   end
 
   # Serializes many Exercises in a fixed number of queries, however many there

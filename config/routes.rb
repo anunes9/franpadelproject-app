@@ -40,11 +40,11 @@ Rails.application.routes.draw do
   scope "/dashboard" do
     resources :class_groups, only: %i[index new create show]
   end
-  # Editing a Training Plan: adding a Class to a group, and moving, skipping
-  # or marking done one Class, at /dashboard/classes/:id.
+  # A Class's page, and editing a Training Plan: adding a Class to a group,
+  # and moving, skipping or marking done one Class, at /dashboard/classes/:id.
   scope "/dashboard" do
     resources :class_groups, only: [] do
-      resources :classes, controller: "training_classes", as: :training_classes, only: %i[create update],
+      resources :classes, controller: "training_classes", as: :training_classes, only: %i[show create update],
                           shallow: true do
         member do
           patch :skip
@@ -55,8 +55,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  # A Class's page and the Exercises its Coach picks for it from its Module.
-  get "/dashboard/classes/:id", to: "class_exercises#show", as: :class_page
+  # The Exercises a Coach picks for a Class from its Module.
   post "/dashboard/classes/:class_id/exercises/:ref", to: "class_exercises#create", as: :class_exercise,
                                                       format: false, constraints: { ref: /[^\/]+/ }
   delete "/dashboard/classes/:class_id/exercises/:ref", to: "class_exercises#destroy",

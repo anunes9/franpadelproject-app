@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatDuration } from '@/lib/classGroups'
 import { classGroupsPath, newClubPlayerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, buttonClass, chipClass, Eyebrow, FieldError, INPUT_CLASS } from '../../components/ui'
+import { BackLink, buttonClass, chipClass, Eyebrow, FieldError, INPUT_CLASS, LABEL_CLASS } from '../../components/ui'
 import type { ClubSummary, Player, PlayerLevel, Weekday } from '../../types/dashboard-data'
 
 interface Props {
@@ -23,7 +23,6 @@ interface Props {
 
 const CADENCE_KEY = { 1: 'once', 2: 'twice' } as const
 
-const LABEL = 'flex flex-col gap-1.5 text-sm font-medium text-ink'
 const LEGEND = 'mb-1.5 text-sm font-medium text-ink'
 
 // A Coach creates a Class Group for themselves; its whole Training Plan is
@@ -101,7 +100,7 @@ function Form() {
           noValidate
           className="flex flex-col gap-5 rounded-[18px] border border-line bg-white p-5 shadow-card"
         >
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.form.level')}
             <select
               value={data.level}
@@ -124,7 +123,7 @@ function Form() {
             />
           </label>
 
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.form.startsOn')}
             <input
               type="date"
@@ -179,7 +178,7 @@ function Form() {
           </fieldset>
 
           <div className="grid gap-5 sm:grid-cols-2">
-            <label className={LABEL}>
+            <label className={LABEL_CLASS}>
               {t('classGroups.form.startTime')}
               <input
                 type="time"

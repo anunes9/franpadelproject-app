@@ -1,14 +1,30 @@
-# Editing a Class Group's Training Plan, one Class at a time: adding a Class,
-# moving one, skipping or unskipping it, and marking it done or undone. The
-# owning Coach and the Club Managers of the group's Club can edit; anyone
-# else gets a 404, as if the Class did not exist. Every edit returns to the
-# group's page.
+# A Class's page, and editing a Class Group's Training Plan one Class at a
+# time: adding a Class, moving one, skipping or unskipping it, and marking it
+# done or undone. The owning Coach and the Club Managers of the group's Club
+# can see and edit; anyone else gets a 404, as if the Class did not exist.
+# Every edit returns to the group's page.
 #
-# Adding, moving and unskipping are checked against the clash rule. A refusal
+# Adding, moving and unskipping are checked against the clash rule. A Class is
+# never both done and skipped (docs/adr/0003-skipping-a-class.md). A refusal
 # returns with the errors, the clashing dates and which edit was refused (a
 # Class's id, or "new" for an added Class), for the page to show them there.
 class TrainingClassesController < DashboardController
   NEW_CLASS = "new".freeze
+
+  # The Class with the Exercises its Coach picked, and those of its Module
+  # still to pick (see ClassExercisesController).
+  def show
+    training_class = visible_classes.includes(:course_module, :exercises, class_group: %i[coach players])
+                                    .find(params[:id])
+    chosen = training_class.exercises.to_a
+
+    render inertia: "TrainingClasses/Show", props: {
+      trainingClass: training_class.plan_json,
+      classGroup: training_class.class_group.summary_json,
+      exercises: chosen.map(&:as_class_json),
+      availableExercises: (training_class.course_module.exercises.to_a - chosen).map(&:as_class_json)
+    }
+  end
 
   # Adds a regular Class of the Coach's own, for a Module of the group's Course.
   def create
@@ -30,10 +46,7 @@ class TrainingClassesController < DashboardController
   end
 
   def skip
-    training_class = find_training_class
-    training_class.update!(skipped: true)
-
-    redirect_to class_group_path(training_class.class_group)
+    mark(skipped: true)
   end
 
   def unskip
@@ -44,32 +57,42 @@ class TrainingClassesController < DashboardController
   end
 
   def done
-    training_class = find_training_class
-    training_class.update!(done: true)
-
-    redirect_to class_group_path(training_class.class_group)
+    mark(done: true)
   end
 
   def undone
-    training_class = find_training_class
-    training_class.update!(done: false)
-
-    redirect_to class_group_path(training_class.class_group)
+    mark(done: false)
   end
 
   private
 
+  def visible_classes
+    TrainingClass.where(class_group: ClassGroup.visible_to(current_user))
+  end
+
   def find_training_class
-    TrainingClass.where(class_group: ClassGroup.visible_to(current_user)).find(params[:id])
+    visible_classes.find(params[:id])
   end
 
   def save_and_return(training_class, refused_edit:)
-    group = training_class.class_group
-    return redirect_to class_group_path(group) if training_class.save_unless_clashing
+    return redirect_to class_group_path(training_class.class_group) if training_class.save_unless_clashing
 
+    refuse(training_class, refused_edit: refused_edit, clashing_dates: training_class.clashing_dates)
+  end
+
+  # Skipping and marking done or undone take up no new time, so they are not
+  # checked against the clash rule.
+  def mark(attributes)
+    training_class = find_training_class
+    return redirect_to class_group_path(training_class.class_group) if training_class.update(attributes)
+
+    refuse(training_class, refused_edit: training_class.id)
+  end
+
+  def refuse(training_class, refused_edit:, clashing_dates: [])
     # The clashing dates go next to the errors, which hold codes only.
-    flash[:clash_dates] = training_class.clashing_dates.map(&:iso8601)
+    flash[:clash_dates] = clashing_dates.map(&:iso8601)
     flash[:refused_edit] = refused_edit
-    redirect_to class_group_path(group), inertia: { errors: form_errors(training_class) }
+    redirect_to class_group_path(training_class.class_group), inertia: { errors: form_errors(training_class) }
   end
 end

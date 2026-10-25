@@ -2,10 +2,10 @@ import { Link, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
-import { classGroupsPath, classPagePath, clubPath } from '@/lib/paths'
+import { classGroupsPath, classPath, clubPath } from '@/lib/paths'
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
+import { BackLink, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
 import type { ClassGroup, ModuleOption, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
@@ -26,15 +26,6 @@ function byModule(classes: TrainingClass[]) {
     else runs.push({ module: trainingClass.module, classes: [trainingClass] })
   }
   return runs
-}
-
-function Detail({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="text-meta text-muted">{label}</dt>
-      <dd className="text-sm font-semibold text-ink">{children}</dd>
-    </div>
-  )
 }
 
 // A Class Group and its whole Training Plan, for its Coach and the Club
@@ -101,7 +92,7 @@ function Show() {
                   <ListRow key={trainingClass.id}>
                     <div className="flex min-w-0 flex-col gap-0.5">
                       <Link
-                        href={classPagePath(trainingClass.id)}
+                        href={classPath(trainingClass.id)}
                         className={`text-sm font-semibold underline-offset-2 hover:underline ${trainingClass.skipped ? 'text-muted line-through' : 'text-ink'}`}
                       >
                         {formatDate(trainingClass.date, locale)}

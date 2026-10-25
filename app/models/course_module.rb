@@ -18,6 +18,11 @@ class CourseModule < ApplicationRecord
     where(level: level).order(:position).to_a
   end
 
+  # The Module as a choice when adding a Class to a Training Plan.
+  def option_json
+    { id: id, number: position, title: title }
+  end
+
   def topics_text
     topics.join(", ")
   end

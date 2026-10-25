@@ -5,7 +5,8 @@
 #
 # The Coach edits a plan Class by Class: moving one, skipping it (it stays in
 # the plan but no longer takes up its time), adding one of their own (marked
-# coach_added) and marking one done.
+# coach_added) and marking one done. A Class is never both done and skipped;
+# see docs/adr/0003-skipping-a-class.md.
 class TrainingClass < ApplicationRecord
   belongs_to :class_group
   belongs_to :course_module
@@ -21,8 +22,11 @@ class TrainingClass < ApplicationRecord
   self.skip_time_zone_conversion_for_attributes = [:start_time]
 
   validates :date, :start_time, presence: true
-  validate :ends_by_midnight
-  validate :module_of_the_groups_course
+  # Checked only when their inputs change, so older Classes saved before
+  # these rules can still be skipped or marked done.
+  validate :ends_by_midnight, if: -> { will_save_change_to_date? || will_save_change_to_start_time? }
+  validate :module_of_the_groups_course, if: :will_save_change_to_course_module_id?
+  validate :not_both_done_and_skipped
 
   delegate :duration, to: :class_group
 
@@ -61,12 +65,15 @@ class TrainingClass < ApplicationRecord
 
   # Picks an Exercise for the Class, after those already picked. Returns the
   # pick, which is refused (unsaved, with errors) for an Exercise of another
-  # Module or one already picked.
+  # Module or one already picked. The Class is locked meanwhile, so picks made
+  # at the same time get distinct positions.
   def pick_exercise(exercise)
-    pick = training_class_exercises.build(exercise: exercise,
-                                          position: training_class_exercises.maximum(:position).to_i + 1)
-    training_class_exercises.delete(pick) unless pick.save
-    pick
+    with_lock do
+      pick = training_class_exercises.build(exercise: exercise,
+                                            position: training_class_exercises.maximum(:position).to_i + 1)
+      training_class_exercises.delete(pick) unless pick.save
+      pick
+    end
   end
 
   # The Class as the group's plan lists it.
@@ -96,6 +103,17 @@ class TrainingClass < ApplicationRecord
   def module_of_the_groups_course
     return unless course_module && class_group
 
-    errors.add(:course_module, :other_course) unless course_module.level == class_group.level
+    errors.add(:course_module, :other_course) unless class_group.course_modules.include?(course_module)
+  end
+
+  # Marking a skipped Class done, or skipping a done one, is refused.
+  def not_both_done_and_skipped
+    return unless done? && skipped?
+
+    if will_save_change_to_skipped?
+      errors.add(:skipped, :done)
+    else
+      errors.add(:done, :skipped)
+    end
   end
 end

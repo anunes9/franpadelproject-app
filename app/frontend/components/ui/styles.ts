@@ -28,6 +28,9 @@ export function chipClass(active: boolean, className = '') {
   return `shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-meta font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-150 pointer-coarse:min-h-11 ${state} ${className}`
 }
 
+// A form field's <label>, wrapping its caption and its control.
+export const LABEL_CLASS = 'flex flex-col gap-1.5 text-sm font-medium text-ink'
+
 // A text input, select or date field in the dashboard's forms.
 export const INPUT_CLASS =
   'rounded-lg border border-line bg-white px-3 py-2.5 text-base text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30'

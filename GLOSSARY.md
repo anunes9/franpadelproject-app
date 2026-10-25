@@ -111,7 +111,7 @@ The ordered Classes of one Class Group, generated up front by rules from the Cou
 _Avoid_: Weekly Plan, schedule, calendar
 
 **Class**:
-One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time.
+One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time. A skipped Class stays in the plan but no longer takes up its time.
 _Avoid_: Session, lesson
 
 **Assessment Class**:

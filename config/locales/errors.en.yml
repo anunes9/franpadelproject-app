@@ -35,6 +35,10 @@ en:
               clash: "would overlap in time with another Class of the Coach or of a Player"
             course_module:
               other_course: "must be a Module of the group's Course"
+            done:
+              skipped: "cannot be marked for a skipped Class"
+            skipped:
+              done: "cannot be marked for a done Class"
             start_time:
               crosses_midnight: "must let the Class end by midnight"
         training_class_exercise:

@@ -234,6 +234,69 @@ RSpec.describe "Editing a Training Plan", type: :request do
     end
   end
 
+  describe "done and skipped together" do
+    def error_codes(field)
+      page_props["errors"][field].map { |e| e["code"] }
+    end
+
+    it "refuses to mark a skipped Class done" do
+      first_class.update!(skipped: true)
+      sign_in coach
+
+      patch "/dashboard/classes/#{first_class.id}/done"
+
+      expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+      expect(first_class.reload).not_to be_done
+      follow_redirect!
+      expect(error_codes("done")).to eq(["skipped"])
+      expect(page_props["refusedEdit"]).to eq(first_class.id)
+    end
+
+    it "refuses to skip a done Class" do
+      first_class.update!(done: true)
+      sign_in coach
+
+      patch "/dashboard/classes/#{first_class.id}/skip"
+
+      expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+      expect(first_class.reload).not_to be_skipped
+      follow_redirect!
+      expect(error_codes("skipped")).to eq(["done"])
+      expect(page_props["refusedEdit"]).to eq(first_class.id)
+    end
+
+    it "still lets a done Class be moved, to correct its date" do
+      first_class.update!(done: true)
+      sign_in coach
+
+      patch "/dashboard/classes/#{first_class.id}", params: { training_class: { date: "2026-09-09", start_time: "18:00" } }
+
+      expect(first_class.reload).to have_attributes(date: Date.new(2026, 9, 9), done: true)
+    end
+  end
+
+  describe "editing an older Class saved before today's rules" do
+    # A row the current validations would refuse: it ends after midnight and
+    # its Module is of another Course.
+    let(:older_class) do
+      other_course = create(:course_module, level: :intermediate, position: 1)
+      TrainingClass.new(class_group: group, date: Date.new(2026, 12, 29), start_time: "23:30",
+                        course_module: other_course).tap { |c| c.save!(validate: false) }
+    end
+
+    %w[skip unskip done undone].each do |edit|
+      it "lets the Coach #{edit} it" do
+        sign_in coach
+
+        patch "/dashboard/classes/#{older_class.id}/#{edit}"
+
+        expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+        follow_redirect!
+        expect(page_props["errors"]).to be_blank
+      end
+    end
+  end
+
   describe "who can edit a plan" do
     def manager_of(club)
       create(:user, :club_manager).tap { |manager| create(:club_membership, user: manager, club: club) }

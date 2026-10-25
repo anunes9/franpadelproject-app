@@ -32,17 +32,16 @@ export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
 
-// Editing a Training Plan: adding a Class to a group, and moving (no edit),
-// skipping, unskipping or marking done one Class.
+// A Class of a Training Plan: its page (no edit), moving it (no edit), and
+// skipping, unskipping or marking it done. Adding a Class goes to its group.
 export type ClassEdit = 'skip' | 'unskip' | 'done' | 'undone'
 export const classGroupClassesPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/classes`
-export const classEditPath = (classId: string, edit?: ClassEdit) =>
+export const classPath = (classId: string, edit?: ClassEdit) =>
   edit ? `/dashboard/classes/${classId}/${edit}` : `/dashboard/classes/${classId}`
 
-// A Class of a Training Plan, and the Exercises its Coach picks for it.
-export const classPagePath = (classId: string) => `/dashboard/classes/${classId}`
+// The Exercises a Coach picks for a Class.
 export const classExercisePath = (classId: string, exerciseRef: string) =>
-  `${classPagePath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`
+  `${classPath(classId)}/exercises/${encodeURIComponent(exerciseRef)}`
 
 // An Exercise of the library.
 export const exercisePath = (exerciseRef: string) => `/dashboard/exercises/${encodeURIComponent(exerciseRef)}`

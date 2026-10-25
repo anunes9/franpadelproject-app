@@ -418,6 +418,8 @@ export const en = {
         module: 'Choose a module of this group’s course.',
         crossesMidnight: 'A class must end by midnight. Choose an earlier start time.',
         clash: 'It would overlap in time with another class of the coach or of a player on {{dates}}.',
+        doneSkipped: 'A skipped class cannot be marked done. Unskip it first.',
+        skippedDone: 'A done class cannot be skipped. Mark it not done first.',
       },
     },
   },

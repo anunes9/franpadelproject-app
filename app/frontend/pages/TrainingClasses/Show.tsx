@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange } from '@/lib/classGroups'
 import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, Eyebrow, FieldError, ListCard, ListRow, Pill } from '../../components/ui'
+import { BackLink, Detail, Eyebrow, FieldError, ListCard, ListRow, Pill } from '../../components/ui'
 import type { ClassExercise, ClassGroup, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
@@ -18,15 +18,6 @@ interface Props {
 
 const ROW_ACTION =
   '-my-2 flex min-h-11 shrink-0 items-center text-meta font-semibold disabled:opacity-60 disabled:cursor-default'
-
-function Detail({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="text-meta text-muted">{label}</dt>
-      <dd className="text-sm font-semibold text-ink">{children}</dd>
-    </div>
-  )
-}
 
 // An Exercise's title linking to its library page, with its category and duration.
 function ExerciseDetails({ exercise }: { exercise: ClassExercise }) {

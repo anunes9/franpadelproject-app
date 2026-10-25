@@ -2,9 +2,9 @@ import { router, useForm, usePage } from '@inertiajs/react'
 import { type FormEvent, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
-import { type ClassEdit, classEditPath, classGroupClassesPath } from '@/lib/paths'
+import { type ClassEdit, classGroupClassesPath, classPath } from '@/lib/paths'
 import type { ModuleOption, TrainingClass } from '../types/dashboard-data'
-import { buttonClass, chipClass, FieldError, INPUT_CLASS, Pill } from './ui'
+import { buttonClass, chipClass, FieldError, INPUT_CLASS, LABEL_CLASS, Pill } from './ui'
 
 // Editing a Training Plan on the group's page: each Class's row actions, and
 // the form that adds a Class. The owning Coach and the Club Managers of the
@@ -21,7 +21,6 @@ interface RefusalProps {
 }
 
 const NEW_CLASS = 'new'
-const LABEL = 'flex flex-col gap-1 text-meta font-medium text-ink'
 const EDIT_OPTIONS = { preserveScroll: true, preserveState: 'errors' } as const
 
 // The errors and clashing dates of the last refused edit, if it was `target`'s.
@@ -58,6 +57,8 @@ function Refusal({ target }: { target: string }) {
           other_course: t('classGroups.planEditing.errors.module'),
         }}
       />
+      <FieldError errors={errors} field="done" copy={{ skipped: t('classGroups.planEditing.errors.doneSkipped') }} />
+      <FieldError errors={errors} field="skipped" copy={{ done: t('classGroups.planEditing.errors.skippedDone') }} />
       <FieldError errors={errors} field="base" copy={{ clash: t('classGroups.planEditing.errors.clash', { dates }) }} />
     </>
   )
@@ -74,12 +75,12 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
 
   function edit(action: ClassEdit) {
     setEditing(true)
-    router.patch(classEditPath(trainingClass.id, action), {}, { ...EDIT_OPTIONS, onFinish: () => setEditing(false) })
+    router.patch(classPath(trainingClass.id, action), {}, { ...EDIT_OPTIONS, onFinish: () => setEditing(false) })
   }
 
   function move(event: FormEvent) {
     event.preventDefault()
-    form.patch(classEditPath(trainingClass.id), { ...EDIT_OPTIONS, onSuccess: () => setMoving(false) })
+    form.patch(classPath(trainingClass.id), { ...EDIT_OPTIONS, onSuccess: () => setMoving(false) })
   }
 
   return (
@@ -118,7 +119,7 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
           aria-label={t('classGroups.planEditing.moveTitle')}
           className="flex w-44 flex-col gap-2"
         >
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.planEditing.date')}
             <input
               type="date"
@@ -127,7 +128,7 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
               className={INPUT_CLASS}
             />
           </label>
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.planEditing.startTime')}
             <input
               type="time"
@@ -181,7 +182,7 @@ export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: st
         className="flex flex-col gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card"
       >
         <div className="grid gap-4 sm:grid-cols-3">
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.planEditing.date')}
             <input
               type="date"
@@ -190,7 +191,7 @@ export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: st
               className={`${INPUT_CLASS} min-h-11`}
             />
           </label>
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.planEditing.startTime')}
             <input
               type="time"
@@ -200,7 +201,7 @@ export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: st
               className={`${INPUT_CLASS} min-h-11`}
             />
           </label>
-          <label className={LABEL}>
+          <label className={LABEL_CLASS}>
             {t('classGroups.planEditing.module')}
             <select
               value={form.data.course_module_id}

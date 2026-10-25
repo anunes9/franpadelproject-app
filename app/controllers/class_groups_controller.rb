@@ -47,9 +47,7 @@ class ClassGroupsController < DashboardController
   # and which edit it was.
   def plan_editing_props(group)
     {
-      moduleOptions: CourseModule.teaching_for(group.level).map do |course_module|
-        { id: course_module.id, number: course_module.position, title: course_module.title }
-      end,
+      moduleOptions: group.course_modules.map(&:option_json),
       clashDates: flash[:clash_dates] || [],
       refusedEdit: flash[:refused_edit]
     }

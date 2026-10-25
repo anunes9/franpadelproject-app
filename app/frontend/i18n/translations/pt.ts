@@ -423,6 +423,8 @@ export const pt = {
         module: 'Escolha um mesociclo do curso deste grupo.',
         crossesMidnight: 'Uma aula tem de terminar até à meia-noite. Escolha uma hora de início mais cedo.',
         clash: 'Sobrepõe-se no tempo a outra aula do treinador ou de um jogador em {{dates}}.',
+        doneSkipped: 'Uma aula saltada não pode ser marcada como feita. Reponha-a primeiro.',
+        skippedDone: 'Uma aula feita não pode ser saltada. Marque-a primeiro como não feita.',
       },
     },
   },
