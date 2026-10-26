@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { clubBreakPeriodsPath, clubPath, clubPlayersPath, newClubCoachInvitationPath } from '@/lib/paths'
 import { ClassGroupRow } from '../../components/ClassGroupRow'
+import { CoachCourseProgress } from '../../components/CoachCourseProgress'
 import { RemoveCoach } from '../../components/CoachRemoval'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
@@ -110,9 +111,10 @@ function Show() {
         >
           {coaches.map((coach) => (
             <ListRow key={coach.id}>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold text-ink">{coach.name}</div>
                 <div className="truncate text-meta text-muted">{coach.email}</div>
+                {coach.courseProgress && <CoachCourseProgress progress={coach.courseProgress} />}
               </div>
               <RemoveCoach clubId={club.id} coach={coach} />
             </ListRow>

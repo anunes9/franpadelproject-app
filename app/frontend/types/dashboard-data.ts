@@ -77,6 +77,22 @@ export interface ClubCoach {
   id: string
   name: string
   email: string
+  // Absent where only the Coach's identity is needed.
+  courseProgress?: CoachCourseProgress
+}
+
+// One Course of a Coach's progress, the same numbers their Course home shows.
+// A Planned Course has no Modules: modulesTotal is 0.
+export interface CourseProgressEntry {
+  level: 'beginner' | 'intermediate' | 'advanced'
+  modulesDone: number
+  modulesTotal: number
+  progress: number
+}
+
+export interface CoachCourseProgress {
+  courses: CourseProgressEntry[]
+  exercisesDone: number
 }
 
 // A Coach invitation of a Club that is still waiting to be accepted.

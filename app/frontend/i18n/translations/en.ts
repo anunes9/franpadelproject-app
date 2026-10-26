@@ -225,6 +225,9 @@ export const en = {
       players: 'Players',
       playersEmpty: 'No players in this club yet.',
       managePlayers: 'Manage players',
+      courseProgress: 'Course progress',
+      courseModules: '{{done}}/{{total}} modules',
+      exercisesDone: 'Exercises completed: {{count}}',
     },
     coachRemoval: {
       remove: 'Remove',

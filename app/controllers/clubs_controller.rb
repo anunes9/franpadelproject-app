@@ -11,9 +11,15 @@ class ClubsController < DashboardController
   def self.overview_props(club)
     return { club: nil, coaches: [], classGroups: [], players: [] } unless club
 
+    coaches = club.coaches.order(:name).to_a
+    # Each Coach's Course progress, the same numbers their Course home shows.
+    progress = CourseModule.progress_for(coaches)
+
     {
       club: club.summary_json,
-      coaches: club.coaches.order(:name).map { |coach| { id: coach.id, name: coach.name, email: coach.email } },
+      coaches: coaches.map do |coach|
+        { id: coach.id, name: coach.name, email: coach.email, courseProgress: progress[coach.id] }
+      end,
       classGroups: ClassGroup.of_clubs(club).with_finished.includes(:coach, :players)
                              .order("users.name", :created_at).map(&:list_json),
       players: club.players.alphabetical.map(&:players_json)
