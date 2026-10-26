@@ -83,6 +83,22 @@ export const en = {
       noModules: 'There are no modules yet.',
       modulesEyebrow: 'Modules',
       thisWeekEyebrow: 'This week',
+      coachHeading: 'Your day',
+      courseProgressTitle: 'Your Course progress',
+      today: {
+        title: 'Today',
+        empty: 'No classes today.',
+        emptyLink: 'See your class groups',
+        assessment: 'Assessment',
+        assessmentNote: 'Assessment class: the last class of this module, to assess each player on its concepts.',
+        done: 'Done',
+      },
+      myGroups: {
+        title: 'My groups',
+        allGroups: 'All groups',
+        empty: 'You have no current class groups.',
+        create: 'Create a group',
+      },
     },
   },
   courses: {
@@ -213,6 +229,9 @@ export const en = {
       players: 'Players',
       playersEmpty: 'No players in this club yet.',
       managePlayers: 'Manage players',
+      courseProgress: 'Course progress',
+      courseModules: '{{done}}/{{total}} modules',
+      exercisesDone: 'Exercises completed: {{count}}',
     },
     coachRemoval: {
       remove: 'Remove',

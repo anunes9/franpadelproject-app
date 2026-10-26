@@ -3,9 +3,21 @@ import type { ReactNode } from 'react'
 import { ModuleCard } from '@/components/ui/ModuleCard'
 import type { TranslationKey } from '@/i18n/translations'
 import { useTranslation } from '@/i18n/useTranslation'
+import { formatTimeRange } from '@/lib/classGroups'
+import { classGroupsPath, classPath, newClassGroupPath } from '@/lib/paths'
+import { ClassGroupRow } from '../../components/ClassGroupRow'
 import { AppShell } from '../../components/shell'
-import { ArrowBadge, ProgressBar, Tile } from '../../components/ui'
-import type { DashboardUser, Module, ModuleStatus } from '../../types/dashboard-data'
+import {
+  ArrowBadge,
+  buttonClass,
+  ListCard,
+  ListRow,
+  Pill,
+  ProgressBar,
+  SectionHeading,
+  Tile,
+} from '../../components/ui'
+import type { ClassGroupListItem, DashboardUser, Module, ModuleStatus, TodayClass } from '../../types/dashboard-data'
 
 interface CourseStats {
   progress: number
@@ -20,6 +32,10 @@ interface Props {
   courseStats: CourseStats
   modules: Module[]
   dashboardUser: DashboardUser
+  // A Coach's only: today's Classes (in Lisbon) by start time, skipped ones
+  // left out, and their current Class Groups.
+  todayClasses?: TodayClass[]
+  classGroups?: ClassGroupListItem[]
 }
 
 const STATUS_LABEL_KEY: Record<ModuleStatus, TranslationKey> = {
@@ -39,24 +55,104 @@ function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name
 }
 
-function SectionTitle({ children, href, linkLabel }: { children: ReactNode; href: string; linkLabel: string }) {
+// A section title's link to the full list, beside the title.
+function SectionLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <div className="flex items-center justify-between">
-      <h2 className="text-lg font-extrabold tracking-[-0.01em] text-ink">{children}</h2>
-      <Link href={href} className="flex min-h-11 items-center text-meta font-semibold text-muted-strong">
-        {linkLabel}
-      </Link>
-    </div>
+    <Link href={href} className="flex min-h-11 items-center text-meta font-semibold text-muted-strong">
+      {children}
+    </Link>
+  )
+}
+
+// Today's Classes of the Coach, each linking to its Class page.
+function TodaySection({ classes }: { classes: TodayClass[] }) {
+  const { t, tn } = useTranslation()
+
+  return (
+    <section className="flex flex-col gap-3" aria-labelledby="today-title">
+      <SectionHeading id="today-title" title={t('dashboard.home.today.title')} />
+      <ListCard
+        count={classes.length}
+        empty={t('dashboard.home.today.empty')}
+        emptyAction={
+          <Link
+            href={classGroupsPath}
+            className="text-meta font-semibold text-teal-deep underline-offset-2 hover:underline"
+          >
+            {t('dashboard.home.today.emptyLink')}
+          </Link>
+        }
+      >
+        {classes.map((trainingClass) => (
+          <ListRow key={trainingClass.id}>
+            <Link
+              href={classPath(trainingClass.id)}
+              className="-my-3.5 flex min-h-11 min-w-0 flex-1 flex-col justify-center gap-0.5 py-3.5 hover:text-teal-deep"
+            >
+              <span className="font-dash-mono text-sm font-semibold text-ink">
+                {formatTimeRange(trainingClass.startTime, trainingClass.duration)}
+              </span>
+              <span className="text-meta text-muted">
+                {t(`players.levelOption.${trainingClass.group.level}`)} ·{' '}
+                {tn('classGroups.playersCount', trainingClass.group.playerCount)}
+              </span>
+              <span className="truncate text-meta text-muted">
+                {trainingClass.module.title}
+              </span>
+              {trainingClass.kind === 'assessment' && (
+                <span className="text-meta text-muted-strong">{t('dashboard.home.today.assessmentNote')}</span>
+              )}
+            </Link>
+            {(trainingClass.kind === 'assessment' || trainingClass.done) && (
+              <div className="flex shrink-0 flex-col items-end gap-1.5">
+                {trainingClass.kind === 'assessment' && <Pill text={t('dashboard.home.today.assessment')} />}
+                {trainingClass.done && <Pill text={t('dashboard.home.today.done')} variant="full" />}
+              </div>
+            )}
+          </ListRow>
+        ))}
+      </ListCard>
+    </section>
+  )
+}
+
+// The Coach's current Class Groups; finished ones are on the full list.
+function MyGroupsSection({ groups }: { groups: ClassGroupListItem[] }) {
+  const { t } = useTranslation()
+
+  return (
+    <section className="flex flex-col gap-3" aria-labelledby="my-groups-title">
+      <SectionHeading
+        id="my-groups-title"
+        title={t('dashboard.home.myGroups.title')}
+        action={<SectionLink href={classGroupsPath}>{t('dashboard.home.myGroups.allGroups')}</SectionLink>}
+      />
+      <ListCard
+        count={groups.length}
+        empty={t('dashboard.home.myGroups.empty')}
+        emptyAction={
+          <Link href={newClassGroupPath} className={buttonClass('primary')}>
+            {t('dashboard.home.myGroups.create')}
+          </Link>
+        }
+      >
+        {groups.map((group) => (
+          <ClassGroupRow key={group.id} group={group} />
+        ))}
+      </ListCard>
+    </section>
   )
 }
 
 function Home() {
-  const { courseStats, modules, dashboardUser } = usePage<Props>().props
+  const { courseStats, modules, dashboardUser, todayClasses, classGroups } = usePage<Props>().props
   const { t } = useTranslation()
   // The Module to continue: one already In Progress, else the next Available
   // one. None when every Module is completed, or there are no Modules at all.
   const current = modules.find((m) => m.status === 'in_progress') ?? modules.find((m) => m.status === 'available')
   const today = new Date()
+  // A Coach's home starts from their day, then their own Course progress.
+  const coachHome = todayClasses && classGroups ? { todayClasses, classGroups } : null
 
   return (
     <div className="px-5 pt-5 lg:px-10 lg:pt-9">
@@ -66,11 +162,19 @@ function Home() {
             {t(greetingKey(today.getHours()))} {firstName(dashboardUser.name)}
           </p>
           <h1 className="text-balance text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink lg:text-[38px]">
-            {t('dashboard.home.heading')}
+            {t(coachHome ? 'dashboard.home.coachHeading' : 'dashboard.home.heading')}
           </h1>
         </div>
 
+        {coachHome && (
+          <>
+            <TodaySection classes={coachHome.todayClasses} />
+            <MyGroupsSection groups={coachHome.classGroups} />
+          </>
+        )}
+
         <div className="flex flex-col gap-5">
+          {coachHome && <SectionHeading title={t('dashboard.home.courseProgressTitle')} />}
           {/* Continue tile */}
           {current ? (
             <Tile tone="teal" href={`/dashboard/courses/${current.id}`} className="flex flex-col gap-4">
@@ -142,9 +246,10 @@ function Home() {
 
           {/* Modules */}
           <div className="flex flex-col gap-3">
-            <SectionTitle href="/dashboard/courses" linkLabel={t('common.viewAll')}>
-              {t('dashboard.home.modulesEyebrow')}
-            </SectionTitle>
+            <SectionHeading
+              title={t('dashboard.home.modulesEyebrow')}
+              action={<SectionLink href="/dashboard/courses">{t('common.viewAll')}</SectionLink>}
+            />
             {modules.slice(0, 5).map((m) => (
               <ModuleCard
                 key={m.id}

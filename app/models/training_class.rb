@@ -76,6 +76,29 @@ class TrainingClass < ApplicationRecord
     end
   end
 
+  # The Classes `coach` teaches on `date`, skipped ones left out, by start
+  # time: the Coach home's "Today". Loaded with their group and Module in one
+  # query, and the group's Players in one more, for #home_json.
+  def self.taught_on(date, coach:)
+    eager_load(:course_module, :class_group)
+      .preload(class_group: :class_group_players)
+      .where(date: date, skipped: false, class_groups: { coach_id: coach.id })
+      .order(:start_time, :id)
+  end
+
+  # The Class as the Coach home lists it, with its group. Load it .taught_on.
+  def home_json
+    {
+      id: id,
+      startTime: start_time.strftime("%H:%M"),
+      duration: duration,
+      kind: kind,
+      done: done,
+      module: module_json,
+      group: { id: class_group.id, level: class_group.level, playerCount: class_group.class_group_players.size }
+    }
+  end
+
   # The Class as the group's plan lists it.
   def plan_json
     {
@@ -86,12 +109,16 @@ class TrainingClass < ApplicationRecord
       done: done,
       skipped: skipped,
       coachAdded: coach_added,
-      module: { slug: course_module.slug, number: course_module.position, title: course_module.title },
+      module: module_json,
       exercises: exercises.map { |exercise| { ref: exercise.ref, title: exercise.title } }
     }
   end
 
   private
+
+  def module_json
+    { slug: course_module.slug, number: course_module.position, title: course_module.title }
+  end
 
   # A Class ends on its own day, so the clash rule compares same-date Classes.
   def ends_by_midnight

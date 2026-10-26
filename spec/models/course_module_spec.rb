@@ -269,4 +269,67 @@ RSpec.describe CourseModule, type: :model do
       )
     end
   end
+
+  describe ".progress_for" do
+    let(:ana) { create(:user, name: "Ana") }
+    let(:bruno) { create(:user, name: "Bruno") }
+
+    it "gives each user's Module Completions and progress per Course, with a Planned Course empty" do
+      b1 = create(:course_module, level: :beginner, position: 1)
+      b2 = create(:course_module, level: :beginner, position: 2)
+      create(:course_module, level: :beginner, position: 3)
+      i1 = create(:course_module, level: :intermediate, position: 1)
+      create(:user_module_progress, user: ana, course_module: b1, status: :done, progress: 100)
+      exercise = create(:exercise, course_module: b2)
+      create(:exercise, course_module: b2)
+      create(:exercise_completion, user: ana, exercise: exercise)
+      create(:user_module_progress, user: bruno, course_module: i1, status: :done, progress: 100)
+
+      progress = CourseModule.progress_for([ana, bruno])
+
+      expect(progress[ana.id]).to eq(
+        courses: [
+          { level: "beginner", modulesDone: 1, modulesTotal: 3, progress: 50 },
+          { level: "intermediate", modulesDone: 0, modulesTotal: 1, progress: 0 },
+          { level: "advanced", modulesDone: 0, modulesTotal: 0, progress: 0 }
+        ],
+        exercisesDone: 1
+      )
+      expect(progress[bruno.id][:courses].map { |c| c[:modulesDone] }).to eq([0, 1, 0])
+      expect(progress[bruno.id][:exercisesDone]).to eq(0)
+    end
+
+    it "gives each user the same numbers as asking for that user alone" do
+      first = create(:course_module, position: 1)
+      second = create(:course_module, position: 2)
+      create(:user_module_progress, user: ana, course_module: first, status: :done, progress: 100)
+      create(:exercise_completion, user: bruno, exercise: create(:exercise, course_module: second))
+
+      batch = CourseModule.progress_for([ana, bruno])
+
+      [ana, bruno].each do |user|
+        expect(batch[user.id]).to eq(CourseModule.progress_for([user])[user.id])
+        stats = CourseModule.dashboard_stats_for(user)
+        expect(batch[user.id][:courses].sum { |c| c[:modulesDone] }).to eq(stats[:modulesDone])
+        expect(batch[user.id][:exercisesDone]).to eq(stats[:exercisesDone])
+      end
+    end
+
+    it "takes no more queries for two users than for one" do
+      create(:course_module, position: 1)
+      create(:exercise_completion, user: ana, exercise: create(:exercise))
+      count_queries = lambda do |users|
+        n = 0
+        counter = ->(*, payload) { n += 1 unless payload[:name] == "SCHEMA" || payload[:cached] }
+        ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+          CourseModule.progress_for(users)
+        end
+        n
+      end
+
+      one = count_queries.call([ana])
+
+      expect(count_queries.call([ana, bruno])).to eq(one)
+    end
+  end
 end

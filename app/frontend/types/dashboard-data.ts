@@ -77,6 +77,22 @@ export interface ClubCoach {
   id: string
   name: string
   email: string
+  // Absent where only the Coach's identity is needed.
+  courseProgress?: CoachCourseProgress
+}
+
+// One Course of a Coach's progress, the same numbers their Course home shows.
+// A Planned Course has no Modules: modulesTotal is 0.
+export interface CourseProgressEntry {
+  level: Level
+  modulesDone: number
+  modulesTotal: number
+  progress: number
+}
+
+export interface CoachCourseProgress {
+  courses: CourseProgressEntry[]
+  exercisesDone: number
 }
 
 // A Coach invitation of a Club that is still waiting to be accepted.
@@ -88,14 +104,15 @@ export interface PendingCoachInvitation {
 
 export type PlayerPosition = 'left' | 'right' | 'both'
 export type PlayerHand = 'left' | 'right'
-export type PlayerLevel = 'beginner' | 'intermediate' | 'advanced'
+// A Course Level, shared by Players, Class Groups and Courses.
+export type Level = 'beginner' | 'intermediate' | 'advanced'
 
 export interface Player {
   id: string
   name: string
   position: PlayerPosition
   hand: PlayerHand
-  level: PlayerLevel
+  level: Level
 }
 
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
@@ -104,7 +121,7 @@ export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
 // duration is in minutes (60 or 90).
 export interface ClassGroupListItem {
   id: string
-  level: PlayerLevel
+  level: Level
   weekdays: Weekday[]
   startTime: string
   duration: number
@@ -114,15 +131,27 @@ export interface ClassGroupListItem {
   finished: boolean
 }
 
+// A Class of today on the Coach home, with its group.
+export interface TodayClass {
+  id: string
+  startTime: string
+  // Minutes: as long as its group's Classes.
+  duration: number
+  kind: 'regular' | 'assessment'
+  done: boolean
+  module: { slug: string; number: number; title: string }
+  group: { id: string; level: Level; playerCount: number }
+}
+
 // A Class Group as a link to it.
 export interface ClassGroupLink {
   id: string
-  level: PlayerLevel
+  level: Level
 }
 
 export interface ClassGroup {
   id: string
-  level: PlayerLevel
+  level: Level
   // ISO date (YYYY-MM-DD).
   startsOn: string
   cadence: number
@@ -143,7 +172,7 @@ export interface ClassGroup {
 // next Level: that Level and the group's Players still in the Coach's Club.
 export interface ClassGroupContinuation {
   from: ClassGroupLink
-  level: PlayerLevel
+  level: Level
   playerIds: string[]
 }
 

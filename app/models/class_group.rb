@@ -57,11 +57,14 @@ class ClassGroup < ApplicationRecord
   # The groups of a Club: those whose Coach belongs to it.
   scope :of_clubs, ->(clubs) { joins(:coach).where(users: { club_id: clubs }) }
 
+  # The groups a Coach teaches.
+  scope :owned_by, ->(coach) { where(coach: coach) }
+
   # The groups a user may see: a Coach's own, or every group of a Club
   # Manager's linked Clubs. Admins work through the admin screens instead.
   def self.visible_to(user)
     if user.coach?
-      where(coach: user)
+      owned_by(user)
     elsif user.club_manager?
       of_clubs(user.managed_clubs.select(:id))
     else

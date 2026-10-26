@@ -85,6 +85,23 @@ export const pt = {
       noModules: 'Ainda não há mesociclos.',
       modulesEyebrow: 'Mesociclos',
       thisWeekEyebrow: 'Esta semana',
+      coachHeading: 'O seu dia',
+      courseProgressTitle: 'O seu progresso nos cursos',
+      today: {
+        title: 'Hoje',
+        empty: 'Sem aulas hoje.',
+        emptyLink: 'Ver os seus grupos de aulas',
+        assessment: 'Avaliação',
+        assessmentNote:
+          'Aula de avaliação: a última aula deste mesociclo, para avaliar cada jogador nos seus conceitos.',
+        done: 'Feita',
+      },
+      myGroups: {
+        title: 'Os meus grupos',
+        allGroups: 'Todos os grupos',
+        empty: 'Não tem grupos de aulas em curso.',
+        create: 'Criar um grupo',
+      },
     },
   },
   courses: {
@@ -216,6 +233,9 @@ export const pt = {
       players: 'Jogadores',
       playersEmpty: 'Ainda não há jogadores neste clube.',
       managePlayers: 'Gerir jogadores',
+      courseProgress: 'Progresso nos cursos',
+      courseModules: '{{done}}/{{total}} mesociclos',
+      exercisesDone: 'Exercícios concluídos: {{count}}',
     },
     coachRemoval: {
       remove: 'Remover',
