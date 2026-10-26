@@ -84,16 +84,16 @@ RSpec.describe "Regenerating a Training Plan", type: :request do
       expect(generated.map { |c| c["kind"] }).to eq(%w[regular regular regular assessment])
     end
 
-    it "counts the remaining Classes from the group's current duration" do
+    it "keeps the weeks per Module when the Class duration changes" do
       mark_done(*classes_of(group).first(8)) # all of Serve, and Volley on 20 and 27 Oct
-      group.update!(duration: 90) # 90-minute Classes: 4 weeks per Module
+      group.update!(duration: 90) # still once a week: 6 weeks per Module
       sign_in coach
 
       travel_to(Date.new(2026, 11, 4)) { regenerate(group) }
 
       generated = plan_of(group).drop(8)
-      expect(generated.map { |c| c["date"] }).to eq(weekly(Date.new(2026, 11, 10), 2))
-      expect(generated.map { |c| c["kind"] }).to eq(%w[regular assessment])
+      expect(generated.map { |c| c["date"] }).to eq(weekly(Date.new(2026, 11, 10), 4))
+      expect(generated.map { |c| c["kind"] }).to eq(%w[regular regular regular assessment])
     end
 
     it "starts after the last done Class when that is later than today" do

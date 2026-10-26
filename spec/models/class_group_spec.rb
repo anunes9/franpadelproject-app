@@ -22,10 +22,10 @@ RSpec.describe ClassGroup do
   end
 
   describe "#create_with_plan" do
-    it "spans the Module over weeks set by the Class duration, whatever the cadence" do
+    it "spans the Module over weeks set by the cadence, whatever the Class duration" do
       expect(planned_group.training_classes.size).to eq(6)
-      expect(planned_group(duration: 90).training_classes.size).to eq(4)
-      expect(planned_group(cadence: 2, weekdays: %w[tuesday thursday]).training_classes.size).to eq(12)
+      expect(planned_group(duration: 90).training_classes.size).to eq(6)
+      expect(planned_group(cadence: 2, weekdays: %w[tuesday thursday]).training_classes.size).to eq(8)
       expect(planned_group(cadence: 2, weekdays: %w[tuesday thursday], duration: 90).training_classes.size).to eq(8)
     end
   end

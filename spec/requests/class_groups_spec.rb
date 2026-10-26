@@ -38,7 +38,7 @@ RSpec.describe "Class Groups", type: :request do
       follow_redirect!
       expect(response.body).to include(%q("component":"ClassGroups/Show"))
       plan = page_props["classes"]
-      # 60-minute Classes: six weeks per Module, the sixth an Assessment Class.
+      # Once a week: six weeks per Module, the sixth an Assessment Class.
       expect(plan.size).to eq(12)
       expect(plan.first).to include("date" => "2026-09-08", "startTime" => "18:00", "kind" => "regular")
       expect(plan.first["module"]).to eq("slug" => serve.slug, "number" => 1, "title" => "Serve",
@@ -52,7 +52,7 @@ RSpec.describe "Class Groups", type: :request do
       )
     end
 
-    it "generates four weeks per Module for 90-minute Classes, skipping the Club's Break Periods" do
+    it "generates four weeks per Module at twice a week, skipping the Club's Break Periods" do
       create(:break_period, club: club, starts_on: Date.new(2026, 9, 14), ends_on: Date.new(2026, 9, 20))
       sign_in coach
 

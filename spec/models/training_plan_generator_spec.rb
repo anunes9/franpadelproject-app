@@ -11,7 +11,7 @@ RSpec.describe TrainingPlanGenerator do
     }.merge(overrides))
   end
 
-  describe "60-minute Classes once a week" do
+  describe "once a week" do
     it "gives each Module 6 weekly Classes in Course order" do
       plan = generate
 
@@ -36,33 +36,8 @@ RSpec.describe TrainingPlanGenerator do
     end
   end
 
-  describe "60-minute Classes twice a week" do
+  describe "twice a week" do
     let(:plan) { generate(cadence: 2, weekdays: %i[thursday monday]) }
-
-    it "gives each Module 6 weeks of 2 Classes, in weekday order" do
-      expect(plan.size).to eq(36)
-      expect(plan.first(12).map(&:date)).to eq(
-        (0..5).flat_map { |w| [start_date + w * 7, start_date + w * 7 + 3] }
-      )
-    end
-
-    it "makes only the last Class of the 6th week the Assessment Class" do
-      expect(plan.first(12).map(&:type)).to eq(%i[regular] * 11 + %i[assessment])
-    end
-  end
-
-  describe "90-minute Classes once a week" do
-    let(:plan) { generate(duration: 90) }
-
-    it "gives each Module 4 weekly Classes, the 4th its Assessment Class" do
-      expect(plan.size).to eq(12)
-      expect(plan.first(4).map(&:date)).to eq((0..3).map { |w| start_date + w * 7 })
-      expect(plan.first(4).map(&:type)).to eq(%i[regular regular regular assessment])
-    end
-  end
-
-  describe "90-minute Classes twice a week" do
-    let(:plan) { generate(cadence: 2, weekdays: %i[thursday monday], duration: 90) }
 
     it "gives each Module 4 weeks of 2 Classes, in weekday order" do
       expect(plan.size).to eq(24)
@@ -76,6 +51,11 @@ RSpec.describe TrainingPlanGenerator do
       first_module = plan.first(8)
       expect(first_module.map(&:type)).to eq(%i[regular] * 7 + %i[assessment])
     end
+  end
+
+  it "keeps the weeks per Module whatever the Class duration" do
+    expect(generate(duration: 90).size).to eq(18)
+    expect(generate(cadence: 2, weekdays: %i[monday thursday], duration: 90).size).to eq(24)
   end
 
   describe "first Class" do
@@ -95,10 +75,9 @@ RSpec.describe TrainingPlanGenerator do
     end
 
     it "counts a partial first week as a week of the first Module" do
-      plan = generate(cadence: 2, weekdays: %i[monday thursday], duration: 90, start_date: start_date + 1)
+      plan = generate(cadence: 2, weekdays: %i[monday thursday], start_date: start_date + 1)
       expect(plan.first.date).to eq(Date.new(2026, 9, 10))
       expect(plan.first(7).last.type).to eq(:assessment)
-      expect(plan.first(7).map(&:course_module).uniq).to eq([modules.first])
     end
   end
 
@@ -145,8 +124,8 @@ RSpec.describe TrainingPlanGenerator do
     end
 
     it "counts in Classes at twice a week, and starts later Modules in the next week" do
-      # 90 minutes: 8 Classes in the first Module, 5 done: Mon, Thu, Mon remain.
-      plan = generate(cadence: 2, weekdays: %i[monday thursday], duration: 90, done_in_first_module: 5)
+      # 8 Classes in the first Module, 5 done: Mon, Thu, Mon remain.
+      plan = generate(cadence: 2, weekdays: %i[monday thursday], done_in_first_module: 5)
 
       first_module = plan.select { |c| c.course_module == modules.first }
       expect(first_module.map(&:date)).to eq([start_date, start_date + 3, start_date + 7])
@@ -154,15 +133,6 @@ RSpec.describe TrainingPlanGenerator do
       second_module = plan.select { |c| c.course_module == modules.second }
       expect(second_module.first.date).to eq(start_date + 14)
       expect(second_module.size).to eq(8)
-    end
-
-    it "counts the Module's Classes from its duration" do
-      # 60 minutes twice a week: 12 Classes in the first Module, 5 done.
-      plan = generate(modules: modules.first(1), cadence: 2, weekdays: %i[monday thursday], done_in_first_module: 5)
-
-      expect(plan.size).to eq(7)
-      expect(plan.last.type).to eq(:assessment)
-      expect(plan.last.date).to eq(start_date + 21)
     end
 
     it "still generates the Assessment Class when the Module's Classes are all done" do

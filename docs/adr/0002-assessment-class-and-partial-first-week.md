@@ -9,7 +9,3 @@ The parent spec (#6) says "Twice a week: 4 weeks per Module, the 4th being the a
 
 - **Both Classes of week 4 as assessments**: rejected. An Assessment Class is where each Player's evaluation of the Module will be recorded. One per Module keeps that to a single place.
 - **Not counting a partial first week**: rejected. The Module would gain an extra Class, and the plan would run longer than the methodology's 4 or 6 weeks per Module.
-
-## Later change
-
-The span of a Module now follows the Class duration rather than the cadence: 6 weeks for 1-hour Classes and 4 weeks for 1h30 Classes (docs/adr/0008). Both decisions here still hold. The Assessment Class is the last Class of the Module's last week, whichever week that is, and a partial first week still counts as week 1.
