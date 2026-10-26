@@ -114,6 +114,18 @@ export interface ClassGroupListItem {
   finished: boolean
 }
 
+// A Class of today on the Coach home, with its group.
+export interface TodayClass {
+  id: string
+  startTime: string
+  // Minutes: as long as its group's Classes.
+  duration: number
+  kind: 'regular' | 'assessment'
+  done: boolean
+  module: { slug: string; number: number; title: string }
+  group: { id: string; level: PlayerLevel; playerCount: number }
+}
+
 // A Class Group as a link to it.
 export interface ClassGroupLink {
   id: string

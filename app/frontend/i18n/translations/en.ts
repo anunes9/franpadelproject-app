@@ -83,6 +83,18 @@ export const en = {
       noModules: 'There are no modules yet.',
       modulesEyebrow: 'Modules',
       thisWeekEyebrow: 'This week',
+      coachHeading: 'Your day',
+      today: {
+        title: 'Today',
+        empty: 'No classes today.',
+        emptyLink: 'See your class groups',
+      },
+      myGroups: {
+        title: 'My groups',
+        allGroups: 'All groups',
+        empty: 'You have no current class groups.',
+        create: 'Create a group',
+      },
     },
   },
   courses: {

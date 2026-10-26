@@ -85,6 +85,18 @@ export const pt = {
       noModules: 'Ainda não há mesociclos.',
       modulesEyebrow: 'Mesociclos',
       thisWeekEyebrow: 'Esta semana',
+      coachHeading: 'O seu dia',
+      today: {
+        title: 'Hoje',
+        empty: 'Sem aulas hoje.',
+        emptyLink: 'Ver os seus grupos de aulas',
+      },
+      myGroups: {
+        title: 'Os meus grupos',
+        allGroups: 'Todos os grupos',
+        empty: 'Não tem grupos de aulas em curso.',
+        create: 'Criar um grupo',
+      },
     },
   },
   courses: {
