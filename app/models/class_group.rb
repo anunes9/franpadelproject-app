@@ -231,11 +231,13 @@ class ClassGroup < ApplicationRecord
     start_time&.strftime("%H:%M")
   end
 
-  # The group as its page shows it.
+  # The group as its page shows it, with how many Exercises each of its
+  # Classes has (ClassStructure).
   def summary_json
     common_json.merge(
       startsOn: starts_on.iso8601,
       cadence: cadence,
+      exercisesPerClass: ClassStructure.exercises_for(duration),
       club: club.summary_json,
       players: players.sort_by(&:name).map(&:players_json)
     )

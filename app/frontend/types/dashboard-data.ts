@@ -161,6 +161,8 @@ export interface ClassGroup {
   coach: string
   club: ClubSummary
   players: Player[]
+  // How many Exercises each Class has, set by the Class duration.
+  exercisesPerClass: number
   // Every Class done or skipped, at least one done: kept as history.
   finished: boolean
   // On the group's page: the finished group it continues at the next Level,
@@ -191,6 +193,14 @@ export interface TrainingClass {
   module: { slug: string; number: number; title: string; topics: string[] }
   // The Exercises the Coach picked, in the order picked.
   exercises: Array<{ ref: string; title: string }>
+}
+
+// How a Class is spent, by its duration: minutes as ranges, and the game
+// takes the remaining time.
+export interface ClassStructure {
+  warmUp: { min: number; max: number }
+  exercises: { count: number; minutes: number }
+  conditioning: { min: number; max: number }
 }
 
 // A Class as its own page shows it, with its Module's description too.

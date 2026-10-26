@@ -45,7 +45,7 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 28. As a Coach, I want no Classes generated in my Club's Break Periods, so that the plan fits the calendar.
 29. As a Coach, I want the first Class on the first chosen weekday on or after the start date, so that the plan starts when I expect.
 30. As a Coach, I want the plan to end after the last Module's assessment with no fixed season end, so that it fits any start date.
-31. As a Coach, I want each Class to show date, start time, Module with its description and topics, the chosen Exercises and the note for an Assessment Class, so that I know what is planned that day.
+31. As a Coach, I want each Class to show date, start time, Module with its description and topics, the Class Structure for its duration, the chosen Exercises out of how many it calls for, and the note for an Assessment Class, so that I know what is planned that day.
 32. As a Coach, I want to pick the Exercises of each Class from its Module, so that I decide what is taught.
 33. As a Coach, I want to move or skip a Class, so that I can handle holidays and cancellations.
 34. As a Coach, I want to add a Class of my own, for example in spare weeks, so that I can use the time freely.
@@ -77,7 +77,7 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 - **Class.** One dated entry of a Training Plan with a date, start time, duration, Module, optional Exercises chosen by the Coach, a type (regular or assessment), and a done flag. A Class has no per-Class duration; it inherits the group's.
 - **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's Modules in order, the group's cadence, weekdays, time and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
   - Once a week: 6 weeks per Module, the 6th being an Assessment Class. Twice a week: 4 weeks per Module, the 4th being the assessment week.
-  - The Class duration (1h or 1h30) does not change the weeks per Module. It only changes how many Exercises fit in a Class.
+  - The Class duration (1h or 1h30) does not change the weeks per Module. It only sets the Class Structure (`ClassStructure`): 4 Exercises of 8 minutes in a 1h Class and 5 in a 1h30 Class, between a warm-up and conditioning drills, with a game for the remaining time. The count is shown as a guide and is not enforced.
   - The Module's own `duration` text is ignored.
   - The first Class is on the first chosen weekday on or after the start date. Weeks that fall in a Break Period get no Classes and are not counted toward the Module's weeks.
   - The plan ends after the last Module's Assessment Class. There is no season end date.

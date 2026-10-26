@@ -1,16 +1,17 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { formatDate, formatTimeRange } from '@/lib/classGroups'
+import { formatDate, formatDuration, formatTimeRange } from '@/lib/classGroups'
 import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Detail, Eyebrow, FieldError, ListCard, ListRow, Pill, Topic } from '../../components/ui'
-import type { ClassExercise, ClassGroup, TrainingClassDetail } from '../../types/dashboard-data'
+import type { ClassExercise, ClassGroup, ClassStructure, TrainingClassDetail } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
   trainingClass: TrainingClassDetail
   classGroup: ClassGroup
+  classStructure: ClassStructure
   exercises: ClassExercise[]
   availableExercises: ClassExercise[]
   errors: Record<string, unknown>
@@ -38,10 +39,18 @@ function ExerciseDetails({ exercise }: { exercise: ClassExercise }) {
   )
 }
 
-// One Class of a Training Plan: what its Module is about, and where its Coach
-// (or a Club Manager of its Club) picks its Exercises from that Module.
+// "5 min" or "10–15 min".
+function minutesText(t: ReturnType<typeof useTranslation>['t'], range: { min: number; max: number }) {
+  return range.min === range.max
+    ? t('trainingClasses.show.minutes', { min: range.min })
+    : t('trainingClasses.show.minutesRange', range)
+}
+
+// One Class of a Training Plan: what its Module is about, how a Class of its
+// duration is spent, and where its Coach (or a Club Manager of its Club)
+// picks its Exercises from that Module.
 function Show() {
-  const { trainingClass, classGroup, exercises, availableExercises, errors } = usePage<Props>().props
+  const { trainingClass, classGroup, classStructure, exercises, availableExercises, errors } = usePage<Props>().props
   const { t, locale } = useTranslation()
   const [pending, setPending] = useState<string | null>(null)
   const moduleHasExercises = exercises.length + availableExercises.length > 0
@@ -104,13 +113,41 @@ function Show() {
           </div>
         </section>
 
+        <section className="flex flex-col gap-3" aria-labelledby="class-structure-heading">
+          <h2 id="class-structure-heading" className="text-sm font-bold text-ink">
+            {t('trainingClasses.show.structure')}
+          </h2>
+          <dl className="grid grid-cols-2 gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card sm:grid-cols-4">
+            <Detail label={t('trainingClasses.show.warmUp')}>{minutesText(t, classStructure.warmUp)}</Detail>
+            <Detail label={t('trainingClasses.show.structureExercises')}>
+              {t('trainingClasses.show.exercisesTime', {
+                count: classStructure.exercises.count,
+                minutes: classStructure.exercises.minutes,
+                total: classStructure.exercises.count * classStructure.exercises.minutes,
+              })}
+            </Detail>
+            <Detail label={t('trainingClasses.show.conditioning')}>
+              {minutesText(t, classStructure.conditioning)}
+            </Detail>
+            <Detail label={t('trainingClasses.show.game')}>{t('trainingClasses.show.gameTime')}</Detail>
+          </dl>
+        </section>
+
         <section className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <h2 className="text-sm font-bold text-ink">
               {t('trainingClasses.show.exercises')}{' '}
-              <span className="font-dash-mono text-meta font-semibold text-muted">{exercises.length}</span>
+              <span className="font-dash-mono text-meta font-semibold text-muted">
+                {exercises.length}/{classStructure.exercises.count}
+              </span>
             </h2>
-            <p className="text-meta text-muted">{t('trainingClasses.show.exercisesIntro')}</p>
+            <p className="text-meta text-muted">
+              {t('trainingClasses.show.exercisesIntro', {
+                duration: formatDuration(classGroup.duration),
+                count: classStructure.exercises.count,
+                minutes: classStructure.exercises.minutes,
+              })}
+            </p>
           </div>
           <FieldError
             errors={errors ?? {}}

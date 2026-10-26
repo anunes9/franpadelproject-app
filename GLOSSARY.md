@@ -107,12 +107,16 @@ A group of one to eight Players taught by one Coach, tied to one Course through 
 _Avoid_: Class (for the group), team, cohort
 
 **Training Plan**:
-The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Its cadence sets the weeks per Module; the Class duration only changes how many Exercises fit in a Class. Regenerating happens only on request, and keeps completed Classes. It is an intention only.
+The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Its cadence sets the weeks per Module; the Class duration only sets its Class Structure. Regenerating happens only on request, and keeps completed Classes. It is an intention only.
 _Avoid_: Weekly Plan, schedule, calendar
 
 **Class**:
 One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time. A skipped Class stays in the plan but no longer takes up its time.
 _Avoid_: Session, lesson
+
+**Class Structure**:
+How a Class is spent, set by its duration: a warm-up, the Exercises the Coach picks (8 minutes each), conditioning drills, and a game for the remaining time. A 1-hour Class has a 5-minute warm-up, 4 Exercises and 10–15 minutes of conditioning; a 1h30 Class has a 10–15-minute warm-up, 5 Exercises and 20–25 minutes of conditioning.
+_Avoid_: Class plan, lesson plan
 
 **Assessment Class**:
 The last Class of each Module in a Training Plan, in week 6 at once a week and in week 4 at twice a week. It is where each Player's qualitative evaluation of the Module's concepts will be recorded; that evaluation feature is still to be scoped, and is separate from Certification.

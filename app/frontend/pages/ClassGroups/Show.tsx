@@ -129,9 +129,12 @@ function Show() {
                         <span className="text-meta text-muted-strong">{t('classGroups.show.assessmentNote')}</span>
                       )}
                       <span className="truncate text-meta text-muted">
-                        {trainingClass.exercises.length === 0
-                          ? t('classGroups.show.noExercises')
-                          : `${tn('classGroups.show.exercisesCount', trainingClass.exercises.length)}: ${trainingClass.exercises.map((exercise) => exercise.title).join(', ')}`}
+                        {t('classGroups.show.exercisesOf', {
+                          count: trainingClass.exercises.length,
+                          suggested: classGroup.exercisesPerClass,
+                        })}
+                        {trainingClass.exercises.length > 0 &&
+                          ` · ${trainingClass.exercises.map((exercise) => exercise.title).join(', ')}`}
                       </span>
                     </div>
                     {trainingClass.kind === 'assessment' && <Pill text={t('classGroups.show.assessment')} />}

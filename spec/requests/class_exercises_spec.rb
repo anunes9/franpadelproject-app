@@ -39,7 +39,11 @@ RSpec.describe "Exercises of a Class", type: :request do
       expect(page_props["trainingClass"]["module"]).to include(
         "title" => "Serve", "number" => 1, "description" => "Starting the point", "topics" => %w[Grip Toss]
       )
-      expect(page_props["classGroup"]).to include("id" => group.id, "duration" => 60)
+      expect(page_props["classGroup"]).to include("id" => group.id, "duration" => 60, "exercisesPerClass" => 4)
+      expect(page_props["classStructure"]).to eq(
+        "warmUp" => { "min" => 5, "max" => 5 }, "exercises" => { "count" => 4, "minutes" => 8 },
+        "conditioning" => { "min" => 10, "max" => 15 }
+      )
       expect(page_props["exercises"]).to eq([])
       expect(page_props["availableExercises"].map { |e| e["ref"] }).to eq(%w[S-1 S-2])
     end

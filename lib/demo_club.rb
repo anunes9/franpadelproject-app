@@ -70,7 +70,6 @@ class DemoClub
       weeks_ahead: 1, players: [10, 11, 12, 16, 17] }
   ].freeze
 
-  EXERCISES_PER_CLASS = 3
   UPCOMING_CLASSES_WITH_EXERCISES = 2
 
   class Error < StandardError; end
@@ -268,7 +267,8 @@ class DemoClub
     exercises = training_class.course_module.exercises.to_a
     return if exercises.empty?
 
-    exercises.rotate(index * EXERCISES_PER_CLASS).first(EXERCISES_PER_CLASS).each do |exercise|
+    count = ClassStructure.exercises_for(training_class.duration)
+    exercises.rotate(index * count).first(count).each do |exercise|
       training_class.pick_exercise(exercise)
     end
   end

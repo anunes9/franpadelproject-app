@@ -11,9 +11,9 @@
 class TrainingClassesController < DashboardController
   NEW_CLASS = "new".freeze
 
-  # The Class with its Module's description and topics, the Exercises its
-  # Coach picked, and those of its Module still to pick (see
-  # ClassExercisesController).
+  # The Class with its Module's description and topics, how a Class of its
+  # duration is spent (ClassStructure), the Exercises its Coach picked, and
+  # those of its Module still to pick (see ClassExercisesController).
   def show
     training_class = visible_classes.includes(:course_module, :exercises, class_group: %i[coach players])
                                     .find(params[:id])
@@ -22,6 +22,7 @@ class TrainingClassesController < DashboardController
     render inertia: "TrainingClasses/Show", props: {
       trainingClass: training_class.page_json,
       classGroup: training_class.class_group.summary_json,
+      classStructure: ClassStructure.json_for(training_class.duration),
       exercises: chosen.map(&:as_class_json),
       availableExercises: (training_class.course_module.exercises.to_a - chosen).map(&:as_class_json)
     }

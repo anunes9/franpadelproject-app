@@ -74,12 +74,19 @@ From that description the app generates the group's **Training Plan** for the wh
 
 - It walks the Course's seven Modules in order.
 - A Module takes 6 weeks at once a week and 4 weeks at twice a week. The last week is the **Assessment Class**.
-- The Class duration (1 hour or 1h30) never changes the weeks per Module. It only changes how many Exercises fit in a Class.
+- The Class duration (1 hour or 1h30) never changes the weeks per Module. It only sets the **Class Structure**:
+
+  | Part | 1-hour Class | 1h30 Class |
+  | --- | --- | --- |
+  | Warm-up | 5 min | 10–15 min |
+  | Exercises, 8 min each | 4 (32 min) | 5 (40 min) |
+  | Conditioning drills | 10–15 min | 20–25 min |
+  | Game | the remaining time | the remaining time |
 - The first Class falls on the first chosen weekday on or after the start date. No Classes fall in the Club's Break Periods.
 - The plan ends after the last Module's Assessment Class. It has no season end date. At 44 teaching weeks in a year (52 weeks less 2 Christmas, 4 August and 2 Easter weeks) all seven Modules fit: 42 weeks at once a week and 28 at twice a week. Spare weeks stay unscheduled.
 - A group can't be created while its Course has no Modules, so Advanced, and for now Intermediate, are unavailable.
 
-A **Class** is one dated day of the plan: its date, time, Module and the Exercises the Coach chooses from that Module. Its page shows the Module's description and topics next to the chosen Exercises, and the plan shows each Module's topics. It is a reference so the Coach can see what is planned that day. Planning a Class never records progress.
+A **Class** is one dated day of the plan: its date, time, Module and the Exercises the Coach chooses from that Module. Its page shows the Module's description and topics, the Class Structure, and the chosen Exercises out of those its duration calls for. The plan shows each Module's topics. The count is a guide: the Coach can pick more or fewer. It is a reference so the Coach can see what is planned that day. Planning a Class never records progress.
 
 ### Editing and clashes
 
