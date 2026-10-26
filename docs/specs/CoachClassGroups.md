@@ -39,13 +39,13 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 22. As a Coach, I want the group's Level to select its Course, so that the plan uses the right Modules.
 23. As a Coach, I want group creation to be refused while the Course has no Modules, so that the app never invents content.
 24. As a Coach, I want the Training Plan generated for the whole Course on creation, so that I see the full year at once.
-25. As a Coach, I want a Module to take 6 weeks at once a week and 4 weeks at twice a week, so that the plan follows the academy's methodology.
+25. As a Coach, I want a Module to take 6 weeks when my Classes last 1 hour and 4 weeks when they last 1h30, at either cadence, so that each Module gets a similar amount of court time, as the academy's methodology asks.
 26. As a Coach, I want the last week of each Module to be an Assessment Class, so that I know when to assess.
 27. As a Coach, I want Modules used in Course order, so that the plan is the teaching sequence.
 28. As a Coach, I want no Classes generated in my Club's Break Periods, so that the plan fits the calendar.
 29. As a Coach, I want the first Class on the first chosen weekday on or after the start date, so that the plan starts when I expect.
 30. As a Coach, I want the plan to end after the last Module's assessment with no fixed season end, so that it fits any start date.
-31. As a Coach, I want each Class to show date, start time, Module and the note for an Assessment Class, so that I know what is planned that day.
+31. As a Coach, I want each Class to show date, start time, Module with its description and topics, the chosen Exercises and the note for an Assessment Class, so that I know what is planned that day.
 32. As a Coach, I want to pick the Exercises of each Class from its Module, so that I decide what is taught.
 33. As a Coach, I want to move or skip a Class, so that I can handle holidays and cancellations.
 34. As a Coach, I want to add a Class of my own, for example in spare weeks, so that I can use the time freely.
@@ -75,8 +75,8 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 - **Class Group.** Owned by one Coach, with its Club taken from that Coach. Holds Level (chosen by the Coach), start date, cadence (1 or 2 per week), chosen weekdays (one per weekly Class), a start time and a duration (60 or 90 minutes). It has one to eight Players, who can also be in other groups. A group is tied to one Course through its Level. It is never deleted when its Coach is removed; ownership is reassigned first.
 - **Break Period.** A set of date ranges per Club, defined by its Managers. Plans skip these dates.
 - **Class.** One dated entry of a Training Plan with a date, start time, duration, Module, optional Exercises chosen by the Coach, a type (regular or assessment), and a done flag. A Class has no per-Class duration; it inherits the group's.
-- **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's Modules in order, the group's cadence, weekdays, time and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
-  - Once a week: 6 weeks per Module, the 6th being an Assessment Class. Twice a week: 4 weeks per Module, the 4th being the assessment week.
+- **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's Modules in order, the group's cadence, weekdays, time, duration and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
+  - The duration sets the span: 6 weeks per Module for 1-hour Classes, 4 weeks per Module for 1h30 Classes. The cadence sets how many Classes fall in each week. The last Class of the Module's last week is its Assessment Class (docs/adr/0008).
   - The Module's own `duration` text is ignored.
   - The first Class is on the first chosen weekday on or after the start date. Weeks that fall in a Break Period get no Classes and are not counted toward the Module's weeks.
   - The plan ends after the last Module's Assessment Class. There is no season end date.
@@ -94,7 +94,7 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 
 - A good test checks external behavior only: what a user sees or is refused, and the resulting plan, not how it is built.
 - **Seam 1, request specs (primary).** Covers invitations and role-based access, Class Group creation and the plan it returns, clash refusal on creation and on every later edit, plan editing and regeneration that keeps completed Classes, Break Periods, Club roster and Player management, Manager multi-Club access and reassignment, and Coach removal being blocked. Prior art: the existing request specs for the plan, the admin Clubs and Users screens, and the dashboard.
-- **Seam 2, Training Plan generator spec (new).** A model-level spec with plain inputs and outputs, with no HTTP. It covers 4 and 6 weeks per Module, the Assessment Class in the last week, Module order, skipping Break Periods, the first-Class date rule, a plan ending after the last Module, and refusal for a Course without Modules. Prior art: the existing model specs. Request specs only check that the generator is wired up.
+- **Seam 2, Training Plan generator spec (new).** A model-level spec with plain inputs and outputs, with no HTTP. It covers 4 and 6 weeks per Module for each duration at either cadence, the Assessment Class in the last week, Module order, skipping Break Periods, the first-Class date rule, a plan ending after the last Module, and refusal for a Course without Modules. Prior art: the existing model specs. Request specs only check that the generator is wired up.
 - No other seams. Assessment evaluation and Exercise suggestion are out of scope.
 
 ## Out of Scope
@@ -109,5 +109,5 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 
 ## Further Notes
 
-- The 44-week figure (52 weeks minus 2 Christmas, 4 August and 2 Easter weeks) is only a sanity check showing that 7 Modules fit: 42 weeks at once a week, 28 at twice a week. It is not a limit, and spare weeks are simply left unscheduled for the Coach to use.
+- The 44-week figure (52 weeks minus 2 Christmas, 4 August and 2 Easter weeks) is only a sanity check showing that 7 Modules fit: 42 weeks with 1-hour Classes, 28 with 1h30 Classes, at either cadence. It is not a limit, and spare weeks are simply left unscheduled for the Coach to use.
 - `GLOSSARY.md` already reflects this vocabulary.

@@ -73,17 +73,17 @@ A Coach creates **Class Groups**. A Class Group is up to eight Players, a Level,
 From that description the app generates the group's **Training Plan** for the whole Course up front, by rules, with no AI:
 
 - It walks the Course's seven Modules in order.
-- A Module takes 6 weeks at once a week and 4 weeks at twice a week. The last week is the **Assessment Class**.
+- A Module takes 6 weeks when Classes last 1 hour and 4 weeks when they last 1h30, so each Module gets a similar amount of court time. The cadence only sets how many Classes fall in each week. The last Class of the Module's last week is the **Assessment Class**.
 - The first Class falls on the first chosen weekday on or after the start date. No Classes fall in the Club's Break Periods.
-- The plan ends after the last Module's Assessment Class. It has no season end date. At 44 teaching weeks in a year (52 weeks less 2 Christmas, 4 August and 2 Easter weeks) all seven Modules fit: 42 weeks at once a week and 28 at twice a week. Spare weeks stay unscheduled.
+- The plan ends after the last Module's Assessment Class. It has no season end date. At 44 teaching weeks in a year (52 weeks less 2 Christmas, 4 August and 2 Easter weeks) all seven Modules fit: 42 weeks with 1-hour Classes and 28 with 1h30 Classes, at either cadence. Spare weeks stay unscheduled.
 - A group can't be created while its Course has no Modules, so Advanced, and for now Intermediate, are unavailable.
 
-A **Class** is one dated day of the plan: its date, time, Module and the Exercises the Coach chooses from that Module. It is a reference so the Coach can see what is planned that day. Planning a Class never records progress.
+A **Class** is one dated day of the plan: its date, time, Module and the Exercises the Coach chooses from that Module. Its page shows the Module's description and topics next to the chosen Exercises, and the plan shows each Module's topics. It is a reference so the Coach can see what is planned that day. Planning a Class never records progress.
 
 ### Editing and clashes
 
 - The Coach can move, skip or add Classes, choose each Class's Exercises, and mark Classes done.
-- Regenerating the plan happens only when the Coach asks, and keeps completed Classes. Changing the cadence or the Players never changes the plan by itself.
+- Regenerating the plan happens only when the Coach asks, and keeps completed Classes. Changing the cadence or the Players never changes the plan by itself. A new duration changes how long every Class lasts straight away, but the new span of weeks per Module only applies when the plan is regenerated.
 - A Coach, and a Player, can never have two Classes that overlap in time. This is checked whenever a group is created or changed, or a Class is moved. A group whose plan would clash is refused, with the clashing dates listed.
 - When a Course is finished, the next Course is a new Class Group, created by copying the Players. The finished group stays as history.
 
@@ -110,7 +110,7 @@ A Module has:
 - the **Exercises** that belong to it
 - a **Quiz** _(not built yet)_
 
-A Module's stored duration text is for display only. A Training Plan always gives a Module 4 or 6 weeks, whatever it says.
+A Module's stored duration text is for display only. A Training Plan always gives a Module 6 weeks of 1-hour Classes or 4 weeks of 1h30 Classes, whatever it says.
 
 ### Module status
 

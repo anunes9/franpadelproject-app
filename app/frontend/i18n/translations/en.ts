@@ -438,6 +438,7 @@ export const en = {
         other: '{{count}} exercises',
       },
       noExercises: 'No exercises picked',
+      moduleTopics: 'Module topics',
     },
     finishedGroups: {
       pill: 'Finished',
@@ -530,6 +531,8 @@ export const en = {
       backToGroup: 'Back to class group',
       when: 'When',
       moduleNumber: 'Module {{n}}',
+      aboutModule: 'About this module',
+      topics: 'Topics',
       exercises: 'Exercises',
       exercisesIntro: 'Pick the exercises for this class from its module.',
       noneChosen: 'No exercises picked for this class yet.',

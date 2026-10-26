@@ -3,7 +3,7 @@
 # Classes (TrainingClass), generated up front when the group is created.
 class ClassGroup < ApplicationRecord
   MAX_PLAYERS = 8
-  CADENCES = TrainingPlanGenerator::CADENCE_WEEKS_PER_MODULE.keys.freeze
+  CADENCES = TrainingPlanGenerator::CADENCES
   DURATIONS = TrainingPlanGenerator::DURATIONS
   WEEKDAYS = TrainingPlanGenerator::WEEKDAYS.map(&:to_s).freeze
 

@@ -4,12 +4,12 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatTimeRange } from '@/lib/classGroups'
 import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, Detail, Eyebrow, FieldError, ListCard, ListRow, Pill } from '../../components/ui'
-import type { ClassExercise, ClassGroup, TrainingClass } from '../../types/dashboard-data'
+import { BackLink, Detail, Eyebrow, FieldError, ListCard, ListRow, Pill, Topic } from '../../components/ui'
+import type { ClassExercise, ClassGroup, TrainingClassDetail } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
-  trainingClass: TrainingClass
+  trainingClass: TrainingClassDetail
   classGroup: ClassGroup
   exercises: ClassExercise[]
   availableExercises: ClassExercise[]
@@ -38,8 +38,8 @@ function ExerciseDetails({ exercise }: { exercise: ClassExercise }) {
   )
 }
 
-// One Class of a Training Plan, where its Coach (or a Club Manager of its
-// Club) picks its Exercises from the Class's Module.
+// One Class of a Training Plan: what its Module is about, and where its Coach
+// (or a Club Manager of its Club) picks its Exercises from that Module.
 function Show() {
   const { trainingClass, classGroup, exercises, availableExercises, errors } = usePage<Props>().props
   const { t, locale } = useTranslation()
@@ -82,6 +82,27 @@ function Show() {
             <p className="col-span-2 text-meta text-muted-strong">{t('classGroups.show.assessmentNote')}</p>
           )}
         </dl>
+
+        <section className="flex flex-col gap-3" aria-labelledby="class-module-heading">
+          <h2 id="class-module-heading" className="text-sm font-bold text-ink">
+            {t('trainingClasses.show.aboutModule')}
+          </h2>
+          <div className="flex flex-col gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card">
+            <p className="text-sm text-muted-strong">{trainingClass.module.description}</p>
+            {trainingClass.module.topics.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <h3 className="text-meta text-muted">{t('trainingClasses.show.topics')}</h3>
+                <ul className="flex flex-wrap gap-1.5">
+                  {trainingClass.module.topics.map((topic) => (
+                    <li key={topic}>
+                      <Topic>{topic}</Topic>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
 
         <section className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">

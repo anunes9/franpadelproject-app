@@ -11,8 +11,10 @@
 #
 # Weeks are calendar weeks (Monday to Sunday). A week that overlaps a Break
 # Period at all gets no Classes and does not count toward a Module's weeks.
-# Only a Module's last Class is its Assessment Class, and a partial first
-# week counts as a full week (docs/adr/0002).
+# A Module spans 6 weeks of 60-minute Classes or 4 weeks of 90-minute ones,
+# whatever the cadence, which only sets how many Classes fall in each week
+# (docs/adr/0008). Only a Module's last Class is its Assessment Class, and a
+# partial first week counts as a full week (docs/adr/0002).
 #
 # Regenerating a plan continues the Course rather than restarting it
 # (docs/adr/0005): the caller passes only the Modules not yet complete, and
@@ -21,8 +23,10 @@
 # Classes rather than weeks, still ending with its Assessment Class. Later
 # Modules start in the next open week and are generated in full.
 class TrainingPlanGenerator
-  CADENCE_WEEKS_PER_MODULE = { 1 => 6, 2 => 4 }.freeze
-  DURATIONS = [60, 90].freeze
+  # Weeks per Module, by Class duration in minutes.
+  WEEKS_PER_MODULE = { 60 => 6, 90 => 4 }.freeze
+  DURATIONS = WEEKS_PER_MODULE.keys.freeze
+  CADENCES = [1, 2].freeze
   WEEKDAYS = %i[monday tuesday wednesday thursday friday saturday sunday].freeze
 
   class NoTeachingModules < StandardError
@@ -81,7 +85,7 @@ class TrainingPlanGenerator
 
   def validate!
     raise NoTeachingModules if @modules.empty?
-    raise ArgumentError, "cadence must be 1 or 2" unless CADENCE_WEEKS_PER_MODULE.key?(@cadence)
+    raise ArgumentError, "cadence must be 1 or 2" unless CADENCES.include?(@cadence)
     raise ArgumentError, "duration must be 60 or 90" unless DURATIONS.include?(@duration)
     raise ArgumentError, "start_date is required" unless @start_date.respond_to?(:cwday)
     unless @done_in_first_module.is_a?(Integer) && @done_in_first_module >= 0
@@ -117,7 +121,7 @@ class TrainingPlanGenerator
   # those done, and always at least its Assessment Class. A week left part
   # used is not used by the next Module.
   def remaining_module_classes(course_module, weeks)
-    total = CADENCE_WEEKS_PER_MODULE.fetch(@cadence) * @cadence
+    total = weeks_per_module * @cadence
     remaining = [total - @done_in_first_module, 1].max
     dates = []
     dates.concat(weeks.next) while dates.size < remaining
@@ -126,12 +130,16 @@ class TrainingPlanGenerator
     end
   end
 
+  def weeks_per_module
+    WEEKS_PER_MODULE.fetch(@duration)
+  end
+
   def planned(date, course_module, type)
     PlannedClass.new(date: date, start_time: @start_time, duration: @duration, course_module: course_module, type: type)
   end
 
   def module_classes(course_module, weeks)
-    week_count = CADENCE_WEEKS_PER_MODULE.fetch(@cadence)
+    week_count = weeks_per_module
     dates = Array.new(week_count) { weeks.next }
     dates.each_with_index.map do |week, index|
       week.each_with_index.map do |date, in_week|

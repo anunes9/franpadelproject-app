@@ -444,6 +444,7 @@ export const pt = {
         other: '{{count}} exercícios',
       },
       noExercises: 'Sem exercícios escolhidos',
+      moduleTopics: 'Tópicos do mesociclo',
     },
     finishedGroups: {
       pill: 'Terminado',
@@ -537,6 +538,8 @@ export const pt = {
       backToGroup: 'Voltar ao grupo de aulas',
       when: 'Quando',
       moduleNumber: 'Mesociclo {{n}}',
+      aboutModule: 'Sobre este mesociclo',
+      topics: 'Tópicos',
       exercises: 'Exercícios',
       exercisesIntro: 'Escolha os exercícios desta aula a partir do seu mesociclo.',
       noneChosen: 'Ainda não escolheu exercícios para esta aula.',

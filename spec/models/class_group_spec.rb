@@ -7,11 +7,11 @@ RSpec.describe ClassGroup do
 
   # Tuesdays at 18:00 from 8 September 2026: six Classes of one Module. Each
   # group gets its own Coach and Players, so their Classes never clash.
-  def planned_group
+  def planned_group(cadence: 1, weekdays: ["tuesday"], duration: 60)
     coach = create(:user, :coach, club: club)
     group = ClassGroup.new(coach: coach, players: create_list(:player, 2, club: club), level: "beginner",
-                           starts_on: Date.new(2026, 9, 7), cadence: 1, weekdays: ["tuesday"],
-                           start_time: "18:00", duration: 60)
+                           starts_on: Date.new(2026, 9, 7), cadence: cadence, weekdays: weekdays,
+                           start_time: "18:00", duration: duration)
     group.create_with_plan || raise("refused: #{group.errors.full_messages}")
     group
   end
@@ -19,6 +19,15 @@ RSpec.describe ClassGroup do
   def finish(group)
     group.training_classes.each { |c| c.update!(done: true) }
     group
+  end
+
+  describe "#create_with_plan" do
+    it "spans the Module over weeks set by the Class duration, whatever the cadence" do
+      expect(planned_group.training_classes.size).to eq(6)
+      expect(planned_group(duration: 90).training_classes.size).to eq(4)
+      expect(planned_group(cadence: 2, weekdays: %w[tuesday thursday]).training_classes.size).to eq(12)
+      expect(planned_group(cadence: 2, weekdays: %w[tuesday thursday], duration: 90).training_classes.size).to eq(8)
+    end
   end
 
   describe "#finished?" do

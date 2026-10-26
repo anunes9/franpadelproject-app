@@ -3,7 +3,10 @@ require "rails_helper"
 RSpec.describe "Exercises of a Class", type: :request do
   let(:club) { create(:club) }
   let(:coach) { create(:user, :coach, club: club) }
-  let!(:serve) { create(:course_module, level: :beginner, position: 1, title: "Serve") }
+  let!(:serve) do
+    create(:course_module, level: :beginner, position: 1, title: "Serve",
+                           description: "Starting the point", topics: %w[Grip Toss])
+  end
   let!(:volley) { create(:course_module, level: :beginner, position: 2, title: "Volley") }
   let!(:serve_drill) { create(:exercise, course_module: serve, ref: "S-1", title: "Serve drill") }
   let!(:serve_game) { create(:exercise, course_module: serve, ref: "S-2", title: "Serve game") }
@@ -26,14 +29,16 @@ RSpec.describe "Exercises of a Class", type: :request do
   def class_exercise_path(training_class, exercise) = "#{class_path(training_class)}/exercises/#{exercise.ref}"
 
   describe "the Class page" do
-    it "shows the Class, no chosen Exercises and its Module's Exercises to pick from" do
+    it "shows the Class with its Module's description and topics, no chosen Exercises and its Module's Exercises to pick from" do
       sign_in coach
 
       get class_path(serve_class)
 
       expect(response.body).to include(%q("component":"TrainingClasses/Show"))
       expect(page_props["trainingClass"]).to include("date" => "2026-09-08", "startTime" => "18:00", "kind" => "regular")
-      expect(page_props["trainingClass"]["module"]).to include("title" => "Serve", "number" => 1)
+      expect(page_props["trainingClass"]["module"]).to include(
+        "title" => "Serve", "number" => 1, "description" => "Starting the point", "topics" => %w[Grip Toss]
+      )
       expect(page_props["classGroup"]).to include("id" => group.id, "duration" => 60)
       expect(page_props["exercises"]).to eq([])
       expect(page_props["availableExercises"].map { |e| e["ref"] }).to eq(%w[S-1 S-2])

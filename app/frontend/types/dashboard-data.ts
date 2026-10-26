@@ -188,9 +188,14 @@ export interface TrainingClass {
   skipped: boolean
   // Added by hand by the Coach, rather than generated.
   coachAdded: boolean
-  module: { slug: string; number: number; title: string }
+  module: { slug: string; number: number; title: string; topics: string[] }
   // The Exercises the Coach picked, in the order picked.
   exercises: Array<{ ref: string; title: string }>
+}
+
+// A Class as its own page shows it, with its Module's description too.
+export interface TrainingClassDetail extends TrainingClass {
+  module: TrainingClass['module'] & { description: string }
 }
 
 // An Exercise of a Class's Module, picked for the Class or left to pick.

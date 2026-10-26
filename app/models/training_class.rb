@@ -99,7 +99,7 @@ class TrainingClass < ApplicationRecord
     }
   end
 
-  # The Class as the group's plan lists it.
+  # The Class as the group's plan lists it, with its Module's topics.
   def plan_json
     {
       id: id,
@@ -109,9 +109,16 @@ class TrainingClass < ApplicationRecord
       done: done,
       skipped: skipped,
       coachAdded: coach_added,
-      module: module_json,
+      module: module_json.merge(topics: course_module.topics),
       exercises: exercises.map { |exercise| { ref: exercise.ref, title: exercise.title } }
     }
+  end
+
+  # The Class as its own page shows it: as the plan lists it, with its
+  # Module's description too.
+  def page_json
+    json = plan_json
+    json.merge(module: json[:module].merge(description: course_module.description))
   end
 
   private

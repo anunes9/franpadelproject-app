@@ -8,7 +8,7 @@ import { ContinuesFrom, FinishedPill, StartNextLevelGroup } from '../../componen
 import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { RegeneratePlan } from '../../components/PlanRegeneration'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, buttonClass, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
+import { BackLink, buttonClass, Detail, Eyebrow, ListCard, ListRow, Pill, Topic } from '../../components/ui'
 import type { ClassGroup, Level, ModuleOption, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
@@ -102,6 +102,15 @@ function Show() {
               <div className="flex flex-col">
                 <Eyebrow>{t('classGroups.show.module', { n: run.module.number })}</Eyebrow>
                 <h3 className="text-base font-bold text-ink">{run.module.title}</h3>
+                {run.module.topics.length > 0 && (
+                  <ul className="flex flex-wrap gap-1.5 pt-1.5" aria-label={t('classGroups.show.moduleTopics')}>
+                    {run.module.topics.map((topic) => (
+                      <li key={topic}>
+                        <Topic>{topic}</Topic>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <ListCard count={run.classes.length} empty="">
                 {run.classes.map((trainingClass) => (
