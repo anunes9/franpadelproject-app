@@ -10,10 +10,23 @@ class User < ApplicationRecord
   enum :locale, { pt: 0, en: 1 }
 
   belongs_to :club, optional: true
+  # A Coach who owns Class Groups can be neither removed (#remove!) nor
+  # deleted (base: has_class_groups): their groups are reassigned first, never
+  # deleted or left without an owner (docs/adr/0006-manager-oversight.md).
+  # Users are removed, not deleted, so their history stays; the delete guard
+  # holds the console to the same rule. Like dependent: :restrict_with_error,
+  # with our own error code; declared before the other dependents so a refused
+  # delete touches nothing.
+  has_many :class_groups, foreign_key: :coach_id, inverse_of: :coach
+  before_destroy :keep_while_owning_class_groups
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercise_completions, dependent: :destroy
   has_many :club_memberships, dependent: :destroy
   has_many :managed_clubs, through: :club_memberships, source: :club
+
+  # Users who have not been removed: the ones who can sign in and appear in
+  # a Club's lists.
+  scope :active, -> { where(removed_at: nil) }
 
   validates :name, presence: true
   # A Coach belongs to exactly one Club; a Club Manager is linked to Clubs
@@ -67,10 +80,61 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[email role created_at club_id]
+    %w[email role created_at club_id removed_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)
     []
+  end
+
+  # The user as a choice of Coach, when reassigning a Class Group.
+  def option_json
+    { id: id, name: name }
+  end
+
+  def removed?
+    removed_at.present?
+  end
+
+  # Removes the user from the platform (docs/adr/0006-manager-oversight.md):
+  # they can no longer sign in, and drop out of their Club's lists, but their
+  # account, course progress, Exercise Completions and every other row are
+  # kept for history. Refused, returning false, while they own a Class Group
+  # (base: has_class_groups). The row lock makes a reassignment to this Coach,
+  # which locks them too (ClassClash.lock), wait for the removal or finish
+  # before the check, so the check sees its group.
+  def remove!
+    removed = false
+    transaction do
+      lock!
+      if class_groups.exists?
+        errors.add(:base, :has_class_groups)
+      else
+        update_columns(removed_at: Time.current, updated_at: Time.current)
+        removed = true
+      end
+    end
+    removed
+  end
+
+  # Devise refuses a removed user's sign-in, and ends their open session on
+  # their next request, with the :removed message (SessionsController).
+  def active_for_authentication?
+    super && !removed?
+  end
+
+  def inactive_message
+    removed? ? :removed : super
+  end
+
+  private
+
+  # Runs inside the delete's transaction, with the same lock as #remove!.
+  def keep_while_owning_class_groups
+    lock!
+    return unless class_groups.exists?
+
+    errors.add(:base, :has_class_groups)
+    throw :abort
   end
 end

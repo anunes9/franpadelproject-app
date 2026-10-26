@@ -3,7 +3,12 @@ class Club < ApplicationRecord
 
   has_one_attached :logo
   organizes_attachment :logo, folder: -> { "clubs/#{id}/logo" }
-  has_many :coaches, -> { where(role: :coach) }, class_name: "User", inverse_of: :club, dependent: :restrict_with_error
+  # The Club's active Coaches; removed ones are kept for history but no longer
+  # listed (docs/adr/0006-manager-oversight.md).
+  has_many :coaches, -> { coach.active }, class_name: "User", inverse_of: :club
+  # Every user of the Club, removed Coaches included, which keep it from being
+  # deleted.
+  has_many :users, dependent: :restrict_with_error
   has_many :club_memberships, dependent: :destroy
   has_many :managers, through: :club_memberships, source: :user
   has_many :players, dependent: :restrict_with_error

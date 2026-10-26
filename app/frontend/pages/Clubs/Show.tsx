@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { clubBreakPeriodsPath, clubPath, clubPlayersPath, newClubCoachInvitationPath } from '@/lib/paths'
 import { ClassGroupRow } from '../../components/ClassGroupRow'
+import { RemoveCoach } from '../../components/CoachRemoval'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
 import type {
@@ -113,6 +114,7 @@ function Show() {
                 <div className="truncate text-sm font-semibold text-ink">{coach.name}</div>
                 <div className="truncate text-meta text-muted">{coach.email}</div>
               </div>
+              <RemoveCoach clubId={club.id} coach={coach} />
             </ListRow>
           ))}
           {pendingInvitations.map((invitation) => (

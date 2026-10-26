@@ -14,7 +14,7 @@ class ClubsController < DashboardController
     {
       club: club.summary_json,
       coaches: club.coaches.order(:name).map { |coach| { id: coach.id, name: coach.name, email: coach.email } },
-      classGroups: ClassGroup.of_clubs(club).includes(:coach, :players)
+      classGroups: ClassGroup.of_clubs(club).with_finished.includes(:coach, :players)
                              .order("users.name", :created_at).map(&:list_json),
       players: club.players.alphabetical.map(&:players_json)
     }
@@ -22,7 +22,12 @@ class ClubsController < DashboardController
 
   def show
     club = find_accessible_club(params[:id])
-    render inertia: "Clubs/Show", props: self.class.overview_props(club).merge(pending_invitations_props(club))
+    render inertia: "Clubs/Show", props: self.class.overview_props(club).merge(
+      pending_invitations_props(club),
+      # The Coach whose removal was just refused (see ClubCoachesController),
+      # for the page to show why by them.
+      refusedEdit: flash[:refused_edit]
+    )
   end
 
   private

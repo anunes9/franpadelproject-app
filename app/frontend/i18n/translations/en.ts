@@ -57,6 +57,7 @@ export const en = {
       submit: 'Sign in',
       submitting: 'Signing in…',
       invalidCredentials: "That email and password don't match. Check both and try again.",
+      removed: 'This account no longer has access.',
       pauseVideo: 'Pause background video',
       playVideo: 'Play background video',
     },
@@ -213,6 +214,14 @@ export const en = {
       playersEmpty: 'No players in this club yet.',
       managePlayers: 'Manage players',
     },
+    coachRemoval: {
+      remove: 'Remove',
+      confirm: 'Remove {{name}}? They lose access to the platform; their history is kept.',
+      cancel: 'Cancel',
+      confirmButton: 'Remove coach',
+      removing: 'Removing…',
+      hasClassGroups: '{{name}} still owns class groups. Reassign them to another coach first.',
+    },
   },
   players: {
     index: {
@@ -365,6 +374,7 @@ export const en = {
         playersTooMany: 'A class group has at most {{max}} players.',
         playersOtherClub: 'Choose players of your own club.',
         noModules: 'This level’s course has no modules yet, so no training plan can be generated.',
+        notNextLevel: 'A group continuing a finished one starts at the level after it. Choose that level.',
         clashTitle: 'This group would overlap with other classes',
         notSaved: 'The group could not be saved, so nothing was created. Please try again.',
         clash:
@@ -410,6 +420,17 @@ export const en = {
       },
       noExercises: 'No exercises picked',
     },
+    finishedGroups: {
+      pill: 'Finished',
+      title: 'Finished groups',
+      hint: 'Every class of these groups is done. They stay here as history.',
+      continuesFrom: 'Continues from the {{level}} group',
+      nextLevelTitle: 'Next level',
+      nextLevelHint: 'Start a {{level}} group with this group’s players. You choose its start date and schedule.',
+      nextLevelButton: 'Start next level group',
+      continuationNote:
+        'Continues the {{level}} group: its players still in your club are already chosen and the level is the next one.',
+    },
     planRegeneration: {
       title: 'Regenerate the plan',
       hint: 'Builds the rest of the plan again from the group’s current schedule and the club’s break periods, continuing the course where it stands.',
@@ -436,6 +457,22 @@ export const en = {
         crossesMidnight: 'The group’s classes would end after midnight.',
         time: 'The group has no start time.',
         notACoach: 'The group’s coach is no longer a coach.',
+      },
+    },
+    reassignment: {
+      title: 'Reassign the group',
+      hint: 'Hand this group and its plan to another coach of the club. The plan stays as it is.',
+      label: 'New coach',
+      choose: 'Choose a coach',
+      button: 'Reassign',
+      reassigning: 'Reassigning…',
+      errors: {
+        clash: 'The new coach already has a class at the same time on {{dates}}. Nothing was changed.',
+        blank: 'Choose a coach of this club.',
+        notACoach: 'Only a coach can own a class group.',
+        otherClub: 'The new coach must belong to this group’s club.',
+        removed: 'That coach was removed from the club. Choose another coach.',
+        notSaved: 'The group could not be reassigned, so nothing was changed. Please try again.',
       },
     },
     planEditing: {

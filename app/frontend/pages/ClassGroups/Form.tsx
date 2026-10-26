@@ -5,7 +5,14 @@ import { formatDate, formatDuration } from '@/lib/classGroups'
 import { classGroupPath, classGroupsPath, newClubPlayerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, chipClass, Eyebrow, FieldError, INPUT_CLASS, LABEL_CLASS } from '../../components/ui'
-import type { ClassGroup, ClubSummary, Player, PlayerLevel, Weekday } from '../../types/dashboard-data'
+import type {
+  ClassGroup,
+  ClassGroupContinuation,
+  ClubSummary,
+  Player,
+  PlayerLevel,
+  Weekday,
+} from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -22,6 +29,9 @@ interface Props {
   maxPlayers: number
   // The dates on which the last refused plan clashed, if it clashed.
   clashDates: string[]
+  // Only when creating the group that continues a finished one at the next
+  // Level: what the form starts from.
+  continuation?: ClassGroupContinuation | null
 }
 
 const CADENCE_KEY = { 1: 'once', 2: 'twice' } as const
@@ -45,6 +55,7 @@ function Form() {
     durationOptions,
     maxPlayers,
     clashDates,
+    continuation,
   } = usePage<Props>().props
   const { t, tn, locale } = useTranslation()
   const editing = classGroup !== undefined
@@ -55,16 +66,18 @@ function Form() {
   ) => t(`${scope}.${key}` as const)
 
   const { data, setData, post, patch, transform, processing, errors } = useForm({
-    level: classGroup?.level ?? '',
+    level: classGroup?.level ?? continuation?.level ?? '',
     starts_on: classGroup?.startsOn ?? '',
     cadence: classGroup?.cadence ?? cadenceOptions[0],
     weekdays: classGroup?.weekdays ?? ([] as Weekday[]),
     start_time: classGroup?.startTime ?? '',
     duration: classGroup?.duration ?? durationOptions[0],
-    player_ids: classGroup?.players.map((player) => player.id) ?? ([] as string[]),
+    player_ids: classGroup?.players.map((player) => player.id) ?? continuation?.playerIds ?? ([] as string[]),
   })
   transform(({ level, starts_on, ...schedule }) => ({
-    class_group: editing ? schedule : { level, starts_on, ...schedule },
+    class_group: editing
+      ? schedule
+      : { level, starts_on, ...schedule, ...(continuation && { previous_class_group_id: continuation.from.id }) },
   }))
 
   function handleSubmit(event: FormEvent) {
@@ -109,6 +122,13 @@ function Form() {
               : club.name}
           </Eyebrow>
           <PageHeader title={own('title')} />
+          {continuation && (
+            <p className="text-meta text-muted-strong">
+              {t('classGroups.finishedGroups.continuationNote', {
+                level: t(`players.levelOption.${continuation.from.level}`),
+              })}
+            </p>
+          )}
         </div>
 
         {clashDates.length > 0 && (
@@ -154,7 +174,12 @@ function Form() {
                 <FieldError
                   errors={errors}
                   field="level"
-                  copy={{ blank: choose, inclusion: choose, no_modules: t('classGroups.form.errors.noModules') }}
+                  copy={{
+                    blank: choose,
+                    inclusion: choose,
+                    no_modules: t('classGroups.form.errors.noModules'),
+                    not_next_level: t('classGroups.form.errors.notNextLevel'),
+                  }}
                 />
               </label>
 

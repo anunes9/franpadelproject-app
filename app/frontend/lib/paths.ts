@@ -31,6 +31,9 @@ export const editBreakPeriodPath = (breakPeriodId: string) => `${breakPeriodPath
 export const classGroupsPath = '/dashboard/class_groups'
 export const newClassGroupPath = `${classGroupsPath}/new`
 export const classGroupPath = (classGroupId: string) => `${classGroupsPath}/${classGroupId}`
+// Creating the group that continues a finished group at the next Level.
+export const newClassGroupFromPath = (classGroupId: string) =>
+  `${newClassGroupPath}?from=${encodeURIComponent(classGroupId)}`
 // Editing a group's Players and schedule; the edit is sent to classGroupPath.
 export const editClassGroupPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/edit`
 
@@ -43,6 +46,12 @@ export const classPath = (classId: string, edit?: ClassEdit) =>
 
 // Regenerating a group's Training Plan, only on request.
 export const classGroupRegenerationPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/regeneration`
+
+// Reassigning a group to another Coach of its Club, by its Club Managers.
+export const classGroupReassignmentPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/reassignment`
+
+// Removing a Coach from a Club, by its Club Managers.
+export const clubCoachPath = (clubId: string, coachId: string) => `${clubPath(clubId)}/coaches/${coachId}`
 
 // The Exercises a Coach picks for a Class.
 export const classExercisePath = (classId: string, exerciseRef: string) =>

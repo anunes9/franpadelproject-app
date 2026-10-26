@@ -11,6 +11,9 @@ class ClassGroup < ApplicationRecord
   has_many :class_group_players, dependent: :destroy
   has_many :players, through: :class_group_players
   has_many :training_classes, -> { order(:date, :start_time) }, dependent: :destroy, inverse_of: :class_group
+  # The finished group this one continues at the next Level, when the Coach
+  # started it from one. A link for history only.
+  belongs_to :previous_class_group, class_name: "ClassGroup", optional: true
 
   enum :level, Level::VALUES, validate: true
 
@@ -26,6 +29,7 @@ class ClassGroup < ApplicationRecord
   validate :players_within_limit
   validate :players_of_the_coachs_club
   validate :owned_by_a_coach
+  validate :continues_at_the_next_level, on: :create
 
   delegate :club, to: :coach
 
@@ -33,6 +37,22 @@ class ClassGroup < ApplicationRecord
   # Class of the Coach or of a Player, after a refused #create_with_plan or
   # #regenerate_plan.
   attr_reader :clashing_dates
+
+  # A group is finished when at least one of its Classes is done and every
+  # Class is done or skipped; see docs/adr/0007-finished-class-groups.md.
+  # Derived, never stored, so marking a Class undone makes it unfinished.
+  FINISHED_SQL = <<~SQL.squish.freeze
+    EXISTS (SELECT 1 FROM training_classes done_classes
+            WHERE done_classes.class_group_id = class_groups.id AND done_classes.done)
+    AND NOT EXISTS (SELECT 1 FROM training_classes open_classes
+                    WHERE open_classes.class_group_id = class_groups.id
+                      AND NOT open_classes.done AND NOT open_classes.skipped)
+  SQL
+
+  scope :finished, -> { where(FINISHED_SQL) }
+  scope :unfinished, -> { where.not(FINISHED_SQL) }
+  # Loads whether each group is finished with the groups, for lists.
+  scope :with_finished, -> { select(arel_table[Arel.star], Arel.sql("(#{FINISHED_SQL}) AS finished_flag")) }
 
   # The groups of a Club: those whose Coach belongs to it.
   scope :of_clubs, ->(clubs) { joins(:coach).where(users: { club_id: clubs }) }
@@ -53,6 +73,20 @@ class ClassGroup < ApplicationRecord
   # generated from and its Classes can be for.
   def course_modules
     CourseModule.teaching_for(level)
+  end
+
+  # See FINISHED_SQL: read with the group when it was loaded .with_finished,
+  # else asked of the database.
+  def finished?
+    return finished_flag if has_attribute?(:finished_flag)
+
+    persisted? && self.class.finished.exists?(id)
+  end
+
+  # The Level of the Course after this group's, which a finished group's
+  # Players can continue at; nil for Advanced.
+  def next_level
+    Level.next(level)
   end
 
   def weekdays=(value)
@@ -142,6 +176,53 @@ class ClassGroup < ApplicationRecord
     false
   end
 
+  # Hands the group to `new_coach`, another Coach of its Club, on a Club
+  # Manager's request (docs/adr/0006-manager-oversight.md). The Training Plan
+  # is kept as it is. Refused, changing nothing, when there is no such user
+  # (coach: blank), when they are not a Coach (coach: not_a_coach), when they
+  # belong to another Club (coach: other_club), when they were removed
+  # (coach: removed), or when one of the group's
+  # upcoming Classes (dated `today` or later, neither done nor skipped) would
+  # overlap in time with another Class of the new Coach (the clashing dates
+  # are then in #clashing_dates).
+  def reassign_to(new_coach, today:)
+    @clashing_dates = []
+    reason = reassignment_refusal(new_coach)
+    if reason
+      errors.add(:coach, reason)
+      return false
+    end
+
+    saved = false
+    transaction do
+      # The group too, so two reassignments of it run one after the other and
+      # the one that wins is the one that was clash-checked.
+      lock!
+      ClassClash.lock(coach: new_coach, players: players)
+      # Again under the lock, which a removal of the Coach takes too
+      # (User#remove!), so a Coach removed meanwhile is not handed the group.
+      if new_coach.class.where(id: new_coach.id).where.not(removed_at: nil).exists?
+        errors.add(:coach, :removed)
+        raise ActiveRecord::Rollback
+      end
+      @clashing_dates = ClassClash.new(coach: new_coach, players: []).dates(upcoming_classes(today))
+      if @clashing_dates.any?
+        errors.add(:base, :clash)
+        raise ActiveRecord::Rollback
+      end
+
+      self.coach = new_coach
+      raise ActiveRecord::Rollback unless save
+
+      saved = true
+    end
+    restore_attributes unless saved
+    saved
+  rescue ActiveRecord::ActiveRecordError => error
+    restore_attributes
+    not_saved(error)
+  end
+
   # "18:00"
   def start_time_text
     start_time&.strftime("%H:%M")
@@ -157,9 +238,15 @@ class ClassGroup < ApplicationRecord
     )
   end
 
-  # The group as the Class Group lists show it.
+  # The group as the Class Group lists show it. Load the groups
+  # .with_finished to read whether each is finished with them.
   def list_json
     common_json.merge(playerCount: players.size)
+  end
+
+  # The group as a link to it: "Continues from <group>".
+  def link_json
+    { id: id, level: level }
   end
 
   private
@@ -172,7 +259,8 @@ class ClassGroup < ApplicationRecord
       weekdays: weekdays,
       startTime: start_time_text,
       duration: duration,
-      coach: coach.name
+      coach: coach.name,
+      finished: finished?
     }
   end
 
@@ -192,6 +280,15 @@ class ClassGroup < ApplicationRecord
   # skipped.
   def upcoming_classes(today)
     training_classes.select { |c| c.date >= today && !c.done? && !c.skipped? }
+  end
+
+  # Why #reassign_to refuses `new_coach`, or nil when it does not.
+  def reassignment_refusal(new_coach)
+    if new_coach.nil? then :blank
+    elsif !new_coach.coach? then :not_a_coach
+    elsif new_coach.club_id != coach.club_id then :other_club
+    elsif new_coach.removed? then :removed
+    end
   end
 
   # The new plan of #regenerate_plan, and the ids of the Classes it replaces,
@@ -287,5 +384,14 @@ class ClassGroup < ApplicationRecord
 
   def owned_by_a_coach
     errors.add(:coach, :not_a_coach) if coach && !coach.coach?
+  end
+
+  # A group continuing a finished one is at the Level after it
+  # (docs/adr/0007-finished-class-groups.md).
+  def continues_at_the_next_level
+    return unless previous_class_group
+    return if level == previous_class_group.next_level
+
+    errors.add(:level, :not_next_level)
   end
 end

@@ -26,7 +26,11 @@ export default function Login({ errors }: Props) {
       <form onSubmit={handleSubmit} className={AUTH_CARD_CLASS}>
         {errors.base && (
           <p role="alert" className="rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-sm text-danger">
-            {errors.base === 'invalid_credentials' ? t('auth.login.invalidCredentials') : errors.base}
+            {errors.base === 'invalid_credentials'
+              ? t('auth.login.invalidCredentials')
+              : errors.base === 'removed'
+                ? t('auth.login.removed')
+                : errors.base}
           </p>
         )}
         <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">

@@ -59,6 +59,7 @@ export const pt = {
       submit: 'Iniciar sessão',
       submitting: 'A iniciar sessão…',
       invalidCredentials: 'O email e a palavra-passe não correspondem. Verifique ambos e tente novamente.',
+      removed: 'Esta conta já não tem acesso.',
       pauseVideo: 'Pausar vídeo de fundo',
       playVideo: 'Reproduzir vídeo de fundo',
     },
@@ -216,6 +217,14 @@ export const pt = {
       playersEmpty: 'Ainda não há jogadores neste clube.',
       managePlayers: 'Gerir jogadores',
     },
+    coachRemoval: {
+      remove: 'Remover',
+      confirm: 'Remover {{name}}? Deixa de ter acesso à plataforma; o histórico é mantido.',
+      cancel: 'Cancelar',
+      confirmButton: 'Remover treinador',
+      removing: 'A remover…',
+      hasClassGroups: '{{name}} ainda tem grupos de aulas. Reatribua-os primeiro a outro treinador.',
+    },
   },
   players: {
     index: {
@@ -370,6 +379,7 @@ export const pt = {
         playersTooMany: 'Um grupo de aulas tem no máximo {{max}} jogadores.',
         playersOtherClub: 'Escolha jogadores do seu clube.',
         noModules: 'O curso deste nível ainda não tem mesociclos, por isso não é possível gerar o plano de treino.',
+        notNextLevel: 'Um grupo que continua um grupo terminado começa no nível seguinte. Escolha esse nível.',
         clashTitle: 'Este grupo sobrepõe-se a outras aulas',
         notSaved: 'Não foi possível guardar o grupo, por isso nada foi criado. Tente novamente.',
         clash:
@@ -415,6 +425,18 @@ export const pt = {
       },
       noExercises: 'Sem exercícios escolhidos',
     },
+    finishedGroups: {
+      pill: 'Terminado',
+      title: 'Grupos terminados',
+      hint: 'Todas as aulas destes grupos estão feitas. Ficam aqui como histórico.',
+      continuesFrom: 'Continua o grupo de nível {{level}}',
+      nextLevelTitle: 'Nível seguinte',
+      nextLevelHint:
+        'Crie um grupo de nível {{level}} com os jogadores deste grupo. A data de início e o horário são escolhidos por si.',
+      nextLevelButton: 'Criar grupo do nível seguinte',
+      continuationNote:
+        'Continua o grupo de nível {{level}}: os seus jogadores que ainda estão no seu clube já vêm escolhidos e o nível é o seguinte.',
+    },
     planRegeneration: {
       title: 'Regenerar o plano',
       hint: 'Volta a gerar o resto do plano com o horário atual do grupo e as pausas do clube, continuando o curso onde está.',
@@ -441,6 +463,22 @@ export const pt = {
         crossesMidnight: 'As aulas do grupo terminariam depois da meia-noite.',
         time: 'O grupo não tem hora de início.',
         notACoach: 'O treinador do grupo já não é treinador.',
+      },
+    },
+    reassignment: {
+      title: 'Reatribuir o grupo',
+      hint: 'Entregue este grupo e o seu plano a outro treinador do clube. O plano fica como está.',
+      label: 'Novo treinador',
+      choose: 'Escolha um treinador',
+      button: 'Reatribuir',
+      reassigning: 'A reatribuir…',
+      errors: {
+        clash: 'O novo treinador já tem uma aula à mesma hora em {{dates}}. Nada foi alterado.',
+        blank: 'Escolha um treinador deste clube.',
+        notACoach: 'Só um treinador pode ter um grupo de aulas.',
+        otherClub: 'O novo treinador tem de pertencer ao clube deste grupo.',
+        removed: 'Esse treinador foi removido do clube. Escolha outro treinador.',
+        notSaved: 'Não foi possível reatribuir o grupo, por isso nada foi alterado. Tente novamente.',
       },
     },
     planEditing: {

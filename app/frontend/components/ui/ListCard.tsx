@@ -2,9 +2,10 @@ import type { ReactNode } from 'react'
 
 const CARD = 'rounded-[18px] border border-line bg-white px-5 shadow-card'
 
-// A white card listing rows, or a single line of copy when there are none.
-export function ListCard({ count, empty, children }: { count: number; empty: string; children?: ReactNode }) {
-  if (count === 0) return <p className={`${CARD} py-8 text-center text-sm text-muted`}>{empty}</p>
+// A white card listing rows; with none, a single line of `empty` copy, or
+// nothing without it.
+export function ListCard({ count, empty, children }: { count: number; empty?: string; children?: ReactNode }) {
+  if (count === 0) return empty ? <p className={`${CARD} py-8 text-center text-sm text-muted`}>{empty}</p> : null
 
   return <ul className={`${CARD} py-2`}>{children}</ul>
 }
