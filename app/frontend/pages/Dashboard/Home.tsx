@@ -97,7 +97,7 @@ function TodaySection({ classes }: { classes: TodayClass[] }) {
                 {tn('classGroups.playersCount', trainingClass.group.playerCount)}
               </span>
               <span className="truncate text-meta text-muted">
-                {t('dashboard.home.today.module', { n: trainingClass.module.number })} · {trainingClass.module.title}
+                {trainingClass.module.title}
               </span>
               {trainingClass.kind === 'assessment' && (
                 <span className="text-meta text-muted-strong">{t('dashboard.home.today.assessmentNote')}</span>

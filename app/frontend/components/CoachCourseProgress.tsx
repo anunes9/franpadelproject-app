@@ -10,15 +10,15 @@ export function CoachCourseProgress({ progress }: { progress: Progress }) {
 
   return (
     <div className="mt-2 flex flex-col gap-1.5">
-      <ul aria-label={t('clubs.overview.courseProgress')} className="grid grid-cols-3 gap-3">
+      <ul aria-label={t('clubs.overview.courseProgress')} className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
         {progress.courses.map((course) => {
           const name = t(`courses.index.level.${course.level}`)
           const planned = course.modulesTotal === 0
           return (
             <li key={course.level} className="flex min-w-0 flex-col gap-1">
-              <div className="flex items-baseline justify-between gap-1 text-meta">
-                <span className="truncate font-semibold text-muted-strong">{name}</span>
-                <span className="shrink-0 font-dash-mono text-muted">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2 text-meta">
+                <span className="font-semibold text-muted-strong">{name}</span>
+                <span className="font-dash-mono text-muted">
                   {planned
                     ? t('courses.index.comingSoon')
                     : t('clubs.overview.courseModules', { done: course.modulesDone, total: course.modulesTotal })}

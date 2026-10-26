@@ -89,7 +89,6 @@ export const en = {
         title: 'Today',
         empty: 'No classes today.',
         emptyLink: 'See your class groups',
-        module: 'Module {{n}}',
         assessment: 'Assessment',
         assessmentNote: 'Assessment class: the last class of this module, to assess each player on its concepts.',
         done: 'Done',

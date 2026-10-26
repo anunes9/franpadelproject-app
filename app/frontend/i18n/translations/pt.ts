@@ -91,7 +91,6 @@ export const pt = {
         title: 'Hoje',
         empty: 'Sem aulas hoje.',
         emptyLink: 'Ver os seus grupos de aulas',
-        module: 'Mesociclo {{n}}',
         assessment: 'Avaliação',
         assessmentNote:
           'Aula de avaliação: a última aula deste mesociclo, para avaliar cada jogador nos seus conceitos.',
