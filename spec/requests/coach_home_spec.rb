@@ -135,10 +135,26 @@ RSpec.describe "Coach home", type: :request do
     expect(queries_for_four).to eq(queries_for_two)
   end
 
-  # The SQL queries run by the block, cached ones included.
-  def count_queries(&)
+  it "works out the Coach's Module states once for both the stats and the Modules list" do
+    create(:exercise, course_module: serve)
+    sign_in coach
+    get "/dashboard"
+
+    state_queries = count_queries(matching: /FROM "user_module_progresses"/) { get "/dashboard" }
+
+    expect(page_props).to include("courseStats" => be_present, "modules" => [include("title" => "Serve")])
+    expect(state_queries).to eq(1)
+  end
+
+  # The SQL queries run by the block, cached ones included; with `matching`,
+  # only those whose SQL matches it.
+  def count_queries(matching: nil, &)
     count = 0
-    counter = ->(*, payload) { count += 1 unless payload[:name].in?(%w[SCHEMA TRANSACTION]) }
+    counter = lambda do |*, payload|
+      next if payload[:name].in?(%w[SCHEMA TRANSACTION])
+
+      count += 1 if matching.nil? || payload[:sql].match?(matching)
+    end
     ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
     count
   end

@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { classGroupPath, newClassGroupFromPath } from '@/lib/paths'
-import type { ClassGroupLink, PlayerLevel } from '../types/dashboard-data'
+import type { ClassGroupLink, Level } from '../types/dashboard-data'
 import { buttonClass, Pill, SectionHeading } from './ui'
 
 // Finished Class Groups, kept as history, and the group that continues one at
@@ -15,7 +15,7 @@ export function FinishedPill() {
 
 // On a finished group's page, for its Coach: starting the next Level's group
 // with its Players, through the normal create form.
-export function StartNextLevelGroup({ classGroupId, nextLevel }: { classGroupId: string; nextLevel: PlayerLevel }) {
+export function StartNextLevelGroup({ classGroupId, nextLevel }: { classGroupId: string; nextLevel: Level }) {
   const { t } = useTranslation()
 
   return (

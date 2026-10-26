@@ -9,8 +9,8 @@ import type {
   ClassGroup,
   ClassGroupContinuation,
   ClubSummary,
+  Level,
   Player,
-  PlayerLevel,
   Weekday,
 } from '../../types/dashboard-data'
 
@@ -20,7 +20,7 @@ interface Props {
   // The Club roster.
   players: Player[]
   // Only when creating: an edited group keeps its Level.
-  levelOptions?: PlayerLevel[]
+  levelOptions?: Level[]
   // The group being edited, if editing one.
   classGroup?: ClassGroup
   cadenceOptions: number[]

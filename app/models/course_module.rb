@@ -148,10 +148,11 @@ class CourseModule < ApplicationRecord
 
   # Each user's Course progress, keyed by user id, as a Club Manager follows
   # their Coaches: for every Course in Level order, the Modules with Module
-  # Completion out of the Course's Modules, and progress computed as the
-  # Course home does (the mean of its Modules' progress). A Planned Course has
-  # no Modules, so its modulesTotal is 0. The same number of queries however
-  # many users there are.
+  # Completion out of the Course's Modules, and progress as the mean of that
+  # Course's Modules' progress (the Course home's stats take the mean over
+  # all Modules instead). A Planned Course has no Modules, so its
+  # modulesTotal is 0. The same number of queries however many users there
+  # are.
   def self.progress_for(users)
     modules = ordered.to_a
     states = states_by_user(users, modules)
@@ -161,41 +162,39 @@ class CourseModule < ApplicationRecord
     users.to_h do |user|
       courses = Level::VALUES.keys.map(&:to_s).map do |level|
         course_states = modules_by_level.fetch(level, []).map { |m| states[user.id][m.id] }
-        {
-          level: level,
-          modulesDone: course_states.count { |s| s[:status] == "completed" },
-          modulesTotal: course_states.size,
-          progress: course_states.empty? ? 0 : (course_states.sum { |s| s[:progress] }.to_f / course_states.size).round
-        }
+        { level: level, **completion_of(course_states) }
       end
       [user.id, { courses: courses, exercisesDone: exercises_done.fetch(user.id, 0) }]
     end
   end
 
-  # One user's entry from `.progress_for`.
-  def self.course_progress_for(user)
-    progress_for([user])[user.id]
-  end
-
-  def self.dashboard_list_for(user)
-    modules = ordered.to_a
-    states = states_for(user, modules)
+  # `modules` and their `states` (from `.states_for`) can be passed in when
+  # the caller already has them, as the Course home does to work them out
+  # once for both its list and its stats.
+  def self.dashboard_list_for(user, modules: ordered.to_a, states: states_for(user, modules))
     modules.map { |m| m.as_dashboard_json(states[m.id]) }
   end
 
   # averageQuiz has no real tracking yet (Quizzes aren't backed by database
   # models) -- it stays nil until that exists.
-  def self.dashboard_stats_for(user)
-    states = states_for(user).values
-
+  def self.dashboard_stats_for(user, states: states_for(user))
     {
-      progress: states.empty? ? 0 : (states.sum { |s| s[:progress] }.to_f / states.size).round,
-      modulesDone: states.count { |s| s[:status] == "completed" },
-      modulesTotal: states.size,
+      **completion_of(states.values),
       exercisesDone: ExerciseCompletion.where(user: user).count,
       averageQuiz: nil
     }
   end
+
+  # Of some Modules' states: those with Module Completion out of all, and the
+  # mean of their progress (0 for none).
+  def self.completion_of(states)
+    {
+      modulesDone: states.count { |s| s[:status] == "completed" },
+      modulesTotal: states.size,
+      progress: states.empty? ? 0 : (states.sum { |s| s[:progress] }.to_f / states.size).round
+    }
+  end
+  private_class_method :completion_of
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[slug title description level position duration created_at updated_at]

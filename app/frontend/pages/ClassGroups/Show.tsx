@@ -9,7 +9,7 @@ import { AddClassForm, ClassActions } from '../../components/PlanEditing'
 import { RegeneratePlan } from '../../components/PlanRegeneration'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, Detail, Eyebrow, ListCard, ListRow, Pill } from '../../components/ui'
-import type { ClassGroup, ModuleOption, PlayerLevel, TrainingClass } from '../../types/dashboard-data'
+import type { ClassGroup, Level, ModuleOption, TrainingClass } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -20,7 +20,7 @@ interface Props {
   moduleOptions: ModuleOption[]
   // For the owning Coach of a finished group: the Level a group continuing it
   // starts at; null otherwise, or after Advanced.
-  nextLevel: PlayerLevel | null
+  nextLevel: Level | null
 }
 
 // The Classes of a Training Plan, one run per Module, in plan order.

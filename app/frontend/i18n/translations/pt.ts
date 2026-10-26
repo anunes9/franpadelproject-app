@@ -86,10 +86,16 @@ export const pt = {
       modulesEyebrow: 'Mesociclos',
       thisWeekEyebrow: 'Esta semana',
       coachHeading: 'O seu dia',
+      courseProgressTitle: 'O seu progresso nos cursos',
       today: {
         title: 'Hoje',
         empty: 'Sem aulas hoje.',
         emptyLink: 'Ver os seus grupos de aulas',
+        module: 'Mesociclo {{n}}',
+        assessment: 'Avaliação',
+        assessmentNote:
+          'Aula de avaliação: a última aula deste mesociclo, para avaliar cada jogador nos seus conceitos.',
+        done: 'Feita',
       },
       myGroups: {
         title: 'Os meus grupos',

@@ -12,9 +12,13 @@ class DashboardController < ApplicationController
   def index
     return club_manager_home if current_user.club_manager?
 
+    # The Module states, worked out once for both the stats and the list.
+    modules = CourseModule.ordered.to_a
+    states = CourseModule.states_for(current_user, modules)
+
     render inertia: "Dashboard/Home", props: {
-      courseStats: CourseModule.dashboard_stats_for(current_user),
-      modules: CourseModule.dashboard_list_for(current_user),
+      courseStats: CourseModule.dashboard_stats_for(current_user, states: states),
+      modules: CourseModule.dashboard_list_for(current_user, modules: modules, states: states),
       **coach_home_props
     }
   end
@@ -28,8 +32,10 @@ class DashboardController < ApplicationController
 
     {
       todayClasses: TrainingClass.taught_on(Academy.today, coach: current_user).map(&:home_json),
-      # Finished groups are history, on the Class Groups list only.
-      classGroups: ClassGroup.where(coach: current_user).unfinished.with_finished
+      # Finished groups are history, on the Class Groups list only. .unfinished
+      # leaves them out; .with_finished still loads the finished flag that
+      # #list_json reads, so it isn't asked of the database per group.
+      classGroups: ClassGroup.owned_by(current_user).unfinished.with_finished
                              .includes(:coach, :players).order(:created_at).map(&:list_json)
     }
   end

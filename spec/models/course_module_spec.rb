@@ -269,6 +269,7 @@ RSpec.describe CourseModule, type: :model do
       )
     end
   end
+
   describe ".progress_for" do
     let(:ana) { create(:user, name: "Ana") }
     let(:bruno) { create(:user, name: "Bruno") }
@@ -298,7 +299,7 @@ RSpec.describe CourseModule, type: :model do
       expect(progress[bruno.id][:exercisesDone]).to eq(0)
     end
 
-    it "gives the same numbers as the single-user path the Course home uses" do
+    it "gives each user the same numbers as asking for that user alone" do
       first = create(:course_module, position: 1)
       second = create(:course_module, position: 2)
       create(:user_module_progress, user: ana, course_module: first, status: :done, progress: 100)
@@ -307,7 +308,7 @@ RSpec.describe CourseModule, type: :model do
       batch = CourseModule.progress_for([ana, bruno])
 
       [ana, bruno].each do |user|
-        expect(batch[user.id]).to eq(CourseModule.course_progress_for(user))
+        expect(batch[user.id]).to eq(CourseModule.progress_for([user])[user.id])
         stats = CourseModule.dashboard_stats_for(user)
         expect(batch[user.id][:courses].sum { |c| c[:modulesDone] }).to eq(stats[:modulesDone])
         expect(batch[user.id][:exercisesDone]).to eq(stats[:exercisesDone])

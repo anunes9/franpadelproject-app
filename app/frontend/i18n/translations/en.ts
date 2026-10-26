@@ -84,10 +84,15 @@ export const en = {
       modulesEyebrow: 'Modules',
       thisWeekEyebrow: 'This week',
       coachHeading: 'Your day',
+      courseProgressTitle: 'Your Course progress',
       today: {
         title: 'Today',
         empty: 'No classes today.',
         emptyLink: 'See your class groups',
+        module: 'Module {{n}}',
+        assessment: 'Assessment',
+        assessmentNote: 'Assessment class: the last class of this module, to assess each player on its concepts.',
+        done: 'Done',
       },
       myGroups: {
         title: 'My groups',

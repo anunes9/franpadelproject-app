@@ -84,7 +84,7 @@ export interface ClubCoach {
 // One Course of a Coach's progress, the same numbers their Course home shows.
 // A Planned Course has no Modules: modulesTotal is 0.
 export interface CourseProgressEntry {
-  level: 'beginner' | 'intermediate' | 'advanced'
+  level: Level
   modulesDone: number
   modulesTotal: number
   progress: number
@@ -104,14 +104,15 @@ export interface PendingCoachInvitation {
 
 export type PlayerPosition = 'left' | 'right' | 'both'
 export type PlayerHand = 'left' | 'right'
-export type PlayerLevel = 'beginner' | 'intermediate' | 'advanced'
+// A Course Level, shared by Players, Class Groups and Courses.
+export type Level = 'beginner' | 'intermediate' | 'advanced'
 
 export interface Player {
   id: string
   name: string
   position: PlayerPosition
   hand: PlayerHand
-  level: PlayerLevel
+  level: Level
 }
 
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
@@ -120,7 +121,7 @@ export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
 // duration is in minutes (60 or 90).
 export interface ClassGroupListItem {
   id: string
-  level: PlayerLevel
+  level: Level
   weekdays: Weekday[]
   startTime: string
   duration: number
@@ -139,18 +140,18 @@ export interface TodayClass {
   kind: 'regular' | 'assessment'
   done: boolean
   module: { slug: string; number: number; title: string }
-  group: { id: string; level: PlayerLevel; playerCount: number }
+  group: { id: string; level: Level; playerCount: number }
 }
 
 // A Class Group as a link to it.
 export interface ClassGroupLink {
   id: string
-  level: PlayerLevel
+  level: Level
 }
 
 export interface ClassGroup {
   id: string
-  level: PlayerLevel
+  level: Level
   // ISO date (YYYY-MM-DD).
   startsOn: string
   cadence: number
@@ -171,7 +172,7 @@ export interface ClassGroup {
 // next Level: that Level and the group's Players still in the Coach's Club.
 export interface ClassGroupContinuation {
   from: ClassGroupLink
-  level: PlayerLevel
+  level: Level
   playerIds: string[]
 }
 

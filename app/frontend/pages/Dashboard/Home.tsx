@@ -7,7 +7,16 @@ import { formatTimeRange } from '@/lib/classGroups'
 import { classGroupsPath, classPath, newClassGroupPath } from '@/lib/paths'
 import { ClassGroupRow } from '../../components/ClassGroupRow'
 import { AppShell } from '../../components/shell'
-import { ArrowBadge, buttonClass, ListCard, ListRow, Pill, ProgressBar, Tile } from '../../components/ui'
+import {
+  ArrowBadge,
+  buttonClass,
+  ListCard,
+  ListRow,
+  Pill,
+  ProgressBar,
+  SectionHeading,
+  Tile,
+} from '../../components/ui'
 import type { ClassGroupListItem, DashboardUser, Module, ModuleStatus, TodayClass } from '../../types/dashboard-data'
 
 interface CourseStats {
@@ -46,38 +55,12 @@ function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name
 }
 
-function SectionTitle({
-  children,
-  id,
-  href,
-  linkLabel,
-}: {
-  children: ReactNode
-  id?: string
-  href?: string
-  linkLabel?: string
-}) {
+// A section title's link to the full list, beside the title.
+function SectionLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <div className="flex min-h-11 items-center justify-between">
-      <h2 id={id} className="text-lg font-extrabold tracking-[-0.01em] text-ink">
-        {children}
-      </h2>
-      {href && (
-        <Link href={href} className="flex min-h-11 items-center text-meta font-semibold text-muted-strong">
-          {linkLabel}
-        </Link>
-      )}
-    </div>
-  )
-}
-
-// A section's empty card: a line of copy and what to do next.
-function EmptyCard({ text, children }: { text: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col items-center gap-3 rounded-[18px] border border-line bg-white px-5 py-8 text-center shadow-card">
-      <p className="text-sm text-muted">{text}</p>
+    <Link href={href} className="flex min-h-11 items-center text-meta font-semibold text-muted-strong">
       {children}
-    </div>
+    </Link>
   )
 }
 
@@ -87,48 +70,48 @@ function TodaySection({ classes }: { classes: TodayClass[] }) {
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="today-title">
-      <SectionTitle id="today-title">{t('dashboard.home.today.title')}</SectionTitle>
-      {classes.length === 0 ? (
-        <EmptyCard text={t('dashboard.home.today.empty')}>
+      <SectionHeading id="today-title" title={t('dashboard.home.today.title')} />
+      <ListCard
+        count={classes.length}
+        empty={t('dashboard.home.today.empty')}
+        emptyAction={
           <Link
             href={classGroupsPath}
             className="text-meta font-semibold text-teal-deep underline-offset-2 hover:underline"
           >
             {t('dashboard.home.today.emptyLink')}
           </Link>
-        </EmptyCard>
-      ) : (
-        <ListCard count={classes.length}>
-          {classes.map((trainingClass) => (
-            <ListRow key={trainingClass.id}>
-              <Link
-                href={classPath(trainingClass.id)}
-                className="-my-3.5 flex min-h-11 min-w-0 flex-1 flex-col justify-center gap-0.5 py-3.5 hover:text-teal-deep"
-              >
-                <span className="font-dash-mono text-sm font-semibold text-ink">
-                  {formatTimeRange(trainingClass.startTime, trainingClass.duration)}
-                </span>
-                <span className="text-meta text-muted">
-                  {t(`players.levelOption.${trainingClass.group.level}`)} ·{' '}
-                  {tn('classGroups.playersCount', trainingClass.group.playerCount)}
-                </span>
-                <span className="truncate text-meta text-muted">
-                  {t('classGroups.show.module', { n: trainingClass.module.number })} · {trainingClass.module.title}
-                </span>
-                {trainingClass.kind === 'assessment' && (
-                  <span className="text-meta text-muted-strong">{t('classGroups.show.assessmentNote')}</span>
-                )}
-              </Link>
-              {(trainingClass.kind === 'assessment' || trainingClass.done) && (
-                <div className="flex shrink-0 flex-col items-end gap-1.5">
-                  {trainingClass.kind === 'assessment' && <Pill text={t('classGroups.show.assessment')} />}
-                  {trainingClass.done && <Pill text={t('classGroups.planEditing.done')} variant="full" />}
-                </div>
+        }
+      >
+        {classes.map((trainingClass) => (
+          <ListRow key={trainingClass.id}>
+            <Link
+              href={classPath(trainingClass.id)}
+              className="-my-3.5 flex min-h-11 min-w-0 flex-1 flex-col justify-center gap-0.5 py-3.5 hover:text-teal-deep"
+            >
+              <span className="font-dash-mono text-sm font-semibold text-ink">
+                {formatTimeRange(trainingClass.startTime, trainingClass.duration)}
+              </span>
+              <span className="text-meta text-muted">
+                {t(`players.levelOption.${trainingClass.group.level}`)} ·{' '}
+                {tn('classGroups.playersCount', trainingClass.group.playerCount)}
+              </span>
+              <span className="truncate text-meta text-muted">
+                {t('dashboard.home.today.module', { n: trainingClass.module.number })} · {trainingClass.module.title}
+              </span>
+              {trainingClass.kind === 'assessment' && (
+                <span className="text-meta text-muted-strong">{t('dashboard.home.today.assessmentNote')}</span>
               )}
-            </ListRow>
-          ))}
-        </ListCard>
-      )}
+            </Link>
+            {(trainingClass.kind === 'assessment' || trainingClass.done) && (
+              <div className="flex shrink-0 flex-col items-end gap-1.5">
+                {trainingClass.kind === 'assessment' && <Pill text={t('dashboard.home.today.assessment')} />}
+                {trainingClass.done && <Pill text={t('dashboard.home.today.done')} variant="full" />}
+              </div>
+            )}
+          </ListRow>
+        ))}
+      </ListCard>
     </section>
   )
 }
@@ -139,22 +122,24 @@ function MyGroupsSection({ groups }: { groups: ClassGroupListItem[] }) {
 
   return (
     <section className="flex flex-col gap-3" aria-labelledby="my-groups-title">
-      <SectionTitle id="my-groups-title" href={classGroupsPath} linkLabel={t('dashboard.home.myGroups.allGroups')}>
-        {t('dashboard.home.myGroups.title')}
-      </SectionTitle>
-      {groups.length === 0 ? (
-        <EmptyCard text={t('dashboard.home.myGroups.empty')}>
+      <SectionHeading
+        id="my-groups-title"
+        title={t('dashboard.home.myGroups.title')}
+        action={<SectionLink href={classGroupsPath}>{t('dashboard.home.myGroups.allGroups')}</SectionLink>}
+      />
+      <ListCard
+        count={groups.length}
+        empty={t('dashboard.home.myGroups.empty')}
+        emptyAction={
           <Link href={newClassGroupPath} className={buttonClass('primary')}>
             {t('dashboard.home.myGroups.create')}
           </Link>
-        </EmptyCard>
-      ) : (
-        <ListCard count={groups.length}>
-          {groups.map((group) => (
-            <ClassGroupRow key={group.id} group={group} />
-          ))}
-        </ListCard>
-      )}
+        }
+      >
+        {groups.map((group) => (
+          <ClassGroupRow key={group.id} group={group} />
+        ))}
+      </ListCard>
     </section>
   )
 }
@@ -189,7 +174,7 @@ function Home() {
         )}
 
         <div className="flex flex-col gap-5">
-          {coachHome && <SectionTitle>{t('dashboard.home.heading')}</SectionTitle>}
+          {coachHome && <SectionHeading title={t('dashboard.home.courseProgressTitle')} />}
           {/* Continue tile */}
           {current ? (
             <Tile tone="teal" href={`/dashboard/courses/${current.id}`} className="flex flex-col gap-4">
@@ -261,9 +246,10 @@ function Home() {
 
           {/* Modules */}
           <div className="flex flex-col gap-3">
-            <SectionTitle href="/dashboard/courses" linkLabel={t('common.viewAll')}>
-              {t('dashboard.home.modulesEyebrow')}
-            </SectionTitle>
+            <SectionHeading
+              title={t('dashboard.home.modulesEyebrow')}
+              action={<SectionLink href="/dashboard/courses">{t('common.viewAll')}</SectionLink>}
+            />
             {modules.slice(0, 5).map((m) => (
               <ModuleCard
                 key={m.id}

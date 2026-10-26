@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { clubPlayersPath, playerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, Eyebrow, FieldError, INPUT_CLASS } from '../../components/ui'
-import type { ClubSummary, Player, PlayerHand, PlayerLevel, PlayerPosition } from '../../types/dashboard-data'
+import type { ClubSummary, Level, Player, PlayerHand, PlayerPosition } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -12,7 +12,7 @@ interface Props {
   player: Player | null
   positionOptions: PlayerPosition[]
   handOptions: PlayerHand[]
-  levelOptions: PlayerLevel[]
+  levelOptions: Level[]
 }
 
 type Field = 'name' | 'position' | 'hand' | 'level'
