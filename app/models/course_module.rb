@@ -107,32 +107,74 @@ class CourseModule < ApplicationRecord
   # and In Progress once the Client has an Exercise Completion in it. Progress
   # is the share of the Module's Exercises completed.
   def self.states_for(user, modules = ordered.to_a)
+    states_by_user([user], modules)[user.id]
+  end
+
+  # `.states_for` for several users at once, keyed by user id, in the same
+  # number of queries however many users there are.
+  def self.states_by_user(users, modules = ordered.to_a)
     ids = modules.map(&:id)
-    completed_ids = UserModuleProgress.done.where(user: user, course_module_id: ids).pluck(:course_module_id).to_set
+    user_ids = users.map(&:id)
+    completed = UserModuleProgress.done.where(user_id: user_ids, course_module_id: ids)
+                                  .pluck(:user_id, :course_module_id).to_set
     exercise_counts = Exercise.where(course_module_id: ids).group(:course_module_id).count
     completion_counts = ExerciseCompletion.joins(:exercise)
-                                          .where(user: user, exercises: { course_module_id: ids })
-                                          .group("exercises.course_module_id").count
+                                          .where(user_id: user_ids, exercises: { course_module_id: ids })
+                                          .group(:user_id, "exercises.course_module_id").count
+    courses = modules.group_by(&:level).values.map { |course_modules| course_modules.sort_by(&:position) }
 
-    modules.group_by(&:level).each_with_object({}) do |(_level, course_modules), states|
-      previous_completed = true
-      course_modules.sort_by(&:position).each do |m|
-        completed = completed_ids.include?(m.id)
-        done = completion_counts.fetch(m.id, 0)
-        total = exercise_counts.fetch(m.id, 0)
+    user_ids.index_with do |user_id|
+      courses.each_with_object({}) do |course_modules, states|
+        previous_completed = true
+        course_modules.each do |m|
+          is_completed = completed.include?([user_id, m.id])
+          done = completion_counts.fetch([user_id, m.id], 0)
+          total = exercise_counts.fetch(m.id, 0)
 
-        status =
-          if completed then "completed"
-          elsif !previous_completed then "locked"
-          elsif done.positive? then "in_progress"
-          else "available"
-          end
-        progress = completed ? 100 : (total.zero? ? 0 : (done * 100.0 / total).round)
+          status =
+            if is_completed then "completed"
+            elsif !previous_completed then "locked"
+            elsif done.positive? then "in_progress"
+            else "available"
+            end
+          progress = is_completed ? 100 : (total.zero? ? 0 : (done * 100.0 / total).round)
 
-        states[m.id] = { status: status, progress: progress }
-        previous_completed = completed
+          states[m.id] = { status: status, progress: progress }
+          previous_completed = is_completed
+        end
       end
     end
+  end
+
+  # Each user's Course progress, keyed by user id, as a Club Manager follows
+  # their Coaches: for every Course in Level order, the Modules with Module
+  # Completion out of the Course's Modules, and progress computed as the
+  # Course home does (the mean of its Modules' progress). A Planned Course has
+  # no Modules, so its modulesTotal is 0. The same number of queries however
+  # many users there are.
+  def self.progress_for(users)
+    modules = ordered.to_a
+    states = states_by_user(users, modules)
+    exercises_done = ExerciseCompletion.where(user_id: users.map(&:id)).group(:user_id).count
+    modules_by_level = modules.group_by(&:level)
+
+    users.to_h do |user|
+      courses = Level::VALUES.keys.map(&:to_s).map do |level|
+        course_states = modules_by_level.fetch(level, []).map { |m| states[user.id][m.id] }
+        {
+          level: level,
+          modulesDone: course_states.count { |s| s[:status] == "completed" },
+          modulesTotal: course_states.size,
+          progress: course_states.empty? ? 0 : (course_states.sum { |s| s[:progress] }.to_f / course_states.size).round
+        }
+      end
+      [user.id, { courses: courses, exercisesDone: exercises_done.fetch(user.id, 0) }]
+    end
+  end
+
+  # One user's entry from `.progress_for`.
+  def self.course_progress_for(user)
+    progress_for([user])[user.id]
   end
 
   def self.dashboard_list_for(user)

@@ -216,6 +216,9 @@ export const pt = {
       players: 'Jogadores',
       playersEmpty: 'Ainda não há jogadores neste clube.',
       managePlayers: 'Gerir jogadores',
+      courseProgress: 'Progresso nos cursos',
+      courseModules: '{{done}}/{{total}} mesociclos',
+      exercisesDone: 'Exercícios concluídos: {{count}}',
     },
     coachRemoval: {
       remove: 'Remover',
