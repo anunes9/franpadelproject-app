@@ -66,3 +66,21 @@ See [`.railway/README.md`](.railway/README.md) for the full command reference.
 ```bash
 railway connect Postgres --tunnel-only
 ```
+
+## Demo Club
+
+`rails demo:club` builds the Club shown to prospective clients: a Club Manager, three Coaches at different points of the Beginner Course, a pending Coach invitation, 18 Players, the coming Christmas, Easter and August Break Periods, and five Class Groups (in progress, finished, and starting next week). Every date is relative to the day it runs, so the first Coach always has a Class today and past Classes are done.
+
+Run it again to reset the demo after a presentation: it keeps the accounts and Players and rebuilds the groups, plans, progress and Break Periods.
+
+```bash
+rails demo:club
+```
+
+The demo accounts (`demo.manager@franpadelproject.com`, `demo.coach@franpadelproject.com`, `demo.coach2@…`, `demo.coach3@…`) get the password `demo-padel-2026` in development. In production the password is required, and the task runs inside the app service's container, since `DATABASE_URL` points at Railway's private network:
+
+```bash
+railway ssh -- env DEMO_PASSWORD=choose-one bin/rails demo:club
+```
+
+The Course Modules and Exercises must already be imported (`rails course_modules:import` and `rails exercises:import`).
