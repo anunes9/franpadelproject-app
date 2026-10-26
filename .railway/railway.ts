@@ -31,6 +31,10 @@ export default defineRailway(() => {
     replicas: { [REGION]: 1 },
     deploy: { limitOverride: { containers: { cpu: 2, memoryBytes: 4_000_000_000 } } },
     domains: ['app.franpadelproject.com'],
+    // Railpack's default Rails start command only boots the server, so run
+    // migrations here. A failing migration stops the deploy instead of
+    // shipping code against a stale schema.
+    preDeploy: 'bin/rails db:prepare',
     env: {
       RAILS_ENV: 'production',
       // Secret: the value stays on Railway and is never written to this file.
