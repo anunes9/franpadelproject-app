@@ -29,13 +29,40 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy on Railway
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Production runs on Railway in the "FranPadelProject App" project, production environment.
+Pushes to `main` deploy automatically from GitHub.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Infrastructure as code
 
+The whole Railway project is defined in [`.railway/railway.ts`](.railway/railway.ts): the app service, Postgres and its volume, the `bundled-wardrobe` storage bucket, the custom domain, and every service variable. Secret values such as `RAILS_MASTER_KEY` stay on Railway through `preserve()` and are never committed.
 
+The file manages the whole project. Anything missing from it, including a service variable, is deleted on apply. Add new variables to the file, not only in the dashboard.
+
+One-time setup:
+
+```bash
+npm install
 railway login
+railway link
+```
 
+Change infrastructure by editing the file, then preview and apply:
+
+```bash
+railway config plan
+railway config apply
+```
+
+`plan` only reads Railway. `apply` shows the plan again and asks for confirmation, and it marks destructive changes. A dashboard edit made outside the file shows up as a pending change in the next plan, so either copy it into the file or let the apply revert it.
+
+To check for drift, `railway config plan --detailed-exit-code` exits `0` when the file matches Railway and `2` when changes are pending.
+
+See [`.railway/README.md`](.railway/README.md) for the full command reference.
+
+### Database access
+
+```bash
 railway connect Postgres --tunnel-only
+```
