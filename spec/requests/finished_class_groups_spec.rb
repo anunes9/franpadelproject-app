@@ -141,7 +141,7 @@ RSpec.describe "Finished Class Groups", type: :request do
       expect(response).to have_http_status(200)
       expect(response.body).to include(%q("component":"ClassGroups/Form"))
       expect(page_props["continuation"]).to eq(
-        "from" => { "id" => finished_group.id, "level" => "beginner" },
+        "from" => { "id" => finished_group.id, "level" => "beginner", "name" => nil },
         "level" => "intermediate",
         "playerIds" => players.sort_by(&:name).map(&:id)
       )
@@ -226,7 +226,8 @@ RSpec.describe "Finished Class Groups", type: :request do
       expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
       follow_redirect!
       expect(page_props["classGroup"]).to include("level" => "intermediate", "finished" => false)
-      expect(page_props["classGroup"]["previousGroup"]).to eq("id" => finished_group.id, "level" => "beginner")
+      expect(page_props["classGroup"]["previousGroup"]).to eq("id" => finished_group.id, "level" => "beginner",
+                                                              "name" => nil)
       expect(page_props["classes"].first["module"]).to include("title" => "Bandeja")
     end
 

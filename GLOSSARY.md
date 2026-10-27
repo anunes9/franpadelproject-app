@@ -103,16 +103,20 @@ _Avoid_: Certificate (for the achievement), diploma
 ## Planning
 
 **Class Group**:
-A group of one to eight Players taught by one Coach, tied to one Course through its Level. It has a start date, a cadence (once or twice a week), chosen weekdays, a start time and a Class duration (1 hour or 1h30). The Coach picks its Level; it is not computed from its Players. A finished Class Group stays as history; the next Course is a new Class Group.
+A group of one to eight Players taught by one Coach, tied to one Course through its Level. It has a start date, a cadence (once or twice a week), chosen weekdays, a start time and a Class duration (1 hour or 1h30). The Coach picks its Level; it is not computed from its Players. The Coach may also give it a name, such as "Fim de tarde"; a group without one is shown by its Level. A finished Class Group stays as history; the next Course is a new Class Group.
 _Avoid_: Class (for the group), team, cohort
 
 **Training Plan**:
-The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Regenerating happens only on request, and keeps completed Classes. It is an intention only.
+The ordered Classes of one Class Group, generated up front by rules from the Course's Modules, and editable by the Coach. It runs through the Course's seven Modules in order and has no season end date. Its cadence sets the weeks per Module; the Class duration only sets its Class Structure. Regenerating happens only on request, and keeps completed Classes. It is an intention only.
 _Avoid_: Weekly Plan, schedule, calendar
 
 **Class**:
-One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time. A skipped Class stays in the plan but no longer takes up its time.
+One dated day of a Training Plan, with a start time, a Module and optionally Exercises the Coach picks. It is a reference for the Coach to see what is planned that day. A Coach, and a Player, can never have two Classes overlapping in time. A skipped Class stays in the plan but no longer takes up its time. Classes are numbered in plan order within their group, Class 1 to the last, skipped ones included.
 _Avoid_: Session, lesson
+
+**Class Structure**:
+How a Class is spent, set by its duration: a warm-up, the Exercises the Coach picks (8 minutes each), a game based on the exercises ("jogo com base nos exercícios"), and a game for the remaining time. A 1-hour Class has a 5-minute warm-up, 4 Exercises and 10–15 minutes of game based on the exercises; a 1h30 Class has a 10–15-minute warm-up, 5 Exercises and 20–25 minutes of it. The Class page lays it out as a timeline.
+_Avoid_: Class plan, lesson plan
 
 **Assessment Class**:
 The last Class of each Module in a Training Plan, in week 6 at once a week and in week 4 at twice a week. It is where each Player's qualitative evaluation of the Module's concepts will be recorded; that evaluation feature is still to be scoped, and is separate from Certification.

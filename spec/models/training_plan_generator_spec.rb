@@ -53,6 +53,11 @@ RSpec.describe TrainingPlanGenerator do
     end
   end
 
+  it "keeps the weeks per Module whatever the Class duration" do
+    expect(generate(duration: 90).size).to eq(18)
+    expect(generate(cadence: 2, weekdays: %i[monday thursday], duration: 90).size).to eq(24)
+  end
+
   describe "first Class" do
     it "is on the start date when it is a chosen weekday" do
       expect(generate.first.date).to eq(start_date)

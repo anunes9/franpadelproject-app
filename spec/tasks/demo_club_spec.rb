@@ -12,7 +12,7 @@ RSpec.describe "demo:club rake task" do
     Rake::Task["demo:club"].reenable
     7.times do |index|
       course_module = create(:course_module, slug: "module-#{index + 1}", position: index + 1, level: :beginner)
-      4.times { create(:exercise, course_module: course_module) }
+      6.times { create(:exercise, course_module: course_module) }
     end
   end
 
@@ -72,6 +72,8 @@ RSpec.describe "demo:club rake task" do
     expect(upcoming).to all(have_attributes(done: false))
     expect(current.flat_map(&:training_classes).count(&:skipped?)).to eq(1)
     expect(past.map(&:exercises)).to all(be_present)
+    # As many Exercises as the Class duration sets: 4 for 1h, 5 for 1h30.
+    expect(past.map { |c| [c.duration, c.exercises.size] }.uniq).to contain_exactly([60, 4], [90, 5])
 
     expect(TrainingClass.taught_on(Date.current, coach: first_coach).count).to eq(1)
     expect(ClassGroup.where(coach: first_coach).order(:starts_on).first.starts_on).to eq(Date.new(2026, 9, 7))

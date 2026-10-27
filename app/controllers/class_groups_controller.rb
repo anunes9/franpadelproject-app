@@ -9,11 +9,21 @@ class ClassGroupsController < DashboardController
   skip_before_action :require_coach, only: :show
   before_action :require_club, only: %i[new create]
 
-  # Current groups first; finished groups are kept apart, as history.
+  # The week's Classes (this week, or with `week` a date, the week holding
+  # it), then the current groups with how far each plan has got. Finished
+  # groups are kept apart, as history.
   def index
-    finished, current = current_user_groups.partition(&:finished?)
+    today = Academy.today
+    week = week_of(params[:week], today)
+    finished, current = current_user_groups.includes(training_classes: :course_module).partition(&:finished?)
+
     render inertia: "ClassGroups/Index", props: {
-      classGroups: current.map(&:list_json),
+      today: today.iso8601,
+      week: {
+        startsOn: week.first.iso8601,
+        classes: TrainingClass.week_of(coach: current_user, dates: week).map(&:week_json)
+      },
+      classGroups: current.map { |group| group.card_json(today: today) },
       finishedGroups: finished.map(&:list_json)
     }
   end
@@ -42,12 +52,21 @@ class ClassGroupsController < DashboardController
     end
   end
 
+  # The group with its whole plan, numbered, beside its Course's Modules and
+  # its Club's Break Periods, for the plan's calendar and list.
   def show
-    group = ClassGroup.visible_to(current_user).with_finished.find(params[:id])
+    group = ClassGroup.visible_to(current_user).with_finished
+                      .includes(:players, training_classes: %i[course_module exercises]).find(params[:id])
+    today = Academy.today
 
     render inertia: "ClassGroups/Show", props: {
-      classGroup: group.summary_json.merge(previousGroup: previous_group_json(group)),
-      classes: group.training_classes.includes(:course_module, :exercises).map(&:plan_json),
+      today: today.iso8601,
+      classGroup: group.summary_json.merge(previousGroup: previous_group_json(group),
+                                           progress: group.progress_json(today: today)),
+      classes: group.training_classes.each_with_index.map { |c, index| c.plan_json(number: index + 1) },
+      modules: group.course_modules.map(&:plan_json),
+      breakPeriods: group.club.break_periods.chronological.map(&:summary_json),
+      nameMaxLength: ClassGroup::NAME_MAX_LENGTH,
       nextLevel: next_level_for_continuation(group),
       **plan_editing_props(group),
       **reassignment_props(group)
@@ -118,6 +137,17 @@ class ClassGroupsController < DashboardController
     return User.none unless current_user.club_manager?
 
     group.club.coaches.where.not(id: group.coach_id).order(:name)
+  end
+
+  # The Monday-to-Sunday week holding `date` (YYYY-MM-DD), or `today`'s when
+  # it is missing or not a date.
+  def week_of(date, today)
+    day = begin
+      Date.iso8601(date.to_s)
+    rescue Date::Error
+      today
+    end
+    day.beginning_of_week..day.end_of_week
   end
 
   def require_club

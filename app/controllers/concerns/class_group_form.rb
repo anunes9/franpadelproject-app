@@ -6,10 +6,10 @@ module ClassGroupForm
 
   private
 
-  # The submitted schedule and Players, plus `extra` fields (creating also
-  # takes the Level and start date).
+  # The submitted name, schedule and Players, plus `extra` fields (creating
+  # also takes the Level and start date).
   def class_group_params(*extra)
-    params.require(:class_group).permit(*extra, :cadence, :start_time, :duration, weekdays: [], player_ids: [])
+    params.require(:class_group).permit(*extra, :name, :cadence, :start_time, :duration, weekdays: [], player_ids: [])
   end
 
   # The Club's roster and the schedule options, for a group of `club`.
@@ -20,7 +20,8 @@ module ClassGroupForm
       cadenceOptions: ClassGroup::CADENCES,
       weekdayOptions: ClassGroup::WEEKDAYS,
       durationOptions: ClassGroup::DURATIONS,
-      maxPlayers: ClassGroup::MAX_PLAYERS
+      maxPlayers: ClassGroup::MAX_PLAYERS,
+      nameMaxLength: ClassGroup::NAME_MAX_LENGTH
     }
   end
 end

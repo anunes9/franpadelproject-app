@@ -44,6 +44,33 @@ RSpec.describe "Editing a Training Plan", type: :request do
     end
   end
 
+  describe "editing from the Class's own page" do
+    it "returns to the Class's page, or else to the group's" do
+      sign_in coach
+      class_page = "http://www.example.com/dashboard/classes/#{first_class.id}"
+
+      patch "/dashboard/classes/#{first_class.id}/done", headers: { "Referer" => class_page }
+      expect(response).to redirect_to(class_page)
+
+      patch "/dashboard/classes/#{first_class.id}/undone", headers: { "Referer" => "https://elsewhere.example/" }
+      expect(response).to redirect_to("/dashboard/class_groups/#{group.id}")
+    end
+
+    it "shows a refused move on the Class's page, with its clashing date" do
+      other = planned_group(coach: coach, players: create_list(:player, 1, club: club), weekdays: ["wednesday"])
+      sign_in coach
+      class_page = "http://www.example.com/dashboard/classes/#{first_class.id}"
+
+      patch "/dashboard/classes/#{first_class.id}", params: { training_class: { date: "2026-09-09", start_time: "18:00" } },
+                                                     headers: { "Referer" => class_page }
+
+      expect(response).to redirect_to(class_page)
+      follow_redirect!
+      expect(page_props).to include("clashDates" => ["2026-09-09"], "refusedEdit" => first_class.id)
+      expect(other.training_classes.first.date).to eq(Date.new(2026, 9, 9))
+    end
+  end
+
   describe "moving a Class" do
     def move(training_class, date:, start_time:)
       patch "/dashboard/classes/#{training_class.id}", params: { training_class: { date: date, start_time: start_time } }

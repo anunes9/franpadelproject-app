@@ -23,6 +23,11 @@ class CourseModule < ApplicationRecord
     { id: id, number: position, title: title }
   end
 
+  # The Module as a group's page shows it beside its Classes.
+  def plan_json
+    option_json.merge(slug: slug, description: description, topics: topics)
+  end
+
   def topics_text
     topics.join(", ")
   end

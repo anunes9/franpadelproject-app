@@ -121,6 +121,8 @@ export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
 // duration is in minutes (60 or 90).
 export interface ClassGroupListItem {
   id: string
+  // The Coach's own name for the group; null shows it by its Level.
+  name: string | null
   level: Level
   weekdays: Weekday[]
   startTime: string
@@ -129,6 +131,36 @@ export interface ClassGroupListItem {
   playerCount: number
   // Every Class done or skipped, at least one done: kept as history.
   finished: boolean
+}
+
+// How far a Training Plan has got: each Module's done and planned Classes
+// (skipped ones left out), the Module being taught, and the next Class to
+// teach with its number in the plan.
+export interface PlanProgress {
+  modules: Array<{ number: number; done: number; total: number }>
+  currentModule: number | null
+  done: number
+  total: number
+  nextClass: { id: string; date: string; startTime: string; number: number } | null
+}
+
+// A Class Group as the Coach's Class Groups page shows it.
+export interface ClassGroupCard extends ClassGroupListItem {
+  playerNames: string[]
+  progress: PlanProgress
+}
+
+// A Class of the week on the Class Groups page, numbered in its group's plan.
+export interface WeekClass {
+  id: string
+  date: string
+  startTime: string
+  duration: number
+  kind: 'regular' | 'assessment'
+  done: boolean
+  number: number
+  moduleNumber: number
+  group: { id: string; name: string | null; level: Level }
 }
 
 // A Class of today on the Coach home, with its group.
@@ -140,17 +172,19 @@ export interface TodayClass {
   kind: 'regular' | 'assessment'
   done: boolean
   module: { slug: string; number: number; title: string }
-  group: { id: string; level: Level; playerCount: number }
+  group: { id: string; name: string | null; level: Level; playerCount: number }
 }
 
 // A Class Group as a link to it.
 export interface ClassGroupLink {
   id: string
+  name: string | null
   level: Level
 }
 
 export interface ClassGroup {
   id: string
+  name: string | null
   level: Level
   // ISO date (YYYY-MM-DD).
   startsOn: string
@@ -161,11 +195,15 @@ export interface ClassGroup {
   coach: string
   club: ClubSummary
   players: Player[]
+  // How many Exercises each Class has, set by the Class duration.
+  exercisesPerClass: number
   // Every Class done or skipped, at least one done: kept as history.
   finished: boolean
   // On the group's page: the finished group it continues at the next Level,
   // while the user can see it.
   previousGroup?: ClassGroupLink | null
+  // On the group's page: how far its plan has got.
+  progress?: PlanProgress
 }
 
 // What the create form starts from when continuing a finished group at the
@@ -179,6 +217,8 @@ export interface ClassGroupContinuation {
 // One Class of a Training Plan. An Assessment Class is the last of its Module.
 export interface TrainingClass {
   id: string
+  // Its place in the group's plan: Class 1 is the first by date and time.
+  number: number
   // ISO date (YYYY-MM-DD).
   date: string
   startTime: string
@@ -188,9 +228,22 @@ export interface TrainingClass {
   skipped: boolean
   // Added by hand by the Coach, rather than generated.
   coachAdded: boolean
-  module: { slug: string; number: number; title: string }
+  module: { slug: string; number: number; title: string; topics: string[] }
   // The Exercises the Coach picked, in the order picked.
   exercises: Array<{ ref: string; title: string }>
+}
+
+// How a Class is spent, by its duration: minutes as ranges, and the game
+// takes the remaining time.
+export interface ClassStructure {
+  warmUp: { min: number; max: number }
+  exercises: { count: number; minutes: number }
+  conditioning: { min: number; max: number }
+}
+
+// A Class as its own page shows it, with its Module's description too.
+export interface TrainingClassDetail extends TrainingClass {
+  module: TrainingClass['module'] & { description: string }
 }
 
 // An Exercise of a Class's Module, picked for the Class or left to pick.
@@ -199,6 +252,18 @@ export interface ClassExercise {
   title: string
   duration: string | null
   category: 'Technical' | 'Tactical' | null
+  // Its first image, its court diagram, if it has one.
+  image: string | null
+}
+
+// A Module of a group's Course, as the group's plan shows it.
+export interface PlanModule {
+  id: string
+  slug: string
+  number: number
+  title: string
+  description: string
+  topics: string[]
 }
 
 // A Coach a Club Manager can reassign a Class Group to.

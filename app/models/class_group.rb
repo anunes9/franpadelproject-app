@@ -3,6 +3,7 @@
 # Classes (TrainingClass), generated up front when the group is created.
 class ClassGroup < ApplicationRecord
   MAX_PLAYERS = 8
+  NAME_MAX_LENGTH = 60
   CADENCES = TrainingPlanGenerator::CADENCE_WEEKS_PER_MODULE.keys.freeze
   DURATIONS = TrainingPlanGenerator::DURATIONS
   WEEKDAYS = TrainingPlanGenerator::WEEKDAYS.map(&:to_s).freeze
@@ -10,7 +11,8 @@ class ClassGroup < ApplicationRecord
   belongs_to :coach, class_name: "User"
   has_many :class_group_players, dependent: :destroy
   has_many :players, through: :class_group_players
-  has_many :training_classes, -> { order(:date, :start_time) }, dependent: :destroy, inverse_of: :class_group
+  # In plan order, which numbers the Classes (TrainingClass.numbered).
+  has_many :training_classes, -> { order(:date, :start_time, :id) }, dependent: :destroy, inverse_of: :class_group
   # The finished group this one continues at the next Level, when the Coach
   # started it from one. A link for history only.
   belongs_to :previous_class_group, class_name: "ClassGroup", optional: true
@@ -20,7 +22,12 @@ class ClassGroup < ApplicationRecord
   # A start time is a wall-clock time at the Club, never shifted by time zone.
   self.skip_time_zone_conversion_for_attributes = [:start_time]
 
+  # The Coach's own name for the group. Optional: without one the group is
+  # shown by its Level. A blank name is no name.
+  normalizes :name, with: ->(name) { name.strip.presence }
+
   validates :starts_on, :start_time, presence: true
+  validates :name, length: { maximum: NAME_MAX_LENGTH }
   validates :cadence, inclusion: { in: CADENCES }
   validates :duration, inclusion: { in: DURATIONS }
   validate :weekdays_match_cadence
@@ -231,11 +238,13 @@ class ClassGroup < ApplicationRecord
     start_time&.strftime("%H:%M")
   end
 
-  # The group as its page shows it.
+  # The group as its page shows it, with how many Exercises each of its
+  # Classes has (ClassStructure).
   def summary_json
     common_json.merge(
       startsOn: starts_on.iso8601,
       cadence: cadence,
+      exercisesPerClass: ClassStructure.exercises_for(duration),
       club: club.summary_json,
       players: players.sort_by(&:name).map(&:players_json)
     )
@@ -247,17 +256,46 @@ class ClassGroup < ApplicationRecord
     common_json.merge(playerCount: players.size)
   end
 
+  # The group as the Coach's Class Groups page shows it: as listed, with its
+  # Players' names and how far its plan has got.
+  def card_json(today:)
+    list_json.merge(playerNames: players.map(&:name).sort, progress: progress_json(today: today))
+  end
+
+  # How far the Training Plan has got, from its loaded Classes: each Module's
+  # done and planned Classes, the Module being taught (that of the first
+  # Class not done), and the next Class to teach from `today` with its number
+  # in the plan. Skipped Classes no longer count, though they keep a number.
+  def progress_json(today:)
+    classes = training_classes.to_a
+    taught = classes.reject(&:skipped?)
+    positions = course_modules.to_h { |course_module| [course_module.id, course_module.position] }
+    next_index = classes.index { |c| c.date >= today && !c.done? && !c.skipped? }
+    {
+      modules: positions.map do |id, number|
+        own = taught.select { |c| c.course_module_id == id }
+        { number: number, done: own.count(&:done?), total: own.size }
+      end,
+      currentModule: positions[taught.find { |c| !c.done? }&.course_module_id],
+      done: taught.count(&:done?),
+      total: taught.size,
+      nextClass: next_index && next_class_json(classes[next_index], next_index + 1)
+    }
+  end
+
   # The group as a link to it: "Continues from <group>".
   def link_json
-    { id: id, level: level }
+    { id: id, level: level, name: name }
   end
 
   private
 
-  # What every view of the group shows: its Level, its weekly time and Coach.
+  # What every view of the group shows: its name (nil when the Coach gave it
+  # none: views show its Level instead), Level, weekly time and Coach.
   def common_json
     {
       id: id,
+      name: name,
       level: level,
       weekdays: weekdays,
       startTime: start_time_text,
@@ -265,6 +303,11 @@ class ClassGroup < ApplicationRecord
       coach: coach.name,
       finished: finished?
     }
+  end
+
+  def next_class_json(training_class, number)
+    { id: training_class.id, date: training_class.date.iso8601, startTime: training_class.start_time.strftime("%H:%M"),
+      number: number }
   end
 
   def generate_plan(modules:, start_date:, done_in_first_module: 0)
