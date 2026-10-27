@@ -58,15 +58,15 @@ class DemoClub
   # never overlap, whatever day the demo is built on. Player indexes are into
   # PLAYERS. `weeks_ago` (or `weeks_ahead`) places the group's start date.
   GROUPS = [
-    { coach: 0, cadence: 2, weekday_offsets: [0, 2], start_time: "18:00", duration: 90,
+    { name: "Fim de tarde", coach: 0, cadence: 2, weekday_offsets: [0, 2], start_time: "18:00", duration: 90,
       weeks_ago: 7, players: [0, 1, 2, 3, 4, 5] },
-    { coach: 0, cadence: 1, weekday_offsets: [5], start_time: "10:00", duration: 60,
+    { name: "Manhãs de fim de semana", coach: 0, cadence: 1, weekday_offsets: [5], start_time: "10:00", duration: 60,
       weeks_ago: 3, players: [0, 1, 6, 7] },
-    { coach: 1, cadence: 2, weekday_offsets: [1, 3], start_time: "19:30", duration: 90,
+    { name: "Noite", coach: 1, cadence: 2, weekday_offsets: [1, 3], start_time: "19:30", duration: 90,
       weeks_ago: 6, players: [8, 9, 10, 11, 12, 13, 14, 15], skipped_class: 2 },
     { coach: 1, cadence: 2, weekday_offsets: [0, 2], start_time: "17:00", duration: 90,
       weeks_ago: 46, players: [8, 9, 10, 11, 12, 13], finished: true },
-    { coach: 2, cadence: 2, weekday_offsets: [0, 4], start_time: "20:00", duration: 60,
+    { name: "Depois do jantar", coach: 2, cadence: 2, weekday_offsets: [0, 4], start_time: "20:00", duration: 60,
       weeks_ahead: 1, players: [10, 11, 12, 16, 17] }
   ].freeze
 
@@ -230,7 +230,7 @@ class DemoClub
   def create_class_group(attrs)
     starts_on = attrs[:weeks_ago] ? @today - attrs[:weeks_ago].weeks : @today + attrs[:weeks_ahead].weeks
     group = ClassGroup.new(
-      coach: @coaches[attrs[:coach]], level: :beginner, starts_on: starts_on,
+      name: attrs[:name], coach: @coaches[attrs[:coach]], level: :beginner, starts_on: starts_on,
       cadence: attrs[:cadence], weekdays: attrs[:weekday_offsets].map { |offset| weekday(offset) },
       start_time: attrs[:start_time], duration: attrs[:duration],
       players: @players.values_at(*attrs[:players])

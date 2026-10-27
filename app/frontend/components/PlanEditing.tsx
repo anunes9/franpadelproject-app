@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate } from '@/lib/classGroups'
 import { type ClassEdit, classGroupClassesPath, classPath } from '@/lib/paths'
 import type { ModuleOption, TrainingClass } from '../types/dashboard-data'
-import { buttonClass, chipClass, FieldError, INPUT_CLASS, LABEL_CLASS, Pill, SectionHeading } from './ui'
+import { buttonClass, FieldError, INPUT_CLASS, LABEL_CLASS, Pill, SectionHeading } from './ui'
 
 // Editing a Training Plan on the group's page: each Class's row actions, and
 // the form that adds a Class. The owning Coach and the Club Managers of the
@@ -21,6 +21,11 @@ interface RefusalProps {
 }
 
 const NEW_CLASS = 'new'
+
+// Whether the last refused edit was adding a Class, so its form stays open.
+export function useAddClassRefused() {
+  return useRefusal(NEW_CLASS) !== null
+}
 const EDIT_OPTIONS = { preserveScroll: true, preserveState: 'errors' } as const
 
 // The errors and clashing dates of the last refused edit, if it was `target`'s.
@@ -64,14 +69,43 @@ function Refusal({ target }: { target: string }) {
   )
 }
 
-// A Class's row actions: mark it done, skip or unskip it, and move it to
-// another date or start time.
-export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }) {
+// The pill buttons of a Class's actions, on a light surface or on ink.
+const ACTION =
+  'inline-flex min-h-11 items-center justify-center rounded-full px-4 text-meta font-semibold disabled:opacity-50'
+const ACTION_STYLES = {
+  light: {
+    primary: `${ACTION} bg-ink text-paper`,
+    secondary: `${ACTION} border border-line bg-white text-ink hover:border-teal`,
+    danger: `${ACTION} border border-line bg-white text-danger hover:border-teal`,
+  },
+  dark: {
+    primary: `${ACTION} border border-ink-edge text-paper hover:border-paper`,
+    secondary: `${ACTION} border border-ink-edge text-paper hover:border-paper`,
+    danger: `${ACTION} border border-ink-edge text-paper hover:border-paper`,
+  },
+} as const
+
+// A Class's actions: mark it done or not done, skip or unskip it, and move it
+// to another date or start time. `doneOnly` keeps just the first, and `tone`
+// sets the surface they sit on.
+export function ClassActions({
+  trainingClass,
+  tone = 'light',
+  doneOnly = false,
+  align = 'start',
+}: {
+  trainingClass: Pick<TrainingClass, 'id' | 'date' | 'startTime' | 'done' | 'skipped' | 'coachAdded'>
+  tone?: keyof typeof ACTION_STYLES
+  doneOnly?: boolean
+  align?: 'start' | 'end'
+}) {
   const { t } = useTranslation()
   const [moving, setMoving] = useState(false)
   const [editing, setEditing] = useState(false)
   const form = useForm({ date: trainingClass.date, start_time: trainingClass.startTime })
   form.transform((fields) => ({ training_class: fields }))
+  const styles = ACTION_STYLES[tone]
+  const justify = align === 'end' ? 'justify-end' : 'justify-start'
 
   function edit(action: ClassEdit) {
     setEditing(true)
@@ -84,32 +118,45 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
   }
 
   return (
-    <div className="flex shrink-0 flex-col items-end gap-2">
-      <div className="flex flex-wrap items-center justify-end gap-1.5">
-        {trainingClass.coachAdded && <Pill text={t('classGroups.planEditing.coachAdded')} variant="muted" />}
-        <button
-          type="button"
-          aria-pressed={trainingClass.done}
-          title={t(trainingClass.done ? 'classGroups.planEditing.markUndone' : 'classGroups.planEditing.markDone')}
-          disabled={editing || trainingClass.skipped}
-          onClick={() => edit(trainingClass.done ? 'undone' : 'done')}
-          className={chipClass(trainingClass.done, 'disabled:opacity-50')}
-        >
-          {t('classGroups.planEditing.done')}
-        </button>
-        <button
-          type="button"
-          aria-pressed={trainingClass.skipped}
-          title={trainingClass.skipped ? t('classGroups.planEditing.unskip') : undefined}
-          disabled={editing}
-          onClick={() => edit(trainingClass.skipped ? 'unskip' : 'skip')}
-          className={chipClass(trainingClass.skipped, 'disabled:opacity-50')}
-        >
-          {t(trainingClass.skipped ? 'classGroups.planEditing.skipped' : 'classGroups.planEditing.skip')}
-        </button>
-        <button type="button" aria-expanded={moving} onClick={() => setMoving(!moving)} className={chipClass(moving)}>
-          {t('classGroups.planEditing.move')}
-        </button>
+    <div className={`flex flex-col gap-2 ${align === 'end' ? 'items-end' : 'items-start'}`}>
+      <div className={`flex flex-wrap items-center gap-2 ${justify}`}>
+        {!doneOnly && trainingClass.coachAdded && (
+          <Pill text={t('classGroups.planEditing.coachAdded')} variant="muted" />
+        )}
+        {!trainingClass.skipped && (
+          <button
+            type="button"
+            disabled={editing}
+            onClick={() => edit(trainingClass.done ? 'undone' : 'done')}
+            className={trainingClass.done ? styles.secondary : styles.primary}
+          >
+            {t(trainingClass.done ? 'classGroups.planEditing.markUndone' : 'classGroups.planEditing.markDone')}
+          </button>
+        )}
+        {!doneOnly && (
+          <>
+            {!trainingClass.skipped && (
+              <button
+                type="button"
+                aria-expanded={moving}
+                onClick={() => setMoving(!moving)}
+                className={styles.secondary}
+              >
+                {t('classGroups.planEditing.move')}
+              </button>
+            )}
+            {!trainingClass.done && (
+              <button
+                type="button"
+                disabled={editing}
+                onClick={() => edit(trainingClass.skipped ? 'unskip' : 'skip')}
+                className={trainingClass.skipped ? styles.secondary : styles.danger}
+              >
+                {t(trainingClass.skipped ? 'classGroups.planEditing.unskip' : 'classGroups.planEditing.skip')}
+              </button>
+            )}
+          </>
+        )}
       </div>
 
       {moving && (
@@ -117,39 +164,39 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
           onSubmit={move}
           noValidate
           aria-label={t('classGroups.planEditing.moveTitle')}
-          className="flex w-44 flex-col gap-2"
+          className="flex flex-wrap items-end gap-2"
         >
-          <label className={LABEL_CLASS}>
+          <label className={`${LABEL_CLASS} ${tone === 'dark' ? 'text-paper' : ''}`}>
             {t('classGroups.planEditing.date')}
             <input
               type="date"
               value={form.data.date}
               onChange={(event) => form.setData('date', event.target.value)}
-              className={INPUT_CLASS}
+              className={`${INPUT_CLASS} min-h-11`}
             />
           </label>
-          <label className={LABEL_CLASS}>
+          <label className={`${LABEL_CLASS} ${tone === 'dark' ? 'text-paper' : ''}`}>
             {t('classGroups.planEditing.startTime')}
             <input
               type="time"
               step={300}
               value={form.data.start_time}
               onChange={(event) => form.setData('start_time', event.target.value)}
-              className={INPUT_CLASS}
+              className={`${INPUT_CLASS} min-h-11`}
             />
           </label>
-          <div className="flex justify-end gap-1.5">
-            <button type="button" onClick={() => setMoving(false)} className={chipClass(false)}>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setMoving(false)} className={styles.secondary}>
               {t('classGroups.planEditing.cancel')}
             </button>
-            <button type="submit" disabled={form.processing} className={chipClass(true)}>
+            <button type="submit" disabled={form.processing} className={ACTION_STYLES.light.primary}>
               {form.processing ? t('classGroups.planEditing.saving') : t('classGroups.planEditing.save')}
             </button>
           </div>
         </form>
       )}
 
-      <div className="flex max-w-60 flex-col items-end text-right">
+      <div className={`flex max-w-80 flex-col ${align === 'end' ? 'items-end text-right' : ''}`}>
         <Refusal target={trainingClass.id} />
       </div>
     </div>
@@ -158,9 +205,24 @@ export function ClassActions({ trainingClass }: { trainingClass: TrainingClass }
 
 // Adds a regular Class of the Coach's own to the plan, for a Module of the
 // group's Course. It lasts as long as the group's Classes.
-export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: string; moduleOptions: ModuleOption[] }) {
+// `initialDate` prefills its date, `initialStartTime` its start time.
+export function AddClassForm({
+  classGroupId,
+  moduleOptions,
+  initialDate = '',
+  initialStartTime = '',
+}: {
+  classGroupId: string
+  moduleOptions: ModuleOption[]
+  initialDate?: string
+  initialStartTime?: string
+}) {
   const { t } = useTranslation()
-  const form = useForm({ date: '', start_time: '', course_module_id: moduleOptions[0]?.id ?? '' })
+  const form = useForm({
+    date: initialDate,
+    start_time: initialStartTime,
+    course_module_id: moduleOptions[0]?.id ?? '',
+  })
   form.transform((fields) => ({ training_class: fields }))
 
   function add(event: FormEvent) {
@@ -169,7 +231,7 @@ export function AddClassForm({ classGroupId, moduleOptions }: { classGroupId: st
   }
 
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="add-class-title">
+    <section id="add-class" className="flex scroll-mt-6 flex-col gap-3" aria-labelledby="add-class-title">
       <SectionHeading
         id="add-class-title"
         title={t('classGroups.planEditing.addTitle')}

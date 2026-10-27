@@ -106,6 +106,7 @@ RSpec.describe Exercise, type: :model do
         duration: exercise.duration,
         description: exercise.description,
         content: exercise.content,
+        image: nil,
         media: [],
         moduleId: course_module.slug,
         completed: false

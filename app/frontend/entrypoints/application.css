@@ -34,6 +34,24 @@
   --color-tint-teal: #dfeee8;
   --color-tint-ink: #e7eaee;
   --color-tint-clay: #f3e4de;
+  /* Assessment Classes on the plan's calendars: clay-ink text (>=7:1 on
+     tint-clay), clay-line borders and a clay-wash fill. today-wash marks
+     today's column or row. */
+  --color-clay-ink: #7a3f2c;
+  --color-clay-line: #ecd3c8;
+  --color-clay-wash: #fbf3ef;
+  --color-today-wash: #f4f8f6;
+  /* Text on tint-teal, the border of a tint-ink chip, a calendar's blank
+     days, the ring of a Class not yet done, and an Assessment Class's dot. */
+  --color-teal-ink: #24533f;
+  --color-tint-ink-line: #ccd3dc;
+  --color-paper-blank: #fafbfa;
+  --color-ring-muted: #9aa6a8;
+  --color-clay: #c07a5e;
+  /* The warm-up and game-based-on-exercises steps of a Class's time bar. */
+  --color-mist-strong: #c9d6d4;
+  /* Outlined buttons on the ink surface: >=3:1 against ink. */
+  --color-ink-edge: #4b6680;
 
   /* Elevation. Tinted with the ink color rather than neutral black, and each
      pairs a tight "contact" shadow with a softer ambient one plus a 1px

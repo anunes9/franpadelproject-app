@@ -35,9 +35,17 @@ class Exercise < ApplicationRecord
     exercise_completions.exists?(user: user)
   end
 
-  # The Exercise as a Class's page lists it, picked or available to pick.
+  # The Exercise as a Class's page lists it, picked or available to pick,
+  # with its first image (its court diagram) when it has one. Load it
+  # .with_attached_media.
   def as_class_json
-    { ref: ref, title: title, category: category&.capitalize, duration: duration }
+    { ref: ref, title: title, category: category&.capitalize, duration: duration, image: image_url }
+  end
+
+  # Its first image's URL, or nil.
+  def image_url
+    image = media.find { |file| file.content_type.to_s.start_with?("image/") }
+    image && Rails.application.routes.url_helpers.rails_blob_path(image, disposition: "inline", only_path: true)
   end
 
   # `completed` lets a caller that already knows the answer (see

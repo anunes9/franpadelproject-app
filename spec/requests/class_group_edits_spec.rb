@@ -209,10 +209,23 @@ RSpec.describe "Editing a Class Group", type: :request do
     end
   end
 
+  describe "its name" do
+    it "renames the group from the form, and the form shows it" do
+      sign_in coach
+
+      edit_group(name: "Fim de tarde")
+
+      expect(group.reload.name).to eq("Fim de tarde")
+      get "/dashboard/class_groups/#{group.id}/edit"
+      expect(page_props["classGroup"]["name"]).to eq("Fim de tarde")
+      expect(page_props["nameMaxLength"]).to eq(60)
+    end
+  end
+
   describe "its schedule" do
     it "stores a new cadence, weekdays and start time without touching any Class" do
       sign_in coach
-      plan = group.training_classes.map(&:plan_json)
+      plan = group.training_classes.each_with_index.map { |c, index| c.plan_json(number: index + 1) }
 
       edit_group(cadence: 2, weekdays: %w[monday wednesday], start_time: "09:00")
 

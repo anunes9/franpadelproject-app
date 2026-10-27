@@ -66,6 +66,12 @@ Rails.application.routes.draw do
       end
     end
   end
+  # Renaming a group from its page.
+  scope "/dashboard" do
+    resources :class_groups, only: [] do
+      resource :name, controller: "class_group_names", as: :class_group_name, only: :update
+    end
+  end
   # Regenerating a group's Training Plan, only on request.
   scope "/dashboard" do
     resources :class_groups, only: [] do

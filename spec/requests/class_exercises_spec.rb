@@ -49,6 +49,22 @@ RSpec.describe "Exercises of a Class", type: :request do
     end
   end
 
+  describe "the Class page's numbers and images" do
+    it "numbers the Class in its plan and gives each Exercise its first image" do
+      serve_drill.media.attach(io: StringIO.new("pdf"), filename: "notes.pdf", content_type: "application/pdf")
+      serve_drill.media.attach(io: StringIO.new("<svg/>"), filename: "diagram.svg", content_type: "image/svg+xml")
+      sign_in coach
+
+      get class_path(group.training_classes.third)
+
+      expect(page_props["trainingClass"]["number"]).to eq(3)
+      expect(page_props["classCount"]).to eq(12)
+      images = page_props["availableExercises"].to_h { |e| [e["ref"], e["image"]] }
+      expect(images["S-1"]).to match(%r{\A/rails/active_storage/blobs/redirect/.+/diagram\.svg\?disposition=inline\z})
+      expect(images["S-2"]).to be_nil
+    end
+  end
+
   describe "picking Exercises" do
     it "adds Exercises of the Class's Module, shown on the Class in the order picked" do
       sign_in coach

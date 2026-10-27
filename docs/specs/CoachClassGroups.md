@@ -60,11 +60,16 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 43. As a Coach, I want a 1h Class at 18:00 to clash with a 1h30 Class at 18:30, so that overlaps are detected by time and not by identical start.
 44. As a Coach, I want to see only my own Class Groups, so that my groups are private from other Coaches.
 45. As a Coach, I want a home screen with today's Classes and my Class Groups, so that I start from what I need.
-46. As a Coach, I want to keep browsing Courses, Modules and Exercises as a library, so that I can prepare Classes and learn.
-47. As a Coach, I want to keep my own Course progress, Quizzes and Certification, so that I can learn through the Courses.
-48. As a Coach, I want a finished Class Group kept as history, so that I can review it.
-49. As a Coach, I want to create the next group at the next Course level by copying a finished group's Players, so that I don't re-enter them.
-50. As a Coach, I want to use the app in Portuguese or English, so that I can use my language.
+46. As a Coach, I want my Class Groups page to show this week's Classes across my groups, and each group with its Players, how far its plan has got and its next Class, so that I see my week at a glance.
+47. As a Coach, I want to see a group's plan as a month calendar or as a list of its Modules, so that I can look at it by date or by what is taught.
+48. As a Coach, I want each Class numbered in its group's plan (Class 1, Class 2…), so that I can refer to it.
+49. As a Coach, I want to name a Class Group and rename it from its page, so that I can tell my groups apart.
+50. As a Coach, I want a Class's page to lay its Class Structure out as a timeline, with each picked Exercise's diagram in its slot, so that I can run the Class from it.
+51. As a Coach, I want to keep browsing Courses, Modules and Exercises as a library, so that I can prepare Classes and learn.
+52. As a Coach, I want to keep my own Course progress, Quizzes and Certification, so that I can learn through the Courses.
+53. As a Coach, I want a finished Class Group kept as history, so that I can review it.
+54. As a Coach, I want to create the next group at the next Course level by copying a finished group's Players, so that I don't re-enter them.
+55. As a Coach, I want to use the app in Portuguese or English, so that I can use my language.
 
 ## Implementation Decisions
 
@@ -72,12 +77,12 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 - **Club membership.** A Coach belongs to exactly one Club. A Club Manager is linked to one or more Clubs through a join between Managers and Clubs. Admins create Clubs, Managers and links. Managers cannot create Clubs.
 - **Coach invitation.** A Manager invites a Coach by email. The Coach accepts through a link and sets a password. Authentication stays on the existing email-and-password sign-in.
 - **Player.** A new record owned by a Club, not a User, with name, position (left, right or both), dominant hand (left or right) and Level (beginner, intermediate, advanced). It has no credentials. Its Level is informational only.
-- **Class Group.** Owned by one Coach, with its Club taken from that Coach. Holds Level (chosen by the Coach), start date, cadence (1 or 2 per week), chosen weekdays (one per weekly Class), a start time and a duration (60 or 90 minutes). It has one to eight Players, who can also be in other groups. A group is tied to one Course through its Level. It is never deleted when its Coach is removed; ownership is reassigned first.
+- **Class Group.** Owned by one Coach, with its Club taken from that Coach. Holds Level (chosen by the Coach), start date, cadence (1 or 2 per week), chosen weekdays (one per weekly Class), a start time and a duration (60 or 90 minutes). It has one to eight Players, who can also be in other groups, and an optional name of up to 60 characters; without one it is shown by its Level. A group is tied to one Course through its Level. It is never deleted when its Coach is removed; ownership is reassigned first.
 - **Break Period.** A set of date ranges per Club, defined by its Managers. Plans skip these dates.
-- **Class.** One dated entry of a Training Plan with a date, start time, duration, Module, optional Exercises chosen by the Coach, a type (regular or assessment), and a done flag. A Class has no per-Class duration; it inherits the group's.
+- **Class.** One dated entry of a Training Plan with a date, start time, duration, Module, optional Exercises chosen by the Coach, a type (regular or assessment), and a done flag. A Class has no per-Class duration; it inherits the group's. Its number is its place in the group's plan by date and start time, skipped Classes included, and is derived, never stored.
 - **Training Plan generator.** A rule-based generator, with no AI. Inputs: the Course's Modules in order, the group's cadence, weekdays, time and start date, and the Club's Break Periods. Output: the dated Classes for the whole Course.
   - Once a week: 6 weeks per Module, the 6th being an Assessment Class. Twice a week: 4 weeks per Module, the 4th being the assessment week.
-  - The Class duration (1h or 1h30) does not change the weeks per Module. It only sets the Class Structure (`ClassStructure`): 4 Exercises of 8 minutes in a 1h Class and 5 in a 1h30 Class, between a warm-up and conditioning drills, with a game for the remaining time. The count is shown as a guide and is not enforced.
+  - The Class duration (1h or 1h30) does not change the weeks per Module. It only sets the Class Structure (`ClassStructure`): 4 Exercises of 8 minutes in a 1h Class and 5 in a 1h30 Class, between a warm-up and a game based on the exercises, with a game for the remaining time. The count is shown as a guide and is not enforced.
   - The Module's own `duration` text is ignored.
   - The first Class is on the first chosen weekday on or after the start date. Weeks that fall in a Break Period get no Classes and are not counted toward the Module's weeks.
   - The plan ends after the last Module's Assessment Class. There is no season end date.
@@ -87,7 +92,7 @@ Vocabulary follows `GLOSSARY.md` (Client, Club Manager, Coach, Player, Club, Cla
 - **Plan editing.** The Coach can move, skip, add and mark Classes done, and pick their Exercises. Regeneration happens only on request, keeps completed Classes, and replaces the rest.
 - **Visibility.** A Class Group and its plan are visible and editable only to its owning Coach and to the Managers of its Club. Other Coaches cannot see it.
 - **Manager powers.** Managers manage the Coaches, Class Groups and Players of their linked Clubs, including reassigning a group to another Coach in the same Club. Removing a Coach is blocked while they own groups.
-- **Screens.** The Coach home shows today's Classes and their Class Groups. The Manager home is a Club overview with a Club switcher. The Courses, Modules and Exercises library is shared by both roles. The Coach keeps their own progress, Quizzes and Certification.
+- **Screens.** The Coach home shows today's Classes and their Class Groups. The Class Groups page shows the Coach's week of Classes, with the weeks before and after a click away, and a card per current group with its Players, its progress per Module and its next Class. A group's page shows its progress and next Class, its Players, and its plan as a month calendar beside the selected day, or as a list of Modules opening onto their Classes, both with the Club's Break Periods. A Class's page lays its Class Structure out as a timeline from its start time, each Exercise slot showing its pick with its first image (its court diagram), beside the Module's Exercises still to pick; while the Class is on, it shows the step it is at. An edit made on a Class's page returns to it. The Manager home is a Club overview with a Club switcher. The Courses, Modules and Exercises library is shared by both roles. The Coach keeps their own progress, Quizzes and Certification.
 - **Removed.** The Player's per-user Weekly Plan is removed along with the Player-with-login role. The app is pre-launch, so existing Player data is dropped, not migrated.
 - **Content dependency.** The Intermediate Course currently has no Modules, and the Beginner Module 7 has no Exercises. Generation for the Intermediate Course stays unavailable until its Modules exist. Exercises have no duration in the content source, so nothing depends on Exercise duration.
 

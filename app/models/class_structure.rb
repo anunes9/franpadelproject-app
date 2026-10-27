@@ -1,6 +1,6 @@
 # How a Class is spent, by its duration, as the academy's methodology sets it:
-# a warm-up, the Exercises the Coach picks (8 minutes each), conditioning
-# drills, and a game for the remaining time. The duration only changes this,
+# a warm-up, the Exercises the Coach picks (8 minutes each), a game based on
+# the exercises (`conditioning`), and a game for the remaining time. The duration only changes this,
 # never the weeks per Module, which follow the cadence (TrainingPlanGenerator).
 class ClassStructure
   EXERCISE_MINUTES = 8

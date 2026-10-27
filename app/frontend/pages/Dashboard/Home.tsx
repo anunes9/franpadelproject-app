@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { ModuleCard } from '@/components/ui/ModuleCard'
 import type { TranslationKey } from '@/i18n/translations'
 import { useTranslation } from '@/i18n/useTranslation'
-import { formatTimeRange } from '@/lib/classGroups'
+import { formatTimeRange, groupName } from '@/lib/classGroups'
 import { classGroupsPath, classPath, newClassGroupPath } from '@/lib/paths'
 import { ClassGroupRow } from '../../components/ClassGroupRow'
 import { AppShell } from '../../components/shell'
@@ -93,12 +93,9 @@ function TodaySection({ classes }: { classes: TodayClass[] }) {
                 {formatTimeRange(trainingClass.startTime, trainingClass.duration)}
               </span>
               <span className="text-meta text-muted">
-                {t(`players.levelOption.${trainingClass.group.level}`)} ·{' '}
-                {tn('classGroups.playersCount', trainingClass.group.playerCount)}
+                {groupName(t, trainingClass.group)} · {tn('classGroups.playersCount', trainingClass.group.playerCount)}
               </span>
-              <span className="truncate text-meta text-muted">
-                {trainingClass.module.title}
-              </span>
+              <span className="truncate text-meta text-muted">{trainingClass.module.title}</span>
               {trainingClass.kind === 'assessment' && (
                 <span className="text-meta text-muted-strong">{t('dashboard.home.today.assessmentNote')}</span>
               )}

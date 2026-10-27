@@ -44,10 +44,10 @@ RSpec.describe "Coach home", type: :request do
       expect(page_props["todayClasses"]).to eq([
         { "id" => class_on(morning).id, "startTime" => "10:00", "duration" => 60, "kind" => "regular",
           "done" => false, "module" => { "slug" => serve.slug, "number" => 1, "title" => "Serve" },
-          "group" => { "id" => morning.id, "level" => "beginner", "playerCount" => 3 } },
+          "group" => { "id" => morning.id, "name" => nil, "level" => "beginner", "playerCount" => 3 } },
         { "id" => class_on(evening).id, "startTime" => "18:00", "duration" => 90, "kind" => "regular",
           "done" => false, "module" => { "slug" => serve.slug, "number" => 1, "title" => "Serve" },
-          "group" => { "id" => evening.id, "level" => "beginner", "playerCount" => 2 } }
+          "group" => { "id" => evening.id, "name" => nil, "level" => "beginner", "playerCount" => 2 } }
       ])
     end
 

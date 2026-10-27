@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Class Groups", type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:club) { create(:club, name: "Padel Clube Lisboa") }
   let(:coach) { create(:user, :coach, club: club, name: "Fran") }
   let!(:serve) { create(:course_module, level: :beginner, position: 1, title: "Serve") }
@@ -50,6 +52,16 @@ RSpec.describe "Class Groups", type: :request do
         "level" => "beginner", "cadence" => 1, "weekdays" => ["tuesday"],
         "startTime" => "18:00", "duration" => 60, "coach" => "Fran"
       )
+    end
+
+    it "names the group when given a name, and leaves it unnamed otherwise" do
+      sign_in coach
+
+      create_group(group_params.merge(name: "  Fim de tarde "))
+      expect(ClassGroup.order(:created_at).last.name).to eq("Fim de tarde")
+
+      create_group(group_params.merge(weekdays: ["friday"], name: ""))
+      expect(ClassGroup.order(:created_at).last).to have_attributes(weekdays: ["friday"], name: nil)
     end
 
     it "generates four weeks per Module at twice a week, skipping the Club's Break Periods" do
@@ -283,6 +295,30 @@ RSpec.describe "Class Groups", type: :request do
       expect(page_props["classGroup"]["id"]).to eq(group.id)
     end
 
+    it "numbers the plan, beside its Course's Modules, the Club's Break Periods and how far it has got" do
+      create(:break_period, club: club, name: "Natal", starts_on: Date.new(2026, 12, 21), ends_on: Date.new(2027, 1, 3))
+      group.training_classes.first.update!(done: true)
+      sign_in coach
+
+      travel_to(Time.utc(2026, 9, 10, 9)) { get "/dashboard/class_groups/#{group.id}" }
+
+      expect(page_props["today"]).to eq("2026-09-10")
+      expect(page_props["classes"].map { |c| c["number"] }).to eq((1..12).to_a)
+      expect(page_props["modules"].map { |m| m.slice("number", "title", "slug") }).to eq([
+        { "number" => 1, "title" => "Serve", "slug" => serve.slug },
+        { "number" => 2, "title" => "Volley", "slug" => volley.slug }
+      ])
+      expect(page_props["modules"].first).to include("description" => serve.description, "topics" => serve.topics)
+      expect(page_props["breakPeriods"]).to eq([
+        { "id" => club.break_periods.first.id, "name" => "Natal", "startsOn" => "2026-12-21", "endsOn" => "2027-01-03" }
+      ])
+      expect(page_props["classGroup"]["progress"]).to include(
+        "done" => 1, "total" => 12, "currentModule" => 1,
+        "nextClass" => include("date" => "2026-09-15", "number" => 2)
+      )
+      expect(page_props["nameMaxLength"]).to eq(60)
+    end
+
     it "404s for another Coach of the same Club" do
       sign_in create(:user, :coach, club: club)
 
@@ -322,6 +358,41 @@ RSpec.describe "Class Groups", type: :request do
       expect(response.body).to include(%q("component":"ClassGroups/Index"))
       expect(page_props["classGroups"].map { |g| g["id"] }).to eq([group.id])
       expect(page_props["classGroups"].first).to include("playerCount" => 2, "startTime" => "18:00")
+    end
+
+    it "shows the Coach's Classes of this week, numbered, and each group's Players and progress" do
+      group = ClassGroup.new(group_params.merge(coach: coach, name: "Terças")).tap(&:create_with_plan)
+      ClassGroup.new(group_params.merge(coach: create(:user, :coach, club: club), player_ids: [create(:player, club: club).id]))
+                .tap(&:create_with_plan)
+      sign_in coach
+
+      # Wednesday 9 September: the week from Monday the 7th holds the group's first Class.
+      travel_to(Time.utc(2026, 9, 9, 9)) { get "/dashboard/class_groups" }
+
+      expect(page_props["today"]).to eq("2026-09-09")
+      expect(page_props["week"]["startsOn"]).to eq("2026-09-07")
+      expect(page_props["week"]["classes"]).to eq([
+        { "id" => group.training_classes.first.id, "date" => "2026-09-08", "startTime" => "18:00", "duration" => 60,
+          "kind" => "regular", "done" => false, "number" => 1, "moduleNumber" => 1,
+          "group" => { "id" => group.id, "name" => "Terças", "level" => "beginner" } }
+      ])
+      card = page_props["classGroups"].first
+      expect(card).to include("name" => "Terças", "playerNames" => players.map(&:name).sort)
+      expect(card["progress"]).to include("done" => 0, "total" => 12, "currentModule" => 1)
+      expect(card["progress"]["nextClass"]).to include("date" => "2026-09-15", "number" => 2)
+    end
+
+    it "shows the week holding the date asked for, and this week for anything else" do
+      group = ClassGroup.new(group_params.merge(coach: coach)).tap(&:create_with_plan)
+      sign_in coach
+
+      travel_to(Time.utc(2026, 9, 9, 9)) { get "/dashboard/class_groups", params: { week: "2026-09-17" } }
+      expect(page_props["week"]["startsOn"]).to eq("2026-09-14")
+      expect(page_props["week"]["classes"].map { |c| [c["id"], c["number"]] })
+        .to eq([[group.training_classes.second.id, 2]])
+
+      travel_to(Time.utc(2026, 9, 9, 9)) { get "/dashboard/class_groups", params: { week: "soon" } }
+      expect(page_props["week"]["startsOn"]).to eq("2026-09-07")
     end
 
     it "gives the create form the Coach's Club roster" do

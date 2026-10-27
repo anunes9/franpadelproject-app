@@ -44,6 +44,12 @@ export const classGroupClassesPath = (classGroupId: string) => `${classGroupPath
 export const classPath = (classId: string, edit?: ClassEdit) =>
   edit ? `/dashboard/classes/${classId}/${edit}` : `/dashboard/classes/${classId}`
 
+// The Class Groups page at the week holding `date` (YYYY-MM-DD).
+export const classGroupsWeekPath = (date: string) => `${classGroupsPath}?week=${encodeURIComponent(date)}`
+
+// Renaming a group from its page.
+export const classGroupNamePath = (classGroupId: string) => `${classGroupPath(classGroupId)}/name`
+
 // Regenerating a group's Training Plan, only on request.
 export const classGroupRegenerationPath = (classGroupId: string) => `${classGroupPath(classGroupId)}/regeneration`
 

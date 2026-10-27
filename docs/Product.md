@@ -66,7 +66,9 @@ A Club Manager sees an overview of each Club they manage: its Coaches, Class Gro
 
 ## Class Groups and Training Plans _(not built yet)_
 
-A Coach creates **Class Groups**. A Class Group is up to eight Players, a Level, a start date, a cadence (once or twice a week), the weekdays and start time of its Classes, and a Class duration (1 hour or 1h30). The Coach chooses the group's Level, which selects its Course. A Class Group is visible only to its Coach and its Club's Managers.
+A Coach creates **Class Groups**. A Class Group is up to eight Players, a Level, a start date, a cadence (once or twice a week), the weekdays and start time of its Classes, and a Class duration (1 hour or 1h30). The Coach chooses the group's Level, which selects its Course, and can give the group a name. A Class Group is visible only to its Coach and its Club's Managers.
+
+The Coach's Class Groups page shows their week of Classes across every group, then a card per group with its Players, its progress per Module and its next Class. A group's page shows its plan as a month calendar or as a list of Modules, with each Class numbered in the plan. A Class's page lays out its Class Structure as a timeline, with each picked Exercise's court diagram in its slot.
 
 ### Training Plan
 
@@ -80,7 +82,7 @@ From that description the app generates the group's **Training Plan** for the wh
   | --- | --- | --- |
   | Warm-up | 5 min | 10–15 min |
   | Exercises, 8 min each | 4 (32 min) | 5 (40 min) |
-  | Conditioning drills | 10–15 min | 20–25 min |
+  | Game based on the exercises | 10–15 min | 20–25 min |
   | Game | the remaining time | the remaining time |
 - The first Class falls on the first chosen weekday on or after the start date. No Classes fall in the Club's Break Periods.
 - The plan ends after the last Module's Assessment Class. It has no season end date. At 44 teaching weeks in a year (52 weeks less 2 Christmas, 4 August and 2 Easter weeks) all seven Modules fit: 42 weeks at once a week and 28 at twice a week. Spare weeks stay unscheduled.

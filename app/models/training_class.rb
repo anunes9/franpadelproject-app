@@ -86,6 +86,45 @@ class TrainingClass < ApplicationRecord
       .order(:start_time, :id)
   end
 
+  # Each Class with its number in its group's plan, as plan_number: Class 1
+  # is the first by date and start time, skipped ones included. Filters on
+  # the result leave the numbers as they are.
+  def self.numbered
+    from(unscoped.select(<<~SQL.squish), :training_classes)
+      training_classes.*,
+      ROW_NUMBER() OVER (PARTITION BY class_group_id ORDER BY date, start_time, id) AS plan_number
+    SQL
+  end
+
+  # The Classes of `coach`'s groups dated in `dates`, skipped ones left out,
+  # by date and start time, numbered: the week on the Coach's Class Groups
+  # page. Loaded with their group and Module.
+  def self.week_of(coach:, dates:)
+    numbered.joins(:class_group).where(class_groups: { coach_id: coach.id })
+            .where(date: dates, skipped: false)
+            .preload(:course_module, :class_group).order(:date, :start_time, :id)
+  end
+
+  # The Class as the Class Groups page's week shows it. Load it .week_of.
+  def week_json
+    {
+      id: id,
+      date: date.iso8601,
+      startTime: start_time.strftime("%H:%M"),
+      duration: duration,
+      kind: kind,
+      done: done,
+      number: plan_number,
+      moduleNumber: course_module.position,
+      group: { id: class_group.id, name: class_group.name, level: class_group.level }
+    }
+  end
+
+  # Its number in its group's plan (see .numbered), from the group's Classes.
+  def number_in_plan
+    class_group.training_classes.index(self) + 1
+  end
+
   # The Class as the Coach home lists it, with its group. Load it .taught_on.
   def home_json
     {
@@ -95,14 +134,17 @@ class TrainingClass < ApplicationRecord
       kind: kind,
       done: done,
       module: module_json,
-      group: { id: class_group.id, level: class_group.level, playerCount: class_group.class_group_players.size }
+      group: { id: class_group.id, name: class_group.name, level: class_group.level,
+               playerCount: class_group.class_group_players.size }
     }
   end
 
-  # The Class as the group's plan lists it, with its Module's topics.
-  def plan_json
+  # The Class as the group's plan lists it, with its `number` in the plan
+  # and its Module's topics.
+  def plan_json(number: nil)
     {
       id: id,
+      number: number,
       date: date.iso8601,
       startTime: start_time.strftime("%H:%M"),
       kind: kind,
@@ -117,7 +159,7 @@ class TrainingClass < ApplicationRecord
   # The Class as its own page shows it: as the plan lists it, with its
   # Module's description too.
   def page_json
-    json = plan_json
+    json = plan_json(number: number_in_plan)
     json.merge(module: json[:module].merge(description: course_module.description))
   end
 

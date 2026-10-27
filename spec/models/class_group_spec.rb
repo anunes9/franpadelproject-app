@@ -100,4 +100,59 @@ RSpec.describe ClassGroup do
       expect(ClassGroup.new(level: "advanced").next_level).to be_nil
     end
   end
+
+  describe "#name" do
+    it "is optional, stripped, and blank is no name" do
+      group = planned_group
+
+      group.update!(name: "  Fim de tarde  ")
+      expect(group.reload.name).to eq("Fim de tarde")
+
+      group.update!(name: "   ")
+      expect(group.reload.name).to be_nil
+    end
+
+    it "has at most 60 characters" do
+      group = planned_group
+
+      expect(group.update(name: "a" * 61)).to be(false)
+      expect(group.errors.details[:name]).to include(error: :too_long, count: 60)
+      expect(group.update(name: "a" * 60)).to be(true)
+    end
+  end
+
+  describe "#progress_json" do
+    let!(:volley) { create(:course_module, level: :beginner, position: 2, title: "Volley") }
+
+    it "counts each Module's done and planned Classes, leaving skipped ones out" do
+      group = planned_group
+      classes = group.training_classes.to_a
+      classes.first(6).each { |c| c.update!(done: true) }
+      classes[6].update!(done: true)
+      classes[7].update!(skipped: true)
+
+      progress = group.reload.progress_json(today: Date.new(2026, 9, 1))
+
+      expect(progress[:modules]).to eq([{ number: 1, done: 6, total: 6 }, { number: 2, done: 1, total: 5 }])
+      expect(progress).to include(currentModule: 2, done: 7, total: 11)
+    end
+
+    it "names the next Class to teach from today, numbered in the whole plan, skipped ones included" do
+      group = planned_group
+      classes = group.training_classes.to_a
+      classes[0].update!(done: true)
+      classes[1].update!(skipped: true)
+
+      # 8 September is the first Class; from the 9th the next is the third.
+      progress = group.reload.progress_json(today: Date.new(2026, 9, 9))
+
+      expect(progress[:nextClass]).to eq(id: classes[2].id, date: "2026-09-22", startTime: "18:00", number: 3)
+    end
+
+    it "has no next Class once every Class is done or skipped" do
+      group = finish(planned_group)
+
+      expect(group.reload.progress_json(today: Date.new(2026, 9, 1))).to include(nextClass: nil, currentModule: nil)
+    end
+  end
 end

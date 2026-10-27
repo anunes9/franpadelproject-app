@@ -27,6 +27,7 @@ interface Props {
   weekdayOptions: Weekday[]
   durationOptions: number[]
   maxPlayers: number
+  nameMaxLength: number
   // The dates on which the last refused plan clashed, if it clashed.
   clashDates: string[]
   // Only when creating the group that continues a finished one at the next
@@ -54,6 +55,7 @@ function Form() {
     weekdayOptions,
     durationOptions,
     maxPlayers,
+    nameMaxLength,
     clashDates,
     continuation,
   } = usePage<Props>().props
@@ -66,6 +68,7 @@ function Form() {
   ) => t(`${scope}.${key}` as const)
 
   const { data, setData, post, patch, transform, processing, errors } = useForm({
+    name: classGroup?.name ?? '',
     level: classGroup?.level ?? continuation?.level ?? '',
     starts_on: classGroup?.startsOn ?? '',
     cadence: classGroup?.cadence ?? cadenceOptions[0],
@@ -153,6 +156,24 @@ function Form() {
           noValidate
           className="flex flex-col gap-5 rounded-[18px] border border-line bg-white p-5 shadow-card"
         >
+          <label className={LABEL_CLASS}>
+            {t('classGroups.form.name')}
+            <input
+              type="text"
+              value={data.name}
+              onChange={(event) => setData('name', event.target.value)}
+              maxLength={nameMaxLength}
+              aria-invalid={errors.name ? true : undefined}
+              className={`${INPUT_CLASS} min-h-11`}
+            />
+            <span className="text-meta font-normal text-muted">{t('classGroups.form.nameHint')}</span>
+            <FieldError
+              errors={errors}
+              field="name"
+              copy={{ too_long: t('classGroups.show.nameTooLong', { max: nameMaxLength }) }}
+            />
+          </label>
+
           {!editing && (
             <>
               <label className={LABEL_CLASS}>

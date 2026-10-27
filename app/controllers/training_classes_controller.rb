@@ -2,7 +2,8 @@
 # time: adding a Class, moving one, skipping or unskipping it, and marking it
 # done or undone. The owning Coach and the Club Managers of the group's Club
 # can see and edit; anyone else gets a 404, as if the Class did not exist.
-# Every edit returns to the group's page.
+# Every edit returns to the page it was made on, the group's or the Class's
+# own, or else to the group's page.
 #
 # Adding, moving and unskipping are checked against the clash rule. A Class is
 # never both done and skipped (docs/adr/0003-skipping-a-class.md). A refusal
@@ -11,20 +12,27 @@
 class TrainingClassesController < DashboardController
   NEW_CLASS = "new".freeze
 
-  # The Class with its Module's description and topics, how a Class of its
-  # duration is spent (ClassStructure), the Exercises its Coach picked, and
-  # those of its Module still to pick (see ClassExercisesController).
+  # The Class, numbered in its plan, with its Module's description and
+  # topics, how a Class of its duration is spent (ClassStructure), the
+  # Exercises its Coach picked, and those of its Module still to pick (see
+  # ClassExercisesController), each with its image. After a refused edit on
+  # this page, its clashing dates and which edit it was.
   def show
-    training_class = visible_classes.includes(:course_module, :exercises, class_group: %i[coach players])
+    training_class = visible_classes.includes(:course_module, class_group: %i[coach players training_classes])
                                     .find(params[:id])
-    chosen = training_class.exercises.to_a
+    chosen = training_class.exercises.with_attached_media.to_a
 
     render inertia: "TrainingClasses/Show", props: {
+      today: Academy.today.iso8601,
       trainingClass: training_class.page_json,
+      classCount: training_class.class_group.training_classes.size,
       classGroup: training_class.class_group.summary_json,
       classStructure: ClassStructure.json_for(training_class.duration),
       exercises: chosen.map(&:as_class_json),
-      availableExercises: (training_class.course_module.exercises.to_a - chosen).map(&:as_class_json)
+      availableExercises: (training_class.course_module.exercises.with_attached_media.to_a - chosen)
+        .map(&:as_class_json),
+      clashDates: flash[:clash_dates] || [],
+      refusedEdit: flash[:refused_edit]
     }
   end
 
@@ -76,8 +84,13 @@ class TrainingClassesController < DashboardController
     visible_classes.find(params[:id])
   end
 
+  # Back to the page the edit was made on, on this site, or else the group's.
+  def return_to(training_class, **)
+    redirect_back_or_to class_group_path(training_class.class_group), allow_other_host: false, **
+  end
+
   def save_and_return(training_class, refused_edit:)
-    return redirect_to class_group_path(training_class.class_group) if training_class.save_unless_clashing
+    return return_to(training_class) if training_class.save_unless_clashing
 
     refuse(training_class, refused_edit: refused_edit, clashing_dates: training_class.clashing_dates)
   end
@@ -86,7 +99,7 @@ class TrainingClassesController < DashboardController
   # checked against the clash rule.
   def mark(attributes)
     training_class = find_training_class
-    return redirect_to class_group_path(training_class.class_group) if training_class.update(attributes)
+    return return_to(training_class) if training_class.update(attributes)
 
     refuse(training_class, refused_edit: training_class.id)
   end
@@ -94,6 +107,6 @@ class TrainingClassesController < DashboardController
   def refuse(training_class, refused_edit:, clashing_dates: [])
     flash_clash_dates(clashing_dates)
     flash[:refused_edit] = refused_edit
-    redirect_to class_group_path(training_class.class_group), inertia: { errors: form_errors(training_class) }
+    return_to(training_class, inertia: { errors: form_errors(training_class) })
   end
 end
