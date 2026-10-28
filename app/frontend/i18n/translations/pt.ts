@@ -258,6 +258,13 @@ export const pt = {
         hand: 'Mão',
         level: 'Nível',
       },
+      filter: {
+        search: 'Pesquisar por nome',
+        allLevels: 'Todos os níveis',
+        allPositions: 'Todas as posições',
+        noResults: 'Nenhum jogador corresponde a estes filtros.',
+        clear: 'Limpar filtros',
+      },
     },
     form: {
       newTitle: 'Novo jogador',
