@@ -24,6 +24,13 @@ class QuizQuestion < ApplicationRecord
     }
   end
 
+  # The question as a Client takes it, in their language ("pt" or "en"),
+  # without the correct answer.
+  def quiz_json(locale)
+    en = locale.to_s == "en"
+    { id: id, text: en ? text_en : text_pt, options: en ? options_en : options_pt }
+  end
+
   # The admin edits each language's options as one option per line.
   def options_pt_text
     options_pt.join("\n")

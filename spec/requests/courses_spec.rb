@@ -52,6 +52,17 @@ RSpec.describe "Courses", type: :request do
     expect(response.body).to include('"exerciseStats":{"count":2,"completed":1}')
   end
 
+  it "sends the number of questions in the Module's Quiz, or 0 when it has none" do
+    course_module = create(:course_module, slug: "module-1", position: 1)
+
+    get "/dashboard/courses/module-1"
+    expect(response.body).to include('"quizQuestionCount":0')
+
+    create_list(:quiz_question, 3, quiz: create(:quiz, course_module: course_module))
+    get "/dashboard/courses/module-1"
+    expect(response.body).to include('"quizQuestionCount":3')
+  end
+
   it "redirects a Locked Module back to the courses index" do
     create(:course_module, slug: "module-1", position: 1)
     create(:course_module, slug: "module-2", position: 2)

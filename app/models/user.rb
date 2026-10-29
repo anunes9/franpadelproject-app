@@ -21,6 +21,7 @@ class User < ApplicationRecord
   before_destroy :keep_while_owning_class_groups
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercise_completions, dependent: :destroy
+  has_many :quiz_attempts, dependent: :destroy
   has_many :club_memberships, dependent: :destroy
   has_many :managed_clubs, through: :club_memberships, source: :club
 

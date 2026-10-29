@@ -193,25 +193,27 @@ function Show() {
           </p>
         )}
 
-        <Link
-          href={`/dashboard/courses/${courseModule.id}/quiz`}
-          className="flex items-center gap-3 rounded-[22px] border border-line bg-white p-4 transition-colors hover:border-teal"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tint-teal text-ink">
-            <HugeiconsIcon icon={Tick02Icon} size={18} strokeWidth={1.8} aria-hidden />
-          </span>
-          <span className="flex flex-1 flex-col gap-0.5">
-            <span className="text-sm font-bold text-ink">{t('courses.show.quizTitle')}</span>
-            <span className="text-xs text-muted-strong">{tn('courses.show.quizDetail', quizQuestionCount)}</span>
-          </span>
-          <HugeiconsIcon
-            icon={ArrowRight01Icon}
-            size={20}
-            strokeWidth={1.7}
-            className="shrink-0 text-muted-strong"
-            aria-hidden
-          />
-        </Link>
+        {quizQuestionCount > 0 && (
+          <Link
+            href={`/dashboard/courses/${courseModule.id}/quiz`}
+            className="flex items-center gap-3 rounded-[22px] border border-line bg-white p-4 transition-colors hover:border-teal"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tint-teal text-ink">
+              <HugeiconsIcon icon={Tick02Icon} size={18} strokeWidth={1.8} aria-hidden />
+            </span>
+            <span className="flex flex-1 flex-col gap-0.5">
+              <span className="text-sm font-bold text-ink">{t('courses.show.quizTitle')}</span>
+              <span className="text-xs text-muted-strong">{tn('courses.show.quizDetail', quizQuestionCount)}</span>
+            </span>
+            <HugeiconsIcon
+              icon={ArrowRight01Icon}
+              size={20}
+              strokeWidth={1.7}
+              className="shrink-0 text-muted-strong"
+              aria-hidden
+            />
+          </Link>
+        )}
 
         {courseModule.status === 'completed' ? (
           <div className={buttonClass('done', 'min-h-14')}>

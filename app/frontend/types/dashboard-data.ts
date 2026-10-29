@@ -53,10 +53,22 @@ export interface ExerciseFilters {
   module: string
 }
 
+// A Quiz question as a Client takes it, in their language, without the answer.
 export interface QuizQuestion {
-  q: string
+  id: string
+  text: string
   options: string[]
+}
+
+// A Quiz Attempt's result, shown once straight after submitting. It names the
+// wrong questions but never the correct answers.
+export interface QuizResult {
+  score: number
+  passed: boolean
   correct: number
+  total: number
+  answers: Record<string, number>
+  wrongQuestionIds: string[]
 }
 
 export interface DashboardUser {
