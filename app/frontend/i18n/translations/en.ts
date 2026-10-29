@@ -254,6 +254,13 @@ export const en = {
         hand: 'Hand',
         level: 'Level',
       },
+      filter: {
+        search: 'Search by name',
+        allLevels: 'All levels',
+        allPositions: 'All positions',
+        noResults: 'No players match these filters.',
+        clear: 'Clear filters',
+      },
     },
     form: {
       newTitle: 'New player',

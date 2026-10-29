@@ -5,7 +5,7 @@ import { addMinutes, formatDate, formatDuration, formatTimeRange, groupName } fr
 import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
 import { ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
-import { BackLink, Detail, Eyebrow, FieldError, MediaPlaceholder, Pill, Topic } from '../../components/ui'
+import { BackLink, Detail, Eyebrow, FieldError, MediaPlaceholder, Pagination, Pill, Topic } from '../../components/ui'
 import type { ClassExercise, ClassGroup, ClassStructure, TrainingClassDetail } from '../../types/dashboard-data'
 
 interface Props {
@@ -21,6 +21,9 @@ interface Props {
   availableExercises: ClassExercise[]
   errors: Record<string, unknown>
 }
+
+// How many of the Module's Exercises the picker shows at a time.
+const PICK_PAGE_SIZE = 3
 
 type Translate = ReturnType<typeof useTranslation>['t']
 type BlockKind = 'warmUp' | 'exercise' | 'conditioning' | 'game'
@@ -110,6 +113,7 @@ function Show() {
   const { t, tn, locale } = useTranslation()
   const [pending, setPending] = useState<string | null>(null)
   const [query, setQuery] = useState('')
+  const [pickPage, setPickPage] = useState(1)
   const duration = classGroup.duration
   const blocks = timeline(classStructure, duration, exercises)
   const slotCount = blocks.filter((block) => block.kind === 'exercise').length
@@ -123,6 +127,10 @@ function Show() {
   const shown = availableExercises.filter(
     (exercise) => !search || `${exercise.title} ${exercise.ref}`.toLowerCase().includes(search)
   )
+  // Adding an Exercise takes it out of the picker, so the last page can empty.
+  const pickPages = Math.max(1, Math.ceil(shown.length / PICK_PAGE_SIZE))
+  const currentPickPage = Math.min(pickPage, pickPages)
+  const pickShown = shown.slice((currentPickPage - 1) * PICK_PAGE_SIZE, currentPickPage * PICK_PAGE_SIZE)
 
   function change(method: 'post' | 'delete', exercise: ClassExercise) {
     const url = classExercisePath(trainingClass.id, exercise.ref)
@@ -284,7 +292,10 @@ function Show() {
                   <input
                     type="search"
                     value={query}
-                    onChange={(event) => setQuery(event.target.value)}
+                    onChange={(event) => {
+                      setQuery(event.target.value)
+                      setPickPage(1)
+                    }}
                     placeholder={t('trainingClasses.show.searchPlaceholder')}
                     className="min-h-11 rounded-xl border border-line bg-paper px-3 text-sm text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/30"
                   />
@@ -298,7 +309,7 @@ function Show() {
                 <p className="text-meta text-muted">{t('trainingClasses.show.noMatch')}</p>
               ) : (
                 <ul className="flex flex-col">
-                  {shown.map((exercise) => (
+                  {pickShown.map((exercise) => (
                     <li
                       key={exercise.ref}
                       className="flex flex-col gap-2.5 border-b border-mist py-3.5 last:border-b-0"
@@ -326,6 +337,7 @@ function Show() {
                   ))}
                 </ul>
               )}
+              <Pagination page={currentPickPage} pages={pickPages} onChange={setPickPage} />
             </section>
           </div>
         </div>
