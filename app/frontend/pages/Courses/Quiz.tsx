@@ -1,39 +1,33 @@
 import { Cancel01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Link, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { AppShell } from '../../components/shell'
 import { BackLink, buttonClass, ProgressBar } from '../../components/ui'
-import type { QuizQuestion } from '../../types/dashboard-data'
+import type { QuizQuestion, QuizResult } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
   id: string
-  quiz: QuizQuestion[]
+  questions: QuizQuestion[]
+  // Only straight after submitting: the attempt the server just scored.
+  result: QuizResult | null
+  errors?: { answers?: string }
 }
 
 function Quiz() {
-  const { id, quiz } = usePage<Props>().props
+  const { id, questions, result, errors } = usePage<Props>().props
   const { t } = useTranslation()
   const [index, setIndex] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, number>>({})
-  const [submitted, setSubmitted] = useState(false)
+  // Question id => chosen option index.
+  const [answers, setAnswers] = useState<Record<string, number>>({})
+  const [submitting, setSubmitting] = useState(false)
 
-  const score = useMemo(() => quiz.reduce((n, q, i) => n + (answers[i] === q.correct ? 1 : 0), 0), [answers, quiz])
-  // A Quiz Pass needs at least 80% (see GLOSSARY.md).
-  const passed = score / quiz.length >= 0.8
-  const question = quiz[index]
-  const picked = answers[index]
+  const quizPath = `/dashboard/courses/${id}/quiz`
 
-  const reset = () => {
-    setAnswers({})
-    setIndex(0)
-    setSubmitted(false)
-  }
-
-  if (submitted) {
+  if (result) {
     return (
       <div className="px-5 py-6 lg:px-10 lg:py-10">
         <div className="mx-auto flex max-w-[720px] flex-col gap-5">
@@ -42,70 +36,65 @@ function Quiz() {
               {t('courses.quiz.resultsHeading')}
             </h1>
             <div className="flex items-baseline gap-3">
-              <span className="text-5xl font-extrabold tracking-[-0.03em] tabular-nums">
-                {Math.round((score / quiz.length) * 100)}%
-              </span>
+              <span className="text-5xl font-extrabold tracking-[-0.03em] tabular-nums">{result.score}%</span>
               <span className="text-base text-ink-mute">
-                {t('courses.quiz.correctCount', { score, total: quiz.length })}
+                {t('courses.quiz.correctCount', { score: result.correct, total: result.total })}
               </span>
             </div>
-            <span className={`text-sm ${passed ? 'text-teal' : 'text-sand'}`}>
-              {passed ? t('courses.quiz.passedMessage') : t('courses.quiz.failedMessage')}
+            <span className={`text-sm ${result.passed ? 'text-teal' : 'text-sand'}`}>
+              {result.passed ? t('courses.quiz.passedMessage') : t('courses.quiz.failedMessage')}
             </span>
           </div>
 
+          <p className="text-sm text-muted-strong">{t('courses.quiz.resultsHint')}</p>
+
           <div className="flex flex-col gap-2.5">
-            {quiz.map((q, i) => {
-              const right = answers[i] === q.correct
+            {questions.map((q) => {
+              const wrong = result.wrongQuestionIds.includes(q.id)
               return (
                 <div
-                  key={q.q}
+                  key={q.id}
                   className="flex flex-col gap-1.5 rounded-[14px] border border-line bg-white px-4 py-3.5 shadow-card"
                 >
-                  <div className="text-sm font-semibold leading-snug text-ink">{q.q}</div>
-                  {right ? (
-                    <div className="flex items-start gap-1.5 text-meta text-teal-deep">
-                      <HugeiconsIcon
-                        icon={Tick02Icon}
-                        size={16}
-                        strokeWidth={2}
-                        className="mt-0.5 shrink-0"
-                        aria-hidden
-                      />
-                      {q.options[answers[i]]}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-start gap-1.5 text-meta text-danger">
-                        <HugeiconsIcon
-                          icon={Cancel01Icon}
-                          size={16}
-                          strokeWidth={2}
-                          className="mt-0.5 shrink-0"
-                          aria-hidden
-                        />
-                        {q.options[answers[i]] ?? t('courses.quiz.notAnswered')}
-                      </div>
-                      <div className="text-meta text-muted">
-                        {t('courses.quiz.correctLabel', { answer: q.options[q.correct] })}
-                      </div>
-                    </div>
-                  )}
+                  <div className="text-sm font-semibold leading-snug text-ink">{q.text}</div>
+                  <div className={`flex items-start gap-1.5 text-meta ${wrong ? 'text-danger' : 'text-teal-deep'}`}>
+                    <HugeiconsIcon
+                      icon={wrong ? Cancel01Icon : Tick02Icon}
+                      size={16}
+                      strokeWidth={2}
+                      className="mt-0.5 shrink-0"
+                      aria-label={wrong ? t('courses.quiz.wrong') : t('courses.quiz.right')}
+                    />
+                    {q.options[result.answers[q.id]]}
+                  </div>
                 </div>
               )
             })}
           </div>
 
           <div className="flex gap-2.5">
-            <button type="button" onClick={reset} className={buttonClass('secondary', 'flex-1')}>
+            <Link href={quizPath} className={buttonClass('secondary', 'flex-1')}>
               {t('courses.quiz.retake')}
-            </button>
-            <Link href="/dashboard/courses" className={buttonClass('primary', 'flex-1')}>
-              {t('courses.quiz.backToCourses')}
+            </Link>
+            <Link href={`/dashboard/courses/${id}`} className={buttonClass('primary', 'flex-1')}>
+              {t('courses.quiz.backToModule')}
             </Link>
           </div>
         </div>
       </div>
+    )
+  }
+
+  const question = questions[index]
+  const picked = answers[question.id]
+  const last = index === questions.length - 1
+
+  const next = () => {
+    if (!last) return setIndex(index + 1)
+    router.post(
+      `${quizPath}/attempts`,
+      { answers },
+      { onStart: () => setSubmitting(true), onFinish: () => setSubmitting(false) }
     )
   }
 
@@ -120,14 +109,14 @@ function Quiz() {
               <BackLink onClick={() => setIndex(index - 1)} label={t('common.back')} />
             )}
             <span className="font-dash-mono text-label uppercase text-muted">
-              {t('courses.quiz.questionProgress', { current: index + 1, total: quiz.length })}
+              {t('courses.quiz.questionProgress', { current: index + 1, total: questions.length })}
             </span>
           </div>
-          <ProgressBar value={((index + 1) / quiz.length) * 100} />
+          <ProgressBar value={((index + 1) / questions.length) * 100} />
         </div>
 
         <h1 className="text-balance text-2xl font-bold leading-tight tracking-[-0.02em] text-ink lg:text-title">
-          {question.q}
+          {question.text}
         </h1>
 
         <div className="flex flex-col gap-2.5">
@@ -137,7 +126,7 @@ function Quiz() {
               <button
                 key={option}
                 type="button"
-                onClick={() => setAnswers({ ...answers, [index]: i })}
+                onClick={() => setAnswers({ ...answers, [question.id]: i })}
                 aria-pressed={on}
                 className={
                   'flex items-start gap-3 rounded-[14px] border px-4 py-4 text-left transition-[transform,box-shadow,border-color,background-color,color] duration-200 motion-reduce:transition-colors ' +
@@ -155,10 +144,14 @@ function Quiz() {
           })}
         </div>
 
+        {errors?.answers && <p className="text-sm text-danger">{t('courses.quiz.incomplete')}</p>}
+
+        {/* One question at a time, and no moving on without an answer, so
+            Submit is only reached with every question answered. */}
         <button
           type="button"
-          disabled={picked === undefined}
-          onClick={() => (index === quiz.length - 1 ? setSubmitted(true) : setIndex(index + 1))}
+          disabled={picked === undefined || submitting}
+          onClick={next}
           className={buttonClass(
             'primary',
             'disabled:bg-track disabled:text-muted disabled:opacity-100 disabled:shadow-none'
@@ -166,7 +159,7 @@ function Quiz() {
         >
           {picked === undefined
             ? t('courses.quiz.selectAnAnswer')
-            : index === quiz.length - 1
+            : last
               ? t('courses.quiz.submit')
               : t('courses.quiz.continue')}
         </button>

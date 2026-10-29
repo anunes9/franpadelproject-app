@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "/dashboard/courses/:id", to: "courses#show"
   patch "/dashboard/courses/:id/complete", to: "courses#complete"
   get "/dashboard/courses/:id/quiz", to: "courses#quiz"
+  post "/dashboard/courses/:id/quiz/attempts", to: "quiz_attempts#create"
   get "/dashboard/exercises", to: "exercises#index"
   get "/dashboard/exercises/:ref", to: "exercises#show", format: false, constraints: { ref: /[^\/]+/ }
   patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }

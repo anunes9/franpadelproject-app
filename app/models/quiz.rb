@@ -5,6 +5,7 @@ class Quiz < ApplicationRecord
 
   has_many :questions, -> { order(:position) }, class_name: "QuizQuestion", dependent: :destroy, inverse_of: :quiz
   accepts_nested_attributes_for :questions, allow_destroy: true
+  has_many :attempts, class_name: "QuizAttempt", dependent: :destroy
 
   validates :course_module_id, uniqueness: true
 
