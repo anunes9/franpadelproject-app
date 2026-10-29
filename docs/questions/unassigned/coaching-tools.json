@@ -1,0 +1,134 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST: MESOCYCLE 8 – COACHING TOOLS",
+    "pt": "TESTE DE ADMISSÃO: MESOCICLO 8 – FERRAMENTAS DO TREINADOR"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The observation method can be of how many types:",
+        "pt": "O método de observação pode ser de quantos tipos:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "4",
+          "5",
+          "None of the above"
+        ],
+        "pt": [
+          "3",
+          "4",
+          "5",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The individual observation involves how many observers:",
+        "pt": "A observação individual contempla quantos observadores:"
+      },
+      "answers": {
+        "en-US": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "pt": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Within the observation method, we find:",
+        "pt": "No método de observação existe:"
+      },
+      "answers": {
+        "en-US": [
+          "Individual observation, team observation, real, and laboratory",
+          "Animal observation, human observation, real, and laboratory",
+          "Team observation, real, invisible, and visible",
+          "None of the above"
+        ],
+        "pt": [
+          "A observação individual, de equipa, real e de laboratório",
+          "A observação animal, humana, real e de laboratório",
+          "A observação de equipa, real, invisível e visível",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The sport-specific feedback used in the coach-athlete relationship can be:",
+        "pt": "O feedback desportivo utilizado na relação treinador-atleta, pode ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Tactile",
+          "Auditory",
+          "Visual",
+          "All of the above"
+        ],
+        "pt": [
+          "Táctil",
+          "Auditivo",
+          "Visual",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The types of ball feed used by the coach can be:",
+        "pt": "Os tipos de lançamento utilizados pelo treinador podem ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Manual",
+          "Self-toss",
+          "With racket",
+          "All of the above"
+        ],
+        "pt": [
+          "Manual",
+          "Autolançamento",
+          "Com raquete",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Which tools allow for the analysis of the players and the team:",
+        "pt": "Quais destas ferramentas permitem uma análise aos jogadores e à equipa:"
+      },
+      "answers": {
+        "en-US": [
+          "Video",
+          "Observation",
+          "Auditory",
+          "Tactile"
+        ],
+        "pt": [
+          "Vídeo",
+          "Observação",
+          "Auditivo",
+          "Táctil"
+        ]
+      },
+      "correctIndex": 0
+    }
+  ]
+}

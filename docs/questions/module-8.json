@@ -1,0 +1,365 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST: MESOCYCLE 9 – DEFENSIVE ZONE ACTION & OFFENSIVE ZONE REACTION",
+    "pt": "TESTE DE ADMISSÃO: MESOCICLO 9 – AÇÃO_DA ZONA_DEFENSIVA E_REAÇÃO DA_ZONA_OFENSIVA"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "What should be the reaction of the player in the offensive zone, when the defensive zone player executes a ball with speed 1?",
+        "pt": "Qual deve ser a reação do jogador da zona ofensiva, quando a ação do jogador da zona defensiva é executada com uma bola de velocidade 1:"
+      },
+      "answers": {
+        "en-US": [
+          "Perform a forward movement",
+          "Perform a backward movement",
+          "Block the ball",
+          "Let the ball pass for a glass exit"
+        ],
+        "pt": [
+          "Deslocamento frontal",
+          "Deslocamento regressivo",
+          "Bloqueio",
+          "Desviar para saída de vidro"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "When the player in the defensive zone executes a ball with speed 1, the offensive player should:",
+        "pt": "Quando o jogador da zona defensiva executa uma bola de velocidade 1, o jogador posicionado na zona ofensiva deve:"
+      },
+      "answers": {
+        "en-US": [
+          "Perform a backward movement, gather information about the opponent’s positioning, and aim to place the ball into the mesh or joker zone",
+          "Perform a backward movement, gather information about the opponent’s positioning, and aim to place the ball into the mesh or joker zone",
+          "Perform a forward movement and gather information about the opponent’s positioning",
+          "Let the ball pass for a glass exit, gather information about the opponent’s positioning, and aim to place the ball into the mesh or joker zone"
+        ],
+        "pt": [
+          "Realizar um deslocamento regressivo, recolher informação relativa ao posicionamento do adversário e procurar colocar a bola na malha ou joker",
+          "Realizar um deslocamento regressivo, recolher informação relativa ao posicionamento do adversário e procurar colocar a bola na malha ou joker",
+          "Realizar um deslocamento frontal e recolher informação relativa ao posicionamento do adversário",
+          "Realizar um desvio para devolver em saída de vidro, recolher informação relativa ao posicionamento do adversário e procurar colocar a bola na malha ou joker"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "In the defensive zone, game actions can be associated with different speed levels, ranging from:",
+        "pt": "Quando abordamos as ações de jogo terrestre da zona defensiva, associamos a vários tipos de velocidade que podem ir:"
+      },
+      "answers": {
+        "en-US": [
+          "1-4",
+          "0-5",
+          "1-3",
+          "1-5"
+        ],
+        "pt": [
+          "1-4",
+          "0-5",
+          "1-3",
+          "1-5"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "When a player intercepts the ball in the offensive zone, it means that the defensive player’s action was executed at speed level:",
+        "pt": "Quando um jogador intercepta a bola na zona ofensiva, significa que a ação do jogador da zona defensiva é de velocidade:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "2",
+          "1",
+          "None of the above"
+        ],
+        "pt": [
+          "3",
+          "2",
+          "1",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "For a player in the offensive zone to respond with a block, it means they received a ground ball from the defensive player at speed level:",
+        "pt": "Para que um jogador da zona ofensiva responda com um bloqueio, implica que recebeu uma bola terrestre do jogador da zona defensiva, de velocidade:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "2",
+          "4",
+          "5"
+        ],
+        "pt": [
+          "3",
+          "2",
+          "4",
+          "5"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "An action of speed 2, coming from the defensive zone, requires an offensive zone reaction of:",
+        "pt": "Uma ação de velocidade 2 proveniente da zona defensiva implica a seguinte reação na zona ofensiva:"
+      },
+      "answers": {
+        "en-US": [
+          "Forward movement",
+          "Forward movement with the mindset of the formula X + 1 = Y",
+          "Forward movement with the mindset of the formula X + 1 = Y and with decision-making oriented towards construction or pressure",
+          "All of the above"
+        ],
+        "pt": [
+          "Deslocamento frontal",
+          "Deslocamento frontal com o “mindset” na fórmula X + 1 = Y",
+          "Deslocamento frontal com o “mindset” na fórmula X + 1 = Y e com a tomada de decisão a ser de construção ou pressão",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "A ball of speed 3 from the defensive zone seeks to provoke an offensive zone reaction of:",
+        "pt": "A aplicação de uma bola de velocidade 3 proveniente da zona defensiva, procura provocar uma ação por parte do jogador posicionado na zona ofensiva de:"
+      },
+      "answers": {
+        "en-US": [
+          "Interception with the goal of maintaining position at the moment of execution",
+          "Interception with the objective of advancing to sector 3 after execution",
+          "All of the above",
+          "None of the above"
+        ],
+        "pt": [
+          "Interseção com o objetivo de manter a posição no momento de execução",
+          "Interseção com o objetivo de avançar para o sector 3 após o momento de execução",
+          "Todas as respostas anteriores",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "In the offensive zone, interception is characterized as a reaction to a speed 3 ball coming from the defensive zone player. This statement is:",
+        "pt": "Na zona ofensiva, a interseção é caracterizada por ser uma reação em resposta a uma bola de velocidade 3 proveniente do jogador da zona defensiva. Esta afirmação é:"
+      },
+      "answers": {
+        "en-US": [
+          "False. Interception is characterized as a reaction where the player lets the ball bounce and chooses its placement based on the opponent’s positioning",
+          "True. Interception requires the player to move the body past the ball line after execution",
+          "False. Interception is characterized as a blocking reaction",
+          "True. Interception requires the player not to move the body past the ball line after execution"
+        ],
+        "pt": [
+          "Falsa. A interseção é caracterizada por ser uma reação que deixa a bola bater no chão e que seleciona a colocação da mesma com base no posicionamento do adversário",
+          "Verdadeira. A interseção pressupõe que o jogador ultrapassa a linha da bola com o corpo após a execução",
+          "Falsa. A interseção é caracterizada por ser uma reação de bloqueio",
+          "Verdadeira. A interseção pressupõe que o jogador não ultrapassa a linha da bola com o corpo após a execução"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In the defensive zone, applying a ball with speed 4 aims to trigger an offensive zone reaction of:",
+        "pt": "Na zona defensiva, a aplicação de uma bola com velocidade 4 visa potenciar uma reação do jogador da zona ofensiva de:"
+      },
+      "answers": {
+        "en-US": [
+          "Interception",
+          "Forward movement",
+          "Block",
+          "Backward movement"
+        ],
+        "pt": [
+          "Interseção",
+          "Deslocamento frontal",
+          "Bloqueio",
+          "Deslocamento regressivo"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "A player positioned in the offensive zone who performs a block will direct the ball to:",
+        "pt": "Um jogador que esteja posicionado na zona ofensiva e que efetue um bloqueio, lançará a bola para:"
+      },
+      "answers": {
+        "en-US": [
+          "VL1C or VL1P",
+          "The opponent’s body",
+          "VL1C and the opponent’s body",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "VL1C ou VL1P",
+          "Corpo do adversário",
+          "VL1C e corpo do adversário",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "If the player in the defensive zone executes a speed 5 ball, then the offensive zone player’s behavior should be:",
+        "pt": "Se a ação do jogador da zona defensiva passa pela aplicação de uma bola de velocidade 5, então o comportamento do jogador posicionado na zona ofensiva deve ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Move away from the ball",
+          "Align the body with the ball trajectory",
+          "Step into the ball",
+          "Dodge the ball"
+        ],
+        "pt": [
+          "Afastar-se da bola",
+          "Alinhar o corpo com a trajetória da bola",
+          "Ir para cima da bola",
+          "Desviar-se da bola"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "For a player to dodge the ball, it means that they:",
+        "pt": "Um jogador desviar-se da bola, significa que:"
+      },
+      "answers": {
+        "en-US": [
+          "Change their area on the court",
+          "Align their body with the ball’s trajectory",
+          "Occupy a new area on the court",
+          "Stay in the same area while adopting a different position within it"
+        ],
+        "pt": [
+          "Altera a sua área no campo",
+          "Alinha o corpo com a trajetória da bola",
+          "Ocupa uma nova área no campo",
+          "Mantém a área no campo e ocupa uma posição diferente na mesma"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The statement “… for every action, there is an equal (in size) and opposite (in direction) reaction force”, corresponds to:",
+        "pt": "A seguinte afirmação “… para todas as forças de ação surgem forças de pressão com intensidades iguais, mas sentidos opostos” corresponde:"
+      },
+      "answers": {
+        "en-US": [
+          "Newton’s 1st Law",
+          "Newton’s 2nd Law",
+          "Newton’s 3rd Law",
+          "Einstein"
+        ],
+        "pt": [
+          "1ª Lei de Newton",
+          "2ª Lei de Newton",
+          "3ª Lei da Newton",
+          "Einstein"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The speed levels applied in the defensive zone trigger offensive zone reactions, which can be:",
+        "pt": "Os tipos de velocidade aplicados na zona defensiva potenciam o aparecimento de reações da zona ofensiva, que podem ser:"
+      },
+      "answers": {
+        "en-US": [
+          "1 – Backward movement; 2 – Forward movement; 3 – Interception; 4 – Block; 5 – Dodging the ball for a glass exit",
+          "1 – Forward movement; 2 – Backward movement; 3 – Interception; 4 – Block; 5 – Dodging the ball for a glass exit",
+          "1 – Backward movement; 2 – Forward movement; 3 – Interception; 4 – Dodging the ball for a glass exit; 5 – Block",
+          "None of the above"
+        ],
+        "pt": [
+          "1 – Deslocamento Regressivo; 2 – Deslocamento Frontal; 3 – Interceção; 4 – Bloqueio; 5 – Desviar para saída de vidro",
+          "1 – Deslocamento Frontal; 2 – Deslocamento Regressivo; 3 – Interceção; 4 – Bloqueio; 5 – Desviar para saída de vidro",
+          "1 – Deslocamento Regressivo; 2 – Deslocamento Frontal; 3 – Interceção; 4 – Desviar para saída de vidro; 5 – Bloqueio",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The mindset of a block performed by a player in the offensive zone, consists of:",
+        "pt": "O “mindset” de um bloqueio protagonizado pelo jogador da zona ofensiva consiste:"
+      },
+      "answers": {
+        "en-US": [
+          "Going towards the ball",
+          "Moving away from the ball",
+          "Aligning the body line with the ball line and moving towards it",
+          "Aligning the body line with the ball line and waiting for the ball to come to the racket"
+        ],
+        "pt": [
+          "Em ir ao encontro da bola",
+          "Fugir da bola",
+          "Colocar a linha do corpo alinhada com a linha da bola e ir ao encontro dela",
+          "Colocar a linha do corpo alinhada com a linha da bola e esperar que a bola vá ao encontro da raquete"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "(Right-handed players) In order to perform a “block,” the padel player must be aware of the natural position of their hand prior to execution. This implies the following line of thought:",
+        "pt": "(Jogadores Destros) Para a aplicação de um “bloqueio”, o jogador de padel tem de ter consciência da naturalidade anatómica da posição da sua mão previamente à execução. Tal pressupõe a seguinte linha de pensamento:"
+      },
+      "answers": {
+        "en-US": [
+          "From the left shoulder to the right shoulder the right palm faces inward, while from the right shoulder to the right side of the body it faces outward",
+          "From the right shoulder to the left shoulder the right palm faces inward, while from the left shoulder to the right side of the body it faces outward",
+          "None of the above",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Do ombro esquerdo até ao ombro direito, a palma da mão direita está virada para dentro, enquanto do ombro direito para a direita do corpo está virada para fora",
+          "Do ombro direito até ao ombro esquerdo, a palma da mão direita está virada para dentro, enquanto do ombro esquerdo para a direita do corpo está virada para fora",
+          "Nenhuma das opções anteriores",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "When reacting in the offensive zone, the player must prepare the technical shot in a way that is:",
+        "pt": "Nos comportamentos de reação protagonizados pelo jogador posicionado na zona ofensiva a preparação do gesto técnico deve ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Proportional to the ball’s speed",
+          "Inversely proportional to the ball’s speed",
+          "Both a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Proporcional à velocidade da bola",
+          "Inversamente proporcional à velocidade da bola",
+          "Resposta a) e b) estão corretas",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    }
+  ]
+}

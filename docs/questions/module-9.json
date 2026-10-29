@@ -1,0 +1,365 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST: MESOCYCLE 10 – OFFENSIVE ZONE ACTION & DEFENSIVE ZONE REACTION",
+    "pt": "TESTE DE ADMISSÃO: MESOCICLO 10 – AÇÃO_DA ZONA_OFENSIVA E_REAÇÃO DA_ZONA_DEFENSIVA"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "How many actions in the offensive zone are included in the Fran Padel Project methodology:",
+        "pt": "Quantas ações na zona ofensiva são abordadas na metodologia Fran Padel Project:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "5",
+          "2",
+          "4"
+        ],
+        "pt": [
+          "3",
+          "5",
+          "2",
+          "4"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "How many reactions in the defensive zone exist, as a response to offensive actions:",
+        "pt": "Quantas reações na zona defensiva existem em resposta às ações ofensivas:"
+      },
+      "answers": {
+        "en-US": [
+          "4",
+          "3",
+          "2",
+          "5"
+        ],
+        "pt": [
+          "4",
+          "3",
+          "2",
+          "5"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "What does an action, of speed 1, performed by a player in the offensive zone, mean:",
+        "pt": "O que significa uma ação de velocidade 1, protagonizada por um jogador posicionado na zona ofensiva:"
+      },
+      "answers": {
+        "en-US": [
+          "Amortie",
+          "Slice volley",
+          "Flat volley",
+          "None of the above"
+        ],
+        "pt": [
+          "Amortie",
+          "Volley em “slice”",
+          "Volley plano",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The behavioral action of speed 1 applied by a player in the offensive zone, called a “drop shot (Amortie),” is performed in the color:",
+        "pt": "A ação comportamental de velocidade 1, aplicada por um jogador posicionado na zona ofensiva denominada de “amortie”, é realizada na cor:"
+      },
+      "answers": {
+        "en-US": [
+          "Yellow",
+          "Green",
+          "Red",
+          "All of the above"
+        ],
+        "pt": [
+          "Amarela",
+          "Verde",
+          "Vermelha",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The defensive reaction to a speed 1 action, performed by a player in the offensive zone, corresponds to:",
+        "pt": "A reação defensiva a uma ação de velocidade 1, protagonizada por um jogador posicionado na zona ofensiva, corresponde:"
+      },
+      "answers": {
+        "en-US": [
+          "Walking towards the red area",
+          "Sprinting towards the red area",
+          "None of the above",
+          "All of the above"
+        ],
+        "pt": [
+          "A caminhar em direção à cor vermelha",
+          "A um Sprint em direção à cor vermelha",
+          "Nenhuma das respostas anteriores",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Which premises are present in the information-gathering process before applying an “Amortie” from the offensive zone:",
+        "pt": "Quais as premissas presentes no processo de recolha de informação, prévio à aplicação de um “amortie”, por um jogador posicionado na zona ofensiva:"
+      },
+      "answers": {
+        "en-US": [
+          "Opponent positioned in the yellow area of the defensive zone and leaning forward towards the net",
+          "Opponent positioned in the red area of the defensive zone",
+          "Opponent leaning backward towards the back glass",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "Posicionamento na cor amarela da zona defensiva e inclinação corporal do adversário para a frente, na direção da rede",
+          "Posicionamento do adversário na cor vermelha da zona defensiva",
+          "Inclinação corporal do adversário para trás, na direção do vidro de fundo",
+          "Respostas b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Applying a speed 2 ball in the offensive zone corresponds to:",
+        "pt": "A aplicação de uma bola com velocidade 2 na zona ofensiva corresponde a:"
+      },
+      "answers": {
+        "en-US": [
+          "Amortie",
+          "Flat volley",
+          "Drive volley (forehand)",
+          "None of the above"
+        ],
+        "pt": [
+          "Um “amortie”",
+          "Um volley plano",
+          "Drive volley de direita",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The angled volley is defined as an action:",
+        "pt": "O volley angulado é assinalado por ser uma ação:"
+      },
+      "answers": {
+        "en-US": [
+          "Executed in the offensive zone, with a speed-2 ball directed towards sector 3",
+          "Executed in the defensive zone, with a speed-2 ball directed towards sector 1",
+          "Executed in the offensive zone, with a speed-2 ball directed towards sector 1",
+          "Executed in the defensive zone, with a speed-2 ball directed towards sector 3"
+        ],
+        "pt": [
+          "Aplicada na zona ofensiva e caracterizada por uma bola de velocidade 2, jogada na direção do setor 3",
+          "Aplicada na zona defensiva e caracterizada por uma bola de velocidade 2, jogada na direção do setor 1",
+          "Aplicada na zona ofensiva e caracterizada por uma bola de velocidade 2, jogada na direção do setor 1",
+          "Aplicada na zona defensiva e caracterizada por uma bola de velocidade 2, jogada na direção do setor 3"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The premises for applying an angled volley are:",
+        "pt": "As premissas ao realizar um volley angulado são:"
+      },
+      "answers": {
+        "en-US": [
+          "Green area, polarity –, centered ball",
+          "Yellow area, polarity =, angled ball",
+          "Red area, polarity +, angled ball",
+          "Yellow or red area, polarity = or +, angled ball"
+        ],
+        "pt": [
+          "Linha verde, polaridade –, bola centrada",
+          "Linha amarela, polaridade =, bola angulada",
+          "Linha vermelha, polaridade +, bola angulada",
+          "Linha amarela ou vermelha, polaridade = ou +, bola angulada"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In the offensive zone, a speed 3 volley is known as:",
+        "pt": "Na zona ofensiva, um volley de velocidade 3 é conhecido por:"
+      },
+      "answers": {
+        "en-US": [
+          "Volley Pensador",
+          "Angled volley",
+          "Flat volley",
+          "Drive volley (forehand)"
+        ],
+        "pt": [
+          "Volley pensador",
+          "Volley angulado",
+          "Volley plano",
+          "Drive volley de direita"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The goal of the volley pensador is:",
+        "pt": "O volley pensador tem como objetivo:"
+      },
+      "answers": {
+        "en-US": [
+          "To facilitate the defensive player’s decision-making process regarding the use of the glass",
+          "To provoke a “ginga” reaction from the defensive player",
+          "To create doubt in the defensive player about using the glass, by placing the ball one meter behind the white line",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "Facilitar o processo de tomada de decisão do jogador posicionado na zona defensiva na utilização ou não do vidro",
+          "Provocar uma reação de “ginga” no jogador da zona defensiva",
+          "Criar a dúvida no jogador da zona defensiva na utilização ou não do vidro através da colocação da bola um metro atrás da linha branca",
+          "Respostas b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The premises for applying thinking volley are:",
+        "pt": "As premissas de aplicabilidade do volley pensador são:"
+      },
+      "answers": {
+        "en-US": [
+          "Polarity =, opponent positioned in the green area of the defensive zone, ball close to the body, speed 3",
+          "Polarity –, opponent positioned in the green area of the defensive zone, ball far from the body, speed 3",
+          "Polarity = or –, opponent positioned in the green area of the defensive zone, ball close to the body, speed 3",
+          "None of the above"
+        ],
+        "pt": [
+          "Polaridade =, adversário posicionado na cor verde da zona defensiva, bola próxima do corpo e velocidade 3",
+          "Polaridade -, adversário posicionado na cor verde da zona defensiva, bola longe do corpo e velocidade 3",
+          "Polaridade = ou -, adversário posicionado na cor verde da zona defensiva, bola próxima do corpo e velocidade 3",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The premises for applying the flat volley in the offensive zone are:",
+        "pt": "As premissas para a aplicabilidade do volley plano na zona de ofensiva são:"
+      },
+      "answers": {
+        "en-US": [
+          "Opponent positioned in the red area of the defensive zone, receiving a speed 2 ball, polarity +",
+          "Opponent positioned in the red area of the defensive zone, receiving a speed 2 ball, polarity =, with body weight leaning towards the back glass",
+          "Opponent positioned in the yellow area of the defensive zone, receiving a speed 5 ball, polarity =",
+          "None of the above"
+        ],
+        "pt": [
+          "Colocação do adversário na cor vermelha da zona defensiva, receção de bola de velocidade 2 e polaridade +",
+          "Colocação do adversário na cor vermelha da zona defensiva, receção de bola de velocidade 2, polaridade = e adversário com o peso corporal a pender na direção do vidro fundo",
+          "Colocação do adversário na cor amarela da zona defensiva, receção de bola de velocidade 5 e polaridade =",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The execution of a drive volley requires:",
+        "pt": "A execução de um drive volley requer:"
+      },
+      "answers": {
+        "en-US": [
+          "Receiving a ball with polarity +, opponent positioned in the red area of the defensive zone, aiming for the bounce on the glass to reach the red area of the offensive zone",
+          "Receiving a ball with polarity –, opponent positioned in the green area of the defensive zone, aiming for the bounce on the glass to reach the transition zone",
+          "Trying to surprise the opponent by changing the rhythm of the game",
+          "Options a) and c) are correct"
+        ],
+        "pt": [
+          "A receção de uma bola em polaridade +, a colocação do adversário na cor vermelha da zona defensiva e procurar que o ressalto da bola no vidro atinja a cor vermelha da zona ofensiva",
+          "A receção de uma bola em polaridade -, a colocação do adversário na cor verde da zona defensiva e procurar que o ressalto da bola no vidro chegue até à zona de transição",
+          "Procurar surpreender o adversário com uma mudança no ritmo de jogo",
+          "As respostas a) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The defensive reactions to an “Amortie” and Drive volley are:",
+        "pt": "A reação comportamental do jogador posicionado na zona defensiva face a um amortie e drive volley, é:"
+      },
+      "answers": {
+        "en-US": [
+          "Assuming a position in the red area of the defensive zone and sprinting to the red area of the offensive zone",
+          "Assuming a position in the transition zone and sprinting to the red area of the defensive zone",
+          "None of the above",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "Igual. Pressupor um posicionamento na cor vermelha da zona defensiva e um sprint até à cor vermelha da zona ofensiva",
+          "Pressupor um posicionamento na zona de transição e um sprint até à cor vermelha da zona defensiva",
+          "Nenhuma das respostas anteriores",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The reaction of a player positioned in the defensive zone to a flat volley is:",
+        "pt": "A reação comportamental do jogador posicionado na zona defensiva face a um volley plano, pressupõe:"
+      },
+      "answers": {
+        "en-US": [
+          "A sprint from the red area towards the transition zone (sector 2)",
+          "A sprint from the red area towards the offensive zone (sector 3)",
+          "A sprint from the yellow area towards the green area",
+          "None of the above"
+        ],
+        "pt": [
+          "Um arranque da cor vermelha para a zona de transição (setor 2)",
+          "Um arranque da cor vermelha para a zona ofensiva (setor 3)",
+          "Um arranque da cor amarela para a cor verde",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "In the offensive zone, each speed corresponds to a behavioral action, for example:",
+        "pt": "Na zona ofensiva, a cada velocidade corresponde uma ação comportamental, como por exemplo:"
+      },
+      "answers": {
+        "en-US": [
+          "Speed 1 – Amortie; Speed 2 – Angled volley; Speed 3 – Volley pensador; Speed 4 – Flat volley; Speed 5 – Drive volley",
+          "Speed 1 – Drive volley; Speed 2 – Angled volley; Speed 3 – Thinking volley; Speed 4 – Flat volley; Speed 5 – Amortie",
+          "Speed 1 – Drive volley; Speed 2 – Flat volley; Speed 3 – Thinking volley; Speed 4 – Angled volley; Speed 5 – Amortie",
+          "None of the above"
+        ],
+        "pt": [
+          "Velocidade 1 – Amortie; Velocidade 2 – Volley angulado; Velocidade 3 – Volley pensador; Velocidade 4 Volley Plano; Velocidade 5 – Drive Volley",
+          "Velocidade 1 - Drive Volley; Velocidade 2 – Volley angulado; Velocidade 3 – Volley pensador; Velocidade 4 Volley Plano; Velocidade 5 – Amortie",
+          "Velocidade 1 - Drive Volley; Velocidade 2 - Volley Plano; Velocidade 3 – Volley pensador; Velocidade 4 - Volley angulado; Velocidade 5 – Amortie",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    }
+  ]
+}

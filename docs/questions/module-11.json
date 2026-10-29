@@ -1,0 +1,428 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST – MESOCYCLE 12 – OFFENSIVE BEHAVIOR IN RESPONSE TO ANGLED LOB (Balão Angulado)",
+    "pt": "TESTE DE AVALIAÇÃO – MESOCICLO 12 – COMPORTAMENTO OFENSIVO EM RESPOSTA AO BALÃO ANGULADO"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "How many panels make up the mesh structure?",
+        "pt": "Por quantos painéis é composta a estrutura da malha?"
+      },
+      "answers": {
+        "en-US": [
+          "2",
+          "3",
+          "4",
+          "1"
+        ],
+        "pt": [
+          "2",
+          "3",
+          "4",
+          "1"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The mesh panels follow a categorization with the top panel being:",
+        "pt": "Os painéis da malha seguem uma categorização, com o painel do topo a ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Number 1, the middle 2, and the last 3",
+          "Number 3, the middle 2, and the last 1",
+          "None of the above",
+          "All of the above"
+        ],
+        "pt": [
+          "O número 1, o do meio o 2 e o último o 3",
+          "O número 3, o do meio o 2 e o último o 1",
+          "Nenhuma das opções anteriores",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The tension along the mesh is distributed in the following order:",
+        "pt": "A distribuição da tensão ao longo da malha segue uma ordem:"
+      },
+      "answers": {
+        "en-US": [
+          "Increasing",
+          "Uniform",
+          "Decreasing",
+          "Parabolic"
+        ],
+        "pt": [
+          "Crescente",
+          "Uniforme",
+          "Decrescente",
+          "Parabólica"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The distribution of tension along the mesh is decreasing when:",
+        "pt": "A distribuição da tensão da malha apresenta uma ordem decrescente com:"
+      },
+      "answers": {
+        "en-US": [
+          "The tension in panel 1 is higher than in panel 3",
+          "The tension in panel 3 is higher than in panel 1",
+          "The tension in panel 1 is lower than in panel 3",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "A tensão do painel 1 a ser mais alta comparada com o painel 3",
+          "A tensão do painel 3 a mais alta comparada com o painel 1",
+          "A tensão do painel 1 a ser mais baixa comparada com o painel 3",
+          "Respostas b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "A left-side player in the offensive zone, receiving an angled lob from the defensive zone over the left shoulder, with a depth in sector 1, can execute:",
+        "pt": "O jogador de esquerda posicionado na zona ofensiva, ao receber um balão angulado proveniente da zona defensiva sobre o ombro esquerdo, com uma profundidade de setor 1, pode aplicar:"
+      },
+      "answers": {
+        "en-US": [
+          "A kick volley to the mesh",
+          "A hook",
+          "An x4 meter smash",
+          "A flat volley to the mesh"
+        ],
+        "pt": [
+          "Uma bola à malha em “kick”",
+          "Um gancho",
+          "Um remate x4 metros",
+          "Uma bola à malha plana"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "What are the indicators for applying the flat volley:",
+        "pt": "Quais são os indicadores de aplicabilidade da bola à malha plana?"
+      },
+      "answers": {
+        "en-US": [
+          "Angled lob over the left shoulder",
+          "Depth of the lob from the defensive zone in sector 1",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Balão angulado sobre o ombro esquerdo",
+          "Profundidade do balão proveniente da zona defensiva no setor 1",
+          "Resposta a) e b) estão corretas",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "When a player in the offensive zone receives an angled lob in sector 1, they play a flat volley with the aim of:",
+        "pt": "O jogador da zona ofensiva, ao receber um balão angulado no setor 1, joga uma bola à malha plana com o objetivo de:"
+      },
+      "answers": {
+        "en-US": [
+          "Increasing the opponent’s reaction time when covering sector 1",
+          "Decreasing the opponent’s reaction time when covering sector 1",
+          "Increasing the likelihood of the ball reaching the net",
+          "Decreasing the opponent’s reaction time while increasing the likelihood of the ball reaching the net"
+        ],
+        "pt": [
+          "Aumentar o tempo de reação do adversário na cobertura do setor 1",
+          "Diminuir o tempo de reação do adversário na cobertura do setor 1",
+          "Aumentar a probabilidade de fazer a bola chegar à malha",
+          "Diminuir o tempo de reação do adversário na cobertura do setor 1 e aumentar a probabilidade de fazer a bola chegar à malha"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In sector 0, an offensive player receiving an angled lob should opt for:",
+        "pt": "No setor 0, o jogador da zona ofensiva ao receber um balão angulado deve optar por lançar:"
+      },
+      "answers": {
+        "en-US": [
+          "A kick volley",
+          "A kick volley towards the peak",
+          "A flat volley",
+          "A flat volley towards the peak"
+        ],
+        "pt": [
+          "Uma bola à malha em “kick”",
+          "Uma bola à malha em “kick” na direção do pico",
+          "Uma bola à malha plana",
+          "Uma bola à malha plana em direção ao pico"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "What are the indicators for applying the kick volley?",
+        "pt": "Quais os indicadores de aplicabilidade da bola à malha em “kick”?"
+      },
+      "answers": {
+        "en-US": [
+          "Angled lob over the left shoulder",
+          "Lob depth in sector 0",
+          "Lob depth in sector 1",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Balão angulado sobre o ombro esquerdo",
+          "Balão de profundidade de setor 0",
+          "Balão de profundidade de setor 1",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "When executing a kick volley, the offensive player’s objective is:",
+        "pt": "Na aplicação da bola à malha em “kick”, o objetivo do jogador que executa é:"
+      },
+      "answers": {
+        "en-US": [
+          "Gain time to recover the offensive zone",
+          "Finish the point",
+          "Place the ball at 4x meters with double-table",
+          "None of the above"
+        ],
+        "pt": [
+          "Perder tempo para recuperar a zona ofensiva",
+          "Definir o ponto",
+          "Colocar a bola por 4x metros com dupla tabela",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The primary objective of a flat volley is:",
+        "pt": "O objetivo principal de aplicar uma bola à malha plana é:"
+      },
+      "answers": {
+        "en-US": [
+          "Recover the offensive zone",
+          "Place the ball behind the opponent",
+          "Avoid the opponent’s block",
+          "Limit the defensive options"
+        ],
+        "pt": [
+          "Recuperar a zona ofensiva",
+          "Colocar a bola nas costas do adversário",
+          "Evitar o bloqueio do adversário",
+          "Limitar as opções defensivas"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The secondary objective of a flat volley is:",
+        "pt": "O objetivo secundário de aplicar uma bola à malha plana é:"
+      },
+      "answers": {
+        "en-US": [
+          "Recover the offensive zone",
+          "Place the ball behind the opponent",
+          "Avoid the opponent’s block",
+          "Push the opposing players backwards"
+        ],
+        "pt": [
+          "Recuperar a zona ofensiva",
+          "Colocar a bola nas costas do adversário",
+          "Evitar o bloqueio do adversário",
+          "Empurrar a dupla adversária para trás"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The main goal of applying a kick volley by the left-side player is:",
+        "pt": "O objetivo principal de aplicar uma bola à malha em “kick”, protagonizada pelo jogador de esquerda é:"
+      },
+      "answers": {
+        "en-US": [
+          "Recover the offensive zone",
+          "Place the ball behind the opponent",
+          "Avoid the opponent’s block",
+          "Direct the ball towards the peak or 1VLC"
+        ],
+        "pt": [
+          "Recuperar a zona ofensiva",
+          "Colocar a bolas nas costas do adversário",
+          "Evitar o bloqueio do adversário",
+          "Direcionar para o pico ou 1VLC"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The second goal of applying a kick volley by the left-side player is:",
+        "pt": "O objetivo secundário da aplicação de uma bola à malha em “kick” protagonizada pelo jogador de esquerda é:"
+      },
+      "answers": {
+        "en-US": [
+          "Recover the offensive zone",
+          "Avoid the block",
+          "Push the opposing pair backwards",
+          "Direct the ball towards the peak or 1VLC"
+        ],
+        "pt": [
+          "Recuperar a zona ofensiva",
+          "Evitar o bloqueio",
+          "Empurrar a dupla adversária para trás",
+          "Direcionar para o pico ou 1VLC"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "What are the indicators for applying the “gancho” (hook shot) for the right-side player?",
+        "pt": "Quais os indicadores de aplicabilidade do gancho para o jogador de direita:"
+      },
+      "answers": {
+        "en-US": [
+          "Receiving a lob with depth in sector 0",
+          "Ball placement slightly to the right side of the body",
+          "Awareness of the opponent’s positioning in sector 1",
+          "All of the above"
+        ],
+        "pt": [
+          "Receção de um balão com profundidade no setor 0",
+          "Colocação da bola ligeiramente à direita do corpo",
+          "Percepção do posicionamento do adversário no setor 1",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The objectives of applying the “gancho” by the right-side player are:",
+        "pt": "A aplicação do gancho pelo jogador de direita tem como objetivos:"
+      },
+      "answers": {
+        "en-US": [
+          "Force the opponent’s rotation",
+          "Limit the opponent’s field of vision",
+          "Take away the opponent’s reaction time",
+          "All of the above"
+        ],
+        "pt": [
+          "Forçar a rotação do adversário",
+          "Limitar o campo de visão do adversário",
+          "Retirar tempo de pressão ao adversário",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "What are the indicators for executing a “viper” towards the VF1C glass by the right-side player?",
+        "pt": "Quais são os indicadores de aplicabilidade para a execução de uma víbora, na direção do vidro VF1C, pelo jogador de direita?"
+      },
+      "answers": {
+        "en-US": [
+          "Hitting the ball further away from the body and observing the opponent’s positioning in sector 0/1 to ensure coverage of the peak",
+          "Hitting the ball further away from the body, observing the opponent’s positioning in sector 0/1 to ensure coverage of the peak, and being positioned in sector 0",
+          "Hitting the ball further away from the body and being positioned in sector 0",
+          "None of the above"
+        ],
+        "pt": [
+          "Colocação da bola mais afastada do corpo e observação do posicionamento do adversário no setor 0/1, para garantir a cobertura do pico",
+          "Colocação da bola mais afastada do corpo, observação do posicionamento do adversário no setor 0/1, para garantir a cobertura do pico e posicionamento no setor 0",
+          "Colocação da bola mais afastada do corpo e posicionamento no setor 0",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The secondary goals of executing a “hook” or “viper” by the right-side player are:",
+        "pt": "Os objetivos secundários na execução de um gancho ou víbora pelo jogador de direita são:"
+      },
+      "answers": {
+        "en-US": [
+          "The same: Force the opponent’s rotation and limit their field of vision",
+          "Different",
+          "The same: Limit the opponent’s defensive options",
+          "None of the above"
+        ],
+        "pt": [
+          "Iguais. Forçar a rotação do adversário e limitar o campo de visão",
+          "Diferentes",
+          "Iguais. Limitar as opções defensivas do adversário",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The primary goal of applying a “viper” towards VF1C by the right-side player is:",
+        "pt": "O objetivo primário na aplicação de uma víbora em direção VF1C pelo jogador de direita é:"
+      },
+      "answers": {
+        "en-US": [
+          "Place the ball behind the opponent",
+          "Direct the ball towards the peak",
+          "Avoid the block",
+          "All of the above"
+        ],
+        "pt": [
+          "Colocar a bola nas costas do adversário",
+          "Garantir a bola na direção do pico",
+          "Evitar o bloqueio",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The offensive responses to an angled lob can be:",
+        "pt": "Os comportamentos ofensivos em resposta a um balão angulado podem ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Flat volley and kick volley",
+          "“Viper” towards VL2C and VF1C",
+          "For left-side players: flat volley and kick volley; for right-side players: “viper” towards VL2C and VF1C",
+          "All of the above"
+        ],
+        "pt": [
+          "Bola à malha plana e kick",
+          "Víbora na direção de VL2C e VF1C",
+          "Nos jogadores de esquerda, as opções são bola à malha plana e kick, enquanto as opções dos jogadores de direita são víbora na direção de VL2C e VF1C",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    }
+  ]
+}

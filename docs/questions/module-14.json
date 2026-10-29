@@ -1,0 +1,302 @@
+{
+  "title": {
+    "en-US": "ADMITION TEST – MESOCYCLE 15 – BALLISTIC MOVEMENTS",
+    "pt": "TESTE DE AVALIAÇÃO – MESOCICLO 15 – MOVIMENTOS BALÍSTICOS"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "Ballistic movements refer to the following technical tools:",
+        "pt": "Os movimentos balísticos referem-se às seguintes ferramentas técnicas:"
+      },
+      "answers": {
+        "en-US": [
+          "Smash x3, Smash x4, Bring-back Smash, Winter Smash",
+          "Víbora, Modern Bandeja, Traditional Bandeja (slice), and Drive Volley",
+          "Forehand without glass, Forehand with glass, Backhand without glass, and Backhand with glass",
+          "Forehand Volley +, Backhand Volley +, Offensive Glass Exit, and Amortie"
+        ],
+        "pt": [
+          "Smash x3, Smash x4, Smash para trazer, Smash de Inverno",
+          "Víbora, Bandeja Moderna, bandeja tradicional em slice e drive volley",
+          "Direita sem vidro, direita com vidro, esquerda sem vidro e esquerda com vidro",
+          "Volley de direita +, volley de esquerda +, saída de vidro ofensiva e amortie"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Regarding spatial awareness and prior to executing a Smash x4, the player must be positioned in zone:",
+        "pt": "Previamente à execução de um Smash x4, ao nível da perceção espacial, o jogador que executa tem de ser consciente de estar posicionado no setor:"
+      },
+      "answers": {
+        "en-US": [
+          "2",
+          "0",
+          "1",
+          "3"
+        ],
+        "pt": [
+          "2",
+          "0",
+          "1",
+          "3"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Ballistic movements are framed within technical executions of a:",
+        "pt": "Os movimentos balísticos estão enquadrados em execuções técnicas de carácter de:"
+      },
+      "answers": {
+        "en-US": [
+          "Build-up nature",
+          "Pressure-inducing nature",
+          "Definition nature",
+          "None of the above"
+        ],
+        "pt": [
+          "Construção",
+          "Pressão",
+          "Definição",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "When executing a Smash x4, the player aims to make the ball bounce on the opponent's side between zones:",
+        "pt": "Em termos visuais, o jogador que executa um Smash x4 procura colocar a bola a bater no lado do adversário entre os setores:"
+      },
+      "answers": {
+        "en-US": [
+          "Sector 0 and VL2P",
+          "Sector 1 and 0",
+          "Sector 1 and 2",
+          "Sector 2 and 3"
+        ],
+        "pt": [
+          "Setor 0 e VL2P",
+          "Setor 1 e 0",
+          "Setor 1 e 2",
+          "Setor 2 e 3"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The indicators for executing a Smash x4 meters are:",
+        "pt": "Os indicadores de aplicabilidade para a execução de um Smash x4 são:"
+      },
+      "answers": {
+        "en-US": [
+          "Polarity +, red zone positioning, and offensive zone sector 3",
+          "Polarity -, red zone positioning, and offensive zone sector 3",
+          "Polarity ++, red zone positioning, and offensive zone sector 3",
+          "None of the above"
+        ],
+        "pt": [
+          "Polaridade +, posicionamento na cor vermelha e setor 3 da zona ofensiva",
+          "Polaridade -, posicionamento na cor vermelha e setor 3 da zona ofensiva",
+          "Polaridade ++, posicionamento na cor vermelha e setor 3 da zona ofensiva",
+          "Nenhuma das anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The main spin effect when applying a Smash x4 is:",
+        "pt": "O efeito primordial na aplicação de um Smash x4 é:"
+      },
+      "answers": {
+        "en-US": [
+          "Sidespin",
+          "Topspin",
+          "Flat",
+          "Slice"
+        ],
+        "pt": [
+          "Sidespin",
+          "Topspin",
+          "Plano",
+          "Slice"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The key conditions for applying the Winter Smash are:",
+        "pt": "As premissas para a aplicação do Smash de Inverno são:"
+      },
+      "answers": {
+        "en-US": [
+          "Positioning in sectors 0 & 1",
+          "Opponent leaning their body backwards",
+          "Positioning in sector 3",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Posicionamento no setor 0 e 1",
+          "Adversário com o corpo balanceado para trás",
+          "Posicionamento no setor 3",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In padel, the \"bomb\" is also known as:",
+        "pt": "A “bomba\" é também conhecida no mundo do padel por:"
+      },
+      "answers": {
+        "en-US": [
+          "Smash X3",
+          "Smash X4",
+          "Winter smash",
+          "Smash to bring back the ball"
+        ],
+        "pt": [
+          "Smash X3",
+          "Smash X4",
+          "Smash de inverno",
+          "Smash para trazer"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "One of the indicators for executing the Winter Smash is:",
+        "pt": "Um dos indicadores para a execução do Smash de Inverno é:"
+      },
+      "answers": {
+        "en-US": [
+          "Opponent placed in the green zone of the offensive area",
+          "Opponent placed in the red zone of the defensive area",
+          "Opponent placed in the yellow zone of the offensive area",
+          "Opponent placed in the yellow zone of the defensive area"
+        ],
+        "pt": [
+          "A colocação do adversário na cor verde da zona ofensiva",
+          "A colocação do adversário na cor vermelha da zona defensiva",
+          "A colocação do adversário na cor amarela da zona ofensiva",
+          "A colocação do adversário na cor amarela da zona defensiva"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The cognitive rationale behind using the Winter Smash is:",
+        "pt": "O pensamento cognitivo por detrás da utilização do Smash de Inverno é:"
+      },
+      "answers": {
+        "en-US": [
+          "Playing equivalent to the padel speedometer",
+          "Playing with the inversion of the padel speedometer",
+          "Playing with the inversion or equivalence of the padel speedometer",
+          "None of the above"
+        ],
+        "pt": [
+          "Jogar de forma equivalente ao velocímetro do padel",
+          "Jogar com a inversão do velocímetro do padel",
+          "Jogar com a inversão ou equivalente ao velocímetro do padel",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "In padel, playing with the inverted speedometer means:",
+        "pt": "Jogar com a inversão do velocímetro do padel significa:"
+      },
+      "answers": {
+        "en-US": [
+          "Applying a ball speed that corresponds to the expected speed based on the player's alignment with the speedometer sector",
+          "Applying a ball speed contrary to the expected speed based on the player's alignment with the speedometer sector",
+          "None of the above",
+          "No one plays with the inversion of the speedometer"
+        ],
+        "pt": [
+          "Aplicar uma velocidade de bola que corresponda à velocidade expectável dada pelo alinhamento do jogador, com o setor do velocímetro",
+          "Aplicar uma velocidade de bola contrária à velocidade expectável dada pelo alinhamento do jogador, com o setor do velocímetro",
+          "Nenhuma das opções anteriores",
+          "Ninguém joga com a inversão do velocímetro"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The flat x3 Smash is a technique that can be executed when the player is positioned:",
+        "pt": "O Smash x 3 plano é uma técnica que pode ser executada quando o jogador está posicionado:"
+      },
+      "answers": {
+        "en-US": [
+          "In sector 0",
+          "In sector 1",
+          "In sector 2",
+          "In sector 3"
+        ],
+        "pt": [
+          "No setor 0",
+          "No setor 1",
+          "No setor 2",
+          "No setor 3"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "For the “kick” x3 Smash, the technical execution in terms of positioning should be applied:",
+        "pt": "No Smash X3 em “kick\", a execução técnica a nível posicional deve ser aplicado:"
+      },
+      "answers": {
+        "en-US": [
+          "In sector 3",
+          "In sector 2",
+          "In sector 1",
+          "All of the above"
+        ],
+        "pt": [
+          "No setor 3",
+          "No setor 2",
+          "No setor 1",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "Hitting a ball coming from a left-handed player’s x3 Smash aims to:",
+        "pt": "O batimento de uma bola oriunda de um Smash x3 de um jogador de esquerda tem como objetivo:"
+      },
+      "answers": {
+        "en-US": [
+          "Intersect VF1C and VF2C",
+          "Intersect VF1C and VF2C plus the last meter of the junction between these glasses",
+          "Intersect VF1P and VF2P",
+          "Intersect VF1P and VF2P plus the last meter of the junction between these glasses"
+        ],
+        "pt": [
+          "A interseção dos VF1C e VF2C",
+          "A Interseção dos VF1C e VF2C mais o último metro da união destes vidros",
+          "A interseção dos VF1P e VF2P",
+          "A Interseção dos VF1P e VF2P mais o último metro da união destes vidros"
+        ]
+      },
+      "correctIndex": 1
+    }
+  ]
+}

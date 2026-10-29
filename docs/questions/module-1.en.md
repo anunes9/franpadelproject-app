@@ -145,7 +145,7 @@
 
 ## Question 14
 
-**In returning a first service, the responder's mindset should be to:**
+**In returning a first service, the responder’s mindset should be to:**
 
 - A) Return with the highest possible quality in order to receive an easier second ball, that allows maintaining control of the ball from the defensive zone
 - B) Attempt to win the point
@@ -176,7 +176,7 @@
 
 ## Question 17
 
-**In returning a second service, the responder's mindset should be:**
+**In returning a second service, the responder’s mindset should be:**
 
 - A) Constructive
 - B) Pressuring

@@ -145,7 +145,7 @@
 
 ## Questão 14
 
-**Na resposta a um primeiro serviço, o "mindset" de quem responde passa por:**
+**Na resposta a um primeiro serviço, o “mindset” de quem responde passa por:**
 
 - A) Responder com a melhor qualidade possível de forma a receber uma segunda bola mais confortável, que permita manter o controlo da bola na zona defensiva
 - B) Procurar ganhar o ponto

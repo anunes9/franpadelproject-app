@@ -1,0 +1,323 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST - MESOCYCLE VI – CIRCULAR MOVEMENTS",
+    "pt": "TESTE DE ADMISSÃO MESOCICLO VI – MOVIMENTOS CIRCULARES"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "How many types can the traditional bandeja be categorized into:",
+        "pt": "A bandeja tradicional pode ser categorizada em quantos tipos:"
+      },
+      "answers": {
+        "en-US": [
+          "6",
+          "4",
+          "5",
+          "2"
+        ],
+        "pt": [
+          "6",
+          "4",
+          "5",
+          "2"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In the traditional bandeja, the clock sector that most characterizes the “Slice” is:",
+        "pt": "Na aplicação da bandeja tradicional, o setor horário que mais caracteriza o “Slice” é:"
+      },
+      "answers": {
+        "en-US": [
+          "12h00-13h00 (12:00 pm - 1:00 pm)",
+          "15h00-16h00 (3:00 pm - 4:00 pm)",
+          "11h00-12h00 (11:00 am - 12:00 pm)",
+          "14h00-15h00 (2:00 am - 3:00 pm)"
+        ],
+        "pt": [
+          "12h00-13h00",
+          "15h00-16h00",
+          "11h00-12h00",
+          "14h00-15h00"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The mental representation prior to executing the traditional bandeja - slice - consists of:",
+        "pt": "A representação cognitiva prévia à execução da pancada técnica na aplicação da bandeja tradicional do tipo slice consiste em:"
+      },
+      "answers": {
+        "en-US": [
+          "Elbowing",
+          "Applying an uppercut",
+          "Throwing a party",
+          "Unscrewing a light bulb"
+        ],
+        "pt": [
+          "Dar uma cotovelada",
+          "Aplicar um uppercut",
+          "Aplicação de uma festa",
+          "Desenroscar uma lâmpada"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "A common guiding error in executing a traditional tray slice is:",
+        "pt": "Um erro considerado de bom orientador na execução de uma bandeja tradicional em slice é:"
+      },
+      "answers": {
+        "en-US": [
+          "The ball going upwards",
+          "The ball going straight to the net",
+          "Hitting with the racket handle",
+          "None of the above"
+        ],
+        "pt": [
+          "A bola sair para cima",
+          "A bola ir diretamente para a rede",
+          "Acertar com o cabo da raquete",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "A good guiding error in the traditional badeja slice consists of:",
+        "pt": "Um erro considerado de bom orientador da bandeja tradicional em slice consiste:"
+      },
+      "answers": {
+        "en-US": [
+          "Observing the ball going to the last meter of the back glass",
+          "Observing the ball going towards the net",
+          "Observing the ball going towards the “sky”",
+          "All of the above"
+        ],
+        "pt": [
+          "Em observar a bola a ir direta ao último metro do vidro de fundo",
+          "Em observar a bola a ir na direção da rede",
+          "Em observar a bola a ir na direção do “céu”",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "A movement with a circular pattern provides the player in the defensive zone with key information that facilitates:",
+        "pt": "Um movimento de padrão circular transmite a quem está na zona defensiva um conjunto de informação que facilita:"
+      },
+      "answers": {
+        "en-US": [
+          "Decision-making regarding the behavior to adopt on court, with the possibility of moving up to the net to block or defend the ball behind the white line",
+          "Decision-making regarding the behavior to adopt in defensive movements, since such movements emphasize power over spin and control, allowing a progressive transition rather than a regressive one",
+          "Decision-making regarding the behavior to adopt in transition movements, due to the increased difficulty in applying a block shot",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "A tomada de decisão relativamente ao comportamento a adoptar no campo, com a possibilidade de subir à rede para bloquear ou defender a bola atrás da linha branca",
+          "A tomada de decisão relativamente ao comportamento a adoptar nos movimentos defensivos, uma vez que potencia a força em detrimento do efeito e controlo, o que favorece uma transição progressiva ao invés da regressiva",
+          "A tomada de decisão relativamente ao comportamento a adoptar nos movimentos de transição por aumentar a dificuldade da aplicação do bloqueio",
+          "Respostas b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The speed at which circular pattern movements are executed, from beginner to advanced levels, is:",
+        "pt": "A velocidade de execução dos movimentos de padrão circular, aplicada por jogadores de nível iniciado a avançado, é:"
+      },
+      "answers": {
+        "en-US": [
+          "3, as they are usually applied in the alignment of sector 3",
+          "3, as they are usually applied in the alignment of sector 2",
+          "3, traditional bandejas applied from sector 1 alignment, while sidespin requires a speed of 3-4 with alignment in sector 2",
+          "3, with traditional bandejas performed in alignment with sector 1, while the sidespin requires a speed of 3–4 with alignment in sector 3"
+        ],
+        "pt": [
+          "3, por serem habitualmente aplicados no alinhamento do setor 3",
+          "3, por serem habitualmente aplicados no alinhamento do setor 2",
+          "3, as bandejas tradicionais aplicadas no alinhamento do setor 1, enquanto o sidespin requer uma velocidade de 3-4 com um alinhamento no setor 2",
+          "3, as bandejas tradicionais aplicadas no alinhamento do setor 1, enquanto o sidespin requer uma velocidade de 3-4 com um alinhamento no setor 3"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "Circular-pattern movements are:",
+        "pt": "Os movimentos de padrão circular são:"
+      },
+      "answers": {
+        "en-US": [
+          "Traditional bandeja - Flat, Traditional bandeja - Sliced , and Vibora",
+          "Sidespin, Backspin and Slice",
+          "Flat, Topspin, and Kick",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Bandeja tradicional plana, Bandeja tradicional cortada e Víbora",
+          "Sidespin, Backspin e Slice",
+          "Plana, Topspin e Kick",
+          "Opções a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The circular-pattern movements have the following effects:",
+        "pt": "Os efeitos presentes nos movimentos de padrão circular são:"
+      },
+      "answers": {
+        "en-US": [
+          "Kick, Backspin, Sidespin",
+          "Flat, Slice, and Sidespin",
+          "Topspin, Kick, and Sidespin",
+          "Flat, Slice, and Kick"
+        ],
+        "pt": [
+          "Kick, Backspin, Sidespin",
+          "Plano, Slice e Sidespin",
+          "Topspin, Kick e Sidespin",
+          "Plano, Slice e Kick"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The movement and positioning phase in the parabolic trajectory, prior to applying circular-pattern movements, corresponds to the:",
+        "pt": "A fase de movimentação e de enquadramento na trajetória parabólica, prévia à aplicação de movimentos de padrão circular, corresponde à:"
+      },
+      "answers": {
+        "en-US": [
+          "Ascending Phase",
+          "Descending Phase",
+          "Concavity facing upward",
+          "Concavity facing downward"
+        ],
+        "pt": [
+          "Fase Ascendente",
+          "Fase Descendente",
+          "Concavidade virada para cima",
+          "Concavidade virada para baixo"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "In the parabolic trajectory, the movement and positioning phase, prior to the circular-pattern movements, corresponds to:",
+        "pt": "Na trajetória parabólica, a aplicação dos movimentos de padrão circular à fase de preparação corresponde à:"
+      },
+      "answers": {
+        "en-US": [
+          "Ascending Phase",
+          "Descending Phase",
+          "Concavity facing upward",
+          "Concavity facing downward"
+        ],
+        "pt": [
+          "Fase Ascendente",
+          "Fase Descendente",
+          "Concavidade virada para cima",
+          "Concavidade virada para baixo"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "In the parabolic trajectory, the timing of striking the ball in a circular-pattern movement corresponds to:",
+        "pt": "Na trajetória parabólica, o “timing” de entrada da bola num movimento de padrão de circular corresponde:"
+      },
+      "answers": {
+        "en-US": [
+          "Ascending Phase",
+          "Descending Phase",
+          "Concavity facing downward",
+          "Concavity facing upward"
+        ],
+        "pt": [
+          "Fase Ascendente",
+          "Fase Descendente",
+          "Concavidade virada para baixo",
+          "Concavidade virada para cima"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Which type of lob enhances the application of circular movements:",
+        "pt": "Qual o tipo de balão que potencia a aplicação de movimentos circulares:"
+      },
+      "answers": {
+        "en-US": [
+          "Fast lob",
+          "High lob",
+          "Arrow lob",
+          "Options a) and c)"
+        ],
+        "pt": [
+          "Balão rápido",
+          "Balão em altura",
+          "Balão flecha",
+          "Opções a) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The fast lob should be applied towards the following glass panels:",
+        "pt": "O balão rápido deve ser aplicado na direção de vidros:"
+      },
+      "answers": {
+        "en-US": [
+          "2FP, 2FC, and JOKER",
+          "2FP, EFC, and JOKER, as it reduces the opponent’s reaction time",
+          "1FP, 2FC, and JOKER",
+          "1FP, 2FC, and JOKER, as it reduces the opponent’s reaction time"
+        ],
+        "pt": [
+          "2FP, 2FC e JOKER",
+          "2FP, EFC e JOKER, por diminuir o tempo de reação dos adversários",
+          "1FP, 2FC e JOKER",
+          "1FP, 2FC e JOKER, por diminuir o tempo de reação dos adversários"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Doing the fast lob requires a set of preconditions such as:",
+        "pt": "A aplicação do balão tipo rápido exige um conjunto de condições prévias à execução, tais como:"
+      },
+      "answers": {
+        "en-US": [
+          "Having the ball positioned in the red area of the defensive zone with positive polarity",
+          "Having the ball positioned in the green area of the defensive zone with negative-negative polarity",
+          "Having the ball positioned in the yellow area of the defensive zone with negative polarity",
+          "Having the ball positioned in the green area of the defensive zone with neutral polarity"
+        ],
+        "pt": [
+          "Ter a bola posicionada na cor vermelha da zona defensiva e com uma polaridade positiva",
+          "Ter a bola posicionada na cor verde da zona defensiva e com uma polaridade negativa-negativa",
+          "Ter a bola posicionada na cor amarela da zona defensiva e com uma polaridade negativa",
+          "Ter a bola posicionada na cor verde da zona defensiva e com uma polaridade neutra"
+        ]
+      },
+      "correctIndex": 3
+    }
+  ]
+}

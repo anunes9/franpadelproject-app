@@ -1,4 +1,8 @@
 {
+  "title": {
+    "en-US": "ADMISSION TEST – MESOCYCLE I – GAME INITIATION MODEL",
+    "pt": "TESTE DE ADMISSÃO - MESOCICLO I – MODELO DE INICIAÇÃO DE JOGO"
+  },
   "questions": [
     {
       "question": {
@@ -19,10 +23,7 @@
           "Todas as opções anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "Pressuring the return",
-        "pt": "Pressionar a resposta"
-      }
+      "correctIndex": 2
     },
     {
       "question": {
@@ -43,10 +44,7 @@
           "Slice e Plano"
         ]
       },
-      "correctOption": {
-        "en-US": "Slice and Flat",
-        "pt": "Slice e Plano"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -67,10 +65,7 @@
           "Nenhuma das opções anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "2",
-        "pt": "2"
-      }
+      "correctIndex": 1
     },
     {
       "question": {
@@ -91,10 +86,7 @@
           "Todas as respostas anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "All of the above",
-        "pt": "Todas as respostas anteriores"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -115,10 +107,7 @@
           "Resposta a) e b) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Answers a) and b) are correct",
-        "pt": "Resposta a) e b) estão corretas"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -139,10 +128,7 @@
           "Todas as respostas anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "Downward",
-        "pt": "Descendente"
-      }
+      "correctIndex": 1
     },
     {
       "question": {
@@ -163,10 +149,7 @@
           "Nenhuma das anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "Elbow height relative to the shoulder",
-        "pt": "A altura do cotovelo ao ombro"
-      }
+      "correctIndex": 0
     },
     {
       "question": {
@@ -187,10 +170,7 @@
           "Resposta b) e c)"
         ]
       },
-      "correctOption": {
-        "en-US": "The lower part of the ribs and the highest point of the hip",
-        "pt": "Parte inferior das costelas e o ponto mais alto do quadril"
-      }
+      "correctIndex": 1
     },
     {
       "question": {
@@ -211,10 +191,7 @@
           "Respostas b) e c) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Answers b) and c) are correct",
-        "pt": "Respostas b) e c) estão corretas"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -235,10 +212,7 @@
           "Construir"
         ]
       },
-      "correctOption": {
-        "en-US": "Constructing",
-        "pt": "Construir"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -259,10 +233,7 @@
           "Respostas a) e b) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Flat",
-        "pt": "Plano"
-      }
+      "correctIndex": 2
     },
     {
       "question": {
@@ -283,10 +254,7 @@
           "Todas as respostas anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "Towards the intended direction of the service",
-        "pt": "No sentido da direção pretendida pelo jogador que serve"
-      }
+      "correctIndex": 0
     },
     {
       "question": {
@@ -307,15 +275,12 @@
           "As respostas a) e b) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Answers a) and b) are correct",
-        "pt": "As respostas a) e b) estão corretas"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
-        "en-US": "In returning a first service, the responder's mindset should be to:",
-        "pt": "Na resposta a um primeiro serviço, o \"mindset\" de quem responde passa por:"
+        "en-US": "In returning a first service, the responder’s mindset should be to:",
+        "pt": "Na resposta a um primeiro serviço, o “mindset” de quem responde passa por:"
       },
       "answers": {
         "en-US": [
@@ -331,10 +296,7 @@
           "Respostas a) e c) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Answers a) and c) are correct",
-        "pt": "Respostas a) e c) estão corretas"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -355,10 +317,7 @@
           "Todas as respostas anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "All of the above",
-        "pt": "Todas as respostas anteriores"
-      }
+      "correctIndex": 3
     },
     {
       "question": {
@@ -375,14 +334,11 @@
           "Falsa"
         ]
       },
-      "correctOption": {
-        "en-US": "True",
-        "pt": "Verdadeira"
-      }
+      "correctIndex": 0
     },
     {
       "question": {
-        "en-US": "In returning a second service, the responder's mindset should be:",
+        "en-US": "In returning a second service, the responder’s mindset should be:",
         "pt": "Na resposta ao segundo serviço, o jogador que responde deve apresentar uma mentalidade:"
       },
       "answers": {
@@ -399,10 +355,7 @@
           "Nenhuma das respostas anteriores"
         ]
       },
-      "correctOption": {
-        "en-US": "Pressuring",
-        "pt": "De pressão"
-      }
+      "correctIndex": 1
     },
     {
       "question": {
@@ -423,10 +376,7 @@
           "Polaridade neutra para defender a posição"
         ]
       },
-      "correctOption": {
-        "en-US": "Positive polarity in order to keep pressing",
-        "pt": "Polaridade positiva para continuar a pressionar"
-      }
+      "correctIndex": 2
     },
     {
       "question": {
@@ -447,10 +397,7 @@
           "As respostas b) e c) estão corretas"
         ]
       },
-      "correctOption": {
-        "en-US": "Answers b) and c) are correct",
-        "pt": "As respostas b) e c) estão corretas"
-      }
+      "correctIndex": 3
     }
   ]
 }
