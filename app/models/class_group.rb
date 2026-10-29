@@ -283,6 +283,19 @@ class ClassGroup < ApplicationRecord
     }
   end
 
+  # How the admin screens name the group: its name or Level, and its Coach.
+  def display_name
+    "#{name || level.capitalize} (#{coach.name})"
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name level coach_id starts_on cadence duration created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   # The group as a link to it: "Continues from <group>".
   def link_json
     { id: id, level: level, name: name }

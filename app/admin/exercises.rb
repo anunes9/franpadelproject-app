@@ -1,4 +1,6 @@
 ActiveAdmin.register Exercise do
+  menu parent: "Content", priority: 2
+
   permit_params :course_module_id, :ref, :title, :category, :duration, :description, :content,
                 new_media: []
 

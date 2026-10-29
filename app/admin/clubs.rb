@@ -1,4 +1,6 @@
 ActiveAdmin.register Club do
+  menu parent: "Clubs", priority: 1
+
   permit_params :name, :location, :instagram, :logo
 
   index do

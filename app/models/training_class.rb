@@ -163,6 +163,19 @@ class TrainingClass < ApplicationRecord
     json.merge(module: json[:module].merge(description: course_module.description))
   end
 
+  # How the admin screens name the Class: its group and date.
+  def display_name
+    "#{class_group.display_name}, #{date.iso8601}"
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[class_group_id course_module_id date kind done skipped coach_added created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   private
 
   def module_json
