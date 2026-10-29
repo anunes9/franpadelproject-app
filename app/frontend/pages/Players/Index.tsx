@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { editPlayerPath, newClubPlayerPath } from '@/lib/paths'
+import { LEVELS, nameMatches } from '@/lib/players'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, INPUT_CLASS, ListCard, ListRow } from '../../components/ui'
 import type { ClubSummary, Level, Player, PlayerPosition } from '../../types/dashboard-data'
@@ -12,16 +13,7 @@ interface Props {
   players: Player[]
 }
 
-const LEVELS: Level[] = ['beginner', 'intermediate', 'advanced']
 const POSITIONS: PlayerPosition[] = ['left', 'right', 'both']
-
-// Lowercase and without accents, so "joao" finds "João".
-function normalize(text: string) {
-  return text
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
-}
 
 function Index() {
   const { club, players } = usePage<Props>().props
@@ -34,7 +26,7 @@ function Index() {
   const filtering = query.trim() !== '' || level !== 'all' || position !== 'all'
   const shown = players.filter(
     (player) =>
-      normalize(player.name).includes(normalize(query.trim())) &&
+      nameMatches(player.name, query) &&
       (level === 'all' || player.level === level) &&
       (position === 'all' || player.position === position)
   )
