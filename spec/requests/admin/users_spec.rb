@@ -99,12 +99,12 @@ RSpec.describe "Admin users management", type: :request do
 
   it "removes a user instead of deleting them, keeping their history" do
     target = create(:user, :coach)
-    progress = create(:user_module_progress, user: target)
+    attempt = create(:quiz_attempt, user: target)
 
     expect { delete "/admin/users/#{target.id}" }.not_to change(User, :count)
 
     expect(target.reload).to be_removed
-    expect(UserModuleProgress.exists?(progress.id)).to be true
+    expect(QuizAttempt.exists?(attempt.id)).to be true
     follow_redirect!
     expect(response.body).to include("removed")
   end

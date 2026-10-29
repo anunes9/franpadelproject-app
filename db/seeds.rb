@@ -30,22 +30,21 @@ Rails.application.load_tasks unless Rake::Task.task_defined?("course_modules:imp
 Rake::Task["course_modules:import"].execute
 Rake::Task["exercises:import"].execute
 
-progress_by_slug = {
-  "module-1" => { status: :done, progress: 100 },
-  "module-2" => { status: :done, progress: 100 },
-  "module-3" => { status: :current, progress: 40 },
-  "module-4" => { status: :locked, progress: 0 },
-  "module-5" => { status: :locked, progress: 0 },
-  "module-6" => { status: :locked, progress: 0 },
-  "module-7" => { status: :locked, progress: 0 }
-}.freeze
-
+# Every seed user has Module Completion of the first two Beginner Modules
+# (every Exercise done and the Quiz passed) and has done 40% of the third's
+# Exercises, so it is In Progress and the rest are Locked.
 User.find_each do |user|
-  progress_by_slug.each do |slug, attrs|
+  %w[module-1 module-2].each do |slug|
     course_module = CourseModule.find_by!(slug: slug)
-    UserModuleProgress.find_or_create_by!(user: user, course_module: course_module) do |progress|
-      progress.status = attrs[:status]
-      progress.progress = attrs[:progress]
-    end
+    course_module.exercises.each { |exercise| ExerciseCompletion.find_or_create_by!(user: user, exercise: exercise) }
+    next unless course_module.quiz?
+
+    quiz = course_module.quiz
+    QuizAttempt.create!(user: user, quiz: quiz, answers: quiz.correct_answers) unless quiz.attempts.passing.exists?(user: user)
+  end
+
+  module_three = CourseModule.find_by!(slug: "module-3")
+  module_three.exercises.first((module_three.exercises.size * 0.4).round).each do |exercise|
+    ExerciseCompletion.find_or_create_by!(user: user, exercise: exercise)
   end
 end

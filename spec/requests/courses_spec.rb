@@ -33,7 +33,7 @@ RSpec.describe "Courses", type: :request do
 
   it "reflects the current user's progress for a module" do
     course_module = create(:course_module, slug: "module-1")
-    create(:user_module_progress, user: user, course_module: course_module, status: :done, progress: 100)
+    create(:exercise_completion, user: user, exercise: create(:exercise, course_module: course_module))
 
     get "/dashboard/courses/module-1"
 
@@ -64,22 +64,12 @@ RSpec.describe "Courses", type: :request do
   end
 
   it "redirects a Locked Module back to the courses index" do
-    create(:course_module, slug: "module-1", position: 1)
+    create(:exercise, course_module: create(:course_module, slug: "module-1", position: 1))
     create(:course_module, slug: "module-2", position: 2)
 
     get "/dashboard/courses/module-2"
 
     expect(response).to redirect_to("/dashboard/courses")
-  end
-
-  it "refuses to complete a Locked Module" do
-    create(:course_module, slug: "module-1", position: 1)
-    locked = create(:course_module, slug: "module-2", position: 2)
-
-    patch "/dashboard/courses/module-2/complete"
-
-    expect(response).to redirect_to("/dashboard/courses")
-    expect(UserModuleProgress.find_by(user: user, course_module: locked)).to be_nil
   end
 
   it "lists a module's documents with inline-disposition urls, no download attribute needed" do
@@ -92,20 +82,11 @@ RSpec.describe "Courses", type: :request do
     expect(response.body).to include("disposition=inline")
   end
 
-  describe "PATCH /dashboard/courses/:id/complete" do
-    it "marks the module done for the current user and redirects back to it" do
-      course_module = create(:course_module, slug: "module-1")
+  it "has no manual way to mark a Module as done" do
+    create(:course_module, slug: "module-1")
 
-      patch "/dashboard/courses/module-1/complete"
+    patch "/dashboard/courses/module-1/complete"
 
-      expect(response).to redirect_to("/dashboard/courses/module-1")
-      progress = UserModuleProgress.find_by(user: user, course_module: course_module)
-      expect(progress).to have_attributes(status: "done", progress: 100)
-    end
-
-    it "404s for an unknown module id" do
-      patch "/dashboard/courses/nope/complete"
-      expect(response).to have_http_status(:not_found)
-    end
+    expect(response).to have_http_status(:not_found)
   end
 end

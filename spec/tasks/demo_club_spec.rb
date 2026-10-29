@@ -13,6 +13,7 @@ RSpec.describe "demo:club rake task" do
     7.times do |index|
       course_module = create(:course_module, slug: "module-#{index + 1}", position: index + 1, level: :beginner)
       6.times { create(:exercise, course_module: course_module) }
+      create(:quiz_question, quiz: create(:quiz, course_module: course_module))
     end
   end
 

@@ -124,7 +124,8 @@ function Quiz() {
             const on = picked === i
             return (
               <button
-                key={option}
+                // biome-ignore lint/suspicious/noArrayIndexKey: an option is its position (the answer is stored as it, and options never move); two options can share their text
+                key={`${question.id}-${i}`}
                 type="button"
                 onClick={() => setAnswers({ ...answers, [question.id]: i })}
                 aria-pressed={on}

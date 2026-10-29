@@ -95,7 +95,8 @@ The Intermediate Module numbers are one behind the mesocycle numbers because Coa
 - Completed = (no Quiz, or a Quiz Pass) and every Exercise currently in the Module has an Exercise Completion. A Module with neither is complete for everyone.
 - In Progress = not Completed, with at least one Exercise Completion or Quiz Attempt.
 - progress = (Exercises done + 1 if Quiz Pass) ÷ (Exercises + 1 if the Module has a Quiz).
-- The manual "mark as done" (`complete_for!`, `PATCH /dashboard/courses/:id/complete`, the button on `Show.tsx`) is removed, and `user_module_progresses` no longer decides completion. Existing "done" rows are not kept as passes (ADR 0008).
+- Locked comes first: a Module after an incomplete one is Locked, and not Completed, even with nothing left to do in it.
+- The manual "mark as done" (`complete_for!`, `PATCH /dashboard/courses/:id/complete`, the button on `Show.tsx`) is removed, and the `user_module_progresses` table is dropped. Existing "done" rows are not kept as passes (ADR 0008). A Module that isn't complete says what is left instead.
 
 **Dashboard.** The Module page's Quiz card shows the question count, the Client's best score and pass state. `averageQuiz` in `dashboard_stats_for` is the mean of the Client's best score on each Quiz they attempted, or nil if none. The Club overview shows only completion and progress.
 

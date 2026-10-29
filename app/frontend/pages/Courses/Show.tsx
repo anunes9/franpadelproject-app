@@ -9,7 +9,7 @@ import {
   Tick02Icon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Link, router, usePage } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
 import type { TranslationKey } from '@/i18n/translations'
 import { useTranslation } from '@/i18n/useTranslation'
@@ -53,7 +53,6 @@ function documentIcon(contentType: string) {
 function Show() {
   const { courseModule, sections, exerciseStats, documents, quizQuestionCount } = usePage<Props>().props
   const { t, tn } = useTranslation()
-  const [completing, setCompleting] = useState(false)
   const [viewingDocument, setViewingDocument] = useState<CourseDocument | null>(null)
 
   const levelKey = courseModule.level.toLowerCase()
@@ -61,14 +60,14 @@ function Show() {
     ? t(`courses.index.level.${levelKey as (typeof LEVEL_KEYS)[number]}`)
     : courseModule.level
 
-  function handleComplete() {
-    setCompleting(true)
-    router.patch(
-      `/dashboard/courses/${courseModule.id}/complete`,
-      {},
-      { preserveScroll: true, onFinish: () => setCompleting(false) }
-    )
-  }
+  // Module Completion follows from the Module's content (a Quiz Pass and every
+  // Exercise done), so a Module that isn't complete says what is left.
+  const completeHint =
+    quizQuestionCount > 0
+      ? exerciseStats.count > 0
+        ? t('courses.show.completeHint.exercisesAndQuiz')
+        : t('courses.show.completeHint.quiz')
+      : t('courses.show.completeHint.exercises')
 
   return (
     <div className="px-5 pt-5 lg:px-10 lg:pt-9">
@@ -221,14 +220,9 @@ function Show() {
             {t('courses.show.moduleCompleted')}
           </div>
         ) : (
-          <button
-            type="button"
-            onClick={handleComplete}
-            disabled={completing}
-            className={buttonClass('accent', 'min-h-14')}
-          >
-            {completing ? t('courses.show.markingComplete') : t('courses.show.markComplete')}
-          </button>
+          <p className="rounded-2xl border border-line bg-white px-4 py-3.5 text-sm text-muted-strong">
+            {completeHint}
+          </p>
         )}
       </div>
 

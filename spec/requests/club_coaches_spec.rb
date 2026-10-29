@@ -25,11 +25,11 @@ RSpec.describe "Removing a Coach", type: :request do
   end
 
   it "removes a Coach with no Class Groups from the Club, keeping their course progress and Exercise Completions" do
-    create(:user_module_progress, user: coach)
+    create(:quiz_attempt, user: coach)
     create(:exercise_completion, user: coach)
     sign_in manager
 
-    expect { remove(coach) }.not_to(change { [User.count, UserModuleProgress.count, ExerciseCompletion.count] })
+    expect { remove(coach) }.not_to(change { [User.count, QuizAttempt.count, ExerciseCompletion.count] })
 
     expect(coach.reload).to be_removed
     expect(response).to redirect_to("/dashboard/clubs/#{club.id}")

@@ -17,15 +17,17 @@ RSpec.describe "db/seeds.rb" do
     expect(module_one.sections).not_to be_empty
   end
 
-  it "creates progress rows for every seed user matching today's hardcoded values" do
-    expect(UserModuleProgress.count).to eq(User.count * 7)
+  it "gives every seed user Module Completion of the first two Beginner Modules and the third In Progress" do
+    User.find_each do |user|
+      states = CourseModule.states_for(user, CourseModule.teaching_for(:beginner))
+      expect(states.values.map { |state| state[:status] }).to eq(%w[completed completed in_progress] + %w[locked] * 4)
+    end
 
-    coach = User.find_by(email: "coach@example.com")
-    module_three = CourseModule.find_by(slug: "module-3")
-    progress = UserModuleProgress.find_by(user: coach, course_module: module_three)
+    expect(QuizAttempt.passing.count).to eq(User.count * 2)
+  end
 
-    expect(progress.status).to eq("current")
-    expect(progress.progress).to eq(40)
+  it "is safe to run again" do
+    expect { load Rails.root.join("db/seeds.rb") }.not_to(change { [ExerciseCompletion.count, QuizAttempt.count] })
   end
 
   it "creates one club matching today's hardcoded values" do

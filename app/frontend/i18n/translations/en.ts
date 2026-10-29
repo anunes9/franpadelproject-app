@@ -155,8 +155,11 @@ export const en = {
       },
       startQuiz: 'Start quiz',
       moduleCompleted: 'Module completed',
-      markComplete: 'Mark module as complete',
-      markingComplete: 'Marking as complete…',
+      completeHint: {
+        exercisesAndQuiz: 'Complete every exercise and pass the quiz (80% or more) to complete this module.',
+        exercises: 'Complete every exercise to complete this module.',
+        quiz: 'Pass the quiz (80% or more) to complete this module.',
+      },
     },
     quiz: {
       resultsHeading: 'Quiz results',

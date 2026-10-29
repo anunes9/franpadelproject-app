@@ -158,8 +158,12 @@ export const pt = {
       },
       startQuiz: 'Iniciar quiz',
       moduleCompleted: 'Mesociclo concluído',
-      markComplete: 'Marcar mesociclo como concluído',
-      markingComplete: 'A marcar como concluído…',
+      completeHint: {
+        exercisesAndQuiz:
+          'Conclua todos os exercícios e seja aprovado no quiz (80% ou mais) para concluir este mesociclo.',
+        exercises: 'Conclua todos os exercícios para concluir este mesociclo.',
+        quiz: 'Seja aprovado no quiz (80% ou mais) para concluir este mesociclo.',
+      },
     },
     quiz: {
       resultsHeading: 'Resultados do quiz',

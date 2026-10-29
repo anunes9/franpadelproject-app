@@ -118,14 +118,14 @@ RSpec.describe User, type: :model do
     end
 
     it "keeps the Coach's account, course progress and Exercise Completions, but not their access" do
-      progress = create(:user_module_progress, user: coach)
+      attempt = create(:quiz_attempt, user: coach)
       completion = create(:exercise_completion, user: coach)
 
       expect(coach.remove!).to be true
       expect(coach.reload).to be_removed
       expect(coach.active_for_authentication?).to be false
       expect(coach.inactive_message).to eq(:removed)
-      expect(UserModuleProgress.exists?(progress.id)).to be true
+      expect(QuizAttempt.exists?(attempt.id)).to be true
       expect(ExerciseCompletion.exists?(completion.id)).to be true
     end
 

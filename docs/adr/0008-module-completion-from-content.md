@@ -6,7 +6,8 @@ Until Quizzes, Module Completion was a manual button: `CourseModule#complete_for
 - **"Has a Quiz" means a Quiz with at least one question.** An empty Quiz never blocks anyone.
 - **A Quiz Pass is worked out from Quiz Attempts, never stored.** It is "an attempt scored at 80% or more exists". The score is frozen on the attempt when it is submitted, so editing or removing questions never takes a pass away.
 - **In Progress counts Quiz Attempts too**, and a Module's progress counts its Quiz as one step: (Exercises done + 1 if Quiz Pass) ÷ (Exercises + 1 if it has a Quiz).
-- **The manual "mark as done" is removed**: `complete_for!`, `PATCH /dashboard/courses/:id/complete` and its button. `user_module_progresses` no longer decides completion.
+- **The manual "mark as done" is removed**: `complete_for!`, `PATCH /dashboard/courses/:id/complete` and its button. The `user_module_progresses` table, its admin screen and its rows are dropped; the seeds and the demo Club record Exercise Completions and passing Quiz Attempts instead.
+- **A Locked Module is never Completed.** A Module after an incomplete one stays Locked even when nothing is left to do in it (no Quiz and no Exercises, or Exercises done from the Exercises pages), and it does not unlock the next one, so a Course is always worked through in order.
 - **Existing "done" rows are not kept as passes.** A Client who marked a Module done without passing its Quiz loses Module Completion on it, and the next Module can lock again until they pass. No Client has progress that needs protecting yet, and keeping the rows would make one Client's completion mean something different from another's.
 
 ## Considered options

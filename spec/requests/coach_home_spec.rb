@@ -140,7 +140,8 @@ RSpec.describe "Coach home", type: :request do
     sign_in coach
     get "/dashboard"
 
-    state_queries = count_queries(matching: /FROM "user_module_progresses"/) { get "/dashboard" }
+    # Working out the states counts each Module's Exercise Completions, once.
+    state_queries = count_queries(matching: /FROM "exercise_completions" INNER JOIN "exercises"/) { get "/dashboard" }
 
     expect(page_props).to include("courseStats" => be_present, "modules" => [include("title" => "Serve")])
     expect(state_queries).to eq(1)
