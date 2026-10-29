@@ -6,6 +6,126 @@
       "en-US": "Module 8"
     },
     "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Ação da zona defensiva e reação da zona ofensiva",
+      "en-US": "Defensive zone action and offensive zone reaction"
+    },
+    "content": {
+      "pt": "",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-9",
+    "title": {
+      "pt": "Mesociclo 9",
+      "en-US": "Module 9"
+    },
+    "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Ação da zona ofensiva e reação da zona defensiva",
+      "en-US": "Offensive zone action and defensive zone reaction"
+    },
+    "content": {
+      "pt": "",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-10",
+    "title": {
+      "pt": "Mesociclo 10",
+      "en-US": "Module 10"
+    },
+    "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Movimentos de basculação da zona ofensiva",
+      "en-US": "Offensive zone shifting movements"
+    },
+    "content": {
+      "pt": "",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-11",
+    "title": {
+      "pt": "Mesociclo 11",
+      "en-US": "Module 11"
+    },
+    "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Comportamento ofensivo em resposta ao balão angulado",
+      "en-US": "Offensive behavior in response to the angled lob"
+    },
+    "content": {
+      "pt": "",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-12",
+    "title": {
+      "pt": "Mesociclo 12",
+      "en-US": "Module 12"
+    },
+    "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Comportamento defensivo em resposta ao balão angulado",
+      "en-US": "Defensive behavior in response to the angled lob"
+    },
+    "content": {
+      "pt": "",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-13",
+    "title": {
+      "pt": "Mesociclo 13",
+      "en-US": "Module 13"
+    },
+    "topics": {
       "pt": [
         "Balão"
       ],
@@ -17,8 +137,32 @@
       "pt": "Transições Progressivas - 1 Tempo",
       "en-US": "Progressive Transitions - 1 Time"
     },
-    "technicalContent": {
+    "content": {
       "pt": "## Conquista da rede apoiada em 1 execução\n\n### Tipo I\n\n- Balão em Altura «=» Zona Vermelha Defensiva - Zona Vermelha Ofensiva;\n- Saida de Vidro Forte - “Side Spin”;\n\n### Tipo II\n\n- Balão Rápido «=» Zona Verde Defensiva - Zona Amarela Ofensiva;\n- Saida de Vidro Forte - “Slice” + “Plano”;\n\n## Identificadores para a aplicação de Conceitos Técnicos\n\n### Balão em Altura\n\n- Coordenação Motora: Agachamento + “Bicep”;\n- Trajetória de uma Parábola;\n- Altura máxima deve ocorrer do lado nosso campo;\n- Preparação deve iniciar com a letra “I” do nosso lado Direito;\n- Preparação deve iniciar com a letra “L” do nosso lado Esquerdo;\n\n### “Side-Spin”\n\n- Ressalto de Bola: Polo Positivo + Positivo«=» Polaridade ++;\n- Direcção: VF1 Cruzado - Dupla Tabela evita uma saída de bola para recuperação;\n- Direção: VF3 - Passagem pela zona da discórdia de modo a conquistar a rede;\n- Entrada da Raquete na Bola: , Sector Horário: 13h00-14h00;\n- Trajetória Vectorial: Centro + Direita;\n\n### Plano\n\n- Ressalto de Bola: Polo Neutro (=);\n- Direção: VF3 - Colocar a bola entre a linha branca e o vidro de fundo;\n- Direção: VF1 Paralelo - Colocar a bola no VF1;\n- Entrada da Raquete na Bola: Sector Horário: 14h00-15h00;\n- Trajetória Vectorial: Centro + Debaixo da Bola;",
+      "en-US": ""
+    },
+    "level": "Intermediate",
+    "duration": {
+      "pt": "2 - 6 semanas",
+      "en-US": "2 - 6 weeks"
+    }
+  },
+  {
+    "externalId": "module-14",
+    "title": {
+      "pt": "Mesociclo 14",
+      "en-US": "Module 14"
+    },
+    "topics": {
+      "pt": [],
+      "en-US": []
+    },
+    "description": {
+      "pt": "Movimentos balísticos",
+      "en-US": "Ballistic movements"
+    },
+    "content": {
+      "pt": "",
       "en-US": ""
     },
     "level": "Intermediate",

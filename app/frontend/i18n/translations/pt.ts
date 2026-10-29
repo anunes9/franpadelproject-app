@@ -134,6 +134,7 @@ export const pt = {
         other: '{{count}} exercícios',
       },
       materialsEyebrow: 'Materiais',
+      contentComingSoon: 'O conteúdo deste mesociclo estará disponível em breve.',
       progressTitle: 'Progresso do mesociclo',
       topicsCount: {
         one: '1 tópico',

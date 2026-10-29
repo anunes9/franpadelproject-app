@@ -131,6 +131,7 @@ export const en = {
         other: '{{count}} exercises',
       },
       materialsEyebrow: 'Resources',
+      contentComingSoon: 'The content for this module is coming soon.',
       progressTitle: 'Module progress',
       topicsCount: {
         one: '1 topic',
