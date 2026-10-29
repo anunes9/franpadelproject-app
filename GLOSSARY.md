@@ -77,11 +77,11 @@ A Client having done an Exercise.
 _Avoid_: Done, finished
 
 **Module Completion**:
-A Client's Quiz Pass on the Module (when it has a Quiz) plus Exercise Completion of every Exercise currently in the Module. It always reflects the Module's current content, so adding a Quiz or an Exercise can remove it. A Module with neither a Quiz nor Exercises is complete for everyone.
+A Client's Quiz Pass on the Module (when it has a Quiz) plus Exercise Completion of every Exercise currently in the Module. It always reflects the Module's current content, so adding a Quiz or an Exercise can remove it. A Module with neither a Quiz nor Exercises is complete for everyone who can open it. A Locked Module never has it.
 _Avoid_: Module done, module progress
 
 **Locked**:
-A Module that cannot be opened because the previous Module in its Course lacks Module Completion. A Player's Level never locks anything.
+A Module that cannot be opened because the previous Module in its Course lacks Module Completion. A Locked Module never has Module Completion, even with nothing left to do in it. A Player's Level never locks anything.
 _Avoid_: Blocked, unavailable
 
 **Available**:

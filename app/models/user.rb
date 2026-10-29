@@ -19,7 +19,6 @@ class User < ApplicationRecord
   # delete touches nothing.
   has_many :class_groups, foreign_key: :coach_id, inverse_of: :coach
   before_destroy :keep_while_owning_class_groups
-  has_many :user_module_progresses, dependent: :destroy
   has_many :exercise_completions, dependent: :destroy
   has_many :quiz_attempts, dependent: :destroy
   has_many :club_memberships, dependent: :destroy

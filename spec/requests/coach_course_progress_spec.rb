@@ -10,7 +10,14 @@ RSpec.describe "Coach Course progress on the Club overview", type: :request do
   let!(:diogo) { create(:user, :coach, club: alpha, name: "Diogo Coach") }
   let!(:bruno) { create(:user, :coach, club: bravo, name: "Bruno Coach") }
 
-  let!(:beginner) { Array.new(3) { |i| create(:course_module, level: :beginner, position: i + 1) } }
+  # Each Beginner Module has a one-question Quiz, so passing it completes the Module.
+  let!(:beginner) do
+    Array.new(3) do |i|
+      create(:course_module, level: :beginner, position: i + 1).tap do |m|
+        create(:quiz_question, quiz: create(:quiz, course_module: m))
+      end
+    end
+  end
   let!(:intermediate) { [create(:course_module, level: :intermediate, position: 1)] }
 
   before do
@@ -26,13 +33,17 @@ RSpec.describe "Coach Course progress on the Club overview", type: :request do
     page["props"]["coaches"].find { |c| c["name"] == name }
   end
 
+  def pass_quiz(user, course_module)
+    QuizAttempt.create!(user: user, quiz: course_module.quiz, answers: course_module.quiz.correct_answers)
+  end
+
   def course(coach, level)
     coach["courseProgress"]["courses"].find { |c| c["level"] == level }
   end
 
   it "shows each active Coach's per-Course progress after some Module progress" do
-    create(:user_module_progress, user: carla, course_module: beginner[0], status: :done, progress: 100)
-    create(:user_module_progress, user: carla, course_module: beginner[1], status: :done, progress: 100)
+    pass_quiz(carla, beginner[0])
+    pass_quiz(carla, beginner[1])
     create(:exercise_completion, user: carla, exercise: create(:exercise, course_module: intermediate[0]))
     create(:exercise, course_module: intermediate[0])
     sign_in manager
@@ -78,7 +89,7 @@ RSpec.describe "Coach Course progress on the Club overview", type: :request do
 
   it "shows a Club Manager of two Clubs each Club's Coaches only on that Club's overview" do
     create(:club_membership, user: manager, club: bravo)
-    create(:user_module_progress, user: bruno, course_module: beginner[0], status: :done, progress: 100)
+    pass_quiz(bruno, beginner[0])
     sign_in manager
 
     get "/dashboard/clubs/#{bravo.id}"

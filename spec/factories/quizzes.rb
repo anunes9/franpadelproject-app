@@ -12,4 +12,11 @@ FactoryBot.define do
     options_en { %w[1 2 3] }
     correct_index { 1 }
   end
+
+  # A passing attempt: every question answered correctly.
+  factory :quiz_attempt do
+    user
+    quiz { create(:quiz_question).quiz }
+    answers { quiz.correct_answers }
+  end
 end

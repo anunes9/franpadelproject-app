@@ -3,7 +3,6 @@ class CourseModule < ApplicationRecord
 
   enum :level, Level::VALUES
 
-  has_many :user_module_progresses, dependent: :destroy
   has_many :exercises, -> { order(:ref) }, dependent: :destroy
   has_one :quiz, dependent: :destroy
   # The admin form always sends a Quiz; only keep a new one that has questions.
@@ -98,27 +97,20 @@ class CourseModule < ApplicationRecord
     state_for(user)[:status] == "locked"
   end
 
-  def complete_for!(user)
-    transaction do
-      progress = UserModuleProgress.find_or_initialize_by(user: user, course_module: self)
-      progress.update!(status: :done, progress: 100)
-
-      next_module = self.class.where(level: level).where("position > ?", position).order(:position).first
-      if next_module
-        next_progress = UserModuleProgress.find_or_initialize_by(user: user, course_module: next_module)
-        next_progress.update!(status: :current) if next_progress.locked?
-      end
-    end
-  end
-
   # A Client's state for each of `modules`, keyed by id, as
   # { status: "locked" | "available" | "in_progress" | "completed", progress: 0..100 }.
   #
-  # Module Completion is still the manual "mark as done" (a done
-  # UserModuleProgress row). Everything else is derived: a Module is Locked
-  # unless it's first in its Course (Level) or the previous one is completed,
-  # and In Progress once the Client has an Exercise Completion in it. Progress
-  # is the share of the Module's Exercises completed.
+  # All of it is worked out from the Module's current content (ADR 0008):
+  # - Completed (Module Completion): a Quiz Pass when the Module has a Quiz,
+  #   and an Exercise Completion of every Exercise in it. A Module with
+  #   neither is complete for everyone.
+  # - Locked: the previous Module in its Course (Level) is not Completed. A
+  #   Locked Module is never Completed, even with nothing left to do in it
+  #   (a Module with neither Quiz nor Exercises, or Exercises done from the
+  #   Exercises pages), so the Course is still worked through in order.
+  # - In Progress: at least one Exercise Completion or Quiz Attempt.
+  # - Available: otherwise.
+  # Progress counts each Exercise as one step and the Quiz as one more.
   def self.states_for(user, modules = ordered.to_a)
     states_by_user([user], modules)[user.id]
   end
@@ -128,29 +120,35 @@ class CourseModule < ApplicationRecord
   def self.states_by_user(users, modules = ordered.to_a)
     ids = modules.map(&:id)
     user_ids = users.map(&:id)
-    completed = UserModuleProgress.done.where(user_id: user_ids, course_module_id: ids)
-                                  .pluck(:user_id, :course_module_id).to_set
     exercise_counts = Exercise.where(course_module_id: ids).group(:course_module_id).count
     completion_counts = ExerciseCompletion.joins(:exercise)
                                           .where(user_id: user_ids, exercises: { course_module_id: ids })
                                           .group(:user_id, "exercises.course_module_id").count
+    with_quiz = QuizQuestion.joins(:quiz).where(quizzes: { course_module_id: ids })
+                            .distinct.pluck("quizzes.course_module_id").to_set
+    attempts = QuizAttempt.joins(:quiz).where(user_id: user_ids, quizzes: { course_module_id: ids })
+    attempted = attempts.distinct.pluck(:user_id, "quizzes.course_module_id").to_set
+    passed = attempts.passing.distinct.pluck(:user_id, "quizzes.course_module_id").to_set
     courses = modules.group_by(&:level).values.map { |course_modules| course_modules.sort_by(&:position) }
 
     user_ids.index_with do |user_id|
       courses.each_with_object({}) do |course_modules, states|
         previous_completed = true
         course_modules.each do |m|
-          is_completed = completed.include?([user_id, m.id])
           done = completion_counts.fetch([user_id, m.id], 0)
-          total = exercise_counts.fetch(m.id, 0)
+          quiz = with_quiz.include?(m.id)
+          quiz_passed = quiz && passed.include?([user_id, m.id])
+          steps = exercise_counts.fetch(m.id, 0) + (quiz ? 1 : 0)
+          steps_done = done + (quiz_passed ? 1 : 0)
+          is_completed = previous_completed && steps_done == steps
 
           status =
-            if is_completed then "completed"
-            elsif !previous_completed then "locked"
-            elsif done.positive? then "in_progress"
+            if !previous_completed then "locked"
+            elsif is_completed then "completed"
+            elsif done.positive? || attempted.include?([user_id, m.id]) then "in_progress"
             else "available"
             end
-          progress = is_completed ? 100 : (total.zero? ? 0 : (done * 100.0 / total).round)
+          progress = steps.zero? ? 100 : (steps_done * 100.0 / steps).round
 
           states[m.id] = { status: status, progress: progress }
           previous_completed = is_completed

@@ -130,67 +130,30 @@ RSpec.describe CourseModule, type: :model do
     end
   end
 
-  describe "#complete_for!" do
-    it "marks the module done and full progress for the user" do
-      user = create(:user)
-      course_module = create(:course_module)
+  # A Module with content to complete: one Exercise, and a one-question Quiz
+  # when `quiz` is set (its correct answer is the second option).
+  def module_with(position:, level: :beginner, exercises: 1, quiz: false)
+    course_module = create(:course_module, level: level, position: position)
+    create_list(:exercise, exercises, course_module: course_module)
+    create(:quiz_question, quiz: create(:quiz, course_module: course_module), correct_index: 1) if quiz
+    course_module
+  end
 
-      course_module.complete_for!(user)
+  def attempt(user, course_module, right:)
+    answers = course_module.quiz.questions.to_h { |q| [ q.id, right ? q.correct_index : 0 ] }
+    QuizAttempt.create!(user: user, quiz: course_module.quiz, answers: answers)
+  end
 
-      progress = UserModuleProgress.find_by(user: user, course_module: course_module)
-      expect(progress).to have_attributes(status: "done", progress: 100)
-    end
-
-    it "updates the existing progress row instead of duplicating it" do
-      user = create(:user)
-      course_module = create(:course_module)
-      create(:user_module_progress, user: user, course_module: course_module, status: :current, progress: 40)
-
-      course_module.complete_for!(user)
-
-      expect(UserModuleProgress.where(user: user, course_module: course_module).count).to eq(1)
-    end
-
-    it "unlocks the next module in position order for that user" do
-      user = create(:user)
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
-
-      first.complete_for!(user)
-
-      next_progress = UserModuleProgress.find_by(user: user, course_module: second)
-      expect(next_progress).to have_attributes(status: "current", progress: 0)
-    end
-
-    it "does not downgrade the next module if it's already current or done" do
-      user = create(:user)
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
-      create(:user_module_progress, user: user, course_module: second, status: :done, progress: 100)
-
-      first.complete_for!(user)
-
-      next_progress = UserModuleProgress.find_by(user: user, course_module: second)
-      expect(next_progress).to have_attributes(status: "done", progress: 100)
-    end
-
-    it "does nothing to other users' progress" do
-      user = create(:user)
-      other_user = create(:user)
-      course_module = create(:course_module)
-
-      course_module.complete_for!(user)
-
-      expect(UserModuleProgress.find_by(user: other_user, course_module: course_module)).to be_nil
-    end
+  def do_exercises(user, course_module, count = course_module.exercises.size)
+    course_module.exercises.first(count).each { |exercise| create(:exercise_completion, user: user, exercise: exercise) }
   end
 
   describe ".states_for" do
     let(:user) { create(:user) }
 
     it "makes the first Module of a Course available to a brand-new Client" do
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
+      first = module_with(position: 1)
+      second = module_with(position: 2)
 
       states = CourseModule.states_for(user)
 
@@ -198,11 +161,12 @@ RSpec.describe CourseModule, type: :model do
       expect(states[second.id]).to eq(status: "locked", progress: 0)
     end
 
-    it "unlocks the next Module once the previous one is completed" do
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
-      third = create(:course_module, position: 3)
-      create(:user_module_progress, user: user, course_module: first, status: :done, progress: 100)
+    it "completes a Module once every Exercise is done and its Quiz passed, unlocking the next" do
+      first = module_with(position: 1, quiz: true)
+      second = module_with(position: 2)
+      third = module_with(position: 3)
+      do_exercises(user, first)
+      attempt(user, first, right: true)
 
       states = CourseModule.states_for(user)
 
@@ -211,31 +175,120 @@ RSpec.describe CourseModule, type: :model do
       expect(states[third.id][:status]).to eq("locked")
     end
 
+    it "keeps a Module in progress while its Quiz is not passed, counting the Quiz as one step" do
+      first = module_with(position: 1, quiz: true)
+      second = module_with(position: 2)
+      do_exercises(user, first)
+      attempt(user, first, right: false)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[first.id]).to eq(status: "in_progress", progress: 50)
+      expect(states[second.id][:status]).to eq("locked")
+    end
+
+    it "keeps a Module in progress while an Exercise is left, even with the Quiz passed" do
+      first = module_with(position: 1, exercises: 3, quiz: true)
+      do_exercises(user, first, 2)
+      attempt(user, first, right: true)
+
+      expect(CourseModule.states_for(user)[first.id]).to eq(status: "in_progress", progress: 75)
+    end
+
+    it "takes a Module with only a Quiz from 0% in progress to 100% completed when it is passed" do
+      quiz_only = module_with(position: 1, exercises: 0, quiz: true)
+      attempt(user, quiz_only, right: false)
+      expect(CourseModule.states_for(user)[quiz_only.id]).to eq(status: "in_progress", progress: 0)
+
+      attempt(user, quiz_only, right: true)
+      expect(CourseModule.states_for(user)[quiz_only.id]).to eq(status: "completed", progress: 100)
+    end
+
+    it "keeps a Quiz Pass whatever later attempts score" do
+      quiz_only = module_with(position: 1, exercises: 0, quiz: true)
+      attempt(user, quiz_only, right: true)
+      attempt(user, quiz_only, right: false)
+
+      expect(CourseModule.states_for(user)[quiz_only.id][:status]).to eq("completed")
+    end
+
+    it "completes a Module with neither a Quiz nor Exercises for everyone" do
+      empty = module_with(position: 1, exercises: 0)
+      second = module_with(position: 2)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[empty.id]).to eq(status: "completed", progress: 100)
+      expect(states[second.id][:status]).to eq("available")
+    end
+
+    it "keeps a Module Locked behind an incomplete one, even with nothing left to do in it" do
+      first = module_with(position: 1)
+      empty = module_with(position: 2, exercises: 0)
+      ahead = module_with(position: 3)
+      do_exercises(user, ahead)
+
+      states = CourseModule.states_for(user)
+
+      expect(states[empty.id]).to eq(status: "locked", progress: 100)
+      expect(states[ahead.id]).to eq(status: "locked", progress: 100)
+
+      do_exercises(user, first)
+      expect(CourseModule.states_for(user).values.map { |s| s[:status] }.uniq).to eq(["completed"])
+    end
+
+    it "counts a Quiz with no questions as no Quiz" do
+      first = module_with(position: 1)
+      create(:quiz, course_module: first)
+      do_exercises(user, first)
+
+      expect(CourseModule.states_for(user)[first.id]).to eq(status: "completed", progress: 100)
+    end
+
+    it "follows the Module's current content, so a new Exercise takes Module Completion away" do
+      first = module_with(position: 1)
+      second = module_with(position: 2)
+      do_exercises(user, first)
+      expect(CourseModule.states_for(user)[first.id][:status]).to eq("completed")
+
+      create(:exercise, course_module: first)
+
+      states = CourseModule.states_for(user)
+      expect(states[first.id]).to eq(status: "in_progress", progress: 50)
+      expect(states[second.id][:status]).to eq("locked")
+    end
+
     it "locks each Course independently, so every Course's first Module is open" do
-      create(:course_module, level: :beginner, position: 1)
-      intermediate_first = create(:course_module, level: :intermediate, position: 1)
+      module_with(level: :beginner, position: 1)
+      intermediate_first = module_with(level: :intermediate, position: 1)
 
       expect(CourseModule.states_for(user)[intermediate_first.id][:status]).to eq("available")
     end
 
     it "marks a Module in progress with the share of its Exercises completed" do
-      course_module = create(:course_module, position: 1)
-      done = create(:exercise, course_module: course_module)
-      create(:exercise, course_module: course_module)
-      create(:exercise_completion, user: user, exercise: done)
+      course_module = module_with(position: 1, exercises: 2)
+      do_exercises(user, course_module, 1)
 
       expect(CourseModule.states_for(user)[course_module.id]).to eq(status: "in_progress", progress: 50)
     end
 
-    it "ignores a stale 'current' progress row and other Clients' completions" do
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
-      create(:user_module_progress, user: user, course_module: second, status: :current, progress: 40)
-      create(:user_module_progress, user: create(:user), course_module: first, status: :done, progress: 100)
+    it "marks a Module in progress after a Quiz Attempt alone" do
+      course_module = module_with(position: 1, quiz: true)
+      attempt(user, course_module, right: false)
+
+      expect(CourseModule.states_for(user)[course_module.id]).to eq(status: "in_progress", progress: 0)
+    end
+
+    it "ignores other Clients' Exercise Completions and Quiz Attempts" do
+      first = module_with(position: 1, quiz: true)
+      second = module_with(position: 2)
+      other = create(:user)
+      do_exercises(other, first)
+      attempt(other, first, right: true)
 
       states = CourseModule.states_for(user)
 
-      expect(states[first.id][:status]).to eq("available")
+      expect(states[first.id]).to eq(status: "available", progress: 0)
       expect(states[second.id][:status]).to eq("locked")
     end
   end
@@ -243,10 +296,11 @@ RSpec.describe CourseModule, type: :model do
   describe ".dashboard_list_for" do
     it "returns every module with the given user's state merged in" do
       user = create(:user)
-      done_module = create(:course_module, slug: "module-1", position: 1)
-      create(:course_module, slug: "module-2", position: 2)
-      create(:course_module, slug: "module-3", position: 3)
-      create(:user_module_progress, user: user, course_module: done_module, status: :done, progress: 100)
+      done_module = module_with(position: 1)
+      done_module.update!(slug: "module-1")
+      module_with(position: 2).update!(slug: "module-2")
+      module_with(position: 3).update!(slug: "module-3")
+      do_exercises(user, done_module)
 
       list = CourseModule.dashboard_list_for(user)
 
@@ -259,10 +313,9 @@ RSpec.describe CourseModule, type: :model do
   describe ".dashboard_stats_for" do
     it "counts completed Modules and the Client's real Exercise Completions" do
       user = create(:user)
-      first = create(:course_module, position: 1)
-      create(:course_module, position: 2)
-      create(:user_module_progress, user: user, course_module: first, status: :done, progress: 100)
-      create(:exercise_completion, user: user, exercise: create(:exercise, course_module: first))
+      first = module_with(position: 1)
+      module_with(position: 2)
+      do_exercises(user, first)
 
       expect(CourseModule.dashboard_stats_for(user)).to include(
         progress: 50, modulesDone: 1, modulesTotal: 2, exercisesDone: 1
@@ -275,15 +328,13 @@ RSpec.describe CourseModule, type: :model do
     let(:bruno) { create(:user, name: "Bruno") }
 
     it "gives each user's Module Completions and progress per Course, with a Planned Course empty" do
-      b1 = create(:course_module, level: :beginner, position: 1)
-      b2 = create(:course_module, level: :beginner, position: 2)
-      create(:course_module, level: :beginner, position: 3)
-      i1 = create(:course_module, level: :intermediate, position: 1)
-      create(:user_module_progress, user: ana, course_module: b1, status: :done, progress: 100)
-      exercise = create(:exercise, course_module: b2)
-      create(:exercise, course_module: b2)
-      create(:exercise_completion, user: ana, exercise: exercise)
-      create(:user_module_progress, user: bruno, course_module: i1, status: :done, progress: 100)
+      b1 = module_with(level: :beginner, position: 1)
+      b2 = module_with(level: :beginner, position: 2, exercises: 2)
+      module_with(level: :beginner, position: 3)
+      i1 = module_with(level: :intermediate, position: 1)
+      do_exercises(ana, b1)
+      do_exercises(ana, b2, 1)
+      do_exercises(bruno, i1)
 
       progress = CourseModule.progress_for([ana, bruno])
 
@@ -293,17 +344,19 @@ RSpec.describe CourseModule, type: :model do
           { level: "intermediate", modulesDone: 0, modulesTotal: 1, progress: 0 },
           { level: "advanced", modulesDone: 0, modulesTotal: 0, progress: 0 }
         ],
-        exercisesDone: 1
+        exercisesDone: 2
       )
       expect(progress[bruno.id][:courses].map { |c| c[:modulesDone] }).to eq([0, 1, 0])
-      expect(progress[bruno.id][:exercisesDone]).to eq(0)
+      expect(progress[bruno.id][:exercisesDone]).to eq(1)
     end
 
     it "gives each user the same numbers as asking for that user alone" do
-      first = create(:course_module, position: 1)
-      second = create(:course_module, position: 2)
-      create(:user_module_progress, user: ana, course_module: first, status: :done, progress: 100)
-      create(:exercise_completion, user: bruno, exercise: create(:exercise, course_module: second))
+      first = module_with(position: 1, quiz: true)
+      second = module_with(position: 2)
+      do_exercises(ana, first)
+      attempt(ana, first, right: true)
+      do_exercises(bruno, second)
+      attempt(bruno, first, right: false)
 
       batch = CourseModule.progress_for([ana, bruno])
 

@@ -24,16 +24,6 @@ class CoursesController < DashboardController
     }
   end
 
-  def complete
-    course_module = CourseModule.find_by(slug: params[:id])
-    return head :not_found unless course_module
-    return redirect_to("/dashboard/courses") if course_module.locked_for?(current_user)
-
-    course_module.complete_for!(current_user)
-
-    redirect_to "/dashboard/courses/#{course_module.slug}"
-  end
-
   # The Module's Quiz, in the Client's language and without the answers. Right
   # after a Quiz Attempt (see QuizAttemptsController) it also carries that
   # attempt's result, once.

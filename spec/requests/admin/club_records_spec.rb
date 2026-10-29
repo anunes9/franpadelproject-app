@@ -13,11 +13,10 @@ RSpec.describe "Admin Break Periods, Coach Invitations, Club Managers and progre
     membership = create(:club_membership, club: club)
     invitation, = CoachInvitation.issue(club: club, invited_by: admin, name: "Rui", email: "rui@example.com")
     completion = create(:exercise_completion)
-    progress = create(:user_module_progress)
 
     {
       "break_periods" => break_period, "club_memberships" => membership, "coach_invitations" => invitation,
-      "exercise_completions" => completion, "module_progresses" => progress, "clubs" => club
+      "exercise_completions" => completion, "clubs" => club
     }.each do |path, record|
       get "/admin/#{path}"
       expect(response).to have_http_status(200), path
@@ -84,16 +83,12 @@ RSpec.describe "Admin Break Periods, Coach Invitations, Club Managers and progre
     }.not_to change(ClubMembership, :count)
   end
 
-  it "records a Module Completion and an Exercise Completion" do
+  it "records an Exercise Completion" do
     user = create(:user, :coach)
-    course_module = create(:course_module)
-    exercise = create(:exercise, course_module: course_module)
+    exercise = create(:exercise, course_module: create(:course_module))
 
-    post "/admin/module_progresses", params: { user_module_progress: { user_id: user.id, course_module_id: course_module.id,
-                                                                       status: "done", progress: "100" } }
     post "/admin/exercise_completions", params: { exercise_completion: { user_id: user.id, exercise_id: exercise.id } }
 
-    expect(UserModuleProgress.find_by(user: user, course_module: course_module)).to be_done
     expect(exercise.completed_for?(user)).to be true
   end
 

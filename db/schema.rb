@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_29_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_29_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -222,18 +222,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_29_140000) do
     t.index ["date"], name: "index_training_classes_on_date"
   end
 
-  create_table "user_module_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "course_module_id", null: false
-    t.datetime "created_at", null: false
-    t.integer "progress", default: 0, null: false
-    t.integer "status", default: 0, null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["course_module_id"], name: "index_user_module_progresses_on_course_module_id"
-    t.index ["user_id", "course_module_id"], name: "index_user_module_progresses_on_user_and_course_module", unique: true
-    t.index ["user_id"], name: "index_user_module_progresses_on_user_id"
-  end
-
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "age"
     t.uuid "club_id"
@@ -275,7 +263,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_29_140000) do
   add_foreign_key "training_class_exercises", "training_classes", on_delete: :cascade
   add_foreign_key "training_classes", "class_groups", on_delete: :cascade
   add_foreign_key "training_classes", "course_modules"
-  add_foreign_key "user_module_progresses", "course_modules"
-  add_foreign_key "user_module_progresses", "users"
   add_foreign_key "users", "clubs"
 end

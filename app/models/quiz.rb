@@ -9,6 +9,12 @@ class Quiz < ApplicationRecord
 
   validates :course_module_id, uniqueness: true
 
+  # Every question answered correctly, as a Quiz Attempt's answers. The seeds
+  # and the demo Club use it to give a Client a Quiz Pass.
+  def correct_answers
+    questions.to_h { |q| [ q.id, q.correct_index ] }
+  end
+
   # The questions as the import and the docs/questions JSON describe them.
   def question_rows
     questions.map(&:row)

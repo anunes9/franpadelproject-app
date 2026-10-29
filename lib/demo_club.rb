@@ -154,8 +154,8 @@ class DemoClub
   # rebuilt on every run; the accounts and Players themselves are kept.
   def reset_dynamic_data
     ClassGroup.where(coach: @coaches).find_each(&:destroy!)
-    UserModuleProgress.where(user: @coaches).delete_all
     ExerciseCompletion.where(user: @coaches).delete_all
+    QuizAttempt.where(user: @coaches).delete_all
     @club.break_periods.destroy_all
   end
 
@@ -210,21 +210,19 @@ class DemoClub
     invitation
   end
 
+  # Module Completion follows from content (ADR 0008): a completed Module
+  # gets every Exercise done and its Quiz passed; the next one some Exercises.
   def record_course_progress(coach, attrs)
     done, rest = modules.partition.with_index { |_module, index| index < attrs[:modules_done] }
     done.each do |course_module|
-      UserModuleProgress.create!(user: coach, course_module: course_module, status: :done, progress: 100)
       course_module.exercises.each { |exercise| ExerciseCompletion.create!(user: coach, exercise: exercise) }
+      QuizAttempt.create!(user: coach, quiz: course_module.quiz, answers: course_module.quiz.correct_answers) if course_module.quiz?
     end
 
     current = rest.first
     return unless current
 
-    exercises = current.exercises.first(attrs[:exercises_started])
-    exercises.each { |exercise| ExerciseCompletion.create!(user: coach, exercise: exercise) }
-    total = current.exercises.size
-    progress = total.zero? ? 0 : (exercises.size * 100.0 / total).round
-    UserModuleProgress.create!(user: coach, course_module: current, status: :current, progress: progress)
+    current.exercises.first(attrs[:exercises_started]).each { |exercise| ExerciseCompletion.create!(user: coach, exercise: exercise) }
   end
 
   def create_class_group(attrs)
