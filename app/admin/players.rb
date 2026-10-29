@@ -1,7 +1,7 @@
 ActiveAdmin.register Player do
   menu parent: "Clubs"
 
-  permit_params :club_id, :name, :level, :position, :hand
+  permit_params :club_id, :name, :level, :position, :hand, :gender
 
   index do
     selectable_column
@@ -10,6 +10,7 @@ ActiveAdmin.register Player do
     column :level
     column :position
     column :hand
+    column :gender
     column("Class Groups") { |player| player.class_groups.size }
     actions
   end
@@ -20,6 +21,7 @@ ActiveAdmin.register Player do
   filter :level, as: :select, collection: -> { Player.levels.to_a }
   filter :position, as: :select, collection: -> { Player.positions.to_a }
   filter :hand, as: :select, collection: -> { Player.hands.to_a }
+  filter :gender, as: :select, collection: -> { Player.genders.to_a }
 
   show do |player|
     attributes_table do
@@ -28,6 +30,7 @@ ActiveAdmin.register Player do
       row :level
       row :position
       row :hand
+      row :gender
       row :created_at
       row :updated_at
     end
@@ -49,6 +52,7 @@ ActiveAdmin.register Player do
       f.input :level, as: :select, collection: Player.levels.keys, include_blank: false
       f.input :position, as: :select, collection: Player.positions.keys, include_blank: false
       f.input :hand, as: :select, collection: Player.hands.keys, include_blank: false
+      f.input :gender, as: :select, collection: Player.genders.keys
     end
     f.actions
   end
