@@ -171,7 +171,7 @@ function Show() {
           </div>
         )}
 
-        {sections.length > 0 && (
+        {sections.length > 0 ? (
           <div className="flex max-w-[68ch] flex-col gap-5">
             {sections.map((s) => (
               <section key={s.heading} className="flex flex-col gap-2">
@@ -187,6 +187,10 @@ function Show() {
               </section>
             ))}
           </div>
+        ) : (
+          <p className="max-w-[68ch] rounded-2xl border border-dashed border-line-strong/40 px-4 py-6 text-sm text-muted-strong">
+            {t('courses.show.contentComingSoon')}
+          </p>
         )}
 
         <Link

@@ -2,7 +2,9 @@ ActiveAdmin.register CourseModule do
   menu parent: "Content", priority: 1
 
   permit_params :slug, :level, :position, :title, :description, :duration, :topics_text, :content,
-                new_documents: []
+                new_documents: [],
+                quiz_attributes: [ :id, { questions_attributes: %i[id position text_pt text_en options_pt_text
+                                                                 options_en_text correct_index _destroy] } ]
 
   index do
     selectable_column
@@ -84,6 +86,28 @@ ActiveAdmin.register CourseModule do
       end
     end
 
+    panel "Quiz (#{course_module.quiz&.questions&.size.to_i} questions)" do
+      if course_module.quiz?
+        table_for course_module.quiz.questions do
+          column("#", &:position)
+          column("Question") { |q| safe_join([ q.text_pt, tag.br, tag.small(q.text_en) ]) }
+          column("Options") do |q|
+            ol(style: "list-style-type: upper-alpha; padding-left: 1.5em") do
+              q.options_pt.zip(q.options_en).each_with_index do |(pt, en), i|
+                li do
+                  text_node pt
+                  text_node " / #{en}"
+                  text_node " ✓" if i == q.correct_index
+                end
+              end
+            end
+          end
+        end
+      else
+        para "No quiz. Add questions on the edit page; a Quiz with no questions does not count.", class: "empty"
+      end
+    end
+
     panel "Exercises (#{course_module.exercises.count})" do
       if course_module.exercises.any?
         table_for course_module.exercises do
@@ -102,6 +126,10 @@ ActiveAdmin.register CourseModule do
   end
 
   form do |f|
+    # Lists errors the inputs can't show next to themselves, such as a quiz
+    # question's options (edited through the one-per-line text fields).
+    f.semantic_errors(*f.object.errors.attribute_names)
+
     f.inputs "Module Details" do
       f.input :slug
       f.input :level, as: :select, collection: CourseModule.levels.keys
@@ -155,6 +183,19 @@ ActiveAdmin.register CourseModule do
       end
       f.input :new_documents, as: :file, input_html: { multiple: true },
                               hint: "Upload one or more documents (PDF, images, etc). Users can view but not download them. Existing documents are kept unless removed above."
+    end
+
+    f.inputs "Quiz", for: [ :quiz, f.object.quiz || f.object.build_quiz ] do |quiz|
+      quiz.has_many :questions, heading: false, allow_destroy: true, new_record: "Add question" do |q|
+        q.input :position, hint: "Questions are shown in this order."
+        q.input :text_pt, label: "Question (PT)", input_html: { rows: 2 }
+        q.input :text_en, label: "Question (EN)", input_html: { rows: 2 }
+        q.input :options_pt_text, as: :text, label: "Options (PT)", input_html: { rows: 4 },
+                                  hint: "One per line, 2 to 4, in the order shown."
+        q.input :options_en_text, as: :text, label: "Options (EN)", input_html: { rows: 4 },
+                                  hint: "Same options, same order, as the Portuguese."
+        q.input :correct_index, as: :select, label: "Correct option", collection: ("A".."D").each_with_index.to_a, include_blank: false
+      end
     end
 
     f.actions

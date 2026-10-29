@@ -5,8 +5,10 @@ RSpec.describe "db/seeds.rb" do
     load Rails.root.join("db/seeds.rb")
   end
 
-  it "creates the 7 beginner course modules from the pt content export" do
-    expect(CourseModule.count).to eq(7)
+  it "creates the 7 beginner and 7 intermediate course modules, with their quizzes, from the pt content export" do
+    expect(CourseModule.where(level: :beginner).count).to eq(7)
+    expect(CourseModule.where(level: :intermediate).count).to eq(7)
+    expect(Quiz.count).to eq(14)
 
     module_one = CourseModule.find_by(slug: "module-1")
     expect(module_one.title).to eq("Mesociclo 1")

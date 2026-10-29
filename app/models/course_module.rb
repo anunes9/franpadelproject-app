@@ -5,6 +5,9 @@ class CourseModule < ApplicationRecord
 
   has_many :user_module_progresses, dependent: :destroy
   has_many :exercises, -> { order(:ref) }, dependent: :destroy
+  has_one :quiz, dependent: :destroy
+  # The admin form always sends a Quiz; only keep a new one that has questions.
+  accepts_nested_attributes_for :quiz, reject_if: ->(attrs) { attrs["id"].blank? && attrs["questions_attributes"].blank? }
   has_many_attached :documents
   organizes_attachment :documents, folder: -> { "course_modules/#{slug}/documents" }
 
@@ -26,6 +29,11 @@ class CourseModule < ApplicationRecord
   # The Module as a group's page shows it beside its Classes.
   def plan_json
     option_json.merge(slug: slug, description: description, topics: topics)
+  end
+
+  # Whether the Module has a Quiz. A Quiz with no questions counts as none.
+  def quiz?
+    quiz.present? && quiz.questions.any?
   end
 
   def topics_text
