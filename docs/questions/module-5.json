@@ -1,0 +1,218 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST - MESOCYCLE V – GLASS EXIT TYPES",
+    "pt": "TESTE DE ADMISSÃO - MESOCICLO V – TIPOLOGIAS DA SAIDA DE VIDRO"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The different types of glass exit can be categorized into:",
+        "pt": "As saídas de vidro podem ser categorizadas em quantos tipos:"
+      },
+      "answers": {
+        "en-US": [
+          "5",
+          "4",
+          "3",
+          "2"
+        ],
+        "pt": [
+          "5",
+          "4",
+          "3",
+          "2"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "A positive-positive glass exit is characterized by being:",
+        "pt": "A saída de vidro positiva-positiva é caracterizada por ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Offensive",
+          "Powerful",
+          "Defensive",
+          "None of the above"
+        ],
+        "pt": [
+          "De carácter ofensivo",
+          "De potência",
+          "De carácter defensivo",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "One of the main characteristics of a positive-positive glass exit consists of:",
+        "pt": "Na saída de vidro de polaridade positiva-positiva, uma das características principais consiste:"
+      },
+      "answers": {
+        "en-US": [
+          "The full arm extension",
+          "Elbow close to the torso",
+          "Being offensive",
+          "All of the above"
+        ],
+        "pt": [
+          "Na extensão total do braço",
+          "No cotovelo estar perto do tronco",
+          "Ser de carácter ofensivo",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The nomenclature assigned to glass exits can be:",
+        "pt": "A nomenclatura atribuída às saídas de vidro pode ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Positive-positive, neutral, negative-negative",
+          "Positive, neutral, and negative",
+          "Positive-positive, positive, neutral, negative, and negative-negative",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Positiva-positiva, neutra, negativa-negativa",
+          "Positiva, neutra e negativa",
+          "Positiva-positiva, positiva, neutra, negativa e negativa-negativa",
+          "Opções a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The primary effects in a negative-polarity glass exit are:",
+        "pt": "Os efeitos primordiais numa saída de vidro de polaridade negativa são:"
+      },
+      "answers": {
+        "en-US": [
+          "Flat and Topspin",
+          "Flat and Slice",
+          "Sidespin and Topspin",
+          "All of the above"
+        ],
+        "pt": [
+          "Plano e Topspin",
+          "Plano e Slice",
+          "Sidespin e Topspin",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The primary effects in a neutral-polarity glass exit are:",
+        "pt": "Os efeitos primordiais numa saída de vidro de polaridade neutra são:"
+      },
+      "answers": {
+        "en-US": [
+          "Flat and Topspin",
+          "Flat",
+          "Sidespin and Topsin",
+          "None of the above"
+        ],
+        "pt": [
+          "Plano e Topspin",
+          "Plano",
+          "Sidespin e Topsin",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Flat and Slice effects are characteristic of which polarity:",
+        "pt": "Os efeitos Plano e Slice são característicos da polaridade:"
+      },
+      "answers": {
+        "en-US": [
+          "Positive",
+          "Neutral",
+          "Neutral and Negative-Negative",
+          "Positive-Positive"
+        ],
+        "pt": [
+          "Positiva",
+          "Neutra",
+          "Neutra e Negativa-Negativa",
+          "Positiva-Positiva"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The most common effects to be applied when we talk about polarity, are:",
+        "pt": "Quando falamos de polaridades, os efeitos mais comuns de serem aplicados são:"
+      },
+      "answers": {
+        "en-US": [
+          "Sidespin e Topspin",
+          "Flat, Slice and Sidespin",
+          "Flat, Sidespin, Topspin and Slice",
+          "All of the above"
+        ],
+        "pt": [
+          "Sidespin e Topspin",
+          "Plano, Slice e Sidespin",
+          "Plano, Sidespin, Topspin e Slice",
+          "Todas as anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "A common conceptual error when applying the slice effect in a neutral-polarity glass exit is:",
+        "pt": "Na aplicação do efeito de slice numa saída de vidro de polaridade neutra, um erro comum consiste em:"
+      },
+      "answers": {
+        "en-US": [
+          "Making the ball bounce before the white line",
+          "Placing the ball directly on the glass",
+          "Hitting the ball directly outside the 4-meter range",
+          "None of the above"
+        ],
+        "pt": [
+          "Fazer a bola bater antes da linha branca",
+          "Colocar a bola diretamente no vidro",
+          "Lançar a bola diretamente para fora dos 4 metros",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "When applying the slice effect in a neutral-polarity glass exit, the ball should bounce on the opposite court:",
+        "pt": "Na aplicação do efeito de slice numa saída de vidro de polaridade neutra, a bola deve bater no campo contrário:"
+      },
+      "answers": {
+        "en-US": [
+          "Between the white line and the back glass",
+          "In the red zone of the defensive area",
+          "Before the white line",
+          "All of the above"
+        ],
+        "pt": [
+          "Entre a linha branca e o vidro de fundo",
+          "Na zona vermelha da zona defensiva",
+          "Antes da linha branca",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    }
+  ]
+}

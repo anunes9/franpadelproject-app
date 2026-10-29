@@ -1,0 +1,428 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST – TYPES OF PROGRESSIVE TRANSITIONS SUPPORTED BY THE LOB",
+    "pt": "TESTE DE AVALIAÇÃO – TIPOLOGIAS DE TRANSIÇÕES PROGRESSIVAS SUPORTADAS NO BALÃO"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "What types of lobs exist in a padel match?",
+        "pt": "Quais os tipos de balão que existem num jogo de padel?"
+      },
+      "answers": {
+        "en-US": [
+          "The arrow lob and the “Louis Armstrong” lob",
+          "The high lob and the “Louis Armstrong” lob",
+          "The fast lob and the high lob",
+          "The arrow lob and the fast lob"
+        ],
+        "pt": [
+          "O balão flecha e o balão “Louis Amstrong”",
+          "O balão em altura e o balão “Louis Amstrong”",
+          "O balão rápido e o balão em altura",
+          "O balão flecha e o balão rápido"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "Usually, the execution of the fast lob is performed in the defensive zone and in the:",
+        "pt": "Regra geral, a execução do balão rápido é realizada na zona defensiva e na cor:"
+      },
+      "answers": {
+        "en-US": [
+          "Red Zone",
+          "Yellow Zone",
+          "Green Zone",
+          "White Zone"
+        ],
+        "pt": [
+          "Vermelha",
+          "Amarela",
+          "Verde",
+          "Branca"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The key indicators for applying the fast lob are:",
+        "pt": "Os indicadores de aplicabilidade do balão rápido são:"
+      },
+      "answers": {
+        "en-US": [
+          "Reduced opponent reaction time and less distance for the ball to travel",
+          "Increased opponent reaction time and more distance for the ball to travel",
+          "Increased opponent reaction time and less distance for the ball to travel",
+          "None of the above"
+        ],
+        "pt": [
+          "Redução do tempo de reação do adversário e ter menos metros para a bola percorrer",
+          "Aumento do tempo de reação do adversário e mais metros para a bola percorrer",
+          "Aumento do tempo de reação do adversário e ter menos metros para a bola percorrer",
+          "Nenhuma das opções"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Usually, the neutral-negative polarity is the most appropriate for executing:",
+        "pt": "Habitualmente, a polaridade neutro-negativa costuma ser a mais indicada para a aplicação:"
+      },
+      "answers": {
+        "en-US": [
+          "The high lob when the ball is in the green area of the defensive zone",
+          "The fast lob when the ball is in the green area of the defensive zone",
+          "The high lob when the ball is in the red area of the defensive zone",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "Do balão em altura com a bola posicionada na cor verde da zona defensiva",
+          "Do balão rápido com a bola posicionada na cor verde da zona defensiva",
+          "Do balão em altura com a bola posicionada na cor vermelha da zona defensiva",
+          "As opções b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "How many types of lobs a padel player can choose from?",
+        "pt": "Quantos tipos de balão no padel:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "4",
+          "2",
+          "1"
+        ],
+        "pt": [
+          "3",
+          "4",
+          "2",
+          "1"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "Applying a fast lob involves a progressive transition of how many steps:",
+        "pt": "Regra geral, a aplicação de um balão rápido pressupõe uma transição progressiva de quantos tempos?"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "4",
+          "2",
+          "1"
+        ],
+        "pt": [
+          "3",
+          "4",
+          "2",
+          "1"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The math equation for spatial perception guidance x + 1 = y refers to the positional base after executing:",
+        "pt": "A equação matemática de orientação da percepção espacial x + 1 = y, é a base posicional após a execução de:"
+      },
+      "answers": {
+        "en-US": [
+          "A fast lob",
+          "A high lob",
+          "A chiquita",
+          "Options b) and c)"
+        ],
+        "pt": [
+          "Balão rápido",
+          "Balão em altura",
+          "Chiquita",
+          "Opções b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "A two-tempo progressive transition implies that the player initiates movement using which technical resource?",
+        "pt": "Uma transição progressiva a 2 tempos implica que a iniciação da movimentação do jogador ocorra com a utilização de um recurso técnico como:"
+      },
+      "answers": {
+        "en-US": [
+          "Chiquita",
+          "Chiquita and fast lob",
+          "Chiquita and high lob",
+          "Ball with speed 5 and fast lob"
+        ],
+        "pt": [
+          "Chiquita",
+          "Chiquita e balão rápido",
+          "Chiquita e balão altura",
+          "Bola de velocidade 5 e balão rápido"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "There are lines of the game that increase the effectiveness of a fast lob. What do they have in common?",
+        "pt": "Existem linhas de jogo que aumentam a eficácia da aplicação de um rápido. O que têm elas em comum?"
+      },
+      "answers": {
+        "en-US": [
+          "Long trajectories",
+          "Medium trajectories",
+          "Long trajectories",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "Trajetos longos",
+          "Trajetos médios",
+          "Trajetos longos",
+          "Opções a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In the equation x + 1 = y, this means the player is trying to take the initiative, using technical resources such as:",
+        "pt": "Na equação × + 1 = y, significa que o jogador procura ter a iniciativa da jogada com a utilização de recursos técnicos como a:"
+      },
+      "answers": {
+        "en-US": [
+          "Speed 5 ball",
+          "Fast lob",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Bola de velocidade 5",
+          "Balão rápido",
+          "Opções a) e b) estão corretas",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The speed 5 ball and the fast lob are technical tools that represent a progressive transition based on the following equation:",
+        "pt": "Os recursos técnicos, bola de velocidade 5 e balão rápido, consistem numa transição progressiva assente na fórmula:"
+      },
+      "answers": {
+        "en-US": [
+          "X + 2 = y",
+          "X × 1 = y",
+          "X + 1 = y",
+          "X × 2 = y"
+        ],
+        "pt": [
+          "X + 2 = y",
+          "X × 1 = y",
+          "X + 1 = y",
+          "X × 2 = y"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The chiquita and high lob are technical tools with a progressive transition based on the following equation:",
+        "pt": "Os recursos técnicos, chiquita e balão em altura, consistem numa transição progressiva com base na fórmula:"
+      },
+      "answers": {
+        "en-US": [
+          "X + 2 = y",
+          "X × 1 = y",
+          "X + 1 = y",
+          "X × 2 = y"
+        ],
+        "pt": [
+          "X + 2 = y",
+          "X × 1 = y",
+          "X + 1 = y",
+          "X × 2 = y"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Imagination is a learning tool that enables the creation of connections between concepts from different contexts. At a technical level, the execution of a high lob combines:",
+        "pt": "A imaginação é um recurso de aprendizagem que permite estabelecer ligações entre conceitos de diferentes contextos. A nível técnico, a aplicação de um balão em altura combina:"
+      },
+      "answers": {
+        "en-US": [
+          "An uppercut with a high jump",
+          "An uppercut with lunges",
+          "An uppercut with a squat",
+          "None of the above"
+        ],
+        "pt": [
+          "Um uppercut com um salto em altura",
+          "Um uppercut com lunges",
+          "Um uppercut com um agachamento",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The execution of a high lob should be performed from which color zone:",
+        "pt": "A aplicação de um balão em altura deve ser aplicado na cor :"
+      },
+      "answers": {
+        "en-US": [
+          "Red in the offensive zone, as it provides a 6-meter margin",
+          "Red in the defensive zone, as it gains a 2-meter margin",
+          "Yellow in the defensive zone, as it gains a 2-meter margin",
+          "None of the above"
+        ],
+        "pt": [
+          "Vermelha da zona ofensiva, por ter 6 metros de margem",
+          "Vermelha da zona defensiva, por ganhar 2 metros de margem",
+          "Amarela da zona defensiva, por ganhar 2 metros de margem",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The trajectory of a high and fast lob is characterized as:",
+        "pt": "A trajetória do balão em altura e rápido é caracterizada por ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Exponential",
+          "Decreasing",
+          "Parabolic",
+          "Circular"
+        ],
+        "pt": [
+          "Exponencial",
+          "Decrescente",
+          "Parabólica",
+          "Circular"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The parabolic trajectory consists of how many phases:",
+        "pt": "A trajetória parabólica é composta por quantas fases:"
+      },
+      "answers": {
+        "en-US": [
+          "2",
+          "3",
+          "5",
+          "0"
+        ],
+        "pt": [
+          "2",
+          "3",
+          "5",
+          "0"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The parabolic trajectory has the following phases:",
+        "pt": "As fases da trajetória parabólica são conhecidas por:"
+      },
+      "answers": {
+        "en-US": [
+          "Ascending, minimum height, and exponential",
+          "Descending, concavity facing upward, and ascending",
+          "Ascending, concavity facing downward, and descending",
+          "Options b) and c) are correct"
+        ],
+        "pt": [
+          "Ascendente, altura mínima e exponencial",
+          "Descendente, concavidade virada para cima e ascendente",
+          "Ascendente, concavidade virada para baixo e descendente",
+          "Opções b) e c) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The ascending phase of the parabolic trajectory matches:",
+        "pt": "A fase ascendente da trajetória parabólica corresponde:"
+      },
+      "answers": {
+        "en-US": [
+          "The preparation phase of the technical gesture",
+          "The alignment phase of the technical gesture",
+          "The stabilization phase of the technical gesture",
+          "The execution phase of the technical gesture"
+        ],
+        "pt": [
+          "À fase de preparação do gesto técnico",
+          "À fase de enquadramento do gesto técnico",
+          "À fase de estabilidade do gesto técnico",
+          "À fase de execução do gesto técnico"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The conditions for applying a level 5 speed shot are:",
+        "pt": "As premissas de aplicabilidade de bola de velocidade 5 são:"
+      },
+      "answers": {
+        "en-US": [
+          "Opponent positioned in the red zone of the offensive area and receiving a ball with positive polarity (+) from the green zone of the defensive area",
+          "Opponent positioned in the yellow zone of the offensive area and receiving a ball with neutral polarity (=) from the red zone of the defensive area",
+          "Opponent positioned in the green zone of the offensive area and receiving a ball with negative polarity (–) from the yellow zone of the defensive area",
+          "None of the above"
+        ],
+        "pt": [
+          "Posicionamento do adversário na cor vermelha da zona ofensiva e recepcionar uma bola com polaridade + na cor verde da zona defensiva",
+          "Posicionamento do adversário na cor amarela da zona ofensiva e recepcionar uma bola com polaridade = na cor vermelha da zona defensiva",
+          "Posicionamento do adversário na cor verde da zona ofensiva e recepcionar uma bola com polaridade – na cor amarela da zona defensiva",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "In the equation x + 1 = y, the variables “x” and “y” represent, respectively:",
+        "pt": "Na equação x + 1 = y, a variável “x\" e “y\" representam respectivamente:"
+      },
+      "answers": {
+        "en-US": [
+          "a. “x” – the sector the player should progress to, and “y” – the player’s current sector",
+          "b. “x” – the player’s current sector, and “y” – the sector the player should progress to",
+          "c. None of the above",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "a. “x\" – setor para o qual deve progredir e “y\" setor atual do jogador",
+          "b. “x\" – setor atual do jogador e “y\" o setor para o qual deve progredir",
+          "c. Nenhuma das opções anteriores",
+          "d. Opções a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 1
+    }
+  ]
+}

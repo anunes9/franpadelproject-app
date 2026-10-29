@@ -1,0 +1,176 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST: MESOCYCLE 11 – OFFENSIVE ZONE SHIFTING MOVEMENTS",
+    "pt": "TESTE DE ADMISSÃO: MESOCICLO 11 – MOVIMENTOS DE BASCULAÇÃO DA ZONA OFENSIVA"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The coverage of the offensive zone can be compared to:",
+        "pt": "A cobertura da zona ofensiva pode ser comparada com:"
+      },
+      "answers": {
+        "en-US": [
+          "Zone marking in football",
+          "A pendulum-like coverage",
+          "None of the above",
+          "Options a) and b) are correct"
+        ],
+        "pt": [
+          "O futebol na marcação à zona",
+          "Com uma cobertura pendular",
+          "Nenhuma das respostas anteriores",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "When the left-side player makes a directional shift towards VF1P, this promotes the partner’s positioning for:",
+        "pt": "O jogador de esquerda, ao protagonizar uma mudança de direção que chegue ao VF1P, promove o posicionamento do parceiro para um:"
+      },
+      "answers": {
+        "en-US": [
+          "Alignment with the Joker",
+          "Alignment with VF2C",
+          "Alignment with VF1C",
+          "None of the above"
+        ],
+        "pt": [
+          "Alinhamento com o Joker",
+          "Alinhamento com o VF2C",
+          "Alinhamento com o VF1C",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "When the left-side player performs a directional shift towards the Joker, it requires the partner to position:",
+        "pt": "O jogador de esquerda, ao realizar uma mudança de direção para o Joker, implica que o parceiro ocupe um posicionamento:"
+      },
+      "answers": {
+        "en-US": [
+          "Aligned with the middle of VF2C",
+          "Aligned with the middle of VF2P",
+          "Aligned with the Joker",
+          "None of the above"
+        ],
+        "pt": [
+          "Alinhado com o meio do VF2C",
+          "Alinhado com o meio do VF2P",
+          "Alinhado com o joker",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "When the left-side player makes a directional shift towards VF1C, his positioning becomes aligned with:",
+        "pt": "O jogador de esquerda, ao protagonizar uma mudança de direção no sentido do VF1C, fica alinhado com:"
+      },
+      "answers": {
+        "en-US": [
+          "The Joker",
+          "Between VF2P and the Joker",
+          "VF1P",
+          "VF2P"
+        ],
+        "pt": [
+          "O joker",
+          "Entre o VF2P e o Joker",
+          "VF1P",
+          "VF2P"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "If a player in the offensive zone makes the ball rebound off the back glass, so that it lands aligned with the red area of the defensive zone, and with negative polarity (–), the player should:",
+        "pt": "Quando um jogador posicionado na zona ofensiva consegue que o ressalto da bola, após o impacto no vidro de fundo, fique alinhado com a cor vermelha da zona defensiva e com uma polaridade --, deve:"
+      },
+      "answers": {
+        "en-US": [
+          "Move towards the red area of the offensive zone",
+          "Move to sector 3",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Acompanhar a bola de pressão na direção da cor vermelha da zona ofensiva",
+          "Avançar até ao setor 3",
+          "Resposta a) e b) estão corretas",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "A positional adjustment occurs:",
+        "pt": "Uma alteração de posicionamento ocorre:"
+      },
+      "answers": {
+        "en-US": [
+          "Before a directional shift",
+          "After a directional shift",
+          "Before the opponent executes",
+          "After the opponent executes"
+        ],
+        "pt": [
+          "Antes de uma mudança de direção",
+          "Depois de uma mudança de direção",
+          "Antes do adversário executar",
+          "Depois do adversário executar"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "A directional shift takes place:",
+        "pt": "Uma mudança de direção sucede:"
+      },
+      "answers": {
+        "en-US": [
+          "Before the positional adjustment",
+          "After the positional adjustment",
+          "All of the above",
+          "None of the above"
+        ],
+        "pt": [
+          "Antes da alteração do posicionamento",
+          "Depois da alteração do posicionamento",
+          "Todas as respostas anteriores",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "During directional shift, sensory stimulation of:",
+        "pt": "Durante o processo de mudança de direção, a estimulação dos sentidos da:"
+      },
+      "answers": {
+        "en-US": [
+          "Vision and hearing are essential for effective timing of the positional adjustment",
+          "Vision and taste are essential for effective timing of the positional adjustment",
+          "Vision, hearing, and touch are essential for effective timing of the positional adjustment",
+          "All of the above"
+        ],
+        "pt": [
+          "Visão e audição são fundamentais para a eficácia do “timing” da alteração do posicionamento",
+          "Visão e paladar são fundamentais para a eficácia do “timing” da alteração do posicionamento",
+          "Visão, audição e tato são fundamentais para a eficácia do “timing” da alteração do posicionamento",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    }
+  ]
+}

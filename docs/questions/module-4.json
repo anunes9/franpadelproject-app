@@ -1,0 +1,172 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST - MESOCYCLE IV – Defense_Counterattack and Attack",
+    "pt": "TESTE DE ADMISSÃO MESOCICLO IV – Defesa_Contra-Ataque e Ataque"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The defensive zone has three subzones:",
+        "pt": "A zona defensiva é composta por três subzonas:"
+      },
+      "answers": {
+        "en-US": [
+          "Green, red, and purple",
+          "Black, yellow, and blue",
+          "Red, yellow, and green",
+          "None of the above"
+        ],
+        "pt": [
+          "Verde, vermelho e roxo",
+          "Preto, Amarelo e azul",
+          "Vermelho, amarelo e verde",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "Theoretically, the green subzone of the defensive zone conveys:",
+        "pt": "Na teoria, a zona verde da zona defensiva procura transmitir:"
+      },
+      "answers": {
+        "en-US": [
+          "Safety, limited shot options, and comfort",
+          "Safety, comfort, and control",
+          "Safety, pressure from the opponent, and the imminence of losing the point",
+          "All of the above"
+        ],
+        "pt": [
+          "Segurança, limitações de opções de jogo e conforto",
+          "Segurança, conforto e domínio",
+          "Segurança, pressão do adversário, iminência de perder o ponto",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "By definition, in padel, defending means:",
+        "pt": "Por definição, defender no padel significa:"
+      },
+      "answers": {
+        "en-US": [
+          "Being in the defensive zone",
+          "Returning the ball to the other side",
+          "Playing an upward-pattern ball",
+          "All of the above"
+        ],
+        "pt": [
+          "Estar na zona defensiva",
+          "Passar a bola para o outro lado",
+          "Jogar uma bola debaixo para cima",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The transition zone is located between:",
+        "pt": "A zona de transição está compreendida entre:"
+      },
+      "answers": {
+        "en-US": [
+          "Sector 1 and 2 of the side mesh",
+          "Sector 0 and 1 of the side mesh",
+          "Sector 1, 1.5, and the end of sector 1 of the side mesh",
+          "None of the above"
+        ],
+        "pt": [
+          "Setor 1 e 2 da malha lateral",
+          "Setor 0 e 1 da malha lateral",
+          "Setor 1, 1.5 e final do setor 1 da malha lateral",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The transition zone has three subzones:",
+        "pt": "A zona de transição é composta por três subzonas:"
+      },
+      "answers": {
+        "en-US": [
+          "Green, yellow, and red",
+          "Black, orange, and purple",
+          "White, gray, and brown",
+          "All of the above"
+        ],
+        "pt": [
+          "Verde, amarelo e vermelho",
+          "Preto, laranja e roxo",
+          "Branca, cinzenta e castanha",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "By definition, in padel, attacking means:",
+        "pt": "Por definição, atacar no padel significa:"
+      },
+      "answers": {
+        "en-US": [
+          "Being in the offensive zone",
+          "Defining the point",
+          "Executing a downward-pattern shot",
+          "Applying maximum intensity to the ball"
+        ],
+        "pt": [
+          "Estar na zona ofensiva",
+          "Definir o ponto",
+          "Realizar uma bola de padrão descendente",
+          "Colocar a maior quantidade de intensidade na bola"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "By definition, the nomenclature given to the zones of the padel court — defensive, transition, and offensive — corresponds respectively to defending, counterattacking, and attacking. This statement is:",
+        "pt": "Por definição, a nomenclatura atribuída às zonas do campo de padel - defesa, transição e ofensiva - significam respetivamente, defender, contra-atacar e atacar. Esta afirmação é:"
+      },
+      "answers": {
+        "en-US": [
+          "True",
+          "False"
+        ],
+        "pt": [
+          "Verdadeira",
+          "Falsa"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The offensive zone has three subzones, with the following meaning:",
+        "pt": "A zona ofensiva é composta por três subzonas, com um significado associado:"
+      },
+      "answers": {
+        "en-US": [
+          "Red – Area of highest ball pressure index",
+          "Yellow – Pressure zone",
+          "Green – Management of the position",
+          "All of the above"
+        ],
+        "pt": [
+          "Vermelha – Zona de maior índice de pressão de bola",
+          "Amarela – Zona de pressão",
+          "Verde – Gestão posicional",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    }
+  ]
+}

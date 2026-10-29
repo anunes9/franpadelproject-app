@@ -1,0 +1,218 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST: MESOCYCLE 7 – SIMPLIFIED MODEL",
+    "pt": "TESTE DE ADMISSÃO: MESOCICLO 7 – MODELO REDUCIONISTA"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The simplified model contains a numerological system associated with the glass walls, functioning as a system of spatial orientation, which is:",
+        "pt": "O modelo reducionista contém uma numerologia associada aos vidros que consiste num sistema de orientação espacial:"
+      },
+      "answers": {
+        "en-US": [
+          "Dissymmetric",
+          "Symmetric",
+          "Asymmetric",
+          "None of the above"
+        ],
+        "pt": [
+          "Dissimétrico",
+          "Simétrico",
+          "Assimétrico",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The simplified model aims to guide players on court through the use of:",
+        "pt": "O modelo reducionista procura orientar os jogadores dentro de campo, através de números:"
+      },
+      "answers": {
+        "en-US": [
+          "Even numbers",
+          "Odd numbers",
+          "Even and Odd numbers",
+          "2 and 1"
+        ],
+        "pt": [
+          "Pares",
+          "Ímpares",
+          "Pares e Ímpares",
+          "2 e 1"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The numerology associated with the simplified model expresses the existence of guiding lines of:",
+        "pt": "A numerologia associada ao modelo reducionista expressa a existência de linhas condutoras de:"
+      },
+      "answers": {
+        "en-US": [
+          "Pressure",
+          "Construction and Pressure",
+          "Definition",
+          "Construction, Pressure, and Definition"
+        ],
+        "pt": [
+          "Pressão",
+          "Construção e Pressão",
+          "Definição",
+          "Construção, Pressão e Definição"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Even numbers have the following functions:",
+        "pt": "Os números pares têm funções de:"
+      },
+      "answers": {
+        "en-US": [
+          "Construction and Counterattack",
+          "Construction and Pressure",
+          "Construction and Definition",
+          "None of the above"
+        ],
+        "pt": [
+          "De construção e contra-ataque",
+          "De construção e pressão",
+          "De construção e definição",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Odd numbers have the following functions:",
+        "pt": "Os números ímpares têm funções de:"
+      },
+      "answers": {
+        "en-US": [
+          "Pressure",
+          "Construction",
+          "Pressure and Counterattack",
+          "None of the above"
+        ],
+        "pt": [
+          "Pressão",
+          "Construção",
+          "Pressão e Contra-ataque",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The following nomenclature means:",
+        "pt": "A seguinte nomenclatura significa:"
+      },
+      "answers": {
+        "en-US": [
+          "1VFP – 1st parallel back glass",
+          "2VLP – 2nd parallel side glass",
+          "1VFC – 1st cross back glass",
+          "All of the above"
+        ],
+        "pt": [
+          "1VFP – 1º vidro de fundo paralelo",
+          "2VLP – 2º vidro de fundo paralelo",
+          "1VFC – 1º vidro de fundo cruzado",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The “Joker” glass has the following functions:",
+        "pt": "O vidro “Joker” tem como funções:"
+      },
+      "answers": {
+        "en-US": [
+          "Construction, Counterattack, and Attack",
+          "Attack and Counterattack",
+          "Construction and Attack",
+          "None of the above"
+        ],
+        "pt": [
+          "Construção, Contra-Ataque e Ataque",
+          "Ataque e Contra-Ataque",
+          "Construção e Ataque",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Glass number 3 is also known as:",
+        "pt": "O vidro nº3 é também conhecido por:"
+      },
+      "answers": {
+        "en-US": [
+          "Dispute Zone",
+          "Joker",
+          "“Dead” Zone",
+          "Answers a) and b) are correct"
+        ],
+        "pt": [
+          "Zona da Discórdia",
+          "Joker",
+          "Zona do “morto”",
+          "Respostas a) e b) estão corretas"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "In this simplified model, odd numbers total:",
+        "pt": "Neste modelo reducionista, os números ímpares perfazem um total de:"
+      },
+      "answers": {
+        "en-US": [
+          "5",
+          "10",
+          "12",
+          "8"
+        ],
+        "pt": [
+          "5",
+          "10",
+          "12",
+          "8"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "In this simplified model, even numbers total:",
+        "pt": "Neste modelo reducionista, os números pares perfazem um total de:"
+      },
+      "answers": {
+        "en-US": [
+          "4",
+          "12",
+          "8",
+          "6"
+        ],
+        "pt": [
+          "4",
+          "12",
+          "8",
+          "6"
+        ]
+      },
+      "correctIndex": 2
+    }
+  ]
+}

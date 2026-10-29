@@ -1,0 +1,365 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST–MESOCYCLE 13 – DEFENSIVE BEHAVIOR IN RESPONSE TO ANGLED LOBS",
+    "pt": "TESTE FORMATIVO – MESOCICLO 13 – COMPORTAMENTO DEFENSIVO EM RESPOSTA AO BALÃO ANGULADO"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The logical reasoning behind positioning the defensive zone player in sectors 0 and 1 is based on:",
+        "pt": "O raciocínio lógico por detrás da colocação do jogador da zona defensiva, para adotar um posicionamento no setor 0 e 1, é feito com base na:"
+      },
+      "answers": {
+        "en-US": [
+          "Mental and spatial perception, and cognitive indicators",
+          "Height/depth of the lob in sector 0",
+          "The aim to protect sector 3",
+          "All of the above"
+        ],
+        "pt": [
+          "Percepção mental, espacial e indicadores cognitivos",
+          "Profundidade do balão em altura no setor 0",
+          "Procurar defender o setor 3",
+          "Todas as respostas estão corretas"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "One of the advantages of the defensive zone player adopting a position in sectors 0 and 1 is:",
+        "pt": "Uma das vantagens do jogador da zona defensiva adotar um posicionamento no sector 0 e 1, consiste em:"
+      },
+      "answers": {
+        "en-US": [
+          "Creating uncertainty in the decision-making process of the attacking player",
+          "Prioritizing net coverage",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Instalar a dúvida no processo de tomada de decisão do jogador que está a atacar",
+          "Privilegiar a cobertura da malha",
+          "As respostas a) e b) estão corretas",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "A high lob from sector 1 allows finishing techniques such as:",
+        "pt": "Um balão em altura de setor 1 promove o surgimento de técnicas de definição, como por exemplo:"
+      },
+      "answers": {
+        "en-US": [
+          "Flat Smash x3",
+          "Flat mesh",
+          "Flat Smash x3 and flat mesh",
+          "All of the above"
+        ],
+        "pt": [
+          "Smash x3 plano",
+          "Malha plana",
+          "Smash x3 plano e malha plana",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The positioning of the partner of the left-side player, who executes an offensive shot in sector 1, should correspond to the following spatial coordinates:",
+        "pt": "O posicionamento do parceiro do jogador de esquerda que executa uma bola de carácter ofensivo no setor 1, deve corresponder às seguintes coordenadas espaciais:"
+      },
+      "answers": {
+        "en-US": [
+          "VF1P/VF2P + Sector 2",
+          "VF1P/VF2P + Sector 1",
+          "VF1P/VF2P + Sector 3",
+          "VF1P/VF2P + Sector 2.5"
+        ],
+        "pt": [
+          "VF1P/VF2P + Setor 2",
+          "VF1P/VF2P + Setor 1",
+          "VF1P/VF2P + Setor 3",
+          "VF1P/VF2P + Setor 2.5"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "A player positioned in sector 1 tends to favor the following effect:",
+        "pt": "Um jogador posicionado no setor 1 privilegia o efeito:"
+      },
+      "answers": {
+        "en-US": [
+          "Slice",
+          "Topspin",
+          "Sidespin",
+          "Flat"
+        ],
+        "pt": [
+          "Slice",
+          "Topspin",
+          "Sidespin",
+          "Plano"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "For a player in the defensive zone to position themselves on the white line, the depth of the lob must be:",
+        "pt": "Para que um jogador da zona defensiva adote um posicionamento em cima da linha branca, significa que a profundidade do balão é:"
+      },
+      "answers": {
+        "en-US": [
+          "From sector 3",
+          "From sector 2",
+          "From sector 0",
+          "From sector 1"
+        ],
+        "pt": [
+          "De setor 3",
+          "De setor 2",
+          "De setor 0",
+          "De setor 1"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "A high lob with depth from sector 0, usually causes the defensive zone player to position themselves:",
+        "pt": "Um balão em altura com profundidade de setor 0, habitualmente provoca um posicionamento do jogador da zona defensiva:"
+      },
+      "answers": {
+        "en-US": [
+          "In sector 1",
+          "On the white line",
+          "In sector 3",
+          "None of the above"
+        ],
+        "pt": [
+          "No setor 1",
+          "No cima da linha branca",
+          "No sector 3",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "When a player in the defensive zone manages to hit a lob with depth in sector 0, they aim to position themselves on the white line to:",
+        "pt": "O jogador da zona defensiva ao conseguir executar um balão com uma profundidade de setor 0, procura posicionar-se em cima da linha branca para:"
+      },
+      "answers": {
+        "en-US": [
+          "Create uncertainty in the opponent's decision-making",
+          "Prioritize peak coverage",
+          "Prioritize VL1 coverage",
+          "All of the above"
+        ],
+        "pt": [
+          "Criar dúvidas no processo de tomada de decisão do adversário",
+          "Privilegia a cobertura do pico",
+          "Privilegia a coberta do VL1",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The spatial references for the positioning of the partner of the player executing a cross-court mesh shot, from the offensive zone, are:",
+        "pt": "As referências espaciais para o posicionamento do parceiro do jogador que executa uma bolha à malha cruzada na zona ofensiva é:"
+      },
+      "answers": {
+        "en-US": [
+          "V1FP / V2FP + Sector 2",
+          "V1FP / V2FP + Sector 1",
+          "V1FP / V2FP + Sector 3",
+          "V2FP /Joker + Green color"
+        ],
+        "pt": [
+          "V1FP / V2FP + Sector 2",
+          "V1FP / V2FP + Sector 1",
+          "V1FP / V2FP + Sector 3",
+          "V2FP /Joker + Cor Verde"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The spatial references for the positioning of the partner of the player defending a cross-court mesh shot, from the offensive zone, are:",
+        "pt": "As referências espaciais para o posicionamento do parceiro do jogador que defende uma bolha à malha cruzada oriunda da zona ofensiva é:"
+      },
+      "answers": {
+        "en-US": [
+          "V2FP / Joker + Red color",
+          "V2FP / Joker + Transition Zone",
+          "V1FP / V2FP + Green color",
+          "None of the above"
+        ],
+        "pt": [
+          "V2FP / Joker + Cor Vermelha",
+          "V2FP / Joker + Zona de Transição",
+          "V1FP / V2FP + Cor Verde",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "How many rotations are there in defensive behaviors:",
+        "pt": "Quantas rotações existem nos comportamentos defensivos:"
+      },
+      "answers": {
+        "en-US": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "pt": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "Which indicators determine the rotations?",
+        "pt": "Quais são os indicadores de aplicabilidade a ter em conta nas rotações:"
+      },
+      "answers": {
+        "en-US": [
+          "Increase in the space behind the defensive player",
+          "Receiving a more angled ball or one outside the body’s reach",
+          "Receiving a ball outside the body’s reach",
+          "All of the above"
+        ],
+        "pt": [
+          "Aumento no espaço nas costas do jogador defensivo",
+          "Receber uma bola mais angulada ou fora do alcance corporal",
+          "Receber uma bola fora do alcance corporal",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "To facilitate the learning process of rotations, one can visualize them as a technical sequence composed of:",
+        "pt": "Para facilitar o processo de aquisição de rotações é possível imaginar uma composição técnica constituída por:"
+      },
+      "answers": {
+        "en-US": [
+          "2 phases/steps",
+          "3 phases/steps",
+          "1 phase/step",
+          "4 phases/steps"
+        ],
+        "pt": [
+          "2 fases",
+          "3 fases",
+          "1 fase",
+          "4 fases"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The process of constructing a right-side rotation consists of:",
+        "pt": "O processo de construção de uma rotação de direita é composto por:"
+      },
+      "answers": {
+        "en-US": [
+          "2 phases/steps. DSV + Glass Rebound",
+          "3 phases. ESV + Glass Rebound + SVE",
+          "3 phases. ESV + Glass Rebound + DSV",
+          "2 phases. DSV + SVE"
+        ],
+        "pt": [
+          "2 fases. DSV + Contra-Vidro",
+          "3 fases. ESV + Contra-Vidro + SVE",
+          "3 fases. ESV + Contra-Vidro + DSV",
+          "2 fases. DSV + SVE"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The process of constructing a left-side rotation consists of:",
+        "pt": "O processo de construção de uma rotação de esquerda é composto por:"
+      },
+      "answers": {
+        "en-US": [
+          "2 phases. DSV + Glass Rebound + SVE",
+          "3 phases. ESV + Glass Rebound + SVE",
+          "3 phases. ESV + Glass Rebound + DSV",
+          "2 phases. DSV + SVE"
+        ],
+        "pt": [
+          "2 fases. DSV + Contra-Vidro + SVE",
+          "3 fases. ESV + Contra-Vidro + SVE",
+          "3 fases. ESV + Contra-Vidro + DSV",
+          "2 fases. DSV + SVE"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "What are the technical markers that facilitate the use of a glass rebound:",
+        "pt": "Quais são os marcadores técnicos que facilitam a aplicação de um contra-vidro:"
+      },
+      "answers": {
+        "en-US": [
+          "Ball placed between the belly button and VF",
+          "Racket with an “I” shape",
+          "Execution of a lob aimed at the last meter of the court",
+          "All of the above"
+        ],
+        "pt": [
+          "Bola colocada entre o umbigo e VF",
+          "Entrada da raquete com a letra “I”",
+          "Execução de um balão na direção do último metro do campo",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "What mental cues help a player decide to use a glass rebound:",
+        "pt": "Indique quais os marcadores cognitivos que promovem a execução de um contra-vidro:"
+      },
+      "answers": {
+        "en-US": [
+          "Ball directed towards VL1",
+          "Ball placed behind the defensive player, with the bounce of the ball aligning with the red zone of the defensive area",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Bola na direção do VL1",
+          "Bola colocada nas costas do jogador defensivo com o ressalto a coincidir com a cor vermelha da zona defensiva",
+          "Respostas a) e b) estão corretas",
+          "Nenhuma das hipóteses anteriores"
+        ]
+      },
+      "correctIndex": 2
+    }
+  ]
+}

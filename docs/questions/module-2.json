@@ -1,0 +1,323 @@
+{
+  "title": {
+    "en-US": "ADMISSION TEST- MESOCYCLE II – CONCEPT “5 IN LINE”",
+    "pt": "TESTE DE ADMISSÃO - MESOCICLO II – CONCEITO 5 EM LINHA"
+  },
+  "questions": [
+    {
+      "question": {
+        "en-US": "The “5 in line” concept has the following order:",
+        "pt": "O conceito “5 em linha” segue uma ordem conceptual:"
+      },
+      "answers": {
+        "en-US": [
+          "Posture, preparation, mobility, stability, and point of impact",
+          "Posture, preparation, stability, mobility, and point of impact",
+          "Posture, stability, preparation, mobility, and point of impact",
+          "None of the above"
+        ],
+        "pt": [
+          "Postura, preparação, mobilidade, estabilidade e ponto de impacto",
+          "Postura, preparação, estabilidade, mobilidade e ponto de impacto",
+          "Postura, estabilidade, preparação, mobilidade e ponto de impacto",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "How many different types of posture exist within padel:",
+        "pt": "Quais os diferentes tipos de posturas que existem dentro da modalidade:"
+      },
+      "answers": {
+        "en-US": [
+          "3",
+          "2",
+          "1",
+          "4"
+        ],
+        "pt": [
+          "3",
+          "2",
+          "1",
+          "4"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Which posture is most recommended in the defensive zone, among the following options:",
+        "pt": "Qual a postura mais recomendada na zona defensiva, dentro das seguintes opções:"
+      },
+      "answers": {
+        "en-US": [
+          "“Chingoto”",
+          "“Paquito”",
+          "“Bela”",
+          "“Arigato”"
+        ],
+        "pt": [
+          "“Chingoto”",
+          "“Paquito”",
+          "“Bela”",
+          "“Arigato”"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "What are the drawbacks of the “Chingoto” posture:",
+        "pt": "Quais os contras da postura “Chingoto”:"
+      },
+      "answers": {
+        "en-US": [
+          "Overload of the quadriceps",
+          "Overload of the lower back",
+          "Overload of the glutes",
+          "Overload of the quadriceps and glutes"
+        ],
+        "pt": [
+          "Sobrecarga dos quadríceps",
+          "Sobrecarga das lombares",
+          "Sobrecarga dos glúteos",
+          "Sobrecarga dos quadríceps e glúteos"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "Which grip is most recommended for playing padel:",
+        "pt": "Qual a pega mais recomendada para se jogar padel:"
+      },
+      "answers": {
+        "en-US": [
+          "Continental",
+          "Right/Forehand",
+          "Left/Backhand",
+          "All of the above"
+        ],
+        "pt": [
+          "Continental",
+          "Direita",
+          "Esquerda",
+          "Todas as anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "How many contact points are there in padel?",
+        "pt": "Quantos pontos de impacto existem no padel:"
+      },
+      "answers": {
+        "en-US": [
+          "4",
+          "3",
+          "2",
+          "5"
+        ],
+        "pt": [
+          "4",
+          "3",
+          "2",
+          "5"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The contact points are associated with directions. Choose the most accurate match for a left-side player, hitting a forehand without using the glass:",
+        "pt": "Os pontos de impacto estão associados a direções. Indique a correspondência mais indicada, para um jogador de esquerda, que execute uma direita sem vidro:"
+      },
+      "answers": {
+        "en-US": [
+          "Parallel ⇒ Contact point in front of the body / Middle ⇒ Contact point aligned with the front shoulder / Cross-court ⇒ Contact point between the shoulders / Net (net play) ⇒ Contact point behind the body",
+          "Parallel ⇒ Contact point behind the body / Middle ⇒ Contact point aligned with the front shoulder / Cross-court ⇒ Contact point between the shoulders / Net (net play) ⇒ Contact point in front of the body",
+          "Parallel ⇒ Contact point between the shoulders / Middle ⇒ Contact point aligned with the front shoulder / Cross-court ⇒ Contact point in front of the body / Net (net play) ⇒ Contact point far in front of the body",
+          "None of the above"
+        ],
+        "pt": [
+          "Paralelo =» Ponto de impacto à frente do corpo / Meio =» Ponto de impacto alinhado com o ombro da frente / Cruzado =» Ponto de impacto entre os ombros / Malha =» Ponto de impacto atrás do corpo",
+          "Paralelo =» Ponto de impacto atrás do corpo / Meio =» Ponto de impacto alinhado com o ombro da frente / Cruzado =» Ponto de impacto entre os ombros / Malha =» Ponto de impacto à frente do corpo",
+          "Paralelo =» Ponto de impacto entre os ombros / Meio =» Ponto de impacto alinhado com o ombro da frente / Cruzado =» Ponto de impacto a frente do corpo / Malha =» Ponto de impacto totalmente à frente do corpo",
+          "Nenhuma das anteriores"
+        ]
+      },
+      "correctIndex": 0
+    },
+    {
+      "question": {
+        "en-US": "The contact points are associated with directions. Choose the most accurate match for a right-side player, hitting a forehand without using the glass:",
+        "pt": "Os pontos de impacto estão associados a direções. Indique a correspondência mais indicada, para um jogador de direita, que execute uma direita sem vidro:"
+      },
+      "answers": {
+        "en-US": [
+          "Parallel ⇒ Contact point between the shoulders / Middle ⇒ Contact point aligned with the front shoulder / Cross-court ⇒ Contact point in front of the body / Net (net play) ⇒ Contact point far in front of the body",
+          "Parallel ⇒ Contact point between the shoulders / Middle ⇒ Contact point aligned with the front shoulder / Cross-court ⇒ Contact point in front of the body / Net (net play) ⇒ Contact point far in front of the body",
+          "Parallel ⇒ Contact point between the shoulders / Middle ⇒ Contact point far in front of the body / Cross-court ⇒ Contact point far in front of the body / Net (net play) ⇒ Contact point aligned with the front shoulder",
+          "None of the above"
+        ],
+        "pt": [
+          "Paralelo =» Ponto de impacto entre os ombros/ Meio =» Ponto de impacto alinhado com o ombro da frente / Cruzado =» Ponto de impacto à frente do corpo / Malha =» Ponto de impacto totalmente à frente do corpo",
+          "Paralelo =» Ponto de impacto entre os ombros/ Meio =» Ponto de impacto alinhado com o ombro da frente / Cruzado =» Ponto de impacto à frente do corpo / Malha =» Ponto de impacto totalmente frente do corpo",
+          "Paralelo =» Ponto de impacto entre os ombros/ Meio =» Ponto de impacto totalmente à frente do corpo / Cruzado =» Ponto de impacto totalmente frente do corpo / Malha =» alinhado com o ombro da frente",
+          "Nenhuma das anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Stability in the “5 in line” concept is negatively affected by the following factors:",
+        "pt": "A estabilidade no conceito “5 em linha” é influenciada de modo negativo pelos seguintes fatores:"
+      },
+      "answers": {
+        "en-US": [
+          "Feet positioned shoulder-width and body instability",
+          "Excessive mobility",
+          "Excessive mobility and body instability",
+          "All of the above"
+        ],
+        "pt": [
+          "Distância dos pés à largura dos ombros e instabilidade corporal",
+          "Mobilidade excessiva",
+          "Mobilidade excessiva e instabilidade corporal",
+          "Todas as respostas anteriores"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The mindset during the preparation phase of the technical movement should be:",
+        "pt": "A mentalidade na fase de preparação do movimento técnico deve ser:"
+      },
+      "answers": {
+        "en-US": [
+          "Directly proportional to the speed of the ball",
+          "Inversely proportional to the speed of the ball",
+          "All of the above",
+          "None of the above"
+        ],
+        "pt": [
+          "Diretamente proporcional à velocidade da bola",
+          "Inversamente proporcional à velocidade da bola",
+          "Todas as respostas anteriores",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "Each ball speed has a specific characterization:",
+        "pt": "Cada velocidade tem uma caracterização específica:"
+      },
+      "answers": {
+        "en-US": [
+          "1 – The ball bounces 3 times before reaching the back glass; 2 – The ball bounces 2 times before reaching the back glass; 3 – The ball bounces once before the back glass and rebounds up to the baseline; 4 – The ball bounces once before reaching the back glass; 5 – The ball bounces once before the back glass and rebounds far past the white line after hitting the glass",
+          "1 – The ball bounces 3 times before reaching the back glass; 2 – The ball bounces 2 times before reaching the back glass; 3 – The ball bounces once before the back glass and rebounds into the red area of the defensive zone; 4 – The ball bounces once before the back glass and the rebound lands in the green area of the defensive zone; 5 – The ball bounces once before the back glass and rebounds far past the white line after hitting the glass",
+          "1 – The ball bounces 2 times before reaching the back glass; 2 – The ball bounces 3 times before reaching the back glass; 3 – The ball bounces once before the back glass and rebounds up to the baseline; 4 – The ball bounces once before reaching the back glass; 5 – The ball bounces once before the back glass and rebounds far past the white line after hitting the glass",
+          "None of the above"
+        ],
+        "pt": [
+          "1 – A bola bate 3 vezes antes de chegar ao vidro de fundo; 2 – a bola bate 2 vezes antes de chegar ao vidro de fundo; 3 - a bola bate 1 vez antes do vidro de fundo e com um ressalto até à linha de fundo; 4 – a bola bate 1 vez antes de chegar ao vidro de fundo; 5 – a bola bate 1 vez antes do vidro e ultrapassa largamente a linha branca após ressaltar no vidro de fundo",
+          "1 – A bola bate 3 vezes antes de chegar ao vidro de fundo; 2 – a bola bate 2 vezes antes de chegar ao vidro de fundo; 3 - a bola bate 1 vez antes do vidro de fundo e com um ressalto até à zona vermelha da zona defensiva; 4 – a bola bate 1 vez antes de chegar ao vidro de fundo e o ressalto ocorre até à zona verde da zona defensiva; 5 – a bola bate 1 vez antes do vidro e ultrapassa largamente a linha branca após ressaltar no vidro de fundo",
+          "1 – A bola bate 2 vezes antes de chegar ao vidro de fundo; 2 – a bola bate 3 vezes antes de chegar ao vidro de fundo; 3 - a bola bate 1 vez antes do vidro de fundo e com um ressalto até à linha de fundo; 4 – a bola bate 1 vez antes de chegar ao vidro de fundo; 5 – a bola bate 1 vez antes do vidro e ultrapassa largamente a linha branca após ressaltar no vidro de fundo",
+          "Nenhuma das respostas anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "The height of the ball is a variable that can be controlled through the following:",
+        "pt": "A altura da bola é uma variável possível de controlar através dos seguintes aspetos:"
+      },
+      "answers": {
+        "en-US": [
+          "Racquet face",
+          "Racquet tip",
+          "Body instability",
+          "All of the above"
+        ],
+        "pt": [
+          "Cara da raquete",
+          "Ponta da raquete",
+          "Instabilidade corporal",
+          "Todas as anteriores"
+        ]
+      },
+      "correctIndex": 1
+    },
+    {
+      "question": {
+        "en-US": "In the “Paquito” posture, there are associated disadvantages. Indicate the most correct option:",
+        "pt": "Na postura ao estilo “Paquito” existem desvantagens associadas. Indique a opção mais correta:"
+      },
+      "answers": {
+        "en-US": [
+          "The use of the lower back is a disadvantage",
+          "A greater need to use the hand is a disadvantage",
+          "A smaller support base is a disadvantage as it increases instability",
+          "All of the above"
+        ],
+        "pt": [
+          "A utilização das lombares é uma desvantagem",
+          "Uma maior necessidade de utilização da mão é uma desvantagem",
+          "A base de apoio mais pequena é uma desvantagem por potenciar uma maior instabilidade",
+          "Todas as opções anteriores"
+        ]
+      },
+      "correctIndex": 3
+    },
+    {
+      "question": {
+        "en-US": "The comfort zone for the point of impact is between:",
+        "pt": "A zona de conforto de impacto é compreendida entre:"
+      },
+      "answers": {
+        "en-US": [
+          "Waist and pelvis",
+          "Waist and chest",
+          "Hip and knee",
+          "Waist and knee"
+        ],
+        "pt": [
+          "Cintura e bacia",
+          "Cintura e peitoral",
+          "Anca e Joelho",
+          "Cintura e joelho"
+        ]
+      },
+      "correctIndex": 2
+    },
+    {
+      "question": {
+        "en-US": "The preparation of a forehand or backhand without glass is easily identified by:",
+        "pt": "A preparação de uma direita ou esquerda sem vidro é facilmente identificada pela:"
+      },
+      "answers": {
+        "en-US": [
+          "Racquet tip pointing to the back glass",
+          "Racquet face pointing to the back glass",
+          "Options a) and b) are correct",
+          "None of the above"
+        ],
+        "pt": [
+          "Ponta da raquete a apontar para o vidro de fundo",
+          "Cara da raquete a apontar para o vidro de fundo",
+          "As opções a) e b) estão corretas",
+          "Nenhuma das opções anteriores"
+        ]
+      },
+      "correctIndex": 1
+    }
+  ]
+}
