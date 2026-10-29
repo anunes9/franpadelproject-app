@@ -19,6 +19,14 @@ class BreakPeriod < ApplicationRecord
     { id: id, name: name, startsOn: starts_on.iso8601, endsOn: ends_on.iso8601 }
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name club_id starts_on ends_on created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   private
 
   def ends_on_or_after_start

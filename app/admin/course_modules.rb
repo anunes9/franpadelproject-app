@@ -1,4 +1,6 @@
 ActiveAdmin.register CourseModule do
+  menu parent: "Content", priority: 1
+
   permit_params :slug, :level, :position, :title, :description, :duration, :topics_text, :content,
                 new_documents: []
 

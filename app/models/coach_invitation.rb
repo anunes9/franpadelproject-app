@@ -71,6 +71,14 @@ class CoachInvitation < ApplicationRecord
     { id: id, name: name, email: email }
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name email club_id accepted_at expires_at created_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   private
 
   def email_has_no_account

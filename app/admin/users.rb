@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-  permit_params :email, :role, :password, :password_confirmation, :name, :age, :level, :hand, :club_id,
+  permit_params :email, :role, :password, :password_confirmation, :name, :age, :level, :hand, :locale, :club_id,
                 managed_club_ids: []
 
   # Users are removed, never deleted: a removed user keeps their account and
@@ -54,6 +54,7 @@ ActiveAdmin.register User do
       f.input :age
       f.input :level, as: :select, collection: User.levels.keys, include_blank: true
       f.input :hand, as: :select, collection: User.hands.keys, include_blank: true
+      f.input :locale, as: :select, collection: User.locales.keys, include_blank: false
       f.input :club, as: :select, collection: Club.order(:name), include_blank: true,
                      hint: "Coaches belong to exactly one Club."
       f.input :managed_clubs, as: :check_boxes, collection: Club.order(:name),
