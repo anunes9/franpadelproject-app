@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clampToCourt, snapToGlass, viewBox, WALLS } from './geometry'
+import { clampToCourt, readableTextAngle, snapToGlass, viewBox, WALLS } from './geometry'
 
 describe('the walls', () => {
   it('has five back glass panels at each end, numbered 1, 2, 3, 2, 1', () => {
@@ -51,5 +51,22 @@ describe('the view', () => {
 
   it('keeps pieces inside the walls', () => {
     expect(clampToCourt({ x: -3, y: 12 })).toEqual({ x: 0, y: 10 })
+  })
+})
+
+describe('readableTextAngle', () => {
+  it('turns text with the court', () => {
+    expect(readableTextAngle(0, 0)).toBe(0)
+    expect(readableTextAngle(90, 0)).toBe(90)
+    expect(readableTextAngle(45, 0)).toBe(45)
+  })
+
+  it('flips text that would read upside down on screen', () => {
+    expect(readableTextAngle(180, 0)).toBe(360)
+    expect(readableTextAngle(270, 0)).toBe(450)
+    // On a portrait screen the court is turned 90°: text at 90° on the court
+    // would read upside down, so it is flipped.
+    expect(readableTextAngle(90, 90)).toBe(270)
+    expect(readableTextAngle(0, 90)).toBe(0)
   })
 })

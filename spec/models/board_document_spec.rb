@@ -92,6 +92,15 @@ RSpec.describe BoardDocument do
     expect(described_class.problems(both)).to eq(["bad caption", "bad text"])
   end
 
+  it "takes text turned on the court, with or without a marker line" do
+    turned = serve
+    turned["steps"][0]["marks"][4].merge!("rotate" => 90, "marker" => true)
+    expect(described_class.problems(turned)).to eq([])
+
+    turned["steps"][0]["marks"][4].merge!("rotate" => 400, "marker" => "yes")
+    expect(described_class.problems(turned)).to eq(["bad text turn", "bad text marker"])
+  end
+
   it "knows a document too large to keep" do
     huge = serve
     huge["steps"][0]["caption"] = "x" * 300.kilobytes

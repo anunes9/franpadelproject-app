@@ -130,6 +130,9 @@ class BoardDocument
     when "zone" then check_zone(mark)
     when "text"
       problem("bad text") unless point?(mark) && words?(mark["text"], MAX_TEXT, required: true)
+      # Optional: how far the text is turned, and a marker line along its top.
+      problem("bad text turn") unless mark["rotate"].nil? || number?(mark["rotate"], 0...360)
+      problem("bad text marker") unless [nil, true, false].include?(mark["marker"])
     when "ink"
       points = mark["points"]
       valid = points.is_a?(Array) && points.size.between?(2, MAX_INK_POINTS) &&

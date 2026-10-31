@@ -83,7 +83,9 @@ export type Mark =
   | { id: string; kind: 'arrow'; from: Point; to: Point }
   | { id: string; kind: 'zone'; shape: 'rect'; fill: ZoneFill; x: number; y: number; w: number; h: number }
   | { id: string; kind: 'zone'; shape: 'circle'; fill: ZoneFill; cx: number; cy: number; r: number }
-  | { id: string; kind: 'text'; x: number; y: number; text: LocalizedText }
+  // `rotate` turns the text on the court, in degrees; `marker` draws a line
+  // along its top side, such as where a shot starts.
+  | { id: string; kind: 'text'; x: number; y: number; text: LocalizedText; rotate?: number; marker?: boolean }
   | { id: string; kind: 'ink'; points: [number, number][] }
 
 export type MarkKind = Mark['kind']
@@ -171,6 +173,12 @@ export const replaceMark = (doc: BoardDocument, stepIndex: number, mark: Mark): 
 
 export const removeMark = (doc: BoardDocument, stepIndex: number, id: string): BoardDocument =>
   withStep(doc, stepIndex, (step) => ({ ...step, marks: step.marks.filter((mark) => mark.id !== id) }))
+
+// How far one press of a turn button turns text.
+export const TEXT_TURN_STEP = 15
+
+// Text turned by `by` degrees, kept within 0–359.
+export const turnText = (rotate: number | undefined, by: number) => ((((rotate ?? 0) + by) % 360) + 360) % 360
 
 export const clearInk = (doc: BoardDocument, stepIndex: number): BoardDocument =>
   withStep(doc, stepIndex, (step) => ({ ...step, marks: step.marks.filter((mark) => mark.kind !== 'ink') }))
