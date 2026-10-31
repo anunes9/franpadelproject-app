@@ -76,3 +76,8 @@ export const isBreakPeriodsPath = (pathname: string) =>
 export const boardsPath = '/dashboard/boards'
 export const newBoardPath = `${boardsPath}/new`
 export const boardPath = (boardId: string) => `${boardsPath}/${boardId}`
+
+// An Exercise's official Board: a copy for a Coach to explain on, or, for
+// Admins, editing it.
+export const exerciseBoardPath = (ref: string) => `${exercisePath(ref)}/board`
+export const editExerciseBoardPath = (ref: string) => `${exerciseBoardPath(ref)}/edit`

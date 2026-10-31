@@ -800,6 +800,20 @@ export const en = {
       delete: 'Delete board {{title}}',
       confirmDelete: 'Delete the board “{{title}}”? This can’t be undone.',
     },
+    copyNote: 'A copy of {{title}}. Not saved: closing it throws it away.',
+    exercise: {
+      saved: 'Saved on the exercise',
+      language: 'Language of the words',
+      remove: 'Remove board',
+      confirmRemove: 'Remove the board from “{{title}}”? The exercise shows its image again.',
+      textTitle: 'Text on the court ({{language}})',
+    },
+    viewer: {
+      label: 'Court diagram of {{title}}, step {{step}} of {{count}}',
+      explain: 'Explain on a board',
+      edit: 'Edit board',
+      add: 'Add board',
+    },
     clearInk: 'Clear drawing',
     steps: {
       position: 'Step {{step}} of {{count}}',

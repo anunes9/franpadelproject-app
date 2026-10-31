@@ -23,6 +23,12 @@ ActiveAdmin.register Exercise do
     redirect_to edit_admin_exercise_path(resource), notice: "Media removed."
   end
 
+  # An Exercise's official Board is edited with the same court Coaches use,
+  # in the dashboard.
+  action_item :board, only: :show do
+    link_to(resource.board ? "Edit board" : "Add board", edit_exercise_board_path(resource.ref))
+  end
+
   show do |exercise|
     attributes_table do
       row :ref
@@ -30,6 +36,14 @@ ActiveAdmin.register Exercise do
       row :category
       row("Course Module") { exercise.course_module && link_to(exercise.course_module.title, admin_course_module_path(exercise.course_module)) }
       row :duration
+      row("Board") do
+        if exercise.board
+          steps = exercise.board.document["steps"].size
+          link_to("#{steps} #{'step'.pluralize(steps)}", edit_exercise_board_path(exercise.ref))
+        else
+          "None: the first image is the court diagram"
+        end
+      end
       row :description
       row :created_at
       row :updated_at

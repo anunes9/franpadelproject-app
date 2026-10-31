@@ -1,9 +1,12 @@
 import { ArrowLeft01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { router, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { Fragment, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
+import { editExerciseBoardPath, exerciseBoardPath } from '@/lib/paths'
+import { parseBoard } from '../../board/document'
+import { BoardViewer } from '../../board/Viewer'
 import { AppShell } from '../../components/shell'
 import {
   buttonClass,
@@ -21,6 +24,7 @@ interface Props {
   [key: string]: unknown
   exercise: Exercise
   courseModule: Module | null
+  current_user: { role: string } | null
 }
 
 function renderBoldText(text: string) {
@@ -37,7 +41,7 @@ function renderBoldText(text: string) {
 }
 
 function Show() {
-  const { exercise, courseModule } = usePage<Props>().props
+  const { exercise, courseModule, current_user } = usePage<Props>().props
   const { t } = useTranslation()
   const [completing, setCompleting] = useState(false)
   const [viewingImage, setViewingImage] = useState<CourseDocument | null>(null)
@@ -52,7 +56,11 @@ function Show() {
   }
 
   const images = exercise.media.filter((file) => file.contentType.startsWith('image/'))
+  // The Exercise's Board, when it has one, is its court diagram in place of
+  // its first image; the other images still show below it.
+  const board = parseBoard(exercise.board)
   const [hero, ...thumbnails] = images
+  const role = current_user?.role
   const imageAlt = (n: number) => t('exercises.show.imageAlt', { title: exercise.title, n, total: images.length })
 
   return (
@@ -66,7 +74,9 @@ function Show() {
           <span className="h-11 w-11 shrink-0" aria-hidden="true" />
         </div>
 
-        {hero ? (
+        {board ? (
+          <BoardViewer doc={board} title={exercise.title} />
+        ) : hero ? (
           <button
             type="button"
             onClick={() => setViewingImage(hero)}
@@ -81,6 +91,21 @@ function Show() {
           </button>
         ) : (
           <MediaPlaceholder label={t('exercises.show.noImages')} className="aspect-[4/3] rounded-[22px]" />
+        )}
+
+        {(board || role === 'admin') && (
+          <div className="flex flex-wrap gap-2.5">
+            {board && role === 'coach' && (
+              <Link href={exerciseBoardPath(exercise.ref)} className={buttonClass('secondary')}>
+                {t('boards.viewer.explain')}
+              </Link>
+            )}
+            {role === 'admin' && (
+              <Link href={editExerciseBoardPath(exercise.ref)} className={buttonClass('secondary')}>
+                {board ? t('boards.viewer.edit') : t('boards.viewer.add')}
+              </Link>
+            )}
+          </div>
         )}
 
         {thumbnails.length > 0 && (

@@ -8,6 +8,54 @@
 import type { BoardLabels, BoardView, GlassPanel, Point } from './geometry'
 import { clampToCourt, roundPoint } from './geometry'
 
+export type Locale = 'pt' | 'en'
+
+// Words on a Board: one language on a Coach's own Board, as they typed it;
+// Portuguese and English on an Exercise's official Board.
+export type LocalizedText = string | { pt: string; en: string }
+
+const OTHER: Record<Locale, Locale> = { pt: 'en', en: 'pt' }
+
+const isLocalizedText = (value: unknown): value is LocalizedText =>
+  typeof value === 'string' ||
+  (typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { pt?: unknown }).pt === 'string' &&
+    typeof (value as { en?: unknown }).en === 'string')
+
+// The words in a language, or in the other one while it has none yet.
+export function localize(text: LocalizedText, locale: Locale): string {
+  if (typeof text === 'string') return text
+  return text[locale] || text[OTHER[locale]]
+}
+
+// The words in exactly one language, for editing them: empty when that
+// language has none.
+export const localizedExactly = (text: LocalizedText, locale: Locale): string =>
+  typeof text === 'string' ? text : text[locale]
+
+// The words with one language changed. Plain words become a pair, keeping
+// them in the other language.
+export function withLocalized(text: LocalizedText, locale: Locale, value: string): { pt: string; en: string } {
+  const pair = typeof text === 'string' ? { pt: text, en: text } : text
+  return { ...pair, [locale]: value }
+}
+
+export const isBlank = (text: LocalizedText) =>
+  typeof text === 'string' ? text.trim() === '' : text.pt.trim() === '' && text.en.trim() === ''
+
+// A copy of a Board in one language, as a Coach adapts an Exercise's Board.
+export function inLocale(doc: BoardDocument, locale: Locale): BoardDocument {
+  return {
+    ...doc,
+    steps: doc.steps.map((step) => ({
+      ...step,
+      caption: localize(step.caption, locale),
+      marks: step.marks.map((mark) => (mark.kind === 'text' ? { ...mark, text: localize(mark.text, locale) } : mark)),
+    })),
+  }
+}
+
 export type PlayerLabel = 'A' | 'B' | 'C' | 'D'
 export const PLAYER_LABELS: PlayerLabel[] = ['A', 'B', 'C', 'D']
 
@@ -35,13 +83,13 @@ export type Mark =
   | { id: string; kind: 'arrow'; from: Point; to: Point }
   | { id: string; kind: 'zone'; shape: 'rect'; fill: ZoneFill; x: number; y: number; w: number; h: number }
   | { id: string; kind: 'zone'; shape: 'circle'; fill: ZoneFill; cx: number; cy: number; r: number }
-  | { id: string; kind: 'text'; x: number; y: number; text: string }
+  | { id: string; kind: 'text'; x: number; y: number; text: LocalizedText }
   | { id: string; kind: 'ink'; points: [number, number][] }
 
 export type MarkKind = Mark['kind']
 
 export interface Step {
-  caption: string
+  caption: LocalizedText
   positions: Record<string, Point>
   marks: Mark[]
 }
@@ -129,7 +177,7 @@ export const clearInk = (doc: BoardDocument, stepIndex: number): BoardDocument =
 
 export const hasInk = (step: Step) => step.marks.some((mark) => mark.kind === 'ink')
 
-export const setCaption = (doc: BoardDocument, stepIndex: number, caption: string): BoardDocument =>
+export const setCaption = (doc: BoardDocument, stepIndex: number, caption: LocalizedText): BoardDocument =>
   withStep(doc, stepIndex, (step) => ({ ...step, caption }))
 
 // A new Step starts where the Step before it ends: every piece where it
@@ -188,7 +236,7 @@ export function parseBoard(value: unknown): BoardDocument | null {
     (step) =>
       typeof step === 'object' &&
       step !== null &&
-      typeof step.caption === 'string' &&
+      isLocalizedText(step.caption) &&
       typeof step.positions === 'object' &&
       step.positions !== null &&
       Array.isArray(step.marks)

@@ -4,13 +4,17 @@ import {
   addPiece,
   clearInk,
   emptyBoard,
+  inLocale,
   insertStepAfter,
+  localize,
+  localizedExactly,
   movePiece,
   parseBoard,
   placeable,
   removePiece,
   removeStep,
   translateMark,
+  withLocalized,
 } from './document'
 
 const withPlayer = () => addPiece(emptyBoard(), { id: 'a', kind: 'player', label: 'A' }, { x: 4, y: 2 })
@@ -116,5 +120,33 @@ describe('parseBoard', () => {
     expect(parseBoard({ ...emptyBoard(), version: 2 })).toBeNull()
     expect(parseBoard({ ...emptyBoard(), steps: [] })).toBeNull()
     expect(parseBoard({ ...emptyBoard(), labels: 'zones' })).toBeNull()
+  })
+})
+
+describe('words in two languages', () => {
+  it('shows a language, or the other while it has none', () => {
+    expect(localize('serve', 'en')).toBe('serve')
+    expect(localize({ pt: 'serviço', en: 'serve' }, 'en')).toBe('serve')
+    expect(localize({ pt: 'serviço', en: '' }, 'en')).toBe('serviço')
+  })
+
+  it('edits one language, keeping plain words in the other', () => {
+    expect(withLocalized('serviço', 'en', 'serve')).toEqual({ pt: 'serviço', en: 'serve' })
+    expect(withLocalized({ pt: 'a', en: 'b' }, 'pt', 'c')).toEqual({ pt: 'c', en: 'b' })
+    expect(localizedExactly({ pt: 'serviço', en: '' }, 'en')).toBe('')
+  })
+
+  it('copies an Exercise’s Board into one language', () => {
+    let board = addMark(emptyBoard(), 0, { id: 't', kind: 'text', x: 1, y: 1, text: { pt: 'serviço', en: 'serve' } })
+    board = { ...board, steps: [{ ...board.steps[0], caption: { pt: 'Passo', en: 'Step' } }] }
+    const copy = inLocale(board, 'en')
+    expect(copy.steps[0].caption).toBe('Step')
+    expect(copy.steps[0].marks[0]).toMatchObject({ text: 'serve' })
+  })
+
+  it('reads back a Board with words in both languages', () => {
+    const board = { ...emptyBoard(), steps: [{ caption: { pt: 'a', en: 'b' }, positions: {}, marks: [] }] }
+    expect(parseBoard(board)).toEqual(board)
+    expect(parseBoard({ ...board, steps: [{ caption: { pt: 'a' }, positions: {}, marks: [] }] })).toBeNull()
   })
 })

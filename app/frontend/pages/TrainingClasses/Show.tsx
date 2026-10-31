@@ -3,6 +3,8 @@ import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { addMinutes, formatDate, formatDuration, formatTimeRange, groupName } from '@/lib/classGroups'
 import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
+import { parseBoard } from '../../board/document'
+import { BoardPreview } from '../../board/Preview'
 import { ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Detail, Eyebrow, FieldError, MediaPlaceholder, Pagination, Pill, Topic } from '../../components/ui'
@@ -346,9 +348,18 @@ function Show() {
   )
 }
 
-// An Exercise's diagram in a 16:9 frame, or a placeholder without one.
+// An Exercise's diagram in a 16:9 frame: its Board's first Step, or else
+// its first image, or a placeholder without either.
 function ExerciseImage({ exercise, className = '' }: { exercise: ClassExercise; className?: string }) {
   const { t } = useTranslation()
+  const board = parseBoard(exercise.board)
+  if (board) {
+    return (
+      <div className={`aspect-video w-full border border-line bg-white p-1 ${className}`}>
+        <BoardPreview doc={board} label={t('trainingClasses.show.imageAlt', { title: exercise.title })} />
+      </div>
+    )
+  }
   if (!exercise.image) return <MediaPlaceholder className={`aspect-video w-full ${className}`} />
   return (
     <img

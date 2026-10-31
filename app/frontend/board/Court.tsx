@@ -30,6 +30,9 @@ export function Upright({ x, y, children }: { x: number; y: number; children: Re
 
 export const FONT = 'Archivo, system-ui, sans-serif'
 
+// The language a Board's words are shown in.
+export const BoardLocaleContext = createContext<'pt' | 'en'>('pt')
+
 // The ids of the pattern and marker a Board's markings use, unique per Board
 // so that several Boards can share a page.
 export interface BoardDefIds {

@@ -9,5 +9,5 @@ interface Props {
 
 export default function ShowBoard() {
   const { board } = usePage<Props>().props
-  return <BoardScreen key={board.id} saved={board} />
+  return <BoardScreen key={board.id} mode={{ kind: 'library', board }} />
 }

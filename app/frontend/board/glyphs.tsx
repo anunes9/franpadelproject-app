@@ -3,9 +3,9 @@
 // a dashed navy ball path and striped zones.
 
 import { useContext } from 'react'
-import { BoardDefIdsContext, FONT, Upright } from './Court'
+import { BoardDefIdsContext, BoardLocaleContext, FONT, Upright } from './Court'
 import type { Mark, PathPoint, Piece } from './document'
-import { pairOf } from './document'
+import { localize, pairOf } from './document'
 import type { Point } from './geometry'
 import { COLORS, glassColor } from './geometry'
 
@@ -121,6 +121,7 @@ const HALO = { stroke: '#fff', strokeOpacity: 0.85, fill: 'none', strokeLinecap:
 
 export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: boolean }) {
   const ids = useContext(BoardDefIdsContext)
+  const locale = useContext(BoardLocaleContext)
   switch (mark.kind) {
     case 'ballPath': {
       const inner = mark.points.slice(1, -1)
@@ -194,7 +195,7 @@ export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: b
             strokeWidth={selected ? 0.16 : 0}
             paintOrder="stroke"
           >
-            {mark.text}
+            {localize(mark.text, locale)}
           </text>
         </Upright>
       )
@@ -219,6 +220,7 @@ export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: b
 
 // An invisible, wider copy of a marking that is easy to tap with a finger.
 export function MarkHitArea({ mark }: { mark: Mark }) {
+  const locale = useContext(BoardLocaleContext)
   const hit = { stroke: 'transparent', strokeWidth: 0.7, fill: 'none', pointerEvents: 'stroke' as const }
   switch (mark.kind) {
     case 'ballPath':
@@ -235,7 +237,7 @@ export function MarkHitArea({ mark }: { mark: Mark }) {
       )
     case 'text': {
       // Roughly the text's box: 0.6 m tall, about 0.36 m per character.
-      const width = Math.max(1, mark.text.length * 0.36) + 0.4
+      const width = Math.max(1, localize(mark.text, locale).length * 0.36) + 0.4
       return (
         <Upright x={mark.x} y={mark.y}>
           <rect x={-width / 2} y={-0.5} width={width} height={1} fill="transparent" pointerEvents="all" />
