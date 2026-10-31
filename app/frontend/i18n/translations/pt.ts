@@ -822,6 +822,7 @@ export const pt = {
       explain: 'Explicar num quadro',
       edit: 'Editar quadro',
       add: 'Adicionar quadro',
+      openBlank: 'Abrir um quadro',
     },
     clearInk: 'Limpar desenho',
     steps: {

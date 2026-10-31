@@ -2,7 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { addMinutes, formatDate, formatDuration, formatTimeRange, groupName } from '@/lib/classGroups'
-import { classExercisePath, classGroupPath, exercisePath } from '@/lib/paths'
+import { classExercisePath, classGroupPath, exerciseBoardPath, exercisePath, newBoardPath } from '@/lib/paths'
 import { parseBoard } from '../../board/document'
 import { BoardPreview } from '../../board/Preview'
 import { ClassActions } from '../../components/PlanEditing'
@@ -22,6 +22,7 @@ interface Props {
   exercises: ClassExercise[]
   availableExercises: ClassExercise[]
   errors: Record<string, unknown>
+  current_user: { role: string } | null
 }
 
 // How many of the Module's Exercises the picker shows at a time.
@@ -110,8 +111,19 @@ function blockTitle(t: Translate, block: Block) {
 // (or a Club Manager of its Club) picks and removes Exercises, and marks,
 // moves or skips the Class.
 function Show() {
-  const { today, trainingClass, classCount, classGroup, classStructure, exercises, availableExercises, errors } =
-    usePage<Props>().props
+  const {
+    today,
+    trainingClass,
+    classCount,
+    classGroup,
+    classStructure,
+    exercises,
+    availableExercises,
+    errors,
+    current_user,
+  } = usePage<Props>().props
+  // Boards are a Coach's tool: a Club Manager looking at the Class has none.
+  const canExplain = current_user?.role === 'coach'
   const { t, tn, locale } = useTranslation()
   const [pending, setPending] = useState<string | null>(null)
   const [query, setQuery] = useState('')
@@ -180,7 +192,14 @@ function Show() {
         </div>
 
         {nowIndex >= 0 && minutesIn !== null && (
-          <NowCard blocks={blocks} index={nowIndex} minutesIn={minutesIn} duration={duration} slotCount={slotCount} />
+          <NowCard
+            blocks={blocks}
+            index={nowIndex}
+            minutesIn={minutesIn}
+            duration={duration}
+            slotCount={slotCount}
+            canExplain={canExplain}
+          />
         )}
 
         <dl className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4 rounded-[18px] border border-line bg-white p-5 shadow-card">
@@ -245,6 +264,7 @@ function Show() {
                   state={nowIndex < 0 ? 'plain' : i < nowIndex ? 'past' : i === nowIndex ? 'now' : 'next'}
                   pending={pending !== null}
                   onRemove={(exercise) => change('delete', exercise)}
+                  canExplain={canExplain}
                 />
               ))}
             </ol>
@@ -424,6 +444,7 @@ function TimelineStep({
   state,
   pending,
   onRemove,
+  canExplain,
 }: {
   block: Block
   time: string
@@ -432,6 +453,7 @@ function TimelineStep({
   state: StepState
   pending: boolean
   onRemove: (exercise: ClassExercise) => void
+  canExplain: boolean
 }) {
   const { t } = useTranslation()
   const exercise = block.exercise
@@ -506,6 +528,14 @@ function TimelineStep({
               <Link href={exercisePath(exercise.ref)} className="block max-w-[560px] overflow-hidden rounded-[10px]">
                 <ExerciseImage exercise={exercise} />
               </Link>
+              {canExplain && exercise.board !== null && (
+                <Link
+                  href={exerciseBoardPath(exercise.ref)}
+                  className="self-start text-meta font-semibold text-teal-deep underline-offset-2 hover:underline"
+                >
+                  {t('boards.viewer.explain')}
+                </Link>
+              )}
             </div>
           )}
           {emptySlot && <span className="text-meta text-muted-strong">{t('trainingClasses.show.emptySlot')}</span>}
@@ -519,19 +549,23 @@ function TimelineStep({
 }
 
 // While the Class is on: the step it is at, the minutes left in it and, for
-// an Exercise, its diagram.
+// an Exercise, its diagram. A Coach is one tap from a Board to explain on:
+// the Exercise's own when it has one (docs/specs/Boards.md, phase 4), or a
+// blank one.
 function NowCard({
   blocks,
   index,
   minutesIn,
   duration,
   slotCount,
+  canExplain,
 }: {
   blocks: Block[]
   index: number
   minutesIn: number
   duration: number
   slotCount: number
+  canExplain: boolean
 }) {
   const { t } = useTranslation()
   const block = blocks[index]
@@ -562,13 +596,31 @@ function NowCard({
         <>
           <span className="text-[17px] font-extrabold leading-snug">{block.exercise.title}</span>
           <ExerciseImage exercise={block.exercise} className="rounded-xl" />
-          <Link
-            href={exercisePath(block.exercise.ref)}
-            className="inline-flex min-h-11 items-center justify-center rounded-full bg-paper text-sm font-bold text-ink"
-          >
-            {t('trainingClasses.show.viewExercise')}
-          </Link>
         </>
+      )}
+      {(block.exercise || canExplain) && (
+        <div className="flex flex-wrap gap-2">
+          {canExplain && (
+            <Link
+              href={block.exercise?.board ? exerciseBoardPath(block.exercise.ref) : newBoardPath}
+              className="inline-flex min-h-11 flex-[1_1_auto] items-center justify-center whitespace-nowrap rounded-full bg-paper px-4 text-sm font-bold text-ink"
+            >
+              {block.exercise?.board ? t('boards.viewer.explain') : t('boards.viewer.openBlank')}
+            </Link>
+          )}
+          {block.exercise && (
+            <Link
+              href={exercisePath(block.exercise.ref)}
+              className={
+                canExplain
+                  ? 'inline-flex min-h-11 flex-[1_1_auto] items-center justify-center whitespace-nowrap rounded-full border border-ink-edge px-4 text-sm font-bold text-paper'
+                  : 'inline-flex min-h-11 flex-[1_1_auto] items-center justify-center whitespace-nowrap rounded-full bg-paper px-4 text-sm font-bold text-ink'
+              }
+            >
+              {t('trainingClasses.show.viewExercise')}
+            </Link>
+          )}
+        </div>
       )}
       <span className="block h-1.5 overflow-hidden rounded-full bg-ink-soft">
         <span className="block h-full bg-teal" style={{ width: `${Math.round((minutesIn / duration) * 100)}%` }} />

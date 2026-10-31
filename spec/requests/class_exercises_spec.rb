@@ -65,6 +65,24 @@ RSpec.describe "Exercises of a Class", type: :request do
     end
   end
 
+  describe "an Exercise's Board on the Class page" do
+    it "comes with each Exercise, picked or not, so the running Class can open it" do
+      document = {
+        "version" => 1, "view" => "full", "labels" => "sectors",
+        "pieces" => [{ "id" => "a", "kind" => "player", "label" => "A" }],
+        "steps" => [{ "caption" => "", "positions" => { "a" => { "x" => 2, "y" => 5 } }, "marks" => [] }]
+      }
+      serve_drill.create_board!(title: serve_drill.title, document: document)
+      sign_in coach
+      post class_exercise_path(serve_class, serve_drill)
+
+      get class_path(serve_class)
+
+      expect(page_props["exercises"].sole).to include("ref" => "S-1", "board" => document)
+      expect(page_props["availableExercises"].sole).to include("ref" => "S-2", "board" => nil)
+    end
+  end
+
   describe "picking Exercises" do
     it "adds Exercises of the Class's Module, shown on the Class in the order picked" do
       sign_in coach

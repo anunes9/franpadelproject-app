@@ -813,6 +813,7 @@ export const en = {
       explain: 'Explain on a board',
       edit: 'Edit board',
       add: 'Add board',
+      openBlank: 'Open a board',
     },
     clearInk: 'Clear drawing',
     steps: {
