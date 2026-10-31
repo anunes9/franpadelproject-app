@@ -34,6 +34,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 Production runs on Railway in the "FranPadelProject App" project, production environment.
 Pushes to `main` deploy automatically from GitHub.
 
+Every deploy runs `bin/rails db:prepare` before the new release goes live, so migrations run first and a failing migration stops the deploy. The command is set in [`railway.json`](railway.json), which Railway reads on each deploy, and mirrored in `.railway/railway.ts`; keep the two the same.
+
 ### Infrastructure as code
 
 The whole Railway project is defined in [`.railway/railway.ts`](.railway/railway.ts): the app service, Postgres and its volume, the `bundled-wardrobe` storage bucket, the custom domain, and every service variable. Secret values such as `RAILS_MASTER_KEY` stay on Railway through `preserve()` and are never committed.
