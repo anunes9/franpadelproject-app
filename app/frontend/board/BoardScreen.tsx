@@ -20,6 +20,8 @@ import {
   PlayIcon,
   PlusSignIcon,
   RedoIcon,
+  RotateLeft01Icon,
+  RotateRight01Icon,
   UndoIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -49,6 +51,8 @@ import {
   removeStep,
   replaceMark,
   setCaption,
+  TEXT_TURN_STEP,
+  turnText,
   withLocalized,
 } from './document'
 import type { BoardLabels, BoardView, Point } from './geometry'
@@ -255,9 +259,19 @@ export function BoardScreen({ mode }: { mode: BoardMode }) {
       if (isBlank(text)) setSelection(null)
     } else if (value) {
       const text = wordsFor('', value)
-      apply(addMark(doc, currentStep, { id: newId(), kind: 'text', x: textEdit.at.x, y: textEdit.at.y, text }))
+      const id = newId()
+      apply(addMark(doc, currentStep, { id, kind: 'text', x: textEdit.at.x, y: textEdit.at.y, text }))
+      // Selected straight away, so it can be turned or given a marker line.
+      setChoice('select')
+      setSelection({ type: 'mark', id })
     }
     setTextEdit(null)
+  }
+
+  // Turning the selected text, or giving it a marker line, or taking it away.
+  function changeSelectedText(change: { rotate?: number; marker?: boolean }) {
+    if (selectedMark?.kind !== 'text') return
+    apply(replaceMark(doc, currentStep, { ...selectedMark, ...change }))
   }
 
   function startOver() {
@@ -603,9 +617,45 @@ export function BoardScreen({ mode }: { mode: BoardMode }) {
         {choice === 'select' && selection ? (
           <>
             {selectedMark?.kind === 'text' && (
-              <BarButton onClick={editSelectedText} label={t('boards.selection.editText')}>
-                {t('boards.selection.editText')}
-              </BarButton>
+              <>
+                <BarButton onClick={editSelectedText} label={t('boards.selection.editText')}>
+                  {t('boards.selection.editText')}
+                </BarButton>
+                <fieldset className="flex shrink-0 items-center">
+                  <legend className="sr-only">{t('boards.selection.turn')}</legend>
+                  <BarButton
+                    onClick={() => changeSelectedText({ rotate: turnText(selectedMark.rotate, -TEXT_TURN_STEP) })}
+                    label={t('boards.selection.turnLeft')}
+                  >
+                    <HugeiconsIcon icon={RotateLeft01Icon} size={18} strokeWidth={1.8} />
+                  </BarButton>
+                  <span
+                    className="min-w-10 text-center font-dash-mono text-meta font-semibold tabular-nums"
+                    aria-live="polite"
+                  >
+                    {t('boards.selection.angle', { degrees: selectedMark.rotate ?? 0 })}
+                  </span>
+                  <BarButton
+                    onClick={() => changeSelectedText({ rotate: turnText(selectedMark.rotate, TEXT_TURN_STEP) })}
+                    label={t('boards.selection.turnRight')}
+                  >
+                    <HugeiconsIcon icon={RotateRight01Icon} size={18} strokeWidth={1.8} />
+                  </BarButton>
+                </fieldset>
+                <button
+                  type="button"
+                  aria-pressed={selectedMark.marker === true}
+                  onClick={() => changeSelectedText({ marker: !selectedMark.marker })}
+                  className={
+                    'min-h-11 shrink-0 whitespace-nowrap rounded-lg px-3 text-meta font-semibold transition-colors ' +
+                    (selectedMark.marker
+                      ? 'bg-tint-teal text-teal-ink ring-2 ring-teal-deep'
+                      : 'text-ink hover:bg-mist')
+                  }
+                >
+                  {t('boards.selection.marker')}
+                </button>
+              </>
             )}
             <BarButton onClick={deleteSelection} label={t('boards.selection.delete')} tone="danger">
               <HugeiconsIcon icon={Delete02Icon} size={18} strokeWidth={1.8} />

@@ -172,3 +172,16 @@ export const roundPoint = (p: Point): Point => ({ x: round(p.x), y: round(p.y) }
 
 // The last item of a list that is never empty.
 export const last = <T>(items: T[]): T => items[items.length - 1]
+
+// The angle text is drawn at on the court. Text turns with the court, so a
+// label along the service line stays along it however the court is shown,
+// but it is flipped whenever it would read upside down on screen.
+// `courtTurn` is how far the court itself is turned on screen (90 on a
+// portrait screen).
+export function readableTextAngle(rotate: number, courtTurn: number): number {
+  const onScreen = (((rotate + courtTurn) % 360) + 360) % 360
+  return onScreen > 90 && onScreen <= 270 ? rotate + 180 : rotate
+}
+
+// About how wide text of a given length is drawn, in metres.
+export const textWidth = (length: number) => Math.max(0.6, length * 0.36)

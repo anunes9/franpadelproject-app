@@ -3,11 +3,11 @@
 // a dashed navy ball path and striped zones.
 
 import { useContext } from 'react'
-import { BoardDefIdsContext, BoardLocaleContext, FONT, Upright } from './Court'
+import { BoardDefIdsContext, BoardLocaleContext, FONT, Upright, UprightContext } from './Court'
 import type { Mark, PathPoint, Piece } from './document'
 import { localize, pairOf } from './document'
 import type { Point } from './geometry'
-import { COLORS, glassColor } from './geometry'
+import { COLORS, glassColor, readableTextAngle, textWidth } from './geometry'
 
 export const TOKEN_RADIUS = 0.55
 export const BALL_RADIUS = 0.3
@@ -122,6 +122,8 @@ const HALO = { stroke: '#fff', strokeOpacity: 0.85, fill: 'none', strokeLinecap:
 export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: boolean }) {
   const ids = useContext(BoardDefIdsContext)
   const locale = useContext(BoardLocaleContext)
+  // How far the court is turned on screen: letters are turned back by as much.
+  const courtTurn = -useContext(UprightContext)
   switch (mark.kind) {
     case 'ballPath': {
       const inner = mark.points.slice(1, -1)
@@ -180,9 +182,26 @@ export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: b
         </g>
       )
     }
-    case 'text':
+    case 'text': {
+      const words = localize(mark.text, locale)
+      // The marker runs along the top of the text, a little past both ends.
+      const half = textWidth(words.length) / 2 + 0.3
       return (
-        <Upright x={mark.x} y={mark.y}>
+        <g transform={`translate(${mark.x} ${mark.y}) rotate(${readableTextAngle(mark.rotate ?? 0, courtTurn)})`}>
+          {mark.marker && (
+            <>
+              {selected && <line x1={-half} y1={-0.42} x2={half} y2={-0.42} {...HALO} strokeWidth={0.2} />}
+              <line
+                x1={-half}
+                y1={-0.42}
+                x2={half}
+                y2={-0.42}
+                stroke={COLORS.ink}
+                strokeWidth={0.06}
+                strokeLinecap="round"
+              />
+            </>
+          )}
           <text
             textAnchor="middle"
             dominantBaseline="central"
@@ -195,10 +214,11 @@ export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: b
             strokeWidth={selected ? 0.16 : 0}
             paintOrder="stroke"
           >
-            {localize(mark.text, locale)}
+            {words}
           </text>
-        </Upright>
+        </g>
       )
+    }
     case 'ink':
       return (
         <g>
@@ -221,6 +241,7 @@ export function MarkShape({ mark, selected = false }: { mark: Mark; selected?: b
 // An invisible, wider copy of a marking that is easy to tap with a finger.
 export function MarkHitArea({ mark }: { mark: Mark }) {
   const locale = useContext(BoardLocaleContext)
+  const courtTurn = -useContext(UprightContext)
   const hit = { stroke: 'transparent', strokeWidth: 0.7, fill: 'none', pointerEvents: 'stroke' as const }
   switch (mark.kind) {
     case 'ballPath':
@@ -236,12 +257,12 @@ export function MarkHitArea({ mark }: { mark: Mark }) {
         <circle cx={mark.cx} cy={mark.cy} r={mark.r} fill="transparent" pointerEvents="all" />
       )
     case 'text': {
-      // Roughly the text's box: 0.6 m tall, about 0.36 m per character.
-      const width = Math.max(1, localize(mark.text, locale).length * 0.36) + 0.4
+      // Roughly the text's box, with its marker: 0.6 m tall text.
+      const width = textWidth(localize(mark.text, locale).length) + 0.8
       return (
-        <Upright x={mark.x} y={mark.y}>
-          <rect x={-width / 2} y={-0.5} width={width} height={1} fill="transparent" pointerEvents="all" />
-        </Upright>
+        <g transform={`translate(${mark.x} ${mark.y}) rotate(${readableTextAngle(mark.rotate ?? 0, courtTurn)})`}>
+          <rect x={-width / 2} y={-0.6} width={width} height={1.1} fill="transparent" pointerEvents="all" />
+        </g>
       )
     }
   }

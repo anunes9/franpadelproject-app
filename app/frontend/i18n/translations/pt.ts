@@ -756,7 +756,7 @@ export const pt = {
         'Arraste da bola até onde ela vai. Largue junto ao vidro para ressaltar nele, e arraste a partir do fim para continuar a trajetória.',
       arrow: 'Arraste de um jogador até onde ele se desloca.',
       zone: 'Arraste no campo para desenhar a zona.',
-      text: 'Toque no campo onde fica o texto.',
+      text: 'Toque no campo onde fica o texto. Depois pode rodá-lo ou dar-lhe uma linha de marcação, como onde começa uma pancada.',
       ink: 'Desenhe no campo com o dedo, uma caneta ou o rato.',
     },
     zone: {
@@ -770,6 +770,11 @@ export const pt = {
     selection: {
       delete: 'Apagar',
       editText: 'Editar texto',
+      turn: 'Rodar o texto',
+      turnLeft: 'Rodar o texto para a esquerda',
+      turnRight: 'Rodar o texto para a direita',
+      angle: '{{degrees}}°',
+      marker: 'Linha de marcação',
     },
     save: 'Guardar',
     saveNew: 'Guardar',

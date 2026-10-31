@@ -55,6 +55,6 @@ See [docs/specs/Boards.md](docs/specs/Boards.md) and ADR 0010.
 - [x] Save Boards into a Coach's own library, private to them
 - [x] An official Board on each Exercise, by Admins, in PT and EN, replacing its image as the court diagram
 - [x] "Explain on a board" from an Exercise and from a running Class
-- [ ] Rotatable text with a marker line, as in the reference diagrams
+- [x] Rotatable text with a marker line, as in the reference diagrams
 - [ ] "Save as" a copy of a saved Board
 - [ ] Rebuild the existing PNG diagrams as Exercise Boards

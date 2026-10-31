@@ -14,6 +14,7 @@ import {
   removePiece,
   removeStep,
   translateMark,
+  turnText,
   withLocalized,
 } from './document'
 
@@ -148,5 +149,13 @@ describe('words in two languages', () => {
     const board = { ...emptyBoard(), steps: [{ caption: { pt: 'a', en: 'b' }, positions: {}, marks: [] }] }
     expect(parseBoard(board)).toEqual(board)
     expect(parseBoard({ ...board, steps: [{ caption: { pt: 'a' }, positions: {}, marks: [] }] })).toBeNull()
+  })
+})
+
+describe('turnText', () => {
+  it('turns text in either direction, kept within 0–359', () => {
+    expect(turnText(undefined, 15)).toBe(15)
+    expect(turnText(0, -15)).toBe(345)
+    expect(turnText(345, 15)).toBe(0)
   })
 })

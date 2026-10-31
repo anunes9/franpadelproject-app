@@ -747,7 +747,7 @@ export const en = {
         'Drag from the ball to where it goes. Let go at the glass to bounce off it, and drag on from the end to carry the path on.',
       arrow: 'Drag from a player to where they run.',
       zone: 'Drag across the court to draw the zone.',
-      text: 'Tap the court where the text goes.',
+      text: 'Tap the court where the text goes. Then turn it, or give it a marker line, such as where a shot starts.',
       ink: 'Draw on the court with your finger, a pen or the mouse.',
     },
     zone: {
@@ -761,6 +761,11 @@ export const en = {
     selection: {
       delete: 'Delete',
       editText: 'Edit text',
+      turn: 'Turn the text',
+      turnLeft: 'Turn the text left',
+      turnRight: 'Turn the text right',
+      angle: '{{degrees}}°',
+      marker: 'Marker line',
     },
     save: 'Save',
     saveNew: 'Save',
