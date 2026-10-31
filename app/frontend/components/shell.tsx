@@ -13,12 +13,12 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import {
+  boardsPath,
   classGroupsPath,
   clubPlayersPath,
   isBreakPeriodsPath,
   isClubOverviewPath,
   isPlayersPath,
-  newBoardPath,
   selectedClubId,
 } from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
@@ -40,10 +40,10 @@ function useNav() {
           },
         ]
       : []
-  // A Coach's Board opens full screen, an interactive court to explain on.
+  // A Coach's own Boards, interactive courts to explain on.
   const board =
     props.current_user?.role === 'coach'
-      ? [{ href: newBoardPath, label: t('common.nav.board'), tab: t('common.nav.board'), icon: CourtLawIcon }]
+      ? [{ href: boardsPath, label: t('common.nav.board'), tab: t('common.nav.board'), icon: CourtLawIcon }]
       : []
   // Players follows the Club selected on the Club Manager home, and
   // otherwise opens on the user's first Club.

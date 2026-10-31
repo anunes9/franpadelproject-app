@@ -71,5 +71,8 @@ export const exercisePath = (exerciseRef: string) => `/dashboard/exercises/${enc
 export const isBreakPeriodsPath = (pathname: string) =>
   /^\/dashboard\/(?:clubs\/[^/?#]+\/)?break_periods/.test(pathname)
 
-// A Coach's scratch Board (Quadro), an interactive court to explain on.
-export const newBoardPath = '/dashboard/boards/new'
+// A Coach's Boards (Quadro), interactive courts to explain on: their own
+// library, a new scratch Board, and one saved Board.
+export const boardsPath = '/dashboard/boards'
+export const newBoardPath = `${boardsPath}/new`
+export const boardPath = (boardId: string) => `${boardsPath}/${boardId}`

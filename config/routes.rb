@@ -42,11 +42,11 @@ Rails.application.routes.draw do
       resources :break_periods, only: %i[index new create edit update destroy], shallow: true
     end
   end
-  # A Coach's Board (Quadro): an interactive padel court to explain an
-  # Exercise or a tactic. For now only a scratch Board, which lives in the
-  # browser and is never sent back.
+  # A Coach's Boards (Quadro): interactive padel courts to explain an
+  # Exercise or a tactic. A new Board is scratch, kept in the browser, until
+  # the Coach saves it into their own library.
   scope "/dashboard" do
-    resources :boards, only: :new
+    resources :boards, only: %i[index new create show update destroy]
   end
   # Class Groups and their Training Plans: a Coach's own groups, also visible
   # to the Club Managers of the Coach's Club.
