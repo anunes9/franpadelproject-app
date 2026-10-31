@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_29_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_29_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -154,6 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_29_160000) do
   create_table "players", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "club_id", null: false
     t.datetime "created_at", null: false
+    t.integer "gender"
     t.integer "hand", null: false
     t.integer "level", null: false
     t.string "name", null: false

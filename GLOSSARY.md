@@ -17,7 +17,7 @@ A Client who belongs to exactly one Club, added by a Club Manager through an ema
 _Avoid_: Instructor, teacher, trainer
 
 **Player**:
-A person who plays padel at a Club, recorded with a name, position (left, right or both), dominant hand and Level. A Player has no account and cannot log in. A Player belongs to one Club and can be in several Class Groups.
+A person who plays padel at a Club, recorded with a name, position (left, right or both), dominant hand, Level and, optionally, gender (male or female). A Player has no account and cannot log in. A Player belongs to one Club and can be in several Class Groups.
 _Avoid_: Student, learner, member
 
 **Club**:

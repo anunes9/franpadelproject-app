@@ -48,7 +48,7 @@ class PlayersController < DashboardController
   private
 
   def player_params
-    params.require(:player).permit(:name, :position, :hand, :level)
+    params.require(:player).permit(:name, :position, :hand, :level, :gender)
   end
 
   def form_props(club, player)
@@ -57,6 +57,7 @@ class PlayersController < DashboardController
       player: player&.players_json,
       positionOptions: Player.positions.keys,
       handOptions: Player.hands.keys,
+      genderOptions: Player.genders.keys,
       levelOptions: Player.levels.keys
     }
   end

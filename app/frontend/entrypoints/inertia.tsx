@@ -1,4 +1,17 @@
-import { createInertiaApp } from '@inertiajs/react'
+import { createInertiaApp, router } from '@inertiajs/react'
+
+// Back and Forward restore a page as it was when it was left, so a group
+// renamed since would still show its old name. Once Inertia has restored the
+// page, ask the server for its current props.
+let restoringFromHistory = false
+window.addEventListener('popstate', (event) => {
+  restoringFromHistory = event.state?.page !== undefined
+})
+router.on('navigate', () => {
+  if (!restoringFromHistory) return
+  restoringFromHistory = false
+  router.reload()
+})
 
 void createInertiaApp({
   pages: '../pages',
