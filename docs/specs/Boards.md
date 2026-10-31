@@ -37,9 +37,18 @@ The look comes from the academy's own Exercise diagrams. The reference is `docs/
   - Navy ticks every 2 m outside the outline.
   - Depth zones along the court, labelled at top and bottom: **0** (2–4 m from the back wall, around the service line), **1** (4–6 m), **2** (6–8 m) and **3** (8–12 m, the 4 m around the net), mirrored on the other side. The 2 m nearest each back wall is unlabelled.
   - Lanes across the court, labelled on both sides: **1, 2, J, 2, 1**, each 2 m wide.
-  - These labels are how the method describes a position ("zone 1, lane 2"), so the Board keeps them, and a Coach can hide them.
+  - These labels are how the method describes a position ("zone 1, lane 2"), so the Board keeps them (see "Labels" below).
 - **Watermark:** the Fran Padel Project logo at 7% opacity at each end, in the strip behind the service line, rotated to read along the court.
-- **Walls:** the outline stands for the walls. Ball paths can bounce off them. Glass and mesh aren't drawn, as in the reference.
+- **Walls and glass:** each wall is drawn as a strip on the outline, split into its glass panels. The definitions come from the academy's glass drawing (`docs/specs/boards/glass-reference.jpg`); the full court is shown in `glass-preview.png`. Each panel is 2 m long.
+  - **Back glass** (each end, across the court): five panels numbered **1, 2, 3, 2, 1** from one side to the other, coloured yellow `#fccc2e`, green `#6ab150`, blue `#1f3df0`, green, yellow. Panel 1 is in the corner and 3 is in the centre.
+  - **Side glass** (both sides, at each end): two panels from the back wall, **2** in orange `#f68b2c` (0–2 m) then **1** in red `#e3101e` (2–4 m).
+  - **Mesh:** from 4 m to 9 m from each back wall, in navy.
+  - **Opening:** 2 m at each side of the net (9–11 m), drawn as a gap in the wall.
+  - The panels are named as the method says them, e.g. "back glass 3" and "side glass 1". A ball path's wall bounce snaps to a glass panel and records its name, so an Exercise can say "off back glass 2". The mesh and the opening take no bounces.
+- **Labels:** the court has two label sets, which can't both show because the lane numbers and the back glass numbers sit in the same places. The Coach switches between them in one tap.
+  - **Sectors** (default): the reference's depth zones and lanes, with the walls in plain navy as in the reference.
+  - **Glass:** the glass numbers, with the panels in their colours.
+  - **None:** a clean court, with the walls in plain navy.
 - **Views:** **full court** and **half court** (one side, larger). On a phone held upright, the court rotates 90° rather than squeezing.
 
 ## Pieces and markings
@@ -65,15 +74,17 @@ The player tokens, ball path, striped zone and text label follow the reference d
 3. As a Coach, I want to add Steps and tap through them, with players and ball gliding between positions, so that the group sees the movement and not just the positions.
 4. As a Coach, I want undo, redo and "clear ink", so that I can fix a mistake mid-explanation.
 5. As a Coach, I want to switch between full court and half court, so that drills on one side are big enough to read.
-6. As a Coach, I want closing a Board I haven't saved to simply throw it away, so that explaining never leaves clutter behind.
-7. As a Coach, I want a scratch Board to survive an accidental reload on the same device, so that I don't lose it mid-explanation.
-8. As a Coach, I want to save a Board with a title into my own library, and later open, update, rename or delete it, so that I keep the tactics I reuse.
-9. As a Coach, I want my saved Boards visible to me alone, so that my library is my own.
-10. As an Admin, I want to build the official Board of an Exercise with the same tool, with captions and text in Portuguese and English, so that every Exercise can have an accurate, animated court diagram.
-11. As a Client, I want an Exercise's Board to replace its PNG diagram wherever the diagram is shown, and the PNG to still show when there is no Board, so that nothing goes blank during the change.
-12. As a Coach, I want "Explain on a Board" on an Exercise to open a scratch copy of its Board, so that I can adapt it to my group without changing the official one.
-13. As a Coach, I want to save that adapted copy into my library, so that I keep my version of the drill.
-14. As a Coach, I want one tap on a running Class to open the current Exercise's Board, so that I can explain it on court without searching.
+6. As a Coach, I want to switch the court labels between the sectors, the glass panels and none, so that I can talk about positions or about play off the walls.
+7. As a Coach, I want a ball path that bounces off a wall to name its glass panel, so that the group hears the same words as in the method.
+8. As a Coach, I want closing a Board I haven't saved to simply throw it away, so that explaining never leaves clutter behind.
+9. As a Coach, I want a scratch Board to survive an accidental reload on the same device, so that I don't lose it mid-explanation.
+10. As a Coach, I want to save a Board with a title into my own library, and later open, update, rename or delete it, so that I keep the tactics I reuse.
+11. As a Coach, I want my saved Boards visible to me alone, so that my library is my own.
+12. As an Admin, I want to build the official Board of an Exercise with the same tool, with captions and text in Portuguese and English, so that every Exercise can have an accurate, animated court diagram.
+13. As a Client, I want an Exercise's Board to replace its PNG diagram wherever the diagram is shown, and the PNG to still show when there is no Board, so that nothing goes blank during the change.
+14. As a Coach, I want "Explain on a Board" on an Exercise to open a scratch copy of its Board, so that I can adapt it to my group without changing the official one.
+15. As a Coach, I want to save that adapted copy into my library, so that I keep my version of the drill.
+16. As a Coach, I want one tap on a running Class to open the current Exercise's Board, so that I can explain it on court without searching.
 
 ## Implementation Decisions
 
@@ -87,7 +98,7 @@ The player tokens, ball path, striped zone and text label follow the reference d
   {
     "version": 1,
     "view": "full",
-    "sectors": true,
+    "labels": "sectors",
     "pieces": [
       { "id": "a",  "kind": "player", "label": "A" },
       { "id": "c",  "kind": "player", "label": "C" },
