@@ -46,3 +46,15 @@ Clients have no way to say whether they are a Player or a Coach.
 - [ ] Record whether a Client is a Player or a Coach
 - [ ] Let an Admin set it when creating the account, and show it on the profile
 - [ ] Club Manager is out of scope for this phase
+
+## Boards
+
+See [docs/specs/Boards.md](docs/specs/Boards.md) and ADR 0010.
+
+- [x] Scratch Board: the court in the academy's style, pieces, markings, Steps and animation, kept in the browser until closed
+- [x] Save Boards into a Coach's own library, private to them
+- [x] An official Board on each Exercise, by Admins, in PT and EN, replacing its image as the court diagram
+- [x] "Explain on a board" from an Exercise and from a running Class
+- [ ] Rotatable text with a marker line, as in the reference diagrams
+- [ ] "Save as" a copy of a saved Board
+- [ ] Rebuild the existing PNG diagrams as Exercise Boards
