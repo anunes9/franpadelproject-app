@@ -22,7 +22,7 @@ Every Board opens full screen, readable at arm's length, built to be held up on 
 
 **Saved Boards are private to the Coach who saved them.** No other Coach, no Club Manager and no Admin sees them. Admins author the official Board on each Exercise, which every Client can open.
 
-Players on a Board are generic tokens (A1, A2, B1, B2, or a short free label), not links to Player records, so a Board stays reusable across Class Groups.
+Players on a Board are generic tokens (a player "A", the Coach "P", or another short label), not links to Player records, so a Board stays reusable across Class Groups.
 
 Vocabulary follows `GLOSSARY.md` (Board, Step). Decisions are recorded in ADR 0010 (Boards are scratch until saved, and private).
 
