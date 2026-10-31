@@ -89,7 +89,7 @@ The player tokens, ball path, striped zone and text label follow the reference d
 ## Implementation Decisions
 
 - **Scratch Boards live in the browser only.** The whole Board is React state. The current scratch Board is also kept in `localStorage` as a convenience (story 7); it is cleared on close, and its absence is never an error.
-- **One `boards` table for what is saved.** `id` (uuid), polymorphic `boardable` (`User` for a Coach's library, `Exercise` for the official Board), `title` (and `title_en` on Exercise Boards), `document` (`jsonb`), timestamps. An Exercise has at most one Board. Boards are not attached to Classes: a running Class opens the current Exercise's Board.
+- **One `boards` table for what is saved.** `id` (uuid), polymorphic `boardable` (`User` for a Coach's library, `Exercise` for the official Board), `title` (and, from phase 3, `title_en` on Exercise Boards), `document` (`jsonb`), timestamps. An Exercise has at most one Board. Boards are not attached to Classes: a running Class opens the current Exercise's Board.
 - **Private by ownership.** A Coach's Boards are found only through `current_user.boards`; anyone else gets a 404, as on every other screen they cannot use. Club Managers and Admins have no screen for them. Exercise Boards are readable by every Client and editable only by Admins.
 - **Copy, never share.** Opening an Exercise Board for a Coach copies its document into a scratch Board; saving creates a new Board in the Coach's library. Nothing links back, so editing one never changes another.
 - **Document shape, versioned from the start.** Version 1, as built in phase 1 (`app/frontend/board/document.ts`):
@@ -133,7 +133,7 @@ The player tokens, ball path, striped zone and text label follow the reference d
 ## Phasing
 
 1. **Scratch Board** _(built)_. `Court`, pieces, marks, ink, Steps and animation, undo/redo, full and half court, the three label sets. Nothing saved. This alone gives Coaches the explaining tool. It lives at `/dashboard/boards/new` ("Quadro" in a Coach's navigation); text marks are not yet rotatable and have no marker line.
-2. **Save to library.** The `boards` table, schema validation, the Boards page, opening, updating, renaming and deleting saved Boards.
+2. **Save to library** _(built)_. The `boards` table, document validation on save (`BoardDocument`), the Boards page at `/dashboard/boards` ("Quadros" in a Coach's navigation) with a thumbnail of each Board's first Step, and saving, opening, updating, renaming and deleting saved Boards. A saved Board's changes stay on screen until saved; closing with unsaved changes asks first, and a reload drops them. Saved Boards have no `title_en` yet: it comes with Exercise Boards.
 3. **Exercise Boards.** Admin authoring, `BoardViewer` replacing the PNG where a Board exists, "Explain on a Board" and saving a copy.
 4. **From a running Class.** One tap from the Class timeline to the current Exercise's Board.
 

@@ -21,6 +21,8 @@ class User < ApplicationRecord
   before_destroy :keep_while_owning_class_groups
   has_many :exercise_completions, dependent: :destroy
   has_many :quiz_attempts, dependent: :destroy
+  # The Coach's saved Boards, visible to them alone (ADR 0010).
+  has_many :boards, as: :boardable, dependent: :destroy
   has_many :club_memberships, dependent: :destroy
   has_many :managed_clubs, through: :club_memberships, source: :club
 
