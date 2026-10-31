@@ -22,7 +22,7 @@ Every Board opens full screen, readable at arm's length, built to be held up on 
 
 **Saved Boards are private to the Coach who saved them.** No other Coach, no Club Manager and no Admin sees them. Admins author the official Board on each Exercise, which every Client can open.
 
-Players on a Board are generic tokens (a player "A", the Coach "P", or another short label), not links to Player records, so a Board stays reusable across Class Groups.
+Players on a Board are generic tokens, A and B for one pair, C and D for the other, and P for the Coach, not links to Player records, so a Board stays reusable across Class Groups.
 
 Vocabulary follows `GLOSSARY.md` (Board, Step). Decisions are recorded in ADR 0010 (Boards are scratch until saved, and private).
 
@@ -44,24 +44,24 @@ The look comes from the academy's own Exercise diagrams. The reference is `docs/
 
 ## Pieces and markings
 
-The player tokens, ball path, landing zone and text label follow the reference drawing. Sizes are in metres.
+The player tokens, ball path, striped zone and text label follow the reference drawing. Sizes are in metres; pieces are drawn larger than life so a group can read them. `docs/specs/boards/pieces-preview.png` shows every piece on the court.
 
 | Kind | Persists across Steps | Look | Notes |
 |---|---|---|---|
-| Player | yes, moves between Steps | Navy `#132d46` circle, radius ≈ 0.55 m, thin black edge, a white letter | The reference labels it "A" (layer "Player A"). Label is one or two characters. |
-| Coach | yes, moves between Steps | Light grey `#cbd1d0` circle, same size, a navy letter | The reference's "Professor", labelled "P". |
-| Ball | yes, moves between Steps | _None in the reference._ Proposed: small yellow-green circle, radius ≈ 0.15 m, navy edge | At most one. |
-| Cone / target | yes | _None in the reference._ Proposed: small navy triangle | Static equipment. |
+| Player | yes, moves between Steps | Circle, radius ≈ 0.55 m, with a letter. **A and B** (one pair) are navy `#132d46` with a white letter and a thin black edge, as in the reference. **C and D** (the other pair) are white with a navy letter and a navy edge. | The label is the letter, and each of A, B, C and D is used at most once. A drill without opponents just leaves C and D off. |
+| Coach | yes, moves between Steps | Light grey `#cbd1d0` circle, same size, navy "P" | The reference's "Professor". At most one. |
+| Ball | yes, moves between Steps | Yellow-green `#c8e03c` circle, radius ≈ 0.3 m, with the white curved stripe of a padel ball and a thin navy edge | At most one. |
+| Cone | yes | Orange `#f28c28` triangle with a navy edge | Equipment; as many as needed. |
 | Ball path | per Step | Navy dashed line, dash 1 : gap 2, round caps | Straight or curved, with an optional bounce point and wall bounce. The ball follows it when animating to the next Step. |
 | Movement arrow | per Step | Navy solid line with an arrowhead | A player's run. A solid line keeps it distinct from the dashed ball path. |
-| Landing zone | per Step | Rectangle with navy diagonal hatching and a thin navy edge | Where the ball should land, e.g. a serve target. |
+| Zone | per Step | A **rectangle** or a **circle**, either **striped** (navy diagonal hatching with a thin navy edge, the reference's landing zone) or **outline** only | Where the ball should land, or an area to cover or avoid. Resizable. |
 | Text | per Step | Navy bold text, rotatable, with an optional short marker line | The reference's "serve" label sits beside a line marking where the shot starts. Exercise Boards have both languages. |
 | Ink | per Step | Freehand stroke | For quick explaining. One tap clears a Step's ink. |
 
 ## User Stories
 
 1. As a Coach, I want to open a blank Board in one tap, full screen, so that I can start explaining straight away.
-2. As a Coach, I want to place and drag players, ball and cones, draw arrows, ball paths, zones and freehand ink, with touch, mouse or pen, so that I can show any situation.
+2. As a Coach, I want to place and drag players A–D, the Coach P, the ball and cones, and draw arrows, ball paths, striped or outline zones (rectangles and circles) and freehand ink, with touch, mouse or pen, so that I can show any situation.
 3. As a Coach, I want to add Steps and tap through them, with players and ball gliding between positions, so that the group sees the movement and not just the positions.
 4. As a Coach, I want undo, redo and "clear ink", so that I can fix a mistake mid-explanation.
 5. As a Coach, I want to switch between full court and half court, so that drills on one side are big enough to read.
@@ -90,16 +90,17 @@ The player tokens, ball path, landing zone and text label follow the reference d
     "sectors": true,
     "pieces": [
       { "id": "a",  "kind": "player", "label": "A" },
-      { "id": "pr", "kind": "coach",  "label": "P" },
+      { "id": "c",  "kind": "player", "label": "C" },
+      { "id": "pr", "kind": "coach" },
       { "id": "b",  "kind": "ball" }
     ],
     "steps": [
       {
         "caption": { "pt": "Serviço", "en": "Serve" },
-        "positions": { "a": { "x": 1.5, "y": 6.4 }, "pr": { "x": 1.5, "y": 3.4 }, "b": { "x": 2.5, "y": 6.6 } },
+        "positions": { "a": { "x": 1.5, "y": 6.4 }, "c": { "x": 18.0, "y": 3.0 }, "pr": { "x": 1.5, "y": 3.4 }, "b": { "x": 2.5, "y": 6.6 } },
         "marks": [
           { "id": "m1", "kind": "ballPath", "points": [[2.5, 6.6], [16.0, 1.9]] },
-          { "id": "m2", "kind": "landingZone", "x": 15.6, "y": 1.6, "w": 1.35, "h": 1.65 },
+          { "id": "m2", "kind": "zone", "shape": "rect", "fill": "striped", "x": 15.6, "y": 1.6, "w": 1.35, "h": 1.65 },
           { "id": "m3", "kind": "text", "text": { "pt": "serviço", "en": "serve" }, "x": 2.9, "y": 6.6, "rotate": 90, "marker": true }
         ]
       }
@@ -107,7 +108,7 @@ The player tokens, ball path, landing zone and text label follow the reference d
   }
   ```
 
-  The example is the reference diagram's own serve drill. Coordinates are metres on the court (`x` 0–20 along, net at 10; `y` 0–10 across). Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. A Coach Board's captions use whichever language the Coach typed in.
+  The example is the reference diagram's own serve drill, with a receiver C added. A player's team follows from its letter (A, B or C, D), so it is not stored. Coordinates are metres on the court (`x` 0–20 along, net at 10; `y` 0–10 across). Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. A Coach Board's captions use whichever language the Coach typed in.
 - **Validated on save.** A JSON Schema (with a `version` check) runs in a model validation, with a size limit to keep ink sane, so a broken document never reaches the database. Upgrades between versions are pure functions on the document.
 - **Frontend: no new canvas library.** A `Court` SVG component draws the court in the reference style (see "The court"), with the logo watermark reused from `public/fran-padel-project-logo.svg`. A `BoardViewer` (read-only, Steps and animation, used for Exercise diagrams and thumbnails) and a `Board` screen (selection, drag with Pointer Events, toolbar, ink, undo/redo as a stack of documents) sit on top of it. Animation uses `requestAnimationFrame` interpolation, with the ball following the Step's ball path when there is one.
 - **Thumbnails** are the viewer rendering Step 1 statically. No server-side image generation.

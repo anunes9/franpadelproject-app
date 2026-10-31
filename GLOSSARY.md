@@ -59,7 +59,7 @@ A Module's set of multiple-choice questions, in Portuguese and English, that che
 _Avoid_: Knowledge check, test, assessment
 
 **Board**:
-A top-down padel court on which a Coach places players, the ball, cones, arrows and freehand ink, in one or more Steps, to explain an Exercise or a tactic. It is scratch until the Coach saves it, and a saved Board is visible only to that Coach. An Exercise may have one official Board, authored by Admins.
+A top-down padel court on which a Coach places players (A and B against C and D), the Coach (P), the ball, cones, arrows, zones and freehand ink, in one or more Steps, to explain an Exercise or a tactic. It is scratch until the Coach saves it, and a saved Board is visible only to that Coach. An Exercise may have one official Board, authored by Admins.
 _Avoid_: Quadro (the Portuguese translation, used only in PT copy), whiteboard, tactic board, diagram (kept for an Exercise's PNG image), drawing
 
 **Step**:
