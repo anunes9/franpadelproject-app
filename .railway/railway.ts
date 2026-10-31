@@ -33,7 +33,10 @@ export default defineRailway(() => {
     domains: ['app.franpadelproject.com'],
     // Railpack's default Rails start command only boots the server, so run
     // migrations here. A failing migration stops the deploy instead of
-    // shipping code against a stale schema.
+    // shipping code against a stale schema. railway.json at the repo root
+    // sets the same command, and Railway reads it on every deploy, so
+    // migrations run even if this file hasn't been applied. Keep the two
+    // the same.
     preDeploy: 'bin/rails db:prepare',
     env: {
       RAILS_ENV: 'production',
