@@ -28,25 +28,35 @@ Vocabulary follows `GLOSSARY.md` (Board, Step). Decisions are recorded in ADR 00
 
 ## The court
 
-Drawn as SVG in metres, so the geometry is the real court and scales to any screen:
+The look comes from the academy's own Exercise diagrams. The reference is `docs/specs/boards/court-reference.svg` (an Inkscape file), rendered in `court-reference.png`. The Board does not embed that file: it redraws the same court as a clean React SVG in metres, so the geometry is the real court, scales to any screen, and pieces can be placed in metres. A rebuild in metres was checked against the reference and matches it.
 
-- 20 m × 10 m playing area, net across the middle.
-- Service lines 6.95 m from the net on each side; centre service line from the net to each service line (extending 0.2 m past it).
-- Walls drawn on the outline: back glass, side glass for the 4 m at each end (with the 2 m step), mesh in between. Ball paths can bounce off them.
-- Two views: **full court** and **half court** (one side, larger). Landscape and portrait orientation, so it fits a phone held either way.
+- **Orientation:** landscape, the long axis left to right, the net as a vertical line in the middle. Coordinates are metres, `x` 0–20 along the court (net at 10) and `y` 0–10 across it.
+- **Surface and lines:** teal `#6bb8a4` court, white lines (~0.11 m), and a navy `#132d46` outline (~0.2 m). These are the brand colours already in `public/fran-padel-project-logo.svg`.
+- **Lines drawn:** service lines 3 m from each back wall (7 m from the net), a centre line between the two service lines, and the net as a white line with a faint dark shadow.
+- **Fran Methodology sectors:** this is the academy's own grid, and it is drawn by default.
+  - Navy ticks every 2 m outside the outline.
+  - Depth zones along the court, labelled at top and bottom: **0** (2–4 m from the back wall, around the service line), **1** (4–6 m), **2** (6–8 m) and **3** (8–12 m, the 4 m around the net), mirrored on the other side. The 2 m nearest each back wall is unlabelled.
+  - Lanes across the court, labelled on both sides: **1, 2, J, 2, 1**, each 2 m wide.
+  - These labels are how the method describes a position ("zone 1, lane 2"), so the Board keeps them, and a Coach can hide them.
+- **Watermark:** the Fran Padel Project logo at 7% opacity at each end, in the strip behind the service line, rotated to read along the court.
+- **Walls:** the outline stands for the walls. Ball paths can bounce off them. Glass and mesh aren't drawn, as in the reference.
+- **Views:** **full court** and **half court** (one side, larger). On a phone held upright, the court rotates 90° rather than squeezing.
 
 ## Pieces and markings
 
-| Kind | Persists across Steps | Notes |
-|---|---|---|
-| Player | yes, moves between Steps | Team A / Team B colour, label (A1… or free text up to ~6 chars), optional Coach marker |
-| Ball | yes, moves between Steps | At most one |
-| Cone / target | yes | Static equipment, a target zone circle |
-| Movement arrow | per Step | Dashed, player run |
-| Ball path | per Step | Solid curve, with optional bounce point and wall bounce; the ball follows it when animating to the next Step |
-| Zone | per Step | Shaded rectangle or freeform polygon, e.g. "the gap down the middle" |
-| Text | per Step | Short label, both languages on Exercise Boards |
-| Ink | per Step | Freehand stroke, for quick explaining; one tap clears a Step's ink |
+The player tokens, ball path, landing zone and text label follow the reference drawing. Sizes are in metres.
+
+| Kind | Persists across Steps | Look | Notes |
+|---|---|---|---|
+| Player | yes, moves between Steps | Navy `#132d46` circle, radius ≈ 0.55 m, thin black edge, a white letter | The reference labels it "A" (layer "Player A"). Label is one or two characters. |
+| Coach | yes, moves between Steps | Light grey `#cbd1d0` circle, same size, a navy letter | The reference's "Professor", labelled "P". |
+| Ball | yes, moves between Steps | _None in the reference._ Proposed: small yellow-green circle, radius ≈ 0.15 m, navy edge | At most one. |
+| Cone / target | yes | _None in the reference._ Proposed: small navy triangle | Static equipment. |
+| Ball path | per Step | Navy dashed line, dash 1 : gap 2, round caps | Straight or curved, with an optional bounce point and wall bounce. The ball follows it when animating to the next Step. |
+| Movement arrow | per Step | Navy solid line with an arrowhead | A player's run. A solid line keeps it distinct from the dashed ball path. |
+| Landing zone | per Step | Rectangle with navy diagonal hatching and a thin navy edge | Where the ball should land, e.g. a serve target. |
+| Text | per Step | Navy bold text, rotatable, with an optional short marker line | The reference's "serve" label sits beside a line marking where the shot starts. Exercise Boards have both languages. |
+| Ink | per Step | Freehand stroke | For quick explaining. One tap clears a Step's ink. |
 
 ## User Stories
 
@@ -77,26 +87,29 @@ Drawn as SVG in metres, so the geometry is the real court and scales to any scre
   {
     "version": 1,
     "view": "full",
+    "sectors": true,
     "pieces": [
-      { "id": "p1", "kind": "player", "team": "a", "label": "A1" },
+      { "id": "a",  "kind": "player", "label": "A" },
+      { "id": "pr", "kind": "coach",  "label": "P" },
       { "id": "b",  "kind": "ball" }
     ],
     "steps": [
       {
         "caption": { "pt": "Serviço", "en": "Serve" },
-        "positions": { "p1": { "x": 7.5, "y": 19.2 }, "b": { "x": 7.3, "y": 19.0 } },
+        "positions": { "a": { "x": 1.5, "y": 6.4 }, "pr": { "x": 1.5, "y": 3.4 }, "b": { "x": 2.5, "y": 6.6 } },
         "marks": [
-          { "id": "m1", "kind": "ballPath", "points": [[7.3, 19.0], [2.5, 4.0]], "bounce": [2.5, 4.0] },
-          { "id": "m2", "kind": "ink", "points": [[3.1, 12.0], [3.4, 12.6], [4.0, 13.1]] }
+          { "id": "m1", "kind": "ballPath", "points": [[2.5, 6.6], [16.0, 1.9]] },
+          { "id": "m2", "kind": "landingZone", "x": 15.6, "y": 1.6, "w": 1.35, "h": 1.65 },
+          { "id": "m3", "kind": "text", "text": { "pt": "serviço", "en": "serve" }, "x": 2.9, "y": 6.6, "rotate": 90, "marker": true }
         ]
       }
     ]
   }
   ```
 
-  Coordinates are metres on the court (x 0–10 across, y 0–20 along). Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. A Coach Board's captions use whichever language the Coach typed in.
+  The example is the reference diagram's own serve drill. Coordinates are metres on the court (`x` 0–20 along, net at 10; `y` 0–10 across). Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. A Coach Board's captions use whichever language the Coach typed in.
 - **Validated on save.** A JSON Schema (with a `version` check) runs in a model validation, with a size limit to keep ink sane, so a broken document never reaches the database. Upgrades between versions are pure functions on the document.
-- **Frontend: no new canvas library.** A `Court` SVG component draws the court. A `BoardViewer` (read-only, Steps and animation, used for Exercise diagrams and thumbnails) and a `Board` screen (selection, drag with Pointer Events, toolbar, ink, undo/redo as a stack of documents) sit on top of it. Animation uses `requestAnimationFrame` interpolation, with the ball following the Step's ball path when there is one.
+- **Frontend: no new canvas library.** A `Court` SVG component draws the court in the reference style (see "The court"), with the logo watermark reused from `public/fran-padel-project-logo.svg`. A `BoardViewer` (read-only, Steps and animation, used for Exercise diagrams and thumbnails) and a `Board` screen (selection, drag with Pointer Events, toolbar, ink, undo/redo as a stack of documents) sit on top of it. Animation uses `requestAnimationFrame` interpolation, with the ball following the Step's ball path when there is one.
 - **Thumbnails** are the viewer rendering Step 1 statically. No server-side image generation.
 - **Routes.** `/boards` (library and "New Board"), `/boards/new` (scratch), `/boards/:id` (a saved Board), `/exercises/:id/board` (scratch copy of the Exercise's Board). Admins edit Exercise Boards from the admin area with the same `Board` screen.
 - **i18n.** All interface strings in PT and EN; "Quadro" in PT copy. Captions and text marks on Exercise Boards in both languages.
