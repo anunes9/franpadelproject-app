@@ -1,6 +1,7 @@
 import {
   Book02Icon,
   Calendar03Icon,
+  CourtLawIcon,
   Dumbbell02Icon,
   Home01Icon,
   Logout03Icon,
@@ -17,6 +18,7 @@ import {
   isBreakPeriodsPath,
   isClubOverviewPath,
   isPlayersPath,
+  newBoardPath,
   selectedClubId,
 } from '@/lib/paths'
 import type { DashboardUser } from '../types/dashboard-data'
@@ -37,6 +39,11 @@ function useNav() {
             icon: Calendar03Icon,
           },
         ]
+      : []
+  // A Coach's Board opens full screen, an interactive court to explain on.
+  const board =
+    props.current_user?.role === 'coach'
+      ? [{ href: newBoardPath, label: t('common.nav.board'), tab: t('common.nav.board'), icon: CourtLawIcon }]
       : []
   // Players follows the Club selected on the Club Manager home, and
   // otherwise opens on the user's first Club.
@@ -62,6 +69,7 @@ function useNav() {
       icon: Dumbbell02Icon,
     },
     ...classGroups,
+    ...board,
     ...players,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]

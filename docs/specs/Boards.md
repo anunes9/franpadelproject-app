@@ -92,7 +92,7 @@ The player tokens, ball path, striped zone and text label follow the reference d
 - **One `boards` table for what is saved.** `id` (uuid), polymorphic `boardable` (`User` for a Coach's library, `Exercise` for the official Board), `title` (and `title_en` on Exercise Boards), `document` (`jsonb`), timestamps. An Exercise has at most one Board. Boards are not attached to Classes: a running Class opens the current Exercise's Board.
 - **Private by ownership.** A Coach's Boards are found only through `current_user.boards`; anyone else gets a 404, as on every other screen they cannot use. Club Managers and Admins have no screen for them. Exercise Boards are readable by every Client and editable only by Admins.
 - **Copy, never share.** Opening an Exercise Board for a Coach copies its document into a scratch Board; saving creates a new Board in the Coach's library. Nothing links back, so editing one never changes another.
-- **Document shape, versioned from the start:**
+- **Document shape, versioned from the start.** Version 1, as built in phase 1 (`app/frontend/board/document.ts`):
 
   ```json
   {
@@ -103,32 +103,36 @@ The player tokens, ball path, striped zone and text label follow the reference d
       { "id": "a",  "kind": "player", "label": "A" },
       { "id": "c",  "kind": "player", "label": "C" },
       { "id": "pr", "kind": "coach" },
-      { "id": "b",  "kind": "ball" }
+      { "id": "b",  "kind": "ball" },
+      { "id": "k1", "kind": "cone" }
     ],
     "steps": [
       {
-        "caption": { "pt": "Serviço", "en": "Serve" },
-        "positions": { "a": { "x": 1.5, "y": 6.4 }, "c": { "x": 18.0, "y": 3.0 }, "pr": { "x": 1.5, "y": 3.4 }, "b": { "x": 2.5, "y": 6.6 } },
+        "caption": "Serviço ao vidro",
+        "positions": { "a": { "x": 1.5, "y": 6.4 }, "c": { "x": 18.0, "y": 3.0 }, "pr": { "x": 1.5, "y": 3.4 }, "b": { "x": 2.5, "y": 6.6 }, "k1": { "x": 8.5, "y": 4.2 } },
         "marks": [
-          { "id": "m1", "kind": "ballPath", "points": [[2.5, 6.6], [16.0, 1.9]] },
+          { "id": "m1", "kind": "ballPath", "points": [{ "x": 2.5, "y": 6.6 }, { "x": 15.2, "y": 2.4 }, { "x": 20, "y": 3.1, "glass": { "wall": "back", "number": 2 } }] },
           { "id": "m2", "kind": "zone", "shape": "rect", "fill": "striped", "x": 15.6, "y": 1.6, "w": 1.35, "h": 1.65 },
-          { "id": "m3", "kind": "text", "text": { "pt": "serviço", "en": "serve" }, "x": 2.9, "y": 6.6, "rotate": 90, "marker": true }
+          { "id": "m3", "kind": "zone", "shape": "circle", "fill": "outline", "cx": 13.2, "cy": 7.6, "r": 0.9 },
+          { "id": "m4", "kind": "arrow", "from": { "x": 1.5, "y": 6.4 }, "to": { "x": 6.0, "y": 6.4 } },
+          { "id": "m5", "kind": "text", "x": 2.9, "y": 5.4, "text": "serviço" },
+          { "id": "m6", "kind": "ink", "points": [[11.0, 1.0], [11.4, 1.5], [12.1, 2.2]] }
         ]
       }
     ]
   }
   ```
 
-  The example is the reference diagram's own serve drill, with a receiver C added. A player's team follows from its letter (A, B or C, D), so it is not stored. Coordinates are metres on the court (`x` 0–20 along, net at 10; `y` 0–10 across). Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. A Coach Board's captions use whichever language the Coach typed in.
+  The example is the reference diagram's own serve drill, with a receiver C added, carried on off back glass 2. A player's team follows from its letter (A, B or C, D), so it is not stored. Coordinates are metres on the court (`x` 0–20 along, net at 10; `y` 0–10 across), rounded to the centimetre. Pieces are declared once and positioned per Step, which makes animation a simple interpolation. Marks belong to a Step. Between a ball path's first and last points, a point with `glass` is a bounce off that panel and any other is a bounce on the floor. Captions and text are one free-text language on a Coach's Board; Exercise Boards (phase 3) will need them in Portuguese and English, which is a version 2 of the document.
 - **Validated on save.** A JSON Schema (with a `version` check) runs in a model validation, with a size limit to keep ink sane, so a broken document never reaches the database. Upgrades between versions are pure functions on the document.
 - **Frontend: no new canvas library.** A `Court` SVG component draws the court in the reference style (see "The court"), with the logo watermark reused from `public/fran-padel-project-logo.svg`. A `BoardViewer` (read-only, Steps and animation, used for Exercise diagrams and thumbnails) and a `Board` screen (selection, drag with Pointer Events, toolbar, ink, undo/redo as a stack of documents) sit on top of it. Animation uses `requestAnimationFrame` interpolation, with the ball following the Step's ball path when there is one.
 - **Thumbnails** are the viewer rendering Step 1 statically. No server-side image generation.
-- **Routes.** `/boards` (library and "New Board"), `/boards/new` (scratch), `/boards/:id` (a saved Board), `/exercises/:id/board` (scratch copy of the Exercise's Board). Admins edit Exercise Boards from the admin area with the same `Board` screen.
+- **Routes**, under `/dashboard` like the rest of the app: `/boards` (library and "New Board"), `/boards/new` (scratch), `/boards/:id` (a saved Board), `/exercises/:ref/board` (scratch copy of the Exercise's Board). Admins edit Exercise Boards from the admin area with the same `Board` screen.
 - **i18n.** All interface strings in PT and EN; "Quadro" in PT copy. Captions and text marks on Exercise Boards in both languages.
 
 ## Phasing
 
-1. **Scratch Board.** `Court`, pieces, marks, ink, Steps and animation, undo/redo, full and half court. Nothing saved. This alone gives Coaches the explaining tool.
+1. **Scratch Board** _(built)_. `Court`, pieces, marks, ink, Steps and animation, undo/redo, full and half court, the three label sets. Nothing saved. This alone gives Coaches the explaining tool. It lives at `/dashboard/boards/new` ("Quadro" in a Coach's navigation); text marks are not yet rotatable and have no marker line.
 2. **Save to library.** The `boards` table, schema validation, the Boards page, opening, updating, renaming and deleting saved Boards.
 3. **Exercise Boards.** Admin authoring, `BoardViewer` replacing the PNG where a Board exists, "Explain on a Board" and saving a copy.
 4. **From a running Class.** One tap from the Class timeline to the current Exercise's Board.
@@ -139,7 +143,7 @@ Each phase ships on its own.
 
 - Model specs: schema validation (good document, every kind of broken document, unknown version, too large), one Board per Exercise, a copy never touching its source.
 - Request specs: a Coach sees, updates and deletes only their own Boards (another Coach, a Club Manager and an Admin get a 404); only Admins edit Exercise Boards.
-- The geometry and interpolation logic is pure TypeScript and worth unit tests. The repo has no JS test runner yet, so adding Vitest for it is proposed.
+- The geometry, edits, undo and animation are pure TypeScript with Vitest unit tests (`npm test`), added in phase 1.
 - A Playwright smoke test: open a blank Board, place a player, add a Step, play it, reload and see it kept, close and see it gone.
 
 ## Out of Scope
