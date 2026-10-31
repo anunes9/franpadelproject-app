@@ -11,7 +11,8 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
-    "vite-plugin-ruby": "^5.2.2"
+    "vite-plugin-ruby": "^5.2.2",
+    "vitest": "^5.0.5"
   },
   "scripts": {
     "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
@@ -19,7 +20,8 @@
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "check:biome": "biome check --write ."
+    "check:biome": "biome check --write .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.2.3",

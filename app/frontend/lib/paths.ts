@@ -70,3 +70,6 @@ export const exercisePath = (exerciseRef: string) => `/dashboard/exercises/${enc
 // They sit under the Club Manager home in the navigation.
 export const isBreakPeriodsPath = (pathname: string) =>
   /^\/dashboard\/(?:clubs\/[^/?#]+\/)?break_periods/.test(pathname)
+
+// A Coach's scratch Board (Quadro), an interactive court to explain on.
+export const newBoardPath = '/dashboard/boards/new'
