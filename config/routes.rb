@@ -14,6 +14,13 @@ Rails.application.routes.draw do
   get "/dashboard/exercises", to: "exercises#index"
   get "/dashboard/exercises/:ref", to: "exercises#show", format: false, constraints: { ref: /[^\/]+/ }
   patch "/dashboard/exercises/:ref/complete", to: "exercises#complete", constraints: { ref: /[^\/]+/ }
+  # An Exercise's official Board: a Coach opens a scratch copy to explain on;
+  # Admins edit it, or take it away.
+  get "/dashboard/exercises/:ref/board", to: "exercise_boards#show", constraints: { ref: /[^\/]+/ }, as: :exercise_board
+  get "/dashboard/exercises/:ref/board/edit", to: "exercise_boards#edit", constraints: { ref: /[^\/]+/ },
+                                              as: :edit_exercise_board
+  put "/dashboard/exercises/:ref/board", to: "exercise_boards#update", constraints: { ref: /[^\/]+/ }
+  delete "/dashboard/exercises/:ref/board", to: "exercise_boards#destroy", constraints: { ref: /[^\/]+/ }
   scope "/dashboard" do
     resources :clubs, only: %i[show] do
       resources :players, only: %i[index new create edit update], shallow: true

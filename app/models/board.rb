@@ -1,11 +1,12 @@
 # A saved Board (Quadro): an interactive padel court with pieces and markings
 # in Steps, used to explain an Exercise or a tactic (docs/specs/Boards.md).
 #
-# A Board is scratch until a Coach saves it (ADR 0010); a saved one belongs to
-# that Coach's library and nobody else sees it. Exercise Boards, authored by
-# Admins, come later and will add Exercise to the boardable types.
+# A Board is scratch until a Coach saves it (ADR 0010); a saved one belongs
+# either to that Coach's library, where nobody else sees it, or to an
+# Exercise as its official Board, which Admins author and every Client sees.
+# An Exercise has at most one; its title is the Exercise's.
 class Board < ApplicationRecord
-  BOARDABLE_TYPES = %w[User].freeze
+  BOARDABLE_TYPES = %w[User Exercise].freeze
   MAX_TITLE = 80
 
   belongs_to :boardable, polymorphic: true
@@ -13,6 +14,7 @@ class Board < ApplicationRecord
   validates :boardable_type, inclusion: { in: BOARDABLE_TYPES }
   validates :title, presence: true, length: { maximum: MAX_TITLE }
   validate :document_is_a_board
+  validates :boardable_id, uniqueness: { scope: :boardable_type }, if: -> { boardable_type == "Exercise" }
 
   normalizes :title, with: ->(title) { title.squish }
 

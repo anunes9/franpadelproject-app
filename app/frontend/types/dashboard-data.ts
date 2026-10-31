@@ -35,6 +35,8 @@ export interface Exercise {
   moduleId: string | null
   duration: string | null
   completed: boolean
+  // Its official Board's document, its court diagram, if it has one.
+  board: unknown | null
 }
 
 export interface ExerciseModuleOption {
@@ -264,8 +266,10 @@ export interface ClassExercise {
   title: string
   duration: string | null
   category: 'Technical' | 'Tactical' | null
-  // Its first image, its court diagram, if it has one.
+  // Its first image, if it has one: its court diagram while it has no Board.
   image: string | null
+  // Its official Board's document, which is its court diagram, if it has one.
+  board: unknown | null
 }
 
 // A Module of a group's Course, as the group's plan shows it.

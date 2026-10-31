@@ -1,10 +1,14 @@
 // A Board (Quadro): a full-screen padel court a Coach explains on, held up
-// to a group on a tablet or phone (docs/specs/Boards.md, ADR 0010).
+// to a group on a tablet or phone (docs/specs/Boards.md, ADR 0010). It opens
+// in one of three ways:
 //
-// A new Board is scratch: nothing reaches the server and it is kept in this
-// browser until the Coach closes it, unless they save it into their library.
-// A saved Board opens as it was saved; changes stay on screen until the Coach
-// saves them again.
+// - scratch: a new Board, or a copy of an Exercise's Board to adapt. Nothing
+//   reaches the server and it is kept in this browser until the Coach closes
+//   it, unless they save it into their library.
+// - library: a Board the Coach saved, opened as it was saved; changes stay
+//   on screen until saved again.
+// - exercise: an Exercise's official Board, which only Admins edit, with its
+//   words in Portuguese and English.
 
 import {
   ArrowLeft01Icon,
@@ -21,19 +25,22 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { Head, router, usePage } from '@inertiajs/react'
-import { type FormEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { boardPath, boardsPath } from '@/lib/paths'
+import { boardPath, boardsPath, exerciseBoardPath, exercisePath } from '@/lib/paths'
 import { fieldErrorText } from '../components/ui'
-import { positionsBetween } from './animation'
 import { BoardCanvas, type Selection, type Tool } from './Canvas'
-import type { BoardDocument, Piece, PlayerLabel, ZoneFill } from './document'
+import { BoardLocaleContext } from './Court'
+import type { BoardDocument, Locale, LocalizedText, Piece, PlayerLabel, ZoneFill } from './document'
 import {
   addMark,
   clearInk,
   emptyBoard,
   hasInk,
+  inLocale,
   insertStepAfter,
+  isBlank,
+  localizedExactly,
   newId,
   parseBoard,
   placeable,
@@ -42,28 +49,20 @@ import {
   removeStep,
   replaceMark,
   setCaption,
+  withLocalized,
 } from './document'
 import type { BoardLabels, BoardView, Point } from './geometry'
 import { PieceShape } from './glyphs'
 import { useBoardHistory } from './history'
 import { clearScratch, loadScratch, saveScratch } from './storage'
 import { BarButton, Segmented, ToolButton, ToolGlyph } from './Toolbar'
-
-// How long the pieces take to move from one Step to the next, and the pause
-// between Steps when playing them all.
-const STEP_MS = 1100
-const PAUSE_MS = 500
+import { useStepPlayer } from './useStepPlayer'
 
 type ToolChoice = 'select' | 'players' | 'ball' | 'cone' | 'ballPath' | 'arrow' | 'zone' | 'text' | 'ink'
 const TOOL_CHOICES: ToolChoice[] = ['select', 'players', 'ball', 'cone', 'ballPath', 'arrow', 'zone', 'text', 'ink']
 
 // Which of A–D or the Coach the Players tool places.
 type PlayerChoice = PlayerLabel | 'P'
-
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-
-const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms))
 
 // A Board's document as a request sends it, as JSON. It is plain data, but
 // its interfaces have no index signature, which Inertia's payload type wants.
@@ -83,34 +82,83 @@ export interface SavedBoard {
   document: unknown
 }
 
+// An Exercise's official Board, copied for a Coach to explain on.
+export interface ExerciseCopy {
+  ref: string
+  title: string
+  document: unknown
+}
+
+// The Exercise whose official Board an Admin is editing.
+export interface BoardExercise {
+  ref: string
+  title: string
+  // The Exercise in the admin, which editing returns to.
+  adminPath: string
+}
+
+export type BoardMode =
+  | { kind: 'scratch'; from: ExerciseCopy | null }
+  | { kind: 'library'; board: SavedBoard }
+  | { kind: 'exercise'; exercise: BoardExercise; document: unknown | null }
+
 // The name asked for when saving a Board, or when renaming a saved one.
 interface TitleEdit {
   kind: 'save' | 'rename'
   value: string
 }
 
-export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
-  const { t } = useTranslation()
+// The document a Board opens with, read once: later props only tell what was
+// saved since.
+function openedDocument(mode: BoardMode, locale: Locale): { doc: BoardDocument; stepIndex: number } | null {
+  switch (mode.kind) {
+    case 'scratch': {
+      const kept = loadScratch()
+      if (!mode.from) return kept
+      // A copy of the Exercise's Board, unless this browser already keeps one
+      // being adapted, in the Coach's language.
+      if (kept && kept.source === mode.from.ref) return kept
+      const official = parseBoard(mode.from.document)
+      return official ? { doc: inLocale(official, locale), stepIndex: 0 } : null
+    }
+    case 'library': {
+      const doc = parseBoard(mode.board.document)
+      return doc ? { doc, stepIndex: 0 } : null
+    }
+    case 'exercise': {
+      const doc = mode.document === null ? null : parseBoard(mode.document)
+      return doc ? { doc, stepIndex: 0 } : null
+    }
+  }
+}
+
+export function BoardScreen({ mode }: { mode: BoardMode }) {
+  const { t, locale } = useTranslation()
   const errors = (usePage().props.errors ?? {}) as Record<string, unknown>
+  const library = mode.kind === 'library' ? mode.board : null
+  const exercise = mode.kind === 'exercise' ? mode.exercise : null
+  const from = mode.kind === 'scratch' ? mode.from : null
 
-  // A saved Board opens as it was saved; a new one as this browser kept it.
-  // Read once: later props only tell what was saved since.
-  const [opened] = useState(() => {
-    if (!saved) return loadScratch()
-    const document = parseBoard(saved.document)
-    return document ? { doc: document, stepIndex: 0 } : null
-  })
+  const [opened] = useState(() => openedDocument(mode, locale))
   const { doc, apply, undo, redo, canUndo, canRedo } = useBoardHistory(() => opened?.doc ?? emptyBoard())
-  const [stepIndex, setStepIndex] = useState(opened?.stepIndex ?? 0)
 
-  // The document as last saved. Undo hands back the very documents it kept,
-  // so undoing to the saved Board counts as no change.
-  const [savedDoc, setSavedDoc] = useState(() => (saved ? doc : null))
-  const unsaved = saved !== null && doc !== savedDoc
+  // The document as last saved, for a Board that is kept on the server. Undo
+  // hands back the very documents it kept, so undoing to the saved Board
+  // counts as no change. An Exercise without a Board yet has none.
+  const [savedDoc, setSavedDoc] = useState(() =>
+    mode.kind === 'library' || (mode.kind === 'exercise' && opened) ? doc : null
+  )
+  const kept = mode.kind !== 'scratch'
+  const unsaved = kept && doc !== savedDoc
   const [saving, setSaving] = useState(false)
   const [titleEdit, setTitleEdit] = useState<TitleEdit | null>(null)
-  const step = doc.steps[Math.min(stepIndex, doc.steps.length - 1)]
-  const currentStep = Math.min(stepIndex, doc.steps.length - 1)
+
+  // An Exercise's Board is written in both languages, one at a time.
+  const [editLocale, setEditLocale] = useState<Locale>(locale)
+  const textLocale: Locale = exercise ? editLocale : locale
+  // Words as the Board keeps them: in both languages on an Exercise's Board.
+  const wordsFor = (existing: LocalizedText, value: string): LocalizedText =>
+    exercise ? withLocalized(existing, editLocale, value) : value
 
   const [choice, setChoice] = useState<ToolChoice>('select')
   const [playerChoice, setPlayerChoice] = useState<PlayerChoice>('A')
@@ -119,11 +167,10 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
   const [selection, setSelection] = useState<Selection | null>(null)
   const [textEdit, setTextEdit] = useState<TextEdit | null>(null)
 
-  // Animating from one Step to the next: the Step it leaves and how far along.
-  const [frame, setFrame] = useState<{ from: number; t: number } | null>(null)
-  const [playing, setPlaying] = useState(false)
-  const playingRef = useRef(false)
-  const cancelRef = useRef<(() => void) | null>(null)
+  // Moving between Steps drops the selection, which belongs to a Step.
+  const player = useStepPlayer(doc, opened?.stepIndex ?? 0, () => setSelection(null))
+  const { stepIndex: currentStep, frame, animating, playing, goTo: goToStep, next, previous, play, stop } = player
+  const step = doc.steps[currentStep]
 
   const free = placeable(doc)
   const playerChoiceFree = playerChoice === 'P' ? free.coach : free.players.includes(playerChoice)
@@ -135,15 +182,12 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
     if (next) setPlayerChoice(next)
   }, [playerChoiceFree, free.players, free.coach])
 
-  // Undo can take the Step shown away; stay on one that exists.
+  // Keep a scratch Board in this browser as it changes, with the Exercise it
+  // was copied from.
+  const fromRef = from?.ref ?? null
   useEffect(() => {
-    if (stepIndex > doc.steps.length - 1) setStepIndex(doc.steps.length - 1)
-  }, [stepIndex, doc.steps.length])
-
-  // Keep a scratch Board in this browser as it changes.
-  useEffect(() => {
-    if (!saved) saveScratch(doc, currentStep)
-  }, [saved, doc, currentStep])
+    if (!kept) saveScratch(doc, currentStep, fromRef)
+  }, [kept, doc, currentStep, fromRef])
 
   const tool: Tool = (() => {
     switch (choice) {
@@ -168,88 +212,6 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
     if (piece.kind === 'ball') setChoice('select')
   }
 
-  // Selecting the shown Step drops any selection, which belongs to a Step.
-  const goToStep = useCallback((index: number) => {
-    setSelection(null)
-    setStepIndex(index)
-  }, [])
-
-  // Animates from Step `from` to the next; resolves false if stopped.
-  const animateStep = useCallback((from: number) => {
-    return new Promise<boolean>((resolve) => {
-      if (prefersReducedMotion()) {
-        resolve(true)
-        return
-      }
-      let raf = 0
-      const start = performance.now()
-      const tick = (now: number) => {
-        const progress = Math.min(1, (now - start) / STEP_MS)
-        setFrame({ from, t: progress })
-        if (progress < 1) raf = requestAnimationFrame(tick)
-        else {
-          cancelRef.current = null
-          resolve(true)
-        }
-      }
-      raf = requestAnimationFrame(tick)
-      cancelRef.current = () => {
-        cancelAnimationFrame(raf)
-        cancelRef.current = null
-        resolve(false)
-      }
-    })
-  }, [])
-
-  const animating = frame !== null || playing
-
-  async function next() {
-    if (animating || currentStep >= doc.steps.length - 1) return
-    setSelection(null)
-    const finished = await animateStep(currentStep)
-    setFrame(null)
-    if (finished) setStepIndex(currentStep + 1)
-  }
-
-  function previous() {
-    if (animating || currentStep === 0) return
-    goToStep(currentStep - 1)
-  }
-
-  async function play() {
-    if (animating || doc.steps.length < 2) return
-    setSelection(null)
-    playingRef.current = true
-    setPlaying(true)
-    let at = currentStep
-    // From the last Step, play starts again from the first.
-    if (at === doc.steps.length - 1) {
-      at = 0
-      setStepIndex(0)
-      await wait(PAUSE_MS)
-    }
-    while (playingRef.current && at < doc.steps.length - 1) {
-      const finished = await animateStep(at)
-      setFrame(null)
-      if (!finished) break
-      at += 1
-      setStepIndex(at)
-      if (at < doc.steps.length - 1) await wait(PAUSE_MS)
-    }
-    playingRef.current = false
-    setPlaying(false)
-  }
-
-  function stop() {
-    playingRef.current = false
-    cancelRef.current?.()
-    setFrame(null)
-    setPlaying(false)
-  }
-
-  // Stop any animation when leaving the page.
-  useEffect(() => () => cancelRef.current?.(), [])
-
   function addStep() {
     if (animating) return
     apply(insertStepAfter(doc, currentStep))
@@ -272,18 +234,27 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
 
   function editSelectedText() {
     if (selectedMark?.kind !== 'text') return
-    setTextEdit({ at: { x: selectedMark.x, y: selectedMark.y }, markId: selectedMark.id, value: selectedMark.text })
+    setTextEdit({
+      at: { x: selectedMark.x, y: selectedMark.y },
+      markId: selectedMark.id,
+      value: localizedExactly(selectedMark.text, textLocale),
+    })
   }
 
+  // Text left empty in every language is removed.
   function saveText(event: FormEvent) {
     event.preventDefault()
     if (!textEdit) return
-    const text = textEdit.value.trim()
+    const value = textEdit.value.trim()
     const existing = textEdit.markId && step.marks.find((mark) => mark.id === textEdit.markId)
     if (existing && existing.kind === 'text') {
-      apply(text ? replaceMark(doc, currentStep, { ...existing, text }) : removeMark(doc, currentStep, existing.id))
-      if (!text) setSelection(null)
-    } else if (text) {
+      const text = wordsFor(existing.text, value)
+      apply(
+        isBlank(text) ? removeMark(doc, currentStep, existing.id) : replaceMark(doc, currentStep, { ...existing, text })
+      )
+      if (isBlank(text)) setSelection(null)
+    } else if (value) {
+      const text = wordsFor('', value)
       apply(addMark(doc, currentStep, { id: newId(), kind: 'text', x: textEdit.at.x, y: textEdit.at.y, text }))
     }
     setTextEdit(null)
@@ -296,17 +267,11 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
     goToStep(0)
   }
 
-  // A scratch Board asks for a name, then joins the library and opens from
-  // there. A saved Board keeps its changes in place.
-  function save() {
-    if (animating || saving) return
-    if (!saved) {
-      setTitleEdit({ kind: 'save', value: '' })
-      return
-    }
+  // Saving a document that the server keeps, then marking it as saved.
+  function saveDocument(path: string, method: 'patch' | 'put') {
     const sent = doc
-    router.patch(
-      boardPath(saved.id),
+    router[method](
+      path,
       { board: { document: payload(sent) } },
       {
         preserveState: true,
@@ -316,6 +281,15 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
         onFinish: () => setSaving(false),
       }
     )
+  }
+
+  // A scratch Board asks for a name, then joins the library and opens from
+  // there. A saved Board, or an Exercise's, keeps its changes in place.
+  function save() {
+    if (animating || saving) return
+    if (library) saveDocument(boardPath(library.id), 'patch')
+    else if (exercise) saveDocument(exerciseBoardPath(exercise.ref), 'put')
+    else setTitleEdit({ kind: 'save', value: from?.title ?? '' })
   }
 
   function submitTitle(event: FormEvent) {
@@ -337,9 +311,9 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
           onSuccess: () => clearScratch(),
         }
       )
-    } else if (saved) {
+    } else if (library) {
       router.patch(
-        boardPath(saved.id),
+        boardPath(library.id),
         { board: { title: titleEdit.value } },
         {
           ...options,
@@ -350,16 +324,25 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
     }
   }
 
+  // Taking an Exercise's official Board away; its PNG diagram shows again.
+  function removeExerciseBoard() {
+    if (!exercise || !window.confirm(t('boards.exercise.confirmRemove', { title: exercise.title }))) return
+    router.delete(exerciseBoardPath(exercise.ref))
+  }
+
   function close() {
     stop()
-    if (saved) {
-      if (unsaved && !window.confirm(t('boards.confirmDiscard'))) return
+    if (unsaved && !window.confirm(t('boards.confirmDiscard'))) return
+    if (library) {
       router.visit(boardsPath)
-      return
+    } else if (exercise) {
+      // The admin is not part of this app's pages.
+      window.location.assign(exercise.adminPath)
+    } else {
+      clearScratch()
+      if (window.history.length > 1) window.history.back()
+      else router.visit(from ? exercisePath(from.ref) : boardsPath)
     }
-    clearScratch()
-    if (window.history.length > 1) window.history.back()
-    else router.visit(boardsPath)
   }
 
   const titleError = fieldErrorText(errors, 'title', {
@@ -372,19 +355,25 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
   })
 
   // What the header says about where this Board is kept.
-  const status = saved
+  const status = kept
     ? saving
       ? t('boards.saving')
       : unsaved
         ? t('boards.unsaved')
-        : t('boards.saved')
-    : t('boards.scratchNote')
+        : exercise
+          ? t('boards.exercise.saved')
+          : t('boards.saved')
+    : from
+      ? t('boards.copyNote', { title: from.title })
+      : t('boards.scratchNote')
+
+  const heading = library?.title ?? exercise?.title ?? t('boards.title')
 
   // A caption change records one undo step per visit to the field, not one
   // per letter.
   const captionTouched = useRef(false)
 
-  // Keyboard: undo and redo, Delete for the selection, arrows between Steps.
+  // Keyboard: undo and redo, Delete for the selection.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null
@@ -409,10 +398,6 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  const shownFrame = frame
-    ? { positions: positionsBetween(doc, frame.from, frame.t), marks: doc.steps[frame.from].marks }
-    : null
-
   const hint = (() => {
     switch (choice) {
       case 'players':
@@ -426,7 +411,7 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-paper font-dash-sans text-ink">
-      <Head title={saved ? saved.title : t('boards.title')} />
+      <Head title={heading} />
 
       <header className="flex shrink-0 items-center gap-2 border-b border-line bg-white px-2 pt-[env(safe-area-inset-top)] sm:px-3">
         <BarButton onClick={close} label={t('boards.close')}>
@@ -434,17 +419,17 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
         </BarButton>
         <div className="min-w-0 flex-1 py-1.5">
           <h1 className="truncate text-base font-bold leading-tight">
-            {saved ? (
+            {library ? (
               <button
                 type="button"
-                onClick={() => setTitleEdit({ kind: 'rename', value: saved.title })}
-                aria-label={t('boards.rename', { title: saved.title })}
+                onClick={() => setTitleEdit({ kind: 'rename', value: library.title })}
+                aria-label={t('boards.rename', { title: library.title })}
                 className="max-w-full truncate text-left underline decoration-line-strong/40 decoration-dotted underline-offset-4 hover:decoration-ink"
               >
-                {saved.title}
+                {library.title}
               </button>
             ) : (
-              t('boards.title')
+              heading
             )}
           </h1>
           {documentError && !titleEdit ? (
@@ -457,7 +442,18 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
             </p>
           )}
         </div>
-        <div className="hidden items-center gap-3 md:flex">
+        {exercise && (
+          <Segmented<Locale>
+            label={t('boards.exercise.language')}
+            value={editLocale}
+            options={[
+              { value: 'pt', label: 'PT' },
+              { value: 'en', label: 'EN' },
+            ]}
+            onChange={setEditLocale}
+          />
+        )}
+        <div className={`hidden items-center gap-3 ${exercise ? 'xl:flex' : 'md:flex'}`}>
           <Segmented<BoardView>
             label={t('boards.view.label')}
             value={doc.view}
@@ -488,19 +484,33 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
           <span className="hidden sm:inline">{t('boards.startOver')}</span>
           <HugeiconsIcon icon={Delete02Icon} size={20} strokeWidth={1.8} className="sm:hidden" />
         </BarButton>
+        {exercise && savedDoc && (
+          <BarButton
+            onClick={removeExerciseBoard}
+            disabled={animating || saving}
+            label={t('boards.exercise.remove')}
+            tone="danger"
+          >
+            <HugeiconsIcon icon={Delete02Icon} size={18} strokeWidth={1.8} />
+            <span className="hidden 2xl:inline">{t('boards.exercise.remove')}</span>
+          </BarButton>
+        )}
         <BarButton
           onClick={save}
-          disabled={animating || saving || (saved !== null && !unsaved)}
-          label={saved ? t('boards.save') : t('boards.saveNew')}
+          disabled={animating || saving || (kept && !unsaved)}
+          label={t('boards.save')}
           tone="primary"
         >
           <HugeiconsIcon icon={FloppyDiskIcon} size={18} strokeWidth={1.8} />
-          <span className="hidden sm:inline">{saved ? t('boards.save') : t('boards.saveNew')}</span>
+          <span className="hidden sm:inline">{t('boards.save')}</span>
         </BarButton>
       </header>
 
-      {/* On small screens the court settings sit under the header. */}
-      <div className="flex shrink-0 gap-3 overflow-x-auto border-b border-line bg-white px-3 py-1.5 md:hidden">
+      {/* On small screens, and with an Exercise's language choice, the court
+          settings sit under the header. */}
+      <div
+        className={`flex shrink-0 gap-3 overflow-x-auto border-b border-line bg-white px-3 py-1.5 ${exercise ? 'xl:hidden' : 'md:hidden'}`}
+      >
         <Segmented<BoardView>
           label={t('boards.view.label')}
           value={doc.view}
@@ -523,18 +533,20 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
       </div>
 
       <main className="relative min-h-0 flex-1 p-1 sm:p-3">
-        <BoardCanvas
-          doc={doc}
-          stepIndex={currentStep}
-          frame={shownFrame}
-          tool={tool}
-          selection={selection}
-          onSelect={setSelection}
-          apply={apply}
-          onPlaced={onPlaced}
-          onRequestText={(at) => setTextEdit({ at, markId: null, value: '' })}
-          label={t('boards.court', { step: currentStep + 1, count: doc.steps.length })}
-        />
+        <BoardLocaleContext.Provider value={textLocale}>
+          <BoardCanvas
+            doc={doc}
+            stepIndex={currentStep}
+            frame={frame}
+            tool={tool}
+            selection={selection}
+            onSelect={setSelection}
+            apply={apply}
+            onPlaced={onPlaced}
+            onRequestText={(at) => setTextEdit({ at, markId: null, value: '' })}
+            label={t('boards.court', { step: currentStep + 1, count: doc.steps.length })}
+          />
+        </BoardLocaleContext.Provider>
       </main>
 
       {/* What the chosen tool does, and its options. */}
@@ -660,7 +672,7 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
         </div>
         <input
           type="text"
-          value={step.caption}
+          value={localizedExactly(step.caption, textLocale)}
           maxLength={140}
           disabled={animating}
           aria-label={t('boards.steps.caption', { step: currentStep + 1 })}
@@ -669,7 +681,7 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
             captionTouched.current = false
           }}
           onChange={(event) => {
-            apply(setCaption(doc, currentStep, event.target.value), !captionTouched.current)
+            apply(setCaption(doc, currentStep, wordsFor(step.caption, event.target.value)), !captionTouched.current)
             captionTouched.current = true
           }}
           className="order-last min-h-11 w-full min-w-0 rounded-lg border border-line bg-paper px-3 text-sm font-semibold text-ink placeholder:font-normal placeholder:text-muted focus:border-teal-deep focus:outline-none sm:order-none sm:flex-1"
@@ -693,7 +705,11 @@ export function BoardScreen({ saved }: { saved: SavedBoard | null }) {
 
       {textEdit && (
         <FormDialog
-          title={t('boards.textDialog.title')}
+          title={
+            exercise
+              ? t('boards.exercise.textTitle', { language: editLocale.toUpperCase() })
+              : t('boards.textDialog.title')
+          }
           label={t('boards.textDialog.label')}
           value={textEdit.value}
           maxLength={40}

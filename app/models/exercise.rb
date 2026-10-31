@@ -5,6 +5,9 @@ class Exercise < ApplicationRecord
 
   belongs_to :course_module, optional: true
   has_many :exercise_completions, dependent: :destroy
+  # Its official Board, authored by Admins, which replaces its first image as
+  # its court diagram wherever that is shown.
+  has_one :board, as: :boardable, dependent: :destroy
   has_many_attached :media
   organizes_attachment :media, folder: -> { "exercises/#{ref}/media" }
 
@@ -36,10 +39,13 @@ class Exercise < ApplicationRecord
   end
 
   # The Exercise as a Class's page lists it, picked or available to pick,
-  # with its first image (its court diagram) when it has one. Load it
-  # .with_attached_media.
+  # with its court diagram: its Board's document when it has one, and its
+  # first image. Load it .with_attached_media.includes(:board).
   def as_class_json
-    { ref: ref, title: title, category: category&.capitalize, duration: duration, image: image_url }
+    {
+      ref: ref, title: title, category: category&.capitalize, duration: duration, image: image_url,
+      board: board&.document
+    }
   end
 
   # Its first image's URL, or nil.
@@ -64,7 +70,7 @@ class Exercise < ApplicationRecord
   # are: Modules and media are preloaded and the Client's Exercise Completions
   # are fetched once.
   def self.dashboard_list(scope, user)
-    exercises = scope.includes(:course_module).with_attached_media.to_a
+    exercises = scope.includes(:course_module, :board).with_attached_media.to_a
     completed_ids = ExerciseCompletion.where(user: user, exercise_id: exercises.map(&:id)).pluck(:exercise_id).to_set
     exercises.map { |e| e.as_dashboard_json(user, completed: completed_ids.include?(e.id)) }
   end

@@ -81,6 +81,17 @@ RSpec.describe BoardDocument do
     expect(described_class.problems(marks)).to eq(["unknown mark kind", "bad text"])
   end
 
+  it "takes captions and text in Portuguese and English, as on an Exercise's Board" do
+    both = serve
+    both["steps"][0]["caption"] = { "pt" => "Serviço", "en" => "Serve" }
+    both["steps"][0]["marks"][4]["text"] = { "pt" => "serviço", "en" => "" }
+    expect(described_class.problems(both)).to eq([])
+
+    both["steps"][0]["marks"][4]["text"] = { "pt" => " ", "en" => "" }
+    both["steps"][0]["caption"] = { "pt" => "Serviço" }
+    expect(described_class.problems(both)).to eq(["bad caption", "bad text"])
+  end
+
   it "knows a document too large to keep" do
     huge = serve
     huge["steps"][0]["caption"] = "x" * 300.kilobytes

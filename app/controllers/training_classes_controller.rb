@@ -20,7 +20,7 @@ class TrainingClassesController < DashboardController
   def show
     training_class = visible_classes.includes(:course_module, class_group: %i[coach players training_classes])
                                     .find(params[:id])
-    chosen = training_class.exercises.with_attached_media.to_a
+    chosen = training_class.exercises.with_attached_media.includes(:board).to_a
 
     render inertia: "TrainingClasses/Show", props: {
       today: Academy.today.iso8601,
@@ -29,7 +29,7 @@ class TrainingClassesController < DashboardController
       classGroup: training_class.class_group.summary_json,
       classStructure: ClassStructure.json_for(training_class.duration),
       exercises: chosen.map(&:as_class_json),
-      availableExercises: (training_class.course_module.exercises.with_attached_media.to_a - chosen)
+      availableExercises: (training_class.course_module.exercises.with_attached_media.includes(:board).to_a - chosen)
         .map(&:as_class_json),
       clashDates: flash[:clash_dates] || [],
       refusedEdit: flash[:refused_edit]

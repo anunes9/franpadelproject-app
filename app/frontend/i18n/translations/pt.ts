@@ -809,6 +809,20 @@ export const pt = {
       delete: 'Apagar o quadro {{title}}',
       confirmDelete: 'Apagar o quadro “{{title}}”? Não é possível anular.',
     },
+    copyNote: 'Uma cópia de {{title}}. Não fica guardada: ao fechar, é descartada.',
+    exercise: {
+      saved: 'Guardado no exercício',
+      language: 'Língua das palavras',
+      remove: 'Remover quadro',
+      confirmRemove: 'Remover o quadro de “{{title}}”? O exercício volta a mostrar a imagem.',
+      textTitle: 'Texto no campo ({{language}})',
+    },
+    viewer: {
+      label: 'Diagrama de campo de {{title}}, passo {{step}} de {{count}}',
+      explain: 'Explicar num quadro',
+      edit: 'Editar quadro',
+      add: 'Adicionar quadro',
+    },
     clearInk: 'Limpar desenho',
     steps: {
       position: 'Passo {{step}} de {{count}}',

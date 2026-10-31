@@ -104,8 +104,7 @@ class BoardDocument
   def check_step(step, piece_ids)
     return problem("a step is not an object") unless step.is_a?(Hash)
 
-    caption = step["caption"]
-    problem("bad caption") unless caption.is_a?(String) && caption.length <= MAX_CAPTION
+    problem("bad caption") unless words?(step["caption"], MAX_CAPTION)
     positions = step["positions"]
     if positions.is_a?(Hash) && positions.keys.sort == piece_ids.sort
       positions.each_value { |at| problem("a piece is off the court") unless point?(at, COURT_X, COURT_Y) }
@@ -130,8 +129,7 @@ class BoardDocument
       problem("bad arrow") unless point?(mark["from"]) && point?(mark["to"])
     when "zone" then check_zone(mark)
     when "text"
-      text = mark["text"]
-      problem("bad text") unless point?(mark) && text.is_a?(String) && text.strip.present? && text.length <= MAX_TEXT
+      problem("bad text") unless point?(mark) && words?(mark["text"], MAX_TEXT, required: true)
     when "ink"
       points = mark["points"]
       valid = points.is_a?(Array) && points.size.between?(2, MAX_INK_POINTS) &&
@@ -167,6 +165,16 @@ class BoardDocument
     else
       problem("unknown zone shape")
     end
+  end
+
+  # Words on a Board: a string in one language on a Coach's Board, or
+  # {"pt", "en"} on an Exercise's. Required words need some text in at least
+  # one language.
+  def words?(value, max, required: false)
+    texts = value.is_a?(Hash) && value.keys.sort == %w[en pt] ? value.values : [value]
+    return false unless texts.all? { |text| text.is_a?(String) && text.length <= max }
+
+    !required || texts.any? { |text| text.strip.present? }
   end
 
   def id?(value)
