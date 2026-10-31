@@ -3,7 +3,7 @@ import { type ReactNode, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { editPlayerPath, newClubPlayerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
-import { buttonClass, chipClass, Eyebrow, INPUT_CLASS, ListCard, ListRow } from '../../components/ui'
+import { buttonClass, chipClass, Eyebrow, INPUT_CLASS, ListCard, ListRow, SegmentedControl } from '../../components/ui'
 import type { ClubSummary, Level, Player, PlayerPosition } from '../../types/dashboard-data'
 
 interface Props {
@@ -68,48 +68,26 @@ function Index() {
               aria-label={t('players.index.filter.search')}
               className={INPUT_CLASS}
             />
-            <fieldset className="flex flex-wrap gap-2" aria-label={t('players.index.columns.level')}>
-              <button
-                type="button"
-                onClick={() => setLevel('all')}
-                aria-pressed={level === 'all'}
-                className={chipClass(level === 'all')}
-              >
-                {t('players.index.filter.allLevels')}
-              </button>
-              {LEVELS.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setLevel(option)}
-                  aria-pressed={level === option}
-                  className={chipClass(level === option)}
-                >
-                  {t(`players.levelOption.${option}`)}
-                </button>
-              ))}
-            </fieldset>
-            <fieldset className="flex flex-wrap gap-2" aria-label={t('players.index.columns.position')}>
-              <button
-                type="button"
-                onClick={() => setPosition('all')}
-                aria-pressed={position === 'all'}
-                className={chipClass(position === 'all')}
-              >
-                {t('players.index.filter.allPositions')}
-              </button>
-              {POSITIONS.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setPosition(option)}
-                  aria-pressed={position === option}
-                  className={chipClass(position === option)}
-                >
-                  {t(`players.positionOption.${option}`)}
-                </button>
-              ))}
-            </fieldset>
+            <div className="grid gap-3 sm:grid-cols-[3fr_2fr]">
+              <SegmentedControl
+                label={t('players.index.columns.level')}
+                value={level}
+                onChange={setLevel}
+                options={[
+                  { value: 'all', label: t('players.index.filter.all') },
+                  ...LEVELS.map((option) => ({ value: option, label: t(`players.levelOption.${option}`) })),
+                ]}
+              />
+              <SegmentedControl
+                label={t('players.index.columns.position')}
+                value={position}
+                onChange={setPosition}
+                options={[
+                  { value: 'all', label: t('players.index.filter.all') },
+                  ...POSITIONS.map((option) => ({ value: option, label: t(`players.positionOption.${option}`) })),
+                ]}
+              />
+            </div>
           </div>
         )}
 
