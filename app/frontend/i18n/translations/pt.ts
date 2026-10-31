@@ -269,8 +269,7 @@ export const pt = {
       },
       filter: {
         search: 'Pesquisar por nome',
-        allLevels: 'Todos os níveis',
-        allPositions: 'Todas as posições',
+        all: 'Todos',
         noResults: 'Nenhum jogador corresponde a estes filtros.',
         clear: 'Limpar filtros',
       },

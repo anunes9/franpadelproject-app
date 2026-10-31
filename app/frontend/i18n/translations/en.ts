@@ -263,8 +263,7 @@ export const en = {
       },
       filter: {
         search: 'Search by name',
-        allLevels: 'All levels',
-        allPositions: 'All positions',
+        all: 'All',
         noResults: 'No players match these filters.',
         clear: 'Clear filters',
       },
