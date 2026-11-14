@@ -58,6 +58,14 @@ _Avoid_: Document, attachment, material (except "Materiais", the Portuguese tran
 A Module's set of multiple-choice questions, in Portuguese and English, that checks a Client's understanding of it. A Module has at most one.
 _Avoid_: Knowledge check, test, assessment
 
+**Board**:
+A top-down padel court on which a Coach places players (A and B against C and D), the Coach (P), the ball, cones, arrows, zones and freehand ink, in one or more Steps, to explain an Exercise or a tactic. It is scratch until the Coach saves it, and a saved Board is visible only to that Coach. An Exercise may have one official Board, authored by Admins.
+_Avoid_: Quadro (the Portuguese translation, used only in PT copy), whiteboard, tactic board, diagram (kept for an Exercise's PNG image), drawing
+
+**Step**:
+One moment of a Board: where every piece stands, plus that moment's arrows, zones, text and ink, with an optional caption.
+_Avoid_: Frame, slide, phase
+
 **Topic**:
 A label from a fixed, curated list, named in both Portuguese and English, used to group and filter Modules and Exercises.
 _Avoid_: Tag, category, theme, Technical/Tactical

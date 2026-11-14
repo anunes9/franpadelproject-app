@@ -5,6 +5,10 @@ pt:
   activerecord:
     errors:
       models:
+        board:
+          attributes:
+            document:
+              too_large: "é demasiado grande para guardar"
         break_period:
           attributes:
             ends_on:

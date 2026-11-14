@@ -1,6 +1,7 @@
 import {
   Book02Icon,
   Calendar03Icon,
+  CourtLawIcon,
   Dumbbell02Icon,
   Home01Icon,
   Logout03Icon,
@@ -12,6 +13,7 @@ import { Link, router, usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import {
+  boardsPath,
   classGroupsPath,
   clubPlayersPath,
   isBreakPeriodsPath,
@@ -38,6 +40,11 @@ function useNav() {
           },
         ]
       : []
+  // A Coach's own Boards, interactive courts to explain on.
+  const board =
+    props.current_user?.role === 'coach'
+      ? [{ href: boardsPath, label: t('common.nav.board'), tab: t('common.nav.board'), icon: CourtLawIcon }]
+      : []
   // Players follows the Club selected on the Club Manager home, and
   // otherwise opens on the user's first Club.
   const selectedId = selectedClubId(url)
@@ -62,6 +69,7 @@ function useNav() {
       icon: Dumbbell02Icon,
     },
     ...classGroups,
+    ...board,
     ...players,
     { href: '/dashboard/profile', label: t('common.nav.profile'), tab: t('common.nav.profile'), icon: User03Icon },
   ]
