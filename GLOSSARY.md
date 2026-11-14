@@ -127,10 +127,33 @@ How a Class is spent, set by its duration: a warm-up, the Exercises the Coach pi
 _Avoid_: Class plan, lesson plan
 
 **Assessment Class**:
-The last Class of each Module in a Training Plan, in week 6 at once a week and in week 4 at twice a week. It is where each Player's qualitative evaluation of the Module's concepts will be recorded; that evaluation feature is still to be scoped, and is separate from Certification.
+The last Class of each Module in a Training Plan, in week 6 at once a week and in week 4 at twice a week. It is where the Coach records an Evaluation of each Player of the group, rating the Profile Areas and the Module's Strokes. Recording the first Evaluation marks it done. It is separate from Certification.
 _Avoid_: Test, exam, Practical Assessment
 
 **Break Period**:
 A span of weeks defined by a Club's Club Manager (Christmas, Easter, August) during which no Classes are generated for its Class Groups.
 _Avoid_: Holiday, vacation
+
+## Evaluation
+
+**Profile Area**:
+One of five fixed aspects every Player is rated on: Technique, Tactics, Physical, Mental and Attitude (Técnica, Tática, Físico, Mental, Atitude). Technique is rated on its own, not calculated from Strokes.
+_Avoid_: Área (the Portuguese translation, used only in PT copy), category, dimension, skill
+
+**Stroke**:
+One padel shot from a fixed list (Serve, Forehand, Bandeja, Víbora…), named in Portuguese and English, rated in Evaluations. Each Module lists the Strokes it works on.
+_Avoid_: Golpe (the Portuguese translation, used only in PT copy), shot, Pancada
+
+**Rating**:
+A Coach's score of one Profile Area or Stroke in an Evaluation, from 1 (Beginning) to 5 (Mastered), with an optional comment. An item can be left unrated.
+_Avoid_: Grade, score, mark
+
+**Evaluation**:
+The Ratings and an optional overall comment a Coach records for one Player in one Assessment Class.
+_Avoid_: Assessment, review, report
+
+**Performance Profile**:
+A Player's picture built from all their Evaluations, across every Class Group, Coach and Level: the latest Rating of each Profile Area and Stroke, its trend, the items to improve (latest Rating 1 or 2) and the history. It is never edited directly, and only Coaches and Club Managers see it.
+_Avoid_: Player card, report card, stats
+
 
