@@ -1,16 +1,17 @@
 import { ArrowDown01Icon, ArrowUp01Icon, MinusSignIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { RATING_VALUES, radarPoint, radarPolygon, scaleLabel } from '@/lib/evaluations'
+import { RATING_MAX, RATING_VALUES, radarPoint, radarPolygon, scaleLabel, TO_IMPROVE_AT } from '@/lib/evaluations'
 import type { EvaluationStatus, ProfileItem } from '../types/dashboard-data'
 import { Pill } from './ui'
 
-// The pieces Player Evaluations are recorded and read with: the 1-5 rating
+// The pieces Player Evaluations are recorded and read with: the 1-10 rating
 // control, a Rating's value as a row of pips, its trend, an Evaluation's
 // status, and the radar chart of the Profile Areas.
 
-// Picks a Rating from 1 to 5, each step with its label; picking the chosen
-// value again leaves the item unrated.
+// Picks a Rating from 1 to 10, each step with its label; picking the chosen
+// value again leaves the item unrated. Two rows of five on phones, so every
+// step keeps a full-size tap target; one row of ten from small tablets up.
 export function RatingControl({
   label,
   value,
@@ -23,7 +24,7 @@ export function RatingControl({
   const { t } = useTranslation()
   return (
     <div className="flex flex-col gap-1.5">
-      <div role="radiogroup" aria-label={label} className="grid grid-cols-5 gap-1.5">
+      <div role="radiogroup" aria-label={label} className="grid grid-cols-5 gap-1.5 sm:grid-cols-10">
         {RATING_VALUES.map((option) => {
           const active = option === value
           return (
@@ -55,14 +56,15 @@ export function RatingControl({
   )
 }
 
-// A value as five pips, the first `value` filled.
+// A value as ten pips, the first `value` filled; clay when it is an item to
+// improve.
 export function RatingPips({ value }: { value: number | null }) {
   return (
-    <span className="inline-flex gap-1" aria-hidden>
+    <span className="inline-flex gap-0.5" aria-hidden>
       {RATING_VALUES.map((step) => (
         <span
           key={step}
-          className={`h-2 w-4 rounded-full ${value !== null && step <= value ? (value <= 2 ? 'bg-clay' : 'bg-teal-deep') : 'bg-track'}`}
+          className={`h-2 w-2 rounded-full ${value !== null && step <= value ? (value <= TO_IMPROVE_AT ? 'bg-clay' : 'bg-teal-deep') : 'bg-track'}`}
         />
       ))}
     </span>
@@ -100,11 +102,14 @@ const RADIUS = 92
 const LABEL_ROOM = 64
 
 // The Profile Areas' latest values as a radar chart: one axis per Area, a
-// ring per step of the scale, and the Player's polygon. Unrated Areas sit at
+// ring every two steps of the scale, and the Player's polygon. Unrated Areas sit at
 // the centre. Screen readers get the values as one label.
 export function RadarChart({ axes, label }: { axes: { name: string; value: number | null }[]; label: string }) {
   const count = axes.length
-  const rings = RATING_VALUES.map((step) => axes.map((_, index) => radarPoint(index, count, step / 5, CENTER, RADIUS)))
+  // A ring every two steps, at each label's top: 2, 4, 6, 8, 10.
+  const rings = RATING_VALUES.filter((step) => step % 2 === 0).map((step) =>
+    axes.map((_, index) => radarPoint(index, count, step / RATING_MAX, CENTER, RADIUS))
+  )
   const rated = axes.some((axis) => axis.value !== null)
 
   return (
@@ -144,7 +149,7 @@ export function RadarChart({ axes, label }: { axes: { name: string; value: numbe
       )}
       {axes.map((axis, index) => {
         if (axis.value === null) return null
-        const point = radarPoint(index, count, axis.value / 5, CENTER, RADIUS)
+        const point = radarPoint(index, count, axis.value / RATING_MAX, CENTER, RADIUS)
         return <circle key={axis.name} cx={point.x} cy={point.y} r={3.5} fill="var(--color-teal-deep)" />
       })}
       {axes.map((axis, index) => {

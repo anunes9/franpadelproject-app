@@ -1,8 +1,8 @@
 # A Coach's score of one Profile Area or Stroke in an Evaluation, from 1
-# (Beginning) to 5 (Mastered), with an optional comment. An item left unrated
+# (Beginning) to 10 (Mastered), with an optional comment. An item left unrated
 # has no Rating.
 class Rating < ApplicationRecord
-  VALUES = (1..5)
+  VALUES = (1..10)
   COMMENT_MAX_LENGTH = 1000
 
   belongs_to :evaluation

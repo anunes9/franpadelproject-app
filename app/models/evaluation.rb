@@ -30,7 +30,7 @@ class Evaluation < ApplicationRecord
 
   # Records `player`'s Evaluation in `training_class` as `coach` sends it: the
   # whole of it, so items left out are unrated. `ratings` are hashes with
-  # kind ("area" or "stroke"), key, value (1-5, blank for unrated) and
+  # kind ("area" or "stroke"), key, value (1-10, blank for unrated) and
   # comment. An Evaluation with no Rating and no comment is removed. Saving
   # one marks the Class done. Returns the Evaluation, refused (with errors,
   # nothing changed) when the Class takes no Evaluations on `today`, the

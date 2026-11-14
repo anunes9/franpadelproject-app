@@ -6,8 +6,8 @@
 # Class date (then start time) that rated it, and its trend compares it with
 # the Rating before that.
 class PerformanceProfile
-  # A latest Rating at or below this is an item to improve.
-  TO_IMPROVE_AT = 2
+  # A latest Rating at or below this (of 10) is an item to improve.
+  TO_IMPROVE_AT = 4
 
   def initialize(player)
     @player = player

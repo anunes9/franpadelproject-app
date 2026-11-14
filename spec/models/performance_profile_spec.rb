@@ -45,9 +45,9 @@ RSpec.describe PerformanceProfile do
     expect(json[:strokes].pluck(:key)).to eq(["bandeja"])
   end
 
-  it "lists the items to improve, latest Rating 1 or 2, lowest first and Areas before Strokes" do
-    evaluated(Date.new(2026, 10, 13), { "area:physical" => 2, "area:mental" => 1, "stroke:lob" => 1,
-                                        "stroke:serve" => 3, "area:attitude" => 5 })
+  it "lists the items to improve, latest Rating 4 or lower, lowest first and Areas before Strokes" do
+    evaluated(Date.new(2026, 10, 13), { "area:physical" => 4, "area:mental" => 1, "stroke:lob" => 1,
+                                        "stroke:serve" => 5, "area:attitude" => 10 })
 
     to_improve = described_class.new(player).as_json[:toImprove]
 

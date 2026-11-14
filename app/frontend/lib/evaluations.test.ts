@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { radarPoint, radarPolygon } from './evaluations'
+import { radarPoint, radarPolygon, scaleLabel } from './evaluations'
 
 const center = { x: 100, y: 100 }
 
@@ -17,6 +17,24 @@ describe('radarPoint', () => {
 
 describe('radarPolygon', () => {
   it('draws each value at its share of the scale, and an unrated one at the centre', () => {
-    expect(radarPolygon([5, null, 5, null], center, 50)).toBe('100,50 100,100 100,150 100,100')
+    expect(radarPolygon([10, null, 5, null], center, 50)).toBe('100,50 100,100 100,125 100,100')
+  })
+})
+
+describe('scaleLabel', () => {
+  it('names each pair of steps of the 1-10 scale', () => {
+    const t = (key: string) => key.split('.').pop() ?? key
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => scaleLabel(t, value))).toEqual([
+      'beginning',
+      'beginning',
+      'developing',
+      'developing',
+      'consistent',
+      'consistent',
+      'proficient',
+      'proficient',
+      'mastered',
+      'mastered',
+    ])
   })
 })

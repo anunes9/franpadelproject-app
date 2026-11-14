@@ -63,9 +63,9 @@ RSpec.describe "Evaluating Players in an Assessment Class", type: :request do
     sign_in coach
     record(assessment, ana, ratings: [area("technique", 4), area("mental", 3)])
 
-    record(assessment, ana, ratings: [area("technique", 5), area("mental", "")])
+    record(assessment, ana, ratings: [area("technique", 10), area("mental", "")])
 
-    expect(assessment.evaluations.find_by!(player: ana).ratings.pluck(:item_key, :value)).to eq([["technique", 5]])
+    expect(assessment.evaluations.find_by!(player: ana).ratings.pluck(:item_key, :value)).to eq([["technique", 10]])
   end
 
   it "removes an Evaluation left with no Rating and no comment" do
@@ -162,11 +162,11 @@ RSpec.describe "Evaluating Players in an Assessment Class", type: :request do
       expect(Evaluation.count).to eq(0)
     end
 
-    it "refuses an unknown item or a value outside 1 to 5, changing nothing" do
+    it "refuses an unknown item or a value outside 1 to 10, changing nothing" do
       record(assessment, ana, ratings: [area("technique", 4)])
 
       record(assessment, ana, ratings: [area("technique", 2), stroke("tweener", 3)])
-      record(assessment, ana, ratings: [area("technique", 6)])
+      record(assessment, ana, ratings: [area("technique", 11)])
 
       expect(assessment.evaluations.find_by!(player: ana).ratings.pluck(:item_key, :value)).to eq([["technique", 4]])
     end

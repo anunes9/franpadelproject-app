@@ -330,7 +330,7 @@ export type StrokeKey =
 
 export type RatedItem = { kind: 'area'; key: ProfileAreaKey } | { kind: 'stroke'; key: StrokeKey }
 
-// A 1-5 Rating of one item, with an optional comment.
+// A 1-10 Rating of one item, with an optional comment.
 export type Rating = RatedItem & { value: number; comment: string | null }
 
 export type EvaluationStatus = 'none' | 'partial' | 'evaluated'

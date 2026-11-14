@@ -229,7 +229,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_100000) do
     t.datetime "updated_at", null: false
     t.integer "value", null: false
     t.index ["evaluation_id", "item_kind", "item_key"], name: "index_ratings_on_evaluation_id_and_item_kind_and_item_key", unique: true
-    t.check_constraint "value >= 1 AND value <= 5", name: "ratings_value_range"
+    t.check_constraint "value >= 1 AND value <= 10", name: "ratings_value_range"
   end
 
   create_table "training_class_exercises", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

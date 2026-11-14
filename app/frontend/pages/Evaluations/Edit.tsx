@@ -41,7 +41,7 @@ type Entries = Record<string, Entry>
 const EMPTY: Entry = { value: null, comment: '' }
 
 // One Player's Evaluation in an Assessment Class, one Player at a time: a
-// 1-5 Rating for each Profile Area and for the Strokes of the Module (plus any
+// 1-10 Rating for each Profile Area and for the Strokes of the Module (plus any
 // other Stroke the Coach adds), each with an optional comment, and an overall
 // comment. Saving sends the whole Evaluation, so an item left unrated has no
 // Rating. The group's other Players are a tap away.
@@ -266,7 +266,7 @@ function Section({ title, intro, children }: { title: string; intro: string; chi
   )
 }
 
-// One item to rate: its name, its previous Rating, the 1-5 control and, once
+// One item to rate: its name, its previous Rating, the 1-10 control and, once
 // rated, its comment. A Stroke the Coach added can be taken away again.
 function ItemRating({
   item,

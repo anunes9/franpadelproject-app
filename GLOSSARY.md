@@ -145,7 +145,7 @@ One padel shot from a fixed list (Serve, Forehand, Bandeja, Víbora…), named i
 _Avoid_: Golpe (the Portuguese translation, used only in PT copy), shot, Pancada
 
 **Rating**:
-A Coach's score of one Profile Area or Stroke in an Evaluation, from 1 (Beginning) to 5 (Mastered), with an optional comment. An item can be left unrated.
+A Coach's score of one Profile Area or Stroke in an Evaluation, from 1 (Beginning) to 10 (Mastered), with an optional comment. An item can be left unrated.
 _Avoid_: Grade, score, mark
 
 **Evaluation**:
@@ -153,7 +153,7 @@ The Ratings and an optional overall comment a Coach records for one Player in on
 _Avoid_: Assessment, review, report
 
 **Performance Profile**:
-A Player's picture built from all their Evaluations, across every Class Group, Coach and Level: the latest Rating of each Profile Area and Stroke, its trend, the items to improve (latest Rating 1 or 2) and the history. It is never edited directly, and only Coaches and Club Managers see it.
+A Player's picture built from all their Evaluations, across every Class Group, Coach and Level: the latest Rating of each Profile Area and Stroke, its trend, the items to improve (latest Rating 4 or lower) and the history. It is never edited directly, and only Coaches and Club Managers see it.
 _Avoid_: Player card, report card, stats
 
 
