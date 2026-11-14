@@ -18,7 +18,7 @@ export default function Login({ errors }: Props) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    post('/users/sign_in')
+    post('/login')
   }
 
   return (

@@ -18,6 +18,12 @@ class AuthFailureApp < Devise::FailureApp
 
   private
 
+  # Signed-out visitors are sent to /login rather than Devise's
+  # /users/sign_in.
+  def route(_scope)
+    :login_url
+  end
+
   def refusal
     warden_message.to_s if REFUSALS.include?(warden_message)
   end

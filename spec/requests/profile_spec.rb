@@ -62,7 +62,7 @@ RSpec.describe "Profile", type: :request do
     it "requires authentication" do
       sign_out user
       patch "/dashboard/profile", params: { level: "advanced" }
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 end

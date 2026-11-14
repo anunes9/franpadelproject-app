@@ -366,7 +366,7 @@ RSpec.describe "Editing a Training Plan", type: :request do
     it "requires authentication" do
       patch "/dashboard/classes/#{first_class.id}/done"
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 end

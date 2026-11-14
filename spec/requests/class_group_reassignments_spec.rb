@@ -181,7 +181,7 @@ RSpec.describe "Reassigning a Class Group", type: :request do
     it "requires authentication" do
       patch "/dashboard/class_groups/#{group.id}/reassignment", params: { coach_id: new_coach.id }
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 end

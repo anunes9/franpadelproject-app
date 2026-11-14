@@ -20,7 +20,7 @@ function Closed({ title, body }: { title: string; body: string }) {
     <div className={AUTH_CARD_CLASS}>
       <h2 className="text-lg font-bold text-ink">{title}</h2>
       <p className="text-sm text-muted">{body}</p>
-      <Link href="/users/sign_in" className={buttonClass('primary', 'mt-2')}>
+      <Link href="/login" className={buttonClass('primary', 'mt-2')}>
         {t('coachInvitations.accept.goToSignIn')}
       </Link>
     </div>

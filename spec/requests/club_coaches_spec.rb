@@ -107,7 +107,7 @@ RSpec.describe "Removing a Coach", type: :request do
 
     remove(target)
 
-    expect(response).to redirect_to(new_user_session_path)
+    expect(response).to redirect_to(login_path)
     expect(target.reload).not_to be_removed
   end
 end

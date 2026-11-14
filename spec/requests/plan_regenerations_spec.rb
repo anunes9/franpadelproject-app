@@ -271,7 +271,7 @@ RSpec.describe "Regenerating a Training Plan", type: :request do
     it "requires authentication" do
       regenerate(group)
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 end

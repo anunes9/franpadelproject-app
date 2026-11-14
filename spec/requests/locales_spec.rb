@@ -28,6 +28,6 @@ RSpec.describe "Locales", type: :request do
   it "requires authentication" do
     sign_out user
     patch "/locale", params: { locale: "en" }
-    expect(response).to redirect_to(new_user_session_path)
+    expect(response).to redirect_to(login_path)
   end
 end
