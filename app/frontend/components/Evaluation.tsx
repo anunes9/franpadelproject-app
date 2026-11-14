@@ -1,7 +1,15 @@
 import { ArrowDown01Icon, ArrowUp01Icon, MinusSignIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { RATING_MAX, RATING_VALUES, radarPoint, radarPolygon, scaleLabel, TO_IMPROVE_AT } from '@/lib/evaluations'
+import {
+  itemName,
+  RATING_MAX,
+  RATING_VALUES,
+  radarPoint,
+  radarPolygon,
+  scaleLabel,
+  TO_IMPROVE_AT,
+} from '@/lib/evaluations'
 import type { EvaluationStatus, ProfileItem } from '../types/dashboard-data'
 import { Pill } from './ui'
 
@@ -172,5 +180,86 @@ export function RadarChart({ axes, label }: { axes: { name: string; value: numbe
         )
       })}
     </svg>
+  )
+}
+
+// A bar chart row's columns: name and value over the bar on phones, then
+// name, bar and value side by side.
+const ROW_GRID = 'grid grid-cols-[minmax(0,1fr)_2rem] gap-x-3 sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)_2rem]'
+
+// The axis steps a bar chart of Ratings marks: 0, 2, 4, 6, 8, 10.
+const AXIS_STEPS = [0, ...RATING_VALUES.filter((step) => step % 2 === 0)]
+
+// Rated items as a horizontal bar chart on the 0-10 scale: one bar per item
+// at its latest Rating (clay at TO_IMPROVE_AT or below, as an item to
+// improve, else teal), a thin tick at its previous Rating, the value printed
+// beside it and the trend under its name, so nothing rests on colour alone.
+// Each row is a list item with its own label, for screen readers. On phones
+// a row stacks its name and value over a full-width bar; from small tablets
+// up, name, bar and value share one line.
+export function RatingBars({ items, label }: { items: ProfileItem[]; label: string }) {
+  const { t } = useTranslation()
+  const percent = (value: number) => `${(value / RATING_MAX) * 100}%`
+
+  return (
+    <figure className="flex flex-col gap-1">
+      <ul aria-label={label} className="flex flex-col">
+        {items.map((item) => {
+          const name = itemName(t, item)
+          const value = item.value ?? 0
+          const previous =
+            item.previous === null ? '' : ` ${t('evaluations.profile.previousValue', { value: item.previous })}`
+          return (
+            <li
+              key={`${item.kind}:${item.key}`}
+              aria-label={`${name}: ${value}${previous}`}
+              className={`${ROW_GRID} items-center gap-y-1 border-b border-mist py-2.5 last:border-b-0`}
+            >
+              <span className="order-1 flex min-w-0 flex-col" aria-hidden>
+                <span className="truncate text-sm font-semibold text-ink">{name}</span>
+                <Trend item={item} />
+              </span>
+              <span className="relative order-3 col-span-2 h-6 sm:order-2 sm:col-span-1" aria-hidden>
+                {AXIS_STEPS.slice(1, -1).map((step) => (
+                  <span key={step} className="absolute inset-y-0 w-px bg-mist" style={{ left: percent(step) }} />
+                ))}
+                <span
+                  className={`absolute top-1/2 left-0 h-2.5 -translate-y-1/2 rounded-r ${
+                    value <= TO_IMPROVE_AT ? 'bg-clay' : 'bg-teal-deep'
+                  }`}
+                  style={{ width: percent(value) }}
+                />
+                {item.previous !== null && (
+                  <span
+                    className="absolute inset-y-0.5 w-0.5 -translate-x-1/2 rounded-full bg-ink-mute ring-2 ring-white"
+                    style={{ left: percent(item.previous) }}
+                  />
+                )}
+              </span>
+              <span className="order-2 text-right font-dash-mono text-sm font-semibold text-ink sm:order-3" aria-hidden>
+                {item.value ?? '–'}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+      <div className={`${ROW_GRID} gap-y-1.5`} aria-hidden>
+        <span className="order-2 col-span-2 font-dash-mono text-label text-muted sm:order-1 sm:col-span-1">
+          <span className="inline-block h-2.5 w-0.5 rounded-full bg-ink-mute align-middle" />{' '}
+          {t('evaluations.profile.previousLegend')}
+        </span>
+        <span className="relative order-1 col-span-2 h-4 font-dash-mono text-label text-muted sm:order-2 sm:col-span-1">
+          {AXIS_STEPS.map((step) => (
+            <span
+              key={step}
+              className={`absolute ${step === 0 ? '' : step === RATING_MAX ? '-translate-x-full' : '-translate-x-1/2'}`}
+              style={{ left: percent(step) }}
+            >
+              {step}
+            </span>
+          ))}
+        </span>
+      </div>
+    </figure>
   )
 }

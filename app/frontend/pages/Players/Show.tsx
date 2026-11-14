@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, groupName } from '@/lib/classGroups'
 import { itemName } from '@/lib/evaluations'
 import { classGroupsPath, classPath, clubPlayersPath, editPlayerPath } from '@/lib/paths'
-import { RadarChart, RatingPips, Trend } from '../../components/Evaluation'
+import { RadarChart, RatingBars, RatingPips, Trend } from '../../components/Evaluation'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Eyebrow } from '../../components/ui'
 import type {
@@ -27,7 +27,7 @@ interface Props {
 
 // A Player's Performance Profile, built from every Evaluation Coaches
 // recorded for them: the Profile Areas as a radar chart, the items to
-// improve, the Strokes, and the history of Evaluations. Read only.
+// improve, the Strokes as a bar chart, and the history of Evaluations. Read only.
 function Show() {
   const { player, club, profile, canEdit, current_user } = usePage<Props>().props
   const { t, locale } = useTranslation()
@@ -104,7 +104,7 @@ function Show() {
               {profile.strokes.length === 0 ? (
                 <p className="text-meta text-muted">{t('evaluations.profile.noStrokes')}</p>
               ) : (
-                <ItemList items={profile.strokes} columns />
+                <RatingBars items={profile.strokes} label={t('evaluations.profile.strokesChart')} />
               )}
             </Panel>
 
@@ -151,18 +151,10 @@ function Panel({
 }
 
 // Items with their latest value as pips and a number, and their trend.
-function ItemList({
-  items,
-  columns = false,
-  className = '',
-}: {
-  items: ProfileItem[]
-  columns?: boolean
-  className?: string
-}) {
+function ItemList({ items, className = '' }: { items: ProfileItem[]; className?: string }) {
   const { t } = useTranslation()
   return (
-    <ul className={`grid gap-x-8 ${columns ? 'sm:grid-cols-2' : ''} ${className}`}>
+    <ul className={`grid ${className}`}>
       {items.map((item) => (
         <li
           key={`${item.kind}:${item.key}`}
