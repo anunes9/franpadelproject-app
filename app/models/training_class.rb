@@ -14,6 +14,8 @@ class TrainingClass < ApplicationRecord
   # automatically.
   has_many :training_class_exercises, -> { order(:position) }, dependent: :delete_all, inverse_of: :training_class
   has_many :exercises, through: :training_class_exercises
+  # The Player Evaluations recorded in an Assessment Class.
+  has_many :evaluations, dependent: :destroy
 
   # An Assessment Class is the last Class of each Module.
   enum :kind, { regular: 0, assessment: 1 }, validate: true
@@ -27,6 +29,7 @@ class TrainingClass < ApplicationRecord
   validate :ends_by_midnight, if: -> { will_save_change_to_date? || will_save_change_to_start_time? }
   validate :module_of_the_groups_course, if: :will_save_change_to_course_module_id?
   validate :not_both_done_and_skipped
+  validate :kept_done_while_evaluated, if: -> { will_save_change_to_done? || will_save_change_to_skipped? }
 
   delegate :duration, to: :class_group
 
@@ -163,6 +166,16 @@ class TrainingClass < ApplicationRecord
     json.merge(module: json[:module].merge(description: course_module.description))
   end
 
+  # The group's Players by name, with how far each one's Evaluation in this
+  # Class is: "none", "partial" or "evaluated" (Evaluation#status).
+  def evaluation_roster
+    by_player = evaluations.includes(:ratings).index_by(&:player_id)
+    class_group.players.sort_by(&:name).map do |player|
+      evaluation = by_player[player.id]
+      { id: player.id, name: player.name, status: evaluation ? evaluation.status : "none" }
+    end
+  end
+
   # How the admin screens name the Class: its group and date.
   def display_name
     "#{class_group.display_name}, #{date.iso8601}"
@@ -193,6 +206,15 @@ class TrainingClass < ApplicationRecord
     return unless course_module && class_group
 
     errors.add(:course_module, :other_course) unless class_group.course_modules.include?(course_module)
+  end
+
+  # An evaluated Assessment Class stays done, so regenerating the plan keeps
+  # its Evaluations (docs/adr/0011-evaluating-marks-the-assessment-class-done.md).
+  def kept_done_while_evaluated
+    return unless persisted? && evaluations.exists?
+
+    errors.add(:done, :evaluated) unless done?
+    errors.add(:skipped, :evaluated) if skipped?
   end
 
   # Marking a skipped Class done, or skipping a done one, is refused.

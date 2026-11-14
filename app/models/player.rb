@@ -5,6 +5,21 @@ class Player < ApplicationRecord
   belongs_to :club
   has_many :class_group_players, dependent: :restrict_with_error
   has_many :class_groups, through: :class_group_players
+  has_many :evaluations, dependent: :restrict_with_error
+
+  # The Players whose Performance Profile `user` may read: a Coach's, those
+  # in one of the Coach's Class Groups (finished ones included); a Club
+  # Manager's, those of their linked Clubs. Admins work through the admin
+  # screens instead.
+  def self.profile_visible_to(user)
+    if user.coach?
+      where(id: ClassGroupPlayer.joins(:class_group).where(class_groups: { coach_id: user.id }).select(:player_id))
+    elsif user.club_manager?
+      where(club_id: user.managed_clubs.select(:id))
+    else
+      none
+    end
+  end
 
   # Position and hand share the values left/right, so their predicates are
   # prefixed (position_left?, hand_left?) to keep them apart.

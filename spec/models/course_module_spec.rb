@@ -5,6 +5,20 @@ RSpec.describe CourseModule, type: :model do
     expect(build(:course_module)).to be_valid
   end
 
+  it "keeps its Strokes once each, dropping the blanks the admin form sends" do
+    course_module = build(:course_module, strokes: ["", "serve", "lob", "serve"])
+
+    expect(course_module.strokes).to eq(%w[serve lob])
+    expect(course_module).to be_valid
+  end
+
+  it "refuses a Stroke that is not in the list" do
+    course_module = build(:course_module, strokes: %w[serve tweener])
+
+    expect(course_module).not_to be_valid
+    expect(course_module.errors.details[:strokes]).to eq([{ error: :unknown, strokes: "tweener" }])
+  end
+
   it "requires a slug" do
     expect(build(:course_module, slug: nil)).not_to be_valid
   end

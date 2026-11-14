@@ -2,13 +2,28 @@ import { Link, router, usePage } from '@inertiajs/react'
 import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { addMinutes, formatDate, formatDuration, formatTimeRange, groupName } from '@/lib/classGroups'
-import { classExercisePath, classGroupPath, exerciseBoardPath, exercisePath, newBoardPath } from '@/lib/paths'
+import {
+  classEvaluationPath,
+  classExercisePath,
+  classGroupPath,
+  exerciseBoardPath,
+  exercisePath,
+  newBoardPath,
+  playerPath,
+} from '@/lib/paths'
 import { parseBoard } from '../../board/document'
 import { BoardPreview } from '../../board/Preview'
+import { StatusPill } from '../../components/Evaluation'
 import { ClassActions } from '../../components/PlanEditing'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, Detail, Eyebrow, FieldError, MediaPlaceholder, Pagination, Pill, Topic } from '../../components/ui'
-import type { ClassExercise, ClassGroup, ClassStructure, TrainingClassDetail } from '../../types/dashboard-data'
+import type {
+  ClassEvaluations,
+  ClassExercise,
+  ClassGroup,
+  ClassStructure,
+  TrainingClassDetail,
+} from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -21,6 +36,8 @@ interface Props {
   classStructure: ClassStructure
   exercises: ClassExercise[]
   availableExercises: ClassExercise[]
+  // An Assessment Class's Player Evaluations; null for a regular Class.
+  evaluations: ClassEvaluations | null
   errors: Record<string, unknown>
   current_user: { role: string } | null
 }
@@ -119,6 +136,7 @@ function Show() {
     classStructure,
     exercises,
     availableExercises,
+    evaluations,
     errors,
     current_user,
   } = usePage<Props>().props
@@ -221,6 +239,8 @@ function Show() {
             <p className="col-span-full text-meta text-muted-strong">{t('classGroups.show.assessmentNote')}</p>
           )}
         </dl>
+
+        {evaluations && <EvaluationsSection classId={trainingClass.id} evaluations={evaluations} />}
 
         <div className="flex flex-wrap items-start gap-5">
           <section aria-labelledby="timeline-title" className="flex min-w-0 flex-[999_1_600px] flex-col gap-4">
@@ -365,6 +385,72 @@ function Show() {
         </div>
       </div>
     </div>
+  )
+}
+
+// An Assessment Class's Player Evaluations: each of the group's Players with
+// how far they are evaluated, one tap from their form (for the group's Coach,
+// once the Class takes Evaluations) and from their Performance Profile.
+function EvaluationsSection({ classId, evaluations }: { classId: string; evaluations: ClassEvaluations }) {
+  const { t } = useTranslation()
+  const { refusal, canRecord, players } = evaluations
+  const done = players.filter((player) => player.status === 'evaluated').length
+  const recordable = canRecord && refusal === null
+  const note =
+    refusal === 'skipped'
+      ? t('evaluations.section.skipped')
+      : refusal === 'not_yet'
+        ? t('evaluations.section.notYet')
+        : canRecord
+          ? t('evaluations.section.intro')
+          : t('evaluations.section.readOnly')
+
+  return (
+    <section
+      id="evaluations"
+      aria-labelledby="evaluations-title"
+      className="flex scroll-mt-6 flex-col gap-3 rounded-[18px] border border-line bg-white p-5 shadow-card"
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="evaluations-title" className="text-lg font-extrabold text-ink">
+          {t('evaluations.section.title')}
+        </h2>
+        <span className="font-dash-mono text-meta text-muted-strong">
+          {t('evaluations.section.count', { done, total: players.length })}
+        </span>
+      </div>
+      <p className="text-meta text-muted-strong">{note}</p>
+      <ul className="flex flex-col">
+        {players.map((player) => (
+          <li
+            key={player.id}
+            className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-mist py-3 last:border-b-0"
+          >
+            <span className="flex min-w-0 flex-wrap items-center gap-2.5">
+              <Link
+                href={playerPath(player.id)}
+                className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                {player.name}
+              </Link>
+              <StatusPill status={player.status} />
+            </span>
+            {recordable && (
+              <Link
+                href={classEvaluationPath(classId, player.id)}
+                className={`inline-flex min-h-11 items-center rounded-full px-4 text-meta font-semibold ${
+                  player.status === 'none'
+                    ? 'bg-ink text-paper'
+                    : 'border border-line bg-white text-teal-deep hover:border-teal'
+                }`}
+              >
+                {player.status === 'none' ? t('evaluations.section.evaluate') : t('evaluations.section.edit')}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

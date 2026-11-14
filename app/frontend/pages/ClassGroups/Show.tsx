@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatShortDay, formatTimeRange, formatWeeklyTime } from '@/lib/classGroups'
-import { classGroupsPath, classPath, clubPath, editClassGroupPath } from '@/lib/paths'
+import { classGroupsPath, classPath, clubPath, editClassGroupPath, playerPath } from '@/lib/paths'
 import { ReassignClassGroup } from '../../components/ClassGroupReassignment'
 import { ContinuesFrom, FinishedPill, StartNextLevelGroup } from '../../components/FinishedGroups'
 import { GroupNameEditor } from '../../components/GroupNameEditor'
@@ -153,8 +153,13 @@ function Show() {
           </h2>
           <ul className="flex flex-wrap gap-2">
             {classGroup.players.map((player) => (
-              <li key={player.id} className="rounded-full border border-line bg-white px-3.5 py-2 text-meta text-ink">
-                {player.name}
+              <li key={player.id}>
+                <Link
+                  href={playerPath(player.id)}
+                  className="inline-flex min-h-10 items-center rounded-full border border-line bg-white px-3.5 text-meta text-ink hover:border-teal"
+                >
+                  {player.name}
+                </Link>
               </li>
             ))}
           </ul>

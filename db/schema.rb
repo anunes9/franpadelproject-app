@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_14_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -131,11 +131,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
     t.integer "level", default: 0, null: false
     t.integer "position", null: false
     t.string "slug", null: false
+    t.jsonb "strokes", default: [], null: false
     t.string "title", null: false
     t.jsonb "topics", default: [], null: false
     t.datetime "updated_at", null: false
     t.index ["level", "position"], name: "index_course_modules_on_level_and_position"
     t.index ["slug"], name: "index_course_modules_on_slug", unique: true
+  end
+
+  create_table "evaluations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "coach_id", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.uuid "player_id", null: false
+    t.uuid "training_class_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coach_id"], name: "index_evaluations_on_coach_id"
+    t.index ["player_id"], name: "index_evaluations_on_player_id"
+    t.index ["training_class_id", "player_id"], name: "index_evaluations_on_training_class_id_and_player_id", unique: true
   end
 
   create_table "exercise_completions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -207,6 +220,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
     t.index ["course_module_id"], name: "index_quizzes_on_course_module_id", unique: true
   end
 
+  create_table "ratings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.uuid "evaluation_id", null: false
+    t.string "item_key", null: false
+    t.integer "item_kind", null: false
+    t.datetime "updated_at", null: false
+    t.integer "value", null: false
+    t.index ["evaluation_id", "item_kind", "item_key"], name: "index_ratings_on_evaluation_id_and_item_kind_and_item_key", unique: true
+    t.check_constraint "value >= 1 AND value <= 5", name: "ratings_value_range"
+  end
+
   create_table "training_class_exercises", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "exercise_id", null: false
@@ -263,6 +288,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
   add_foreign_key "club_memberships", "users"
   add_foreign_key "coach_invitations", "clubs", on_delete: :cascade
   add_foreign_key "coach_invitations", "users", column: "invited_by_id", on_delete: :cascade
+  add_foreign_key "evaluations", "players"
+  add_foreign_key "evaluations", "training_classes"
+  add_foreign_key "evaluations", "users", column: "coach_id"
   add_foreign_key "exercise_completions", "exercises"
   add_foreign_key "exercise_completions", "users"
   add_foreign_key "exercises", "course_modules"
@@ -271,6 +299,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
   add_foreign_key "quiz_attempts", "users"
   add_foreign_key "quiz_questions", "quizzes"
   add_foreign_key "quizzes", "course_modules"
+  add_foreign_key "ratings", "evaluations", on_delete: :cascade
   add_foreign_key "training_class_exercises", "exercises", on_delete: :cascade
   add_foreign_key "training_class_exercises", "training_classes", on_delete: :cascade
   add_foreign_key "training_classes", "class_groups", on_delete: :cascade

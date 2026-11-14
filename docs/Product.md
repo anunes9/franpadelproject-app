@@ -163,9 +163,9 @@ The dashboard shows overall progress, Modules completed out of the total, and Ex
 
 _(not built yet)_: Module Completion worked out as above (today a Module is marked done by hand), the Exercises-completed count, quiz scores, hours practised.
 
-## Assessment of Players _(not built yet, to be scoped)_
+## Assessment of Players
 
-The last Class of each Module is an **Assessment Class**. Each Player in the group will get a qualitative evaluation of the concepts learned in that Module, so the app can show graphs per Player and the areas to improve. This is a separate feature that still needs scoping. Until then an Assessment Class is only a marker in the plan, and no evaluations are recorded.
+The last Class of each Module is an **Assessment Class**. In it, the group's Coach records an **Evaluation** of each Player: a 1–5 Rating of the five **Profile Areas** (Technique, Tactics, Physical, Mental, Attitude) and of the **Strokes** the Module works on, with optional comments. Recording the first Evaluation marks the Class done. Each Player has a **Performance Profile**, built from all their Evaluations: a radar chart of the latest Area Ratings, their Strokes with a trend, the items to improve (latest Rating 1 or 2) and the history. Only Coaches and Club Managers see it. See `docs/specs/PlayerPerformanceProfile.md`.
 
 ## Certification _(not built yet)_
 

@@ -35,10 +35,22 @@ en:
               other_club: "must all belong to the Coach's Club"
             weekdays:
               cadence_mismatch: "must be one distinct weekday per weekly Class"
+        course_module:
+          attributes:
+            strokes:
+              unknown: "has Strokes that are not in the list: %{strokes}"
         coach_invitation:
           attributes:
             email:
               account_exists: "already has an account"
+        evaluation:
+          attributes:
+            base:
+              not_assessment: "can only be recorded in an Assessment Class"
+              skipped: "cannot be recorded in a skipped Class"
+              not_yet: "can only be recorded from the Class's date"
+            player:
+              not_in_group: "must be a Player of the Class's group"
         training_class:
           attributes:
             base:
@@ -47,8 +59,10 @@ en:
               other_course: "must be a Module of the group's Course"
             done:
               skipped: "cannot be marked for a skipped Class"
+              evaluated: "must stay marked while the Class has Player Evaluations"
             skipped:
               done: "cannot be marked for a done Class"
+              evaluated: "cannot be marked while the Class has Player Evaluations"
             start_time:
               crosses_midnight: "must let the Class end by midnight"
         training_class_exercise:

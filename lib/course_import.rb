@@ -46,6 +46,9 @@ class CourseImport
       title: entry["title"]["pt"],
       description: entry["description"]["pt"],
       topics: entry["topics"]["pt"],
+      # Stroke keys (Stroke::KEYS), the same in both languages. An unknown
+      # key is refused.
+      strokes: entry.fetch("strokes", []),
       duration: entry["duration"]["pt"],
       content: entry["content"]["pt"]
     )

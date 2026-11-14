@@ -17,6 +17,12 @@
         "1st Volley"
       ]
     },
+    "strokes": [
+      "serve",
+      "return",
+      "forehand_volley",
+      "backhand_volley"
+    ],
     "description": {
       "pt": "Modelo Iniciação de Jogo",
       "en-US": "Game Initiation Model"
@@ -53,6 +59,7 @@
         "Execution"
       ]
     },
+    "strokes": [],
     "description": {
       "pt": "Conceito Cinco em Linha: Postura, Preparação, Mobilidade, Estabilidade e Ponto de Impacto",
       "en-US": "Five in Line Concept: Posture, Preparation, Mobility, Stability and Impact Point"
@@ -85,6 +92,12 @@
         "Volley"
       ]
     },
+    "strokes": [
+      "forehand",
+      "backhand",
+      "forehand_volley",
+      "backhand_volley"
+    ],
     "description": {
       "pt": "Conceitos Transversais ao jogo aéreo e terrestre",
       "en-US": "Cross-cutting Concepts for Aerial and Ground Game"
@@ -121,6 +134,10 @@
         "Racket handling"
       ]
     },
+    "strokes": [
+      "lob",
+      "chiquita"
+    ],
     "description": {
       "pt": "O conceito de Defesa, Contra-Ataque e Ataque",
       "en-US": "The concept of Defense, Counter-attack and Attack"
@@ -149,6 +166,11 @@
         "Glass Exit"
       ]
     },
+    "strokes": [
+      "forehand_back_wall",
+      "backhand_back_wall",
+      "side_wall"
+    ],
     "description": {
       "pt": "Positiva-positiva, Positiva, neutra, negativa ou negativa-negativa",
       "en-US": "Positive-positive, Positive, neutral, negative or negative-negative"
@@ -181,6 +203,11 @@
         "Net"
       ]
     },
+    "strokes": [
+      "bandeja",
+      "vibora",
+      "smash"
+    ],
     "description": {
       "pt": "Abordagem técnica a movimentos aereos : Bandejas Tradicionais e Víbora",
       "en-US": "Technical approach to aerial movements: Traditional Smashes and Viper"
@@ -211,6 +238,12 @@
         "Speedometer"
       ]
     },
+    "strokes": [
+      "forehand_back_wall",
+      "backhand_back_wall",
+      "side_wall",
+      "bajada"
+    ],
     "description": {
       "pt": "Definição conceptual subjacente há numerologia dos vidros e sectores da malha: 1P, 2P, 3 \"Joker\", 2C e 1C; 0,1,2 e 3",
       "en-US": "Conceptual definition underlying the numerology of glasses and net sectors: 1P, 2P, 3 \"Joker\", 2C and 1C; 0,1,2 and 3"

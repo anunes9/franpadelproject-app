@@ -62,8 +62,22 @@ function Refusal({ target }: { target: string }) {
           other_course: t('classGroups.planEditing.errors.module'),
         }}
       />
-      <FieldError errors={errors} field="done" copy={{ skipped: t('classGroups.planEditing.errors.doneSkipped') }} />
-      <FieldError errors={errors} field="skipped" copy={{ done: t('classGroups.planEditing.errors.skippedDone') }} />
+      <FieldError
+        errors={errors}
+        field="done"
+        copy={{
+          skipped: t('classGroups.planEditing.errors.doneSkipped'),
+          evaluated: t('classGroups.planEditing.errors.doneEvaluated'),
+        }}
+      />
+      <FieldError
+        errors={errors}
+        field="skipped"
+        copy={{
+          done: t('classGroups.planEditing.errors.skippedDone'),
+          evaluated: t('classGroups.planEditing.errors.skippedEvaluated'),
+        }}
+      />
       <FieldError errors={errors} field="base" copy={{ clash: t('classGroups.planEditing.errors.clash', { dates }) }} />
     </>
   )

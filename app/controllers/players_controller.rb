@@ -1,5 +1,5 @@
-# A Club's Players, managed by its Coaches and Club Managers.
-# Players of Clubs the user cannot access are 404s.
+# A Club's Players, managed by its Coaches and Club Managers, and a Player's
+# Performance Profile. Players of Clubs the user cannot access are 404s.
 class PlayersController < DashboardController
   include ClubScoped
 
@@ -9,6 +9,20 @@ class PlayersController < DashboardController
     render inertia: "Players/Index", props: {
       club: club.summary_json,
       players: club.players.alphabetical.map(&:players_json)
+    }
+  end
+
+  # A Player's Performance Profile, for the Coaches who have them in a Class
+  # Group and the Club Managers of their Club.
+  def show
+    player = Player.profile_visible_to(current_user).find(params[:id])
+
+    render inertia: "Players/Show", props: {
+      player: player.players_json,
+      club: player.club.summary_json,
+      areas: ProfileArea::KEYS,
+      profile: PerformanceProfile.new(player).as_json,
+      canEdit: accessible_players.exists?(player.id)
     }
   end
 
