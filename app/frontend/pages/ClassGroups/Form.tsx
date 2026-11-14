@@ -3,6 +3,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
 import { formatDate, formatDuration } from '@/lib/classGroups'
 import { classGroupPath, classGroupsPath, newClubPlayerPath } from '@/lib/paths'
+import { PlayerPicker } from '../../components/PlayerPicker'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, chipClass, Eyebrow, FieldError, INPUT_CLASS, LABEL_CLASS } from '../../components/ui'
 import type {
@@ -322,26 +323,7 @@ function Form() {
                 </Link>
               </p>
             ) : (
-              <ul className="flex flex-col rounded-lg border border-line">
-                {players.map((player) => {
-                  const checked = data.player_ids.includes(player.id)
-                  return (
-                    <li key={player.id} className="border-b border-track last:border-0">
-                      <label className="flex min-h-11 cursor-pointer items-center gap-3 px-3 py-2 text-sm text-ink has-disabled:cursor-not-allowed has-disabled:opacity-50">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          disabled={!checked && full}
-                          onChange={() => togglePlayer(player.id)}
-                          className="h-4 w-4 accent-teal-deep"
-                        />
-                        <span className="min-w-0 flex-1 truncate font-medium">{player.name}</span>
-                        <span className="text-meta text-muted">{t(`players.levelOption.${player.level}`)}</span>
-                      </label>
-                    </li>
-                  )
-                })}
-              </ul>
+              <PlayerPicker players={players} chosenIds={data.player_ids} full={full} onToggle={togglePlayer} />
             )}
             <FieldError
               errors={errors}

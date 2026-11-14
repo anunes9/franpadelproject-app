@@ -70,6 +70,29 @@ RSpec.describe "Players", type: :request do
       )
     end
 
+    it "records a gender when given one, and none otherwise" do
+      sign_in coach
+
+      post "/dashboard/clubs/#{club.id}/players", params: { player: player_params[:player].merge(gender: "female") }
+      expect(club.players.last.gender).to eq("female")
+
+      post "/dashboard/clubs/#{club.id}/players", params: { player: player_params[:player].merge(gender: "") }
+      expect(club.players.order(:created_at).last.gender).to be_nil
+
+      get "/dashboard/clubs/#{club.id}/players"
+      expect(page_props["players"].pluck("gender")).to contain_exactly("female", nil)
+    end
+
+    it "rejects an unknown gender" do
+      sign_in coach
+
+      expect do
+        post "/dashboard/clubs/#{club.id}/players", params: { player: player_params[:player].merge(gender: "other") }
+      end.not_to change(Player, :count)
+      follow_redirect!
+      expect(page_props["errors"].keys).to contain_exactly("gender")
+    end
+
     it "never gives the Player an email or password" do
       sign_in coach
 
@@ -139,7 +162,7 @@ RSpec.describe "Players", type: :request do
       expect(response).to have_http_status(:not_found)
     end
 
-    it "renders the new Player form with the position, hand and Level options" do
+    it "renders the new Player form with the position, hand, gender and Level options" do
       sign_in coach
 
       get "/dashboard/clubs/#{club.id}/players/new"
@@ -149,6 +172,7 @@ RSpec.describe "Players", type: :request do
       expect(page_props).to include(
         "positionOptions" => %w[left right both],
         "handOptions" => %w[left right],
+        "genderOptions" => %w[male female],
         "levelOptions" => %w[beginner intermediate advanced]
       )
     end

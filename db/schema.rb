@@ -165,6 +165,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_100000) do
   create_table "players", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "club_id", null: false
     t.datetime "created_at", null: false
+    t.integer "gender"
     t.integer "hand", null: false
     t.integer "level", null: false
     t.string "name", null: false

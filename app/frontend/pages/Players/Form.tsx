@@ -4,7 +4,7 @@ import { useTranslation } from '@/i18n/useTranslation'
 import { clubPlayersPath, playerPath } from '@/lib/paths'
 import { AppShell, PageHeader } from '../../components/shell'
 import { BackLink, buttonClass, Eyebrow, FieldError, INPUT_CLASS } from '../../components/ui'
-import type { ClubSummary, Level, Player, PlayerHand, PlayerPosition } from '../../types/dashboard-data'
+import type { ClubSummary, Level, Player, PlayerGender, PlayerHand, PlayerPosition } from '../../types/dashboard-data'
 
 interface Props {
   [key: string]: unknown
@@ -12,13 +12,14 @@ interface Props {
   player: Player | null
   positionOptions: PlayerPosition[]
   handOptions: PlayerHand[]
+  genderOptions: PlayerGender[]
   levelOptions: Level[]
 }
 
-type Field = 'name' | 'position' | 'hand' | 'level'
+type Field = 'name' | 'position' | 'hand' | 'gender' | 'level'
 
 function Form() {
-  const { club, player, positionOptions, handOptions, levelOptions } = usePage<Props>().props
+  const { club, player, positionOptions, handOptions, genderOptions, levelOptions } = usePage<Props>().props
   const { t } = useTranslation()
   const playersHref = clubPlayersPath(club.id)
 
@@ -26,9 +27,10 @@ function Form() {
     name: player?.name ?? '',
     position: player?.position ?? '',
     hand: player?.hand ?? '',
+    gender: player?.gender ?? '',
     level: player?.level ?? '',
   })
-  transform((fields) => ({ player: fields }))
+  transform(({ gender, ...fields }) => ({ player: { ...fields, gender: gender || null } }))
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -46,7 +48,13 @@ function Form() {
     return <FieldError errors={errors} field={field} copy={copy} />
   }
 
-  const selects: Array<{ field: Exclude<Field, 'name'>; label: string; options: Array<[string, string]> }> = [
+  // Gender is optional: its blank choice can be chosen, and is sent as none.
+  const selects: Array<{
+    field: Exclude<Field, 'name'>
+    label: string
+    options: Array<[string, string]>
+    optional?: boolean
+  }> = [
     {
       field: 'position',
       label: t('players.form.position'),
@@ -56,6 +64,12 @@ function Form() {
       field: 'hand',
       label: t('players.form.hand'),
       options: handOptions.map((o) => [o, t(`players.handOption.${o}`)]),
+    },
+    {
+      field: 'gender',
+      label: t('players.form.gender'),
+      options: genderOptions.map((o) => [o, t(`players.genderOption.${o}`)]),
+      optional: true,
     },
     {
       field: 'level',
@@ -91,7 +105,7 @@ function Form() {
             {errorFor('name')}
           </label>
 
-          {selects.map(({ field, label, options }) => (
+          {selects.map(({ field, label, options, optional }) => (
             <label key={field} className="flex flex-col gap-1.5 text-sm font-medium text-ink">
               {label}
               <select
@@ -100,7 +114,7 @@ function Form() {
                 aria-invalid={errors[field] ? true : undefined}
                 className={`${INPUT_CLASS} min-h-11`}
               >
-                <option value="" disabled />
+                <option value="" disabled={!optional} />
                 {options.map(([value, optionLabel]) => (
                   <option key={value} value={value}>
                     {optionLabel}

@@ -118,6 +118,7 @@ export interface PendingCoachInvitation {
 
 export type PlayerPosition = 'left' | 'right' | 'both'
 export type PlayerHand = 'left' | 'right'
+export type PlayerGender = 'male' | 'female'
 // A Course Level, shared by Players, Class Groups and Courses.
 export type Level = 'beginner' | 'intermediate' | 'advanced'
 
@@ -127,6 +128,8 @@ export interface Player {
   position: PlayerPosition
   hand: PlayerHand
   level: Level
+  // Optional: Players recorded before it was asked have none.
+  gender: PlayerGender | null
 }
 
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
