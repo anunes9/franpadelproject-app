@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Admin panel access", type: :request do
   it "redirects an anonymous visitor to the login page" do
     get "/admin"
-    expect(response).to redirect_to(new_user_session_path)
+    expect(response).to redirect_to(login_path)
   end
 
   %i[coach club_manager].each do |role|

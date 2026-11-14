@@ -84,7 +84,7 @@ RSpec.describe "Renaming a Class Group", type: :request do
   it "requires authentication" do
     rename("Noite")
 
-    expect(response).to redirect_to("/users/sign_in")
+    expect(response).to redirect_to("/login")
     expect(group.reload.name).to be_nil
   end
 end

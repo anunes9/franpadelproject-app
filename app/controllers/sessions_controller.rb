@@ -20,7 +20,7 @@ class SessionsController < Devise::SessionsController
 
   def destroy
     sign_out(resource_name)
-    redirect_to new_user_session_path
+    redirect_to login_path
   end
 
   # Devise's default require_no_authentication before_action (runs on #new)

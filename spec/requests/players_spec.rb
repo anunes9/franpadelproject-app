@@ -106,7 +106,7 @@ RSpec.describe "Players", type: :request do
     it "requires authentication" do
       post "/dashboard/clubs/#{club.id}/players", params: player_params
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 

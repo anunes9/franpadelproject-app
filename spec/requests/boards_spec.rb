@@ -56,7 +56,7 @@ RSpec.describe "Boards", type: :request do
     it "sends a signed-out visitor to sign in" do
       get "/dashboard/boards/new"
 
-      expect(response).to redirect_to("/users/sign_in")
+      expect(response).to redirect_to("/login")
     end
   end
 

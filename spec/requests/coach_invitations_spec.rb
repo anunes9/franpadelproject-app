@@ -87,7 +87,7 @@ RSpec.describe "Coach invitations", type: :request do
     it "requires authentication" do
       invite
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
       expect(ActionMailer::Base.deliveries).to be_empty
     end
 

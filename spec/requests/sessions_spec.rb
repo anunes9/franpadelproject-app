@@ -25,11 +25,11 @@ RSpec.describe "Sessions", type: :request do
 
       post user_session_path, params: { user: { email: coach.email, password: "password123" } }
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
       follow_redirect!
       expect(response.body).to include('"base":"removed"')
       get dashboard_path
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
 
     it "is told only that the credentials are wrong when the password is wrong" do
@@ -48,18 +48,52 @@ RSpec.describe "Sessions", type: :request do
       coach.remove!
       get dashboard_path
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
       follow_redirect!
       expect(response.body).to include('"base":"removed"')
       get dashboard_path
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 
   it "logs out and redirects to login" do
     post user_session_path, params: { user: { email: user.email, password: "password123" } }
     delete destroy_user_session_path
-    expect(response).to redirect_to(new_user_session_path)
+    expect(response).to redirect_to(login_path)
+  end
+
+  describe "the /login address" do
+    it "serves the login page" do
+      get "/login"
+
+      expect(response).to have_http_status(200)
+      expect(response.body).to include("Auth/Login")
+    end
+
+    it "signs in from it, and refuses wrong credentials on it" do
+      post "/login", params: { user: { email: user.email, password: "wrongpassword" } }
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include('"base":"invalid_credentials"')
+
+      post "/login", params: { user: { email: user.email, password: "password123" } }
+      expect(response).to redirect_to(dashboard_path)
+    end
+
+    it "is where a signed-out visitor is sent, while /users/sign_in still serves the page" do
+      get dashboard_path
+      expect(response).to redirect_to("/login")
+
+      get "/users/sign_in"
+      expect(response).to have_http_status(200)
+    end
+
+    it "sends a signed-in user on to the dashboard" do
+      sign_in user
+
+      get "/login"
+
+      expect(response).to redirect_to(dashboard_path)
+    end
   end
 
   it "serves the login page at root" do

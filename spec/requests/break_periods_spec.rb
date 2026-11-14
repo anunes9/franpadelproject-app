@@ -77,7 +77,7 @@ RSpec.describe "Break Periods", type: :request do
     it "requires authentication" do
       post "/dashboard/clubs/#{club.id}/break_periods", params: christmas
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 

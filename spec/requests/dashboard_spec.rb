@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Dashboard", type: :request do
   it "redirects an unauthenticated visitor to the login page" do
     get "/dashboard"
-    expect(response).to redirect_to(new_user_session_path)
+    expect(response).to redirect_to(login_path)
   end
 
   it "renders the real dashboard home for an authenticated user" do

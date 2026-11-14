@@ -96,7 +96,7 @@ RSpec.describe "Club Manager home", type: :request do
     it "requires authentication" do
       get "/dashboard/clubs/#{alpha.id}"
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
     end
   end
 

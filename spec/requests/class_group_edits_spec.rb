@@ -204,7 +204,7 @@ RSpec.describe "Editing a Class Group", type: :request do
     it "requires authentication" do
       patch "/dashboard/class_groups/#{group.id}", params: { class_group: { player_ids: [players.first.id] } }
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to redirect_to(login_path)
       expect(group.players.reload.size).to eq(2)
     end
   end

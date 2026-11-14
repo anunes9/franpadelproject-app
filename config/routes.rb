@@ -118,6 +118,10 @@ Rails.application.routes.draw do
   # AbstractController::ActionNotFound ("Could not find devise mapping").
   devise_scope :user do
     root to: "sessions#new"
+    # The sign-in page's own address, which the app links and redirects to.
+    # Devise's /users/sign_in still serves it, for older links.
+    get "/login", to: "sessions#new", as: :login
+    post "/login", to: "sessions#create"
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
