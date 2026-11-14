@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   delete "/dashboard/exercises/:ref/board", to: "exercise_boards#destroy", constraints: { ref: /[^\/]+/ }
   scope "/dashboard" do
     resources :clubs, only: %i[show] do
-      resources :players, only: %i[index new create edit update], shallow: true
+      resources :players, only: %i[index new create show edit update], shallow: true
     end
   end
   # Coach invitations: a Club Manager invites from a Club; the Coach accepts
@@ -78,6 +78,12 @@ Rails.application.routes.draw do
         end
       end
     end
+  end
+  # Recording a Player's Evaluation in an Assessment Class, one Player at a
+  # time, at /dashboard/classes/:training_class_id/evaluations/:player_id.
+  scope "/dashboard" do
+    get "classes/:training_class_id/evaluations/:player_id", to: "evaluations#edit", as: :class_evaluation
+    put "classes/:training_class_id/evaluations/:player_id", to: "evaluations#update"
   end
   # Renaming a group from its page.
   scope "/dashboard" do

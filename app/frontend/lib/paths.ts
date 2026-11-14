@@ -81,3 +81,8 @@ export const boardPath = (boardId: string) => `${boardsPath}/${boardId}`
 // Admins, editing it.
 export const exerciseBoardPath = (ref: string) => `${exercisePath(ref)}/board`
 export const editExerciseBoardPath = (ref: string) => `${exerciseBoardPath(ref)}/edit`
+
+// Recording one Player's Evaluation in an Assessment Class; the form is sent
+// to the same URL.
+export const classEvaluationPath = (classId: string, playerId: string) =>
+  `${classPath(classId)}/evaluations/${playerId}`

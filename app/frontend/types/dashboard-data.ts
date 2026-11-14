@@ -305,3 +305,74 @@ export interface BreakPeriod {
   startsOn: string
   endsOn: string
 }
+
+// Player Evaluations and Performance Profiles
+// (docs/specs/PlayerPerformanceProfile.md). Keys match ProfileArea::KEYS and
+// Stroke::KEYS on the server.
+export type ProfileAreaKey = 'technique' | 'tactics' | 'physical' | 'mental' | 'attitude'
+export type StrokeKey =
+  | 'serve'
+  | 'return'
+  | 'forehand'
+  | 'backhand'
+  | 'forehand_volley'
+  | 'backhand_volley'
+  | 'bandeja'
+  | 'vibora'
+  | 'smash'
+  | 'lob'
+  | 'chiquita'
+  | 'drop_shot'
+  | 'forehand_back_wall'
+  | 'backhand_back_wall'
+  | 'side_wall'
+  | 'bajada'
+
+export type RatedItem = { kind: 'area'; key: ProfileAreaKey } | { kind: 'stroke'; key: StrokeKey }
+
+// A 1-10 Rating of one item, with an optional comment.
+export type Rating = RatedItem & { value: number; comment: string | null }
+
+export type EvaluationStatus = 'none' | 'partial' | 'evaluated'
+
+// A group's Player as an Assessment Class lists them.
+export interface RosterPlayer {
+  id: string
+  name: string
+  status: EvaluationStatus
+}
+
+// An Assessment Class's Evaluations, on its page. `refusal` says why it takes
+// none today, if so; only the group's Coach records (`canRecord`).
+export interface ClassEvaluations {
+  refusal: 'not_assessment' | 'skipped' | 'not_yet' | null
+  canRecord: boolean
+  players: RosterPlayer[]
+}
+
+// One item of a Performance Profile: its latest value and the one before, if
+// any (nil values when never rated), and the trend between them.
+export type ProfileItem = RatedItem & {
+  value: number | null
+  previous: number | null
+  trend: 'up' | 'down' | 'same' | null
+}
+
+export interface ProfileEvaluation {
+  id: string
+  classId: string
+  // ISO date (YYYY-MM-DD) of the Assessment Class.
+  date: string
+  module: { number: number; title: string }
+  group: { id: string; name: string | null; level: Level }
+  coach: string
+  comment: string | null
+  ratings: Rating[]
+}
+
+export interface PerformanceProfile {
+  areas: ProfileItem[]
+  strokes: ProfileItem[]
+  toImprove: ProfileItem[]
+  history: ProfileEvaluation[]
+}

@@ -32,7 +32,8 @@ class TrainingClassesController < DashboardController
       availableExercises: (training_class.course_module.exercises.with_attached_media.includes(:board).to_a - chosen)
         .map(&:as_class_json),
       clashDates: flash[:clash_dates] || [],
-      refusedEdit: flash[:refused_edit]
+      refusedEdit: flash[:refused_edit],
+      evaluations: evaluations_json(training_class)
     }
   end
 
@@ -75,6 +76,19 @@ class TrainingClassesController < DashboardController
   end
 
   private
+
+  # For an Assessment Class: whether it takes Evaluations today (nil) or why
+  # not, whether the user records them (only the group's Coach), and the
+  # group's Players with how far each is evaluated. Nil for a regular Class.
+  def evaluations_json(training_class)
+    return nil unless training_class.assessment?
+
+    {
+      refusal: Evaluation.refusal_for(training_class, today: Academy.today),
+      canRecord: training_class.class_group.coach_id == current_user.id,
+      players: training_class.evaluation_roster
+    }
+  end
 
   def visible_classes
     TrainingClass.where(class_group: ClassGroup.visible_to(current_user))

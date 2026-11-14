@@ -12,6 +12,7 @@ class CourseModule < ApplicationRecord
 
   validates :slug, :title, :description, :duration, presence: true
   validates :slug, uniqueness: true
+  validate :known_strokes
 
   scope :ordered, -> { order(:level, :position) }
 
@@ -33,6 +34,13 @@ class CourseModule < ApplicationRecord
   # Whether the Module has a Quiz. A Quiz with no questions counts as none.
   def quiz?
     quiz.present? && quiz.questions.any?
+  end
+
+  # The Strokes the Module works on (Stroke::KEYS), offered for rating in its
+  # Assessment Class. Blank entries, as the admin form's check boxes send,
+  # are dropped, and each Stroke is kept once in the list's order.
+  def strokes=(value)
+    super(Array(value).compact_blank.map(&:to_s).uniq)
   end
 
   def topics_text
@@ -213,5 +221,12 @@ class CourseModule < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     []
+  end
+
+  private
+
+  def known_strokes
+    unknown = strokes - Stroke::KEYS
+    errors.add(:strokes, :unknown, strokes: unknown.join(", ")) if unknown.any?
   end
 end

@@ -35,10 +35,22 @@ pt:
               other_club: "têm de pertencer todos ao clube do treinador"
             weekdays:
               cadence_mismatch: "tem de ter um dia da semana diferente por cada aula semanal"
+        course_module:
+          attributes:
+            strokes:
+              unknown: "tem golpes que não estão na lista: %{strokes}"
         coach_invitation:
           attributes:
             email:
               account_exists: "já tem uma conta"
+        evaluation:
+          attributes:
+            base:
+              not_assessment: "só pode ser registada numa aula de avaliação"
+              skipped: "não pode ser registada numa aula saltada"
+              not_yet: "só pode ser registada a partir da data da aula"
+            player:
+              not_in_group: "tem de ser um jogador do grupo da aula"
         training_class:
           attributes:
             base:
@@ -47,8 +59,10 @@ pt:
               other_course: "tem de ser um mesociclo do curso do grupo"
             done:
               skipped: "não pode ser marcado numa aula saltada"
+              evaluated: "tem de continuar marcado enquanto a aula tiver avaliações de jogadores"
             skipped:
               done: "não pode ser marcado numa aula feita"
+              evaluated: "não pode ser marcado enquanto a aula tiver avaliações de jogadores"
             start_time:
               crosses_midnight: "tem de permitir que a aula termine até à meia-noite"
         training_class_exercise:

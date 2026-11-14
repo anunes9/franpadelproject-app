@@ -93,4 +93,20 @@ RSpec.describe CourseImport do
     expect(CourseModule.find_by(slug: "module-13").sections).to be_present
     expect(CourseModule.find_by(slug: "module-8").sections).to be_empty
   end
+
+  it "imports each Module's Strokes, and refuses an unknown one" do
+    write(root, "docs/courses/beginner.json", [ module_entry("module-1").merge(strokes: %w[serve bandeja]) ])
+    described_class.new(root: root).run
+    expect(CourseModule.find_by(slug: "module-1").strokes).to eq(%w[serve bandeja])
+    expect(CourseModule.find_by(slug: "module-8").strokes).to eq([])
+
+    write(root, "docs/courses/beginner.json", [ module_entry("module-1").merge(strokes: %w[tweener]) ])
+    expect { described_class.new(root: root).run }.to raise_error(ActiveRecord::RecordInvalid, /tweener/)
+  end
+
+  it "lists only known Strokes in the repo's Courses" do
+    described_class.new.run
+
+    expect(CourseModule.pluck(:strokes).flatten - Stroke::KEYS).to be_empty
+  end
 end

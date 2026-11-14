@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode, useState } from 'react'
 import { useTranslation } from '@/i18n/useTranslation'
-import { editPlayerPath, newClubPlayerPath } from '@/lib/paths'
+import { editPlayerPath, newClubPlayerPath, playerPath } from '@/lib/paths'
 import { LEVELS, nameMatches } from '@/lib/players'
 import { AppShell, PageHeader } from '../../components/shell'
 import { buttonClass, chipClass, Eyebrow, INPUT_CLASS, ListCard, ListRow, SegmentedControl } from '../../components/ui'
@@ -11,12 +11,16 @@ interface Props {
   [key: string]: unknown
   club: ClubSummary
   players: Player[]
+  current_user: { role: string } | null
 }
 
 const POSITIONS: PlayerPosition[] = ['left', 'right', 'both']
 
 function Index() {
-  const { club, players } = usePage<Props>().props
+  const { club, players, current_user } = usePage<Props>().props
+  // A Club Manager reads every Player's Performance Profile; a Coach reads
+  // those of their groups' Players, from their groups.
+  const showProfile = current_user?.role === 'club_manager'
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [level, setLevel] = useState<Level | 'all'>('all')
@@ -102,13 +106,24 @@ function Index() {
                     {t(`players.handOption.${player.hand}`).toLowerCase()}
                   </div>
                 </div>
-                <Link
-                  href={editPlayerPath(player.id)}
-                  className="-my-2 flex min-h-11 shrink-0 items-center text-meta font-semibold text-teal-deep hover:text-ink"
-                  aria-label={`${t('players.index.edit')} ${player.name}`}
-                >
-                  {t('players.index.edit')}
-                </Link>
+                <span className="flex shrink-0 items-center gap-4">
+                  {showProfile && (
+                    <Link
+                      href={playerPath(player.id)}
+                      className="-my-2 flex min-h-11 items-center text-meta font-semibold text-teal-deep hover:text-ink"
+                      aria-label={`${t('players.index.profile')} ${player.name}`}
+                    >
+                      {t('players.index.profile')}
+                    </Link>
+                  )}
+                  <Link
+                    href={editPlayerPath(player.id)}
+                    className="-my-2 flex min-h-11 items-center text-meta font-semibold text-teal-deep hover:text-ink"
+                    aria-label={`${t('players.index.edit')} ${player.name}`}
+                  >
+                    {t('players.index.edit')}
+                  </Link>
+                </span>
               </ListRow>
             ))}
           </ListCard>

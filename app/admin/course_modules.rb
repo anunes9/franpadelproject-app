@@ -2,6 +2,7 @@ ActiveAdmin.register CourseModule do
   menu parent: "Content", priority: 1
 
   permit_params :slug, :level, :position, :title, :description, :duration, :topics_text, :content,
+                strokes: [],
                 new_documents: [],
                 quiz_attributes: [ :id, { questions_attributes: %i[id position text_pt text_en options_pt_text
                                                                  options_en_text correct_index _destroy] } ]
@@ -32,6 +33,7 @@ ActiveAdmin.register CourseModule do
       row :description
       row :duration
       row :topics
+      row :strokes
       row :created_at
       row :updated_at
     end
@@ -138,6 +140,8 @@ ActiveAdmin.register CourseModule do
       f.input :description
       f.input :duration
       f.input :topics_text, label: "Topics (comma separated)"
+      f.input :strokes, as: :check_boxes, collection: Stroke::KEYS.map { |key| [key.humanize, key] },
+                        hint: "The Strokes this Module works on, offered for rating in its Assessment Class."
       f.input :content, as: :text, input_html: {
         rows: 20,
         data: {
